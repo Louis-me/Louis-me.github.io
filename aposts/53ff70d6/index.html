@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.shikun.work","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":true,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="说明 本次用jmeter进行登录并发的压测实例 jmeter version 5.4.1 压测平台是自己搭建的jform 压测机器为单机win  20个并发登录设置线程组 1秒钟发20个线程   参数化登录数据 下图为参数化设置，文件名使用相对路径，指向%JMETER_HOME%上一级目录，比如我放到的是D:\exe\apache-jmeter-5.4.1   参数化格式为   123456tes">
+<meta property="og:type" content="article">
+<meta property="og:title" content="jmeter登录并发实例">
+<meta property="og:url" content="http://www.shikun.work/aposts/53ff70d6/index.html">
+<meta property="og:site_name" content="施坤的博客">
+<meta property="og:description" content="说明 本次用jmeter进行登录并发的压测实例 jmeter version 5.4.1 压测平台是自己搭建的jform 压测机器为单机win  20个并发登录设置线程组 1秒钟发20个线程   参数化登录数据 下图为参数化设置，文件名使用相对路径，指向%JMETER_HOME%上一级目录，比如我放到的是D:\exe\apache-jmeter-5.4.1   参数化格式为   123456tes">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://www.shikun.work/aposts/53ff70d6/image-20211027161520958.png">
+<meta property="og:image" content="http://www.shikun.work/aposts/53ff70d6/image-20211027161648791.png">
+<meta property="og:image" content="http://www.shikun.work/aposts/53ff70d6/image-20211027162309389.png">
+<meta property="og:image" content="http://www.shikun.work/aposts/53ff70d6/image-20211027162426589.png">
+<meta property="og:image" content="http://www.shikun.work/aposts/53ff70d6/image-20211027162740355.png">
+<meta property="og:image" content="http://www.shikun.work/aposts/53ff70d6/image-20211027163542732.png">
+<meta property="og:image" content="http://www.shikun.work/aposts/53ff70d6/image-20211027163910713.png">
+<meta property="og:image" content="http://www.shikun.work/aposts/53ff70d6/image-20211027164933790.png">
+<meta property="og:image" content="http://www.shikun.work/aposts/53ff70d6/image-20211027174053337.png">
+<meta property="og:image" content="http://www.shikun.work/aposts/53ff70d6/image-20211028103314940.png">
+<meta property="og:image" content="http://www.shikun.work/aposts/53ff70d6/image-20211028103515713.png">
+<meta property="og:image" content="http://www.shikun.work/aposts/53ff70d6/image-20211027174638748.png">
+<meta property="og:image" content="http://www.shikun.work/aposts/53ff70d6/image-20211027174848666.png">
+<meta property="og:image" content="http://www.shikun.work/aposts/53ff70d6/image-20211027175002092.png">
+<meta property="og:image" content="http://www.shikun.work/aposts/53ff70d6/image-20211027175148394.png">
+<meta property="og:image" content="http://www.shikun.work/aposts/53ff70d6/image-20211028105143043.png">
+<meta property="og:image" content="http://www.shikun.work/aposts/53ff70d6/image-20211028105302902.png">
+<meta property="og:image" content="http://www.shikun.work/aposts/53ff70d6/image-20211028114406461.png">
+<meta property="og:image" content="http://www.shikun.work/aposts/53ff70d6/image-20211028114550041.png">
+<meta property="og:image" content="http://www.shikun.work/aposts/53ff70d6/image-20211028152612334.png">
+<meta property="og:image" content="http://www.shikun.work/aposts/53ff70d6/image-20211028152720062.png">
+<meta property="article:published_time" content="2021-10-27T08:12:31.000Z">
+<meta property="article:modified_time" content="2022-02-25T03:20:56.589Z">
+<meta property="article:tag" content="jmeter">
+<meta property="article:tag" content="性能测试">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://www.shikun.work/aposts/53ff70d6/image-20211027161520958.png">
+
+<link rel="canonical" href="http://www.shikun.work/aposts/53ff70d6/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>jmeter登录并发实例 | 施坤的博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">施坤的博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-简历">
+
+    <a href="/resume/" rel="section"><i class="fa fa-address-card fa-fw"></i>简历</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://www.shikun.work/aposts/53ff70d6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="一个正经的测试工程师">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="施坤的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          jmeter登录并发实例
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-10-27 16:12:31" itemprop="dateCreated datePublished" datetime="2021-10-27T16:12:31+08:00">2021-10-27</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-02-25 11:20:56" itemprop="dateModified" datetime="2022-02-25T11:20:56+08:00">2022-02-25</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/jmeter/" itemprop="url" rel="index"><span itemprop="name">jmeter</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/aposts/53ff70d6/" class="post-meta-item leancloud_visitors" data-flag-title="jmeter登录并发实例" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/aposts/53ff70d6/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/aposts/53ff70d6/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h1><ul>
+<li>本次用jmeter进行登录并发的压测实例</li>
+<li>jmeter version 5.4.1</li>
+<li>压测平台是自己搭建的jform</li>
+<li>压测机器为单机win</li>
+</ul>
+<h2 id="20个并发登录"><a href="#20个并发登录" class="headerlink" title="20个并发登录"></a>20个并发登录</h2><h3 id="设置线程组"><a href="#设置线程组" class="headerlink" title="设置线程组"></a>设置线程组</h3><ul>
+<li>1秒钟发20个线程</li>
+</ul>
+<p><img src="/aposts/53ff70d6/image-20211027161520958.png" alt="image-20211027161520958"></p>
+<h3 id="参数化登录数据"><a href="#参数化登录数据" class="headerlink" title="参数化登录数据"></a>参数化登录数据</h3><ul>
+<li><p>下图为参数化设置，文件名使用相对路径，指向<code>%JMETER_HOME%</code>上一级目录，比如我放到的是<code>D:\exe\apache-jmeter-5.4.1</code></p>
+<p><img src="/aposts/53ff70d6/image-20211027161648791.png" alt="image-20211027161648791"></p>
+</li>
+<li><p>参数化格式为</p>
+</li>
+</ul>
+<figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">test1008,<span class="number">123456</span></span><br><span class="line">test1009,<span class="number">123456</span></span><br><span class="line">test1010,<span class="number">123456</span></span><br><span class="line">test1011,<span class="number">123456</span></span><br><span class="line">test1012,<span class="number">123456</span></span><br><span class="line">test1013,<span class="number">123456</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="登录接口"><a href="#登录接口" class="headerlink" title="登录接口"></a>登录接口</h3><p><img src="/aposts/53ff70d6/image-20211027162309389.png" alt="image-20211027162309389"></p>
+<h3 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h3><ul>
+<li><p>运行成功后，查看测试报告</p>
+<p><img src="/aposts/53ff70d6/image-20211027162426589.png" alt="image-20211027162426589"></p>
+</li>
+</ul>
+<h3 id="服务器监控"><a href="#服务器监控" class="headerlink" title="服务器监控"></a>服务器监控</h3><ul>
+<li><p>下载<a target="_blank" rel="noopener" href="https://jmeter-plugins.org/wiki/PerfMonAgent/">ServerAgent-2.2.3</a>，放到服务器上，给其他插件提供性能指标数据</p>
+</li>
+<li><p>下载<a target="_blank" rel="noopener" href="https://jmeter-plugins.org/?search=jpgc-perfmon">jpgc</a>,监控cpu,men等</p>
+<p><img src="/aposts/53ff70d6/image-20211027162740355.png" alt="image-20211027162740355"></p>
+<ul>
+<li>解压后把<code>perfmon-2.2.2.jar</code>放到<code>D:\exe\apache-jmeter-5.4.1\lib\ext</code>目录下面</li>
+</ul>
+</li>
+<li><p>重启jmeter，新增监听器可以看到PerfMon插件</p>
+<p><img src="/aposts/53ff70d6/image-20211027163542732.png" alt="image-20211027163542732"></p>
+</li>
+<li><p>新增监控指标</p>
+<ul>
+<li><p>CPU：combined ： 综合CPU使用情况</p>
+</li>
+<li><p>Memory：usedperc：内存使用比例</p>
+</li>
+<li><p>DIsk IO：usedperc：磁盘IO占用比例</p>
+</li>
+<li><p>Swap：分区通常被称为交换分区，这块儿分区位于硬盘的某个位置，当系统内存（物理内存）不够用的时候，如果开启了交换分区，部分内存里面暂时不用的数据就会Swap out（换出）到这块儿分区；当系统要使用这部分数据的时候，存储在Swap分区的数据就会Swap in(换入）到内存当中。</p>
+<p>简而言之，Swap分区就类似于内存的后备内存(只是做了下缓冲）</p>
+</li>
+</ul>
+</li>
+</ul>
+<p><img src="/aposts/53ff70d6/image-20211027163910713.png" alt="image-20211027163910713"></p>
+<h4 id="设置ServerAgent"><a href="#设置ServerAgent" class="headerlink" title="设置ServerAgent"></a>设置ServerAgent</h4><ul>
+<li>把压缩包放在服务器（centos7）上后，解压</li>
+</ul>
+<figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[root@racknerd-<span class="number">4</span>dbd89 local]# tar -zxvf ServerAgent-<span class="number">2.2</span>.<span class="number">3</span>.tar.gz</span><br><span class="line">ServerAgent-<span class="number">2.2</span>.<span class="number">3</span>/</span><br><span class="line">ServerAgent-<span class="number">2.2</span>.<span class="number">3</span>/CMDRunner.jar</span><br><span class="line">ServerAgent-<span class="number">2.2</span>.<span class="number">3</span>/lib/</span><br><span class="line">ServerAgent-<span class="number">2.2</span>.<span class="number">3</span>/lib/avalon-framework-<span class="number">4.1</span>.<span class="number">5</span>.jar</span><br><span class="line">ServerAgent-<span class="number">2.2</span>.<span class="number">3</span>/lib/cmdrunner-<span class="number">1.0</span>.<span class="number">2</span>.jar</span><br><span class="line">ServerAgent-<span class="number">2.2</span>.<span class="number">3</span>/lib/jorphan-<span class="number">2.6</span>.jar</span><br><span class="line">ServerAgent-<span class="number">2.2</span>.<span class="number">3</span>/lib/libsigar-amd64-freebsd-<span class="number">6</span>.so</span><br><span class="line">ServerAgent-<span class="number">2.2</span>.<span class="number">3</span>/lib/libsigar-amd64-linux.so</span><br><span class="line">ServerAgent-<span class="number">2.2</span>.<span class="number">3</span>/lib/libsigar-amd64-solaris.so</span><br><span class="line">ServerAgent-<span class="number">2.2</span>.<span class="number">3</span>/lib/libsigar-ia64-hpux-<span class="number">11</span>.sl</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>启动发现4444端口被使用</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@racknerd-4dbd89 ServerAgent-2.2.3]<span class="comment"># sh startAgent.sh</span></span><br><span class="line">INFO    2021-10-27 04:55:56.640 [kg.apc.p] (): Binding UDP to 4444</span><br><span class="line">INFO    2021-10-27 04:55:57.767 [kg.apc.p] (): Binding TCP to 4444</span><br><span class="line">ERROR   2021-10-27 04:55:57.778 [kg.apc.p] (): Can<span class="string">&#x27;t accept TCP connections</span></span><br><span class="line"><span class="string">java.net.BindException: Address already in use</span></span><br><span class="line"><span class="string">        at sun.nio.ch.Net.bind0(Native Method)</span></span><br><span class="line"><span class="string">        at sun.nio.ch.Net.bind(Net.java:438)</span></span><br><span class="line"><span class="string">        at sun.nio.ch.Net.bind(Net.java:430)</span></span><br><span class="line"><span class="string"></span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>修改端口</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@racknerd-4dbd89 ServerAgent-2.2.3]<span class="comment"># java -jar ./CMDRunner.jar --tool PerfMonAgent --udp-port 7777 --tcp-port 7777</span></span><br><span class="line">INFO    2021-10-27 04:57:38.028 [kg.apc.p] (): Binding UDP to 7777</span><br><span class="line">INFO    2021-10-27 04:57:39.040 [kg.apc.p] (): Binding TCP to 7777</span><br><span class="line">INFO    2021-10-27 04:57:39.048 [kg.apc.p] (): JP@GC Agent v2.2.3 started</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>jmeter这里也要修改端口为7777</p>
+<p><img src="/aposts/53ff70d6/image-20211027164933790.png" alt="image-20211027164933790"></p>
+</li>
+</ul>
+<h3 id="再次运行"><a href="#再次运行" class="headerlink" title="再次运行"></a>再次运行</h3><ul>
+<li><p>发现启动后，监听器jpgc这里一直卡着，jmeter也一直卡死，用任务管理器结束任务后，查了下相关资料，说要设置文件名路径，我设置后依然如此</p>
+</li>
+<li><p>等待漫长五分钟后，终于看到结果出现timed out提示</p>
+<p><img src="/aposts/53ff70d6/image-20211027174053337.png" alt="image-20211027174053337"></p>
+</li>
+<li><p>想到应该是服务器端口没有开放，设置防火墙端口开放</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">firewall-cmd --zone=public --add-port=7777/tcp --permanent</span><br><span class="line">firewall-cmd --relod</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>重启服务器上的serverAgent</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@racknerd-4dbd89 ServerAgent-2.2.3]<span class="comment"># netstat -lnpt |grep 7777</span></span><br><span class="line">tcp6       0      0 :::7777                 :::*                    LISTEN      23648/java</span><br><span class="line">[root@racknerd-4dbd89 ServerAgent-2.2.3]<span class="comment"># kill -9 23648</span></span><br><span class="line">[root@racknerd-4dbd89 ServerAgent-2.2.3]<span class="comment"># java -jar ./CMDRunner.jar --tool PerfMonAgent --udp-port 7777 --tcp-port 7777</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>再次运行jmeter脚本后，查看到服务器这里已经连接上了</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">gent --udp-port 7777 --tcp-port 7777</span><br><span class="line">INFO    2021-10-27 05:22:24.028 [kg.apc.p] (): Binding UDP to 7777</span><br><span class="line">INFO    2021-10-27 05:22:25.036 [kg.apc.p] (): Binding TCP to 7777</span><br><span class="line">INFO    2021-10-27 05:22:25.070 [kg.apc.p] (): JP@GC Agent v2.2.3 started</span><br><span class="line">INFO    2021-10-27 05:23:06.182 [kg.apc.p] (): Accepting new TCP connection</span><br><span class="line">INFO    2021-10-27 05:23:06.194 [kg.apc.p] (): Yep, we received the <span class="string">&#x27;test&#x27;</span> <span class="built_in">command</span></span><br><span class="line">INFO    2021-10-27 05:23:27.425 [kg.apc.p] (): Starting measures: swap: memory:cpu:</span><br><span class="line">INFO    2021-10-27 05:23:30.179 [kg.apc.p] (): Client disconnected</span><br><span class="line">INFO    2021-10-27 05:26:35.347 [kg.apc.p] (): Accepting new TCP connection</span><br><span class="line">INFO    2021-10-27 05:26:39.514 [kg.apc.p] (): Closing TCP connection</span><br><span class="line">INFO    2021-10-27 05:31:26.064 [kg.apc.p] (): Accepting new TCP connection</span><br><span class="line">INFO    2021-10-27 05:31:26.067 [kg.apc.p] (): Yep, we received the <span class="string">&#x27;test&#x27;</span> <span class="built_in">command</span></span><br><span class="line">INFO    2021-10-27 05:31:26.274 [kg.apc.p] (): Starting measures: swap: memory:cpu:     disks i/o:</span><br><span class="line">INFO    2021-10-27 05:31:28.823 [kg.apc.p] (): Client disconnected</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="出现提示框"><a href="#出现提示框" class="headerlink" title="出现提示框"></a>出现提示框</h4><ul>
+<li><p>再次运行是，出现一个弹框</p>
+<p><img src="/aposts/53ff70d6/image-20211028103314940.png" alt="image-20211028103314940"></p>
+</li>
+<li><p>打开<code>jmeter.properties</code>设置<code>resultcollector.action_if_file_exists=DELETE</code>,如下图展示，<code>action_if_file_exists</code>有三个值<code>ask</code>,<code>append</code>,<code>delete</code>看字面意思就很清楚了。</p>
+</li>
+<li><p>修改后重新打开jmeter，再次运行脚本就不会出现提示</p>
+<p><img src="/aposts/53ff70d6/image-20211028103515713.png" alt="image-20211028103515713"></p>
+</li>
+</ul>
+<h4 id="查看测试报告"><a href="#查看测试报告" class="headerlink" title="查看测试报告"></a>查看测试报告</h4><h5 id="查看服务器的测试报告"><a href="#查看服务器的测试报告" class="headerlink" title="查看服务器的测试报告"></a>查看服务器的测试报告</h5><p><img src="/aposts/53ff70d6/image-20211027174638748.png" alt="image-20211027174638748"></p>
+<ul>
+<li><p>X 10000000表示放大的次数，助于观察</p>
+</li>
+<li><p>查看cpu情况</p>
+<p><img src="/aposts/53ff70d6/image-20211027174848666.png" alt="image-20211027174848666"></p>
+</li>
+</ul>
+<p><img src="/aposts/53ff70d6/image-20211027175002092.png" alt="image-20211027175002092"></p>
+<ul>
+<li><p>我的服务器是单核cpu，配置比较差，直接就100%</p>
+</li>
+<li><p>磁盘使用情况还不错</p>
+<p><img src="/aposts/53ff70d6/image-20211027175148394.png" alt="image-20211027175148394"></p>
+</li>
+<li><p>其他情况就不分析了，类似</p>
+</li>
+</ul>
+<h5 id="查看其他监听报告"><a href="#查看其他监听报告" class="headerlink" title="查看其他监听报告"></a>查看其他监听报告</h5><ul>
+<li>汇总报告，单位为ms</li>
+</ul>
+<p><img src="/aposts/53ff70d6/image-20211028105143043.png" alt="image-20211028105143043"></p>
+<ul>
+<li><p>聚合测试报告，单位为ms，其中<code>Throughput</code>（吞吐量）——默认情况下表示每秒完成的请求数（<code>Request per Second</code>），当使用了<code> Transaction Controller</code> 时，也可以表示类似<code> LoadRunner</code> 的<code> Transaction per Second</code> 数（该值越大越好，表示服务器处理能力越强。）</p>
+<p><img src="/aposts/53ff70d6/image-20211028105302902.png" alt="image-20211028105302902"></p>
+</li>
+</ul>
+<h2 id="简单负载登录测试"><a href="#简单负载登录测试" class="headerlink" title="简单负载登录测试"></a>简单负载登录测试</h2><ul>
+<li>1秒钟增加2个线程，运行100次</li>
+<li>分别看20，40，60并发下的表现</li>
+</ul>
+<h3 id="并发20的线程组设置"><a href="#并发20的线程组设置" class="headerlink" title="并发20的线程组设置"></a>并发20的线程组设置</h3><p><img src="/aposts/53ff70d6/image-20211028114406461.png" alt="image-20211028114406461"></p>
+<h3 id="参数化"><a href="#参数化" class="headerlink" title="参数化"></a>参数化</h3><ul>
+<li>沿用上述</li>
+</ul>
+<h3 id="集合点设置"><a href="#集合点设置" class="headerlink" title="集合点设置"></a>集合点设置</h3><p><img src="/aposts/53ff70d6/image-20211028114550041.png" alt="image-20211028114550041"></p>
+<ul>
+<li><p>Number of Simulated Users to Group by:每次释放的线程数量。<strong>如果设置为0，等同于设置为线程租中的线程数量</strong>。</p>
+</li>
+<li><p>Timeout in milliseconds:</p>
+<ul>
+<li><strong>如果设置为0，Timer将会等待线程数达到了”Number of Simultaneous Users to Group”中设置的值才释放</strong>。</li>
+<li>如果大于0，那么如果超过Timeout in milliseconds中设置的最大等待时间(毫秒为单位)后还没达到”Number of Simultaneous Users to Group”中设置的值，Timer将不再等待，释放已到达的线程。默认为0</li>
+</ul>
+</li>
+<li><p>注意：如果设置Timeout in milliseconds为0，且线程数量无法达到”Number of Simultaneous Users to Group by”中设置的值，那么Test将无限等待，除非手动终止。</p>
+</li>
+<li><p>Synchronizing timer 仅作用于同一个JVM中的线程,所以，如果使用并发测试，确保”Number of Simultaneous Users to Group by”中设置的值不大于它所在线程组包含的用户数。</p>
+</li>
+<li><p><strong>备注：像聚合报告这类监听器最好少添加，一个线程组用一个足以。之所以建议少添加是因为这类组件非常消耗性能，容易对压测结果产生影响。</strong></p>
+</li>
+</ul>
+<h3 id="查看服务器报告"><a href="#查看服务器报告" class="headerlink" title="查看服务器报告"></a>查看服务器报告</h3><ul>
+<li><p>swap波动比较大</p>
+<p><img src="/aposts/53ff70d6/image-20211028152612334.png" alt="image-20211028152612334"></p>
+</li>
+<li><p>cpu再并发请求的时候直接100%</p>
+<p><img src="/aposts/53ff70d6/image-20211028152720062.png" alt="image-20211028152720062"></p>
+</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/jmeter/" rel="tag"># jmeter</a>
+              <a href="/tags/%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag"># 性能测试</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/aposts/42060b4c/" rel="prev" title="jmeter场景设计">
+      <i class="fa fa-chevron-left"></i> jmeter场景设计
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/aposts/9b3814ef/" rel="next" title="win10下装虚拟机">
+      win10下装虚拟机 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+
+
+    <div class="sidebar-inner">
+
+
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AF%B4%E6%98%8E"><span class="nav-number">1.</span> <span class="nav-text">说明</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#20%E4%B8%AA%E5%B9%B6%E5%8F%91%E7%99%BB%E5%BD%95"><span class="nav-number">1.1.</span> <span class="nav-text">20个并发登录</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AE%E7%BA%BF%E7%A8%8B%E7%BB%84"><span class="nav-number">1.1.1.</span> <span class="nav-text">设置线程组</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%82%E6%95%B0%E5%8C%96%E7%99%BB%E5%BD%95%E6%95%B0%E6%8D%AE"><span class="nav-number">1.1.2.</span> <span class="nav-text">参数化登录数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%99%BB%E5%BD%95%E6%8E%A5%E5%8F%A3"><span class="nav-number">1.1.3.</span> <span class="nav-text">登录接口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%90%E8%A1%8C"><span class="nav-number">1.1.4.</span> <span class="nav-text">运行</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%9B%91%E6%8E%A7"><span class="nav-number">1.1.5.</span> <span class="nav-text">服务器监控</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AEServerAgent"><span class="nav-number">1.1.5.1.</span> <span class="nav-text">设置ServerAgent</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%8D%E6%AC%A1%E8%BF%90%E8%A1%8C"><span class="nav-number">1.1.6.</span> <span class="nav-text">再次运行</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%87%BA%E7%8E%B0%E6%8F%90%E7%A4%BA%E6%A1%86"><span class="nav-number">1.1.6.1.</span> <span class="nav-text">出现提示框</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E6%B5%8B%E8%AF%95%E6%8A%A5%E5%91%8A"><span class="nav-number">1.1.6.2.</span> <span class="nav-text">查看测试报告</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%9A%84%E6%B5%8B%E8%AF%95%E6%8A%A5%E5%91%8A"><span class="nav-number">1.1.6.2.1.</span> <span class="nav-text">查看服务器的测试报告</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E5%85%B6%E4%BB%96%E7%9B%91%E5%90%AC%E6%8A%A5%E5%91%8A"><span class="nav-number">1.1.6.2.2.</span> <span class="nav-text">查看其他监听报告</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%80%E5%8D%95%E8%B4%9F%E8%BD%BD%E7%99%BB%E5%BD%95%E6%B5%8B%E8%AF%95"><span class="nav-number">1.2.</span> <span class="nav-text">简单负载登录测试</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B9%B6%E5%8F%9120%E7%9A%84%E7%BA%BF%E7%A8%8B%E7%BB%84%E8%AE%BE%E7%BD%AE"><span class="nav-number">1.2.1.</span> <span class="nav-text">并发20的线程组设置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%82%E6%95%B0%E5%8C%96"><span class="nav-number">1.2.2.</span> <span class="nav-text">参数化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9B%86%E5%90%88%E7%82%B9%E8%AE%BE%E7%BD%AE"><span class="nav-number">1.2.3.</span> <span class="nav-text">集合点设置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%8A%A5%E5%91%8A"><span class="nav-number">1.2.4.</span> <span class="nav-text">查看服务器报告</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt=""
+      src="/images/avatar.gif">
+  <p class="site-author-name" itemprop="name"></p>
+  <div class="site-description" itemprop="description">一个正经的测试工程师</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">143</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">25</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">62</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Louis-me" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Louis-me" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:shikun.job@foxmail.com" title="E-Mail → mailto:shikun.job@foxmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+  <!-- 标签云 -->
+
+<script type="text/javascript" charset="utf-8" src="/js/tagcloud.js"></script>
+<script type="text/javascript" charset="utf-8" src="/js/tagcanvas.js"></script>
+<div class="widget-wrap">
+    <!--<h3 class="widget-title">Tag Cloud</h3> -->
+    <div id="myCanvasContainer" class="widget tagcloud">
+        <canvas width="250" height="250" id="resCanvas" style="width=100%">
+            <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AWVS/" rel="tag">AWVS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Burp-Site/" rel="tag">Burp Site</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DVWA/" rel="tag">DVWA</a><span class="tag-list-count">15</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dependency-Check/" rel="tag">Dependency-Check</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/H5/" rel="tag">H5</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hadoop/" rel="tag">Hadoop</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hive/" rel="tag">Hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jenkins/" rel="tag">Jenkins</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Metasploit/" rel="tag">Metasploit</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Nessus/" rel="tag">Nessus</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Sonic/" rel="tag">Sonic</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/airtest/" rel="tag">airtest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">android性能测试</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/app%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">app安全测试</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aritest/" rel="tag">aritest</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/centos/" rel="tag">centos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/" rel="tag">chrome</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/datax/" rel="tag">datax</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/django/" rel="tag">django</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/drozer/" rel="tag">drozer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fisco-bcos/" rel="tag">fisco-bcos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flink/" rel="tag">flink</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gin/" rel="tag">gin</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/" rel="tag">go</a><span class="tag-list-count">16</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go-zero/" rel="tag">go-zero</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hive/" rel="tag">hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/httprunner/" rel="tag">httprunner</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jmeter/" rel="tag">jmeter</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka/" rel="tag">kafka</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kail/" rel="tag">kail</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode/" rel="tag">leetcode</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode-%E6%95%B0%E7%BB%84/" rel="tag">leetcode-数组</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mitmproxy/" rel="tag">mitmproxy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongodb/" rel="tag">mongodb</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/monkey/" rel="tag">monkey</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/" rel="tag">mysql</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pandas/" rel="tag">pandas</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pc%E8%87%AA%E5%8A%A8%E5%8C%96/" rel="tag">pc自动化</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/playwright/" rel="tag">playwright</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pytest/" rel="tag">pytest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a><span class="tag-list-count">23</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/" rel="tag">redis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/selenium/" rel="tag">selenium</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlite/" rel="tag">sqlite</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlmap/" rel="tag">sqlmap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tkinter/" rel="tag">tkinter</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/" rel="tag">vue</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue3/" rel="tag">vue3</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">云服务器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8C%BA%E5%9D%97%E9%93%BE/" rel="tag">区块链</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag">大数据</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">安全测试</a><span class="tag-list-count">29</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">性能测试</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%88%AC%E8%99%AB/" rel="tag">爬虫</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" rel="tag">环境搭建</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95/" rel="tag">自动化测试</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%8B%B1%E8%AF%AD%E5%AD%A6%E4%B9%A0/" rel="tag">英语学习</a><span class="tag-list-count">1</span></li></ul>
+        </canvas>
+    </div>
+</div>
+
+</div>
+<!-- 标签云 -->
+    </div>
+
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  <a href="https://beian.miit.gov.cn/" target="_blank">湘ICP备2022002212号-1</a><br />
+  <!--
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder"></span>
+  -->
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script src='../../../js/src/av-min.js'></script>
+<script src='../../../js/src/Valine.min.js'></script>
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : true,
+      notify     : false,
+      appId      : 'mhSm1aOQmnVeiAUJxrsKIFg5-gzGzoHsz',
+      appKey     : 'kW6GQVoeJac7wDgKvy9vXhn6',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : true,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+  
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

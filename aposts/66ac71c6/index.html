@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.shikun.work","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":true,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="说明 jmeter 5.4.1 测试论坛登录并发的拐点  第一次线程组脚本配置 设置并发10个请求，永远   设置RPS定时器，将RPS逐渐增加到50&#x2F;S，并持续一段时间    结果分析 首先分析Hits per Second，在54秒后，RPS为84.7&#x2F;S（可以理解为：最大支持1秒内84.7个用户同时登录），出现拐点，请求曲线开始收窄，有同学会问，怎么会是RPS？不是HPS">
+<meta property="og:type" content="article">
+<meta property="og:title" content="寻找拐点">
+<meta property="og:url" content="http://www.shikun.work/aposts/66ac71c6/index.html">
+<meta property="og:site_name" content="施坤的博客">
+<meta property="og:description" content="说明 jmeter 5.4.1 测试论坛登录并发的拐点  第一次线程组脚本配置 设置并发10个请求，永远   设置RPS定时器，将RPS逐渐增加到50&#x2F;S，并持续一段时间    结果分析 首先分析Hits per Second，在54秒后，RPS为84.7&#x2F;S（可以理解为：最大支持1秒内84.7个用户同时登录），出现拐点，请求曲线开始收窄，有同学会问，怎么会是RPS？不是HPS">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://www.shikun.work/aposts/66ac71c6/image-20211126145852042.png">
+<meta property="og:image" content="http://www.shikun.work/aposts/66ac71c6/image-20211126150023226.png">
+<meta property="og:image" content="http://www.shikun.work/aposts/66ac71c6/image-20211129113816875.png">
+<meta property="og:image" content="http://www.shikun.work/aposts/66ac71c6/image-20211129114833158.png">
+<meta property="og:image" content="http://www.shikun.work/aposts/66ac71c6/image-20211129145513074.png">
+<meta property="og:image" content="http://www.shikun.work/aposts/66ac71c6/image-20211129145631570.png">
+<meta property="og:image" content="http://www.shikun.work/aposts/66ac71c6/image-20211129145944164.png">
+<meta property="og:image" content="http://www.shikun.work/aposts/66ac71c6/image-20211129150633788.png">
+<meta property="og:image" content="http://www.shikun.work/aposts/66ac71c6/image-20211130102551759.png">
+<meta property="og:image" content="http://www.shikun.work/aposts/66ac71c6/image-20211130102819087.png">
+<meta property="og:image" content="http://www.shikun.work/aposts/66ac71c6/image-20211130103151709.png">
+<meta property="og:image" content="http://www.shikun.work/aposts/66ac71c6/image-20211130104030732.png">
+<meta property="article:published_time" content="2021-11-24T03:42:59.000Z">
+<meta property="article:modified_time" content="2022-02-25T03:20:56.673Z">
+<meta property="article:tag" content="jmeter">
+<meta property="article:tag" content="性能测试">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://www.shikun.work/aposts/66ac71c6/image-20211126145852042.png">
+
+<link rel="canonical" href="http://www.shikun.work/aposts/66ac71c6/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>寻找拐点 | 施坤的博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">施坤的博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-简历">
+
+    <a href="/resume/" rel="section"><i class="fa fa-address-card fa-fw"></i>简历</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://www.shikun.work/aposts/66ac71c6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="一个正经的测试工程师">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="施坤的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          寻找拐点
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-11-24 11:42:59" itemprop="dateCreated datePublished" datetime="2021-11-24T11:42:59+08:00">2021-11-24</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-02-25 11:20:56" itemprop="dateModified" datetime="2022-02-25T11:20:56+08:00">2022-02-25</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/jmeter/" itemprop="url" rel="index"><span itemprop="name">jmeter</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/aposts/66ac71c6/" class="post-meta-item leancloud_visitors" data-flag-title="寻找拐点" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/aposts/66ac71c6/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/aposts/66ac71c6/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><ul>
+<li>jmeter 5.4.1</li>
+<li>测试论坛登录并发的拐点</li>
+</ul>
+<h2 id="第一次线程组脚本配置"><a href="#第一次线程组脚本配置" class="headerlink" title="第一次线程组脚本配置"></a>第一次线程组脚本配置</h2><ul>
+<li><p>设置并发10个请求，永远</p>
+<p><img src="/aposts/66ac71c6/image-20211126145852042.png" alt="image-20211126145852042"></p>
+</li>
+<li><p>设置RPS定时器，将RPS逐渐增加到50&#x2F;S，并持续一段时间</p>
+</li>
+</ul>
+<p><img src="/aposts/66ac71c6/image-20211126150023226.png" alt="image-20211126150023226"></p>
+<h3 id="结果分析"><a href="#结果分析" class="headerlink" title="结果分析"></a>结果分析</h3><ul>
+<li><p>首先分析Hits per Second，在54秒后，RPS为84.7&#x2F;S（可以理解为：<strong>最大支持1秒内84.7个用户同时登录</strong>），<strong>出现拐点</strong>，请求曲线开始收窄，有同学会问，怎么会是RPS？不是HPS吗？因为在单接口请求下，我么可以认为HPS和RPS是相等的</p>
+<p><img src="/aposts/66ac71c6/image-20211129113816875.png" alt="image-20211129113816875"></p>
+</li>
+<li><p>查看聚合报告，得到RT的响应时间，平均值为203，，这时候可能会有同学说，你这里不能取平均时间，不具有代表性，我们还应该考虑90%,95%，99%不同比例的接口响应时间。对的，个人认为，这些数值在和平均值没有过大的区别的情况下，我们可以取平均值来计算，如果说出现了较大的波动，那么我们需要考虑是不是服务器的内存,cpu出现了问题。</p>
+</li>
+<li><p>这里我们算下并发数：<code>84.7*0.203=17.19</code>，可以理解为，<strong>支持17.19个用户在1s内同时登录</strong></p>
+</li>
+<li><p>查看TPS ，发现在16秒支持<strong>最大tps为12</strong>，不然就会出现明显波动</p>
+<p><img src="/aposts/66ac71c6/image-20211129114833158.png" alt="image-20211129114833158"></p>
+</li>
+</ul>
+<h3 id="第一次运行结果总结"><a href="#第一次运行结果总结" class="headerlink" title="第一次运行结果总结"></a>第一次运行结果总结</h3><ul>
+<li>我们的<strong>最大请求数为84</strong></li>
+<li><strong>最大 TPS 为12</strong></li>
+<li><strong>最大系统并发数在 17左右</strong></li>
+<li>超出这些范围就开始出现波动</li>
+</ul>
+<h2 id="第二次调整运行参数"><a href="#第二次调整运行参数" class="headerlink" title="第二次调整运行参数"></a>第二次调整运行参数</h2><ul>
+<li><p>并发数调整为<strong>5个</strong></p>
+<p><img src="/aposts/66ac71c6/image-20211129145513074.png" alt="image-20211129145513074"></p>
+<h3 id="运行结果分析"><a href="#运行结果分析" class="headerlink" title="运行结果分析"></a>运行结果分析</h3></li>
+<li><p>在54秒时，RPS的值为<strong>84.3&#x2F;S</strong></p>
+<p><img src="/aposts/66ac71c6/image-20211129145631570.png" alt="image-20211129145631570"></p>
+</li>
+<li><p>查看聚合报告，得到RT的响应时间，平均值为175，这里我们算下<strong>并发数：84.3*0.175&#x3D;14.17</strong></p>
+</li>
+</ul>
+<p><img src="/aposts/66ac71c6/image-20211129145944164.png" alt="image-20211129145944164"></p>
+<ul>
+<li>查看TPS，在21秒是，<strong>tps的值为18</strong>为最佳，不然后续出现巨大波动</li>
+</ul>
+<p><img src="/aposts/66ac71c6/image-20211129150633788.png" alt="image-20211129150633788"></p>
+<h3 id="第二次结果分析"><a href="#第二次结果分析" class="headerlink" title="第二次结果分析"></a>第二次结果分析</h3><ul>
+<li>我们的<strong>最大请求数为84</strong></li>
+<li><strong>最大 TPS 为18</strong></li>
+<li><strong>最大系统并发数在 14左右</strong></li>
+<li>超出这些范围就开始出现波动</li>
+</ul>
+<h2 id="CLI运行"><a href="#CLI运行" class="headerlink" title="CLI运行"></a>CLI运行</h2><ul>
+<li>10个并发</li>
+</ul>
+<h3 id="命令运行"><a href="#命令运行" class="headerlink" title="命令运行"></a>命令运行</h3><ul>
+<li>发起压测请求<code>jmeter -n -t resp.jmx -l result/report.jtl</code></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">E:\jmeter&gt;jmeter -n -t resp.jmx -l result/report.jtl</span><br><span class="line">Creating summariser &lt;summary&gt;</span><br><span class="line">Created the tree successfully using resp.jmx</span><br><span class="line">Starting standalone <span class="built_in">test</span> @ Tue Nov 30 10:06:56 CST 2021 (1638238016471)</span><br><span class="line">Waiting <span class="keyword">for</span> possible Shutdown/StopTestNow/HeapDump/ThreadDump message on port 4445</span><br><span class="line">summary +      9 <span class="keyword">in</span> 00:00:03 =    2.6/s Avg:   140 Min:   117 Max:   230 Err:     0 (0.00%) Active: 5 Started: 5 Finished: 0</span><br><span class="line">summary +    406 <span class="keyword">in</span> 00:00:30 =   13.7/s Avg:   148 Min:   108 Max:  1160 Err:     0 (0.00%) Active: 5 Started: 5 Finished: 0</span><br><span class="line">summary =    415 <span class="keyword">in</span> 00:00:33 =   12.5/s Avg:   148 Min:   108 Max:  1160 Err:     0 (0.00%)</span><br><span class="line">summary +    516 <span class="keyword">in</span> 00:00:30 =   17.2/s Avg:   232 Min:   108 Max: 15728 Err:     0 (0.00%) Active: 5 Started: 5 Finished: 0</span><br><span class="line">.....</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>压测完毕后，转变为测试报告</p>
+<p><code>jmeter -g report.jtl -o report</code></p>
+<p><img src="/aposts/66ac71c6/image-20211130102551759.png" alt="image-20211130102551759"></p>
+<h3 id="报告分析"><a href="#报告分析" class="headerlink" title="报告分析"></a>报告分析</h3></li>
+<li><p>RPS为<strong>80.48&#x2F;S</strong></p>
+<p><img src="/aposts/66ac71c6/image-20211130102819087.png" alt="image-20211130102819087"></p>
+</li>
+<li><p>得到RT的响应时间，平均值为121.14，这里我们算下<strong>并发数：80.4*0.121&#x3D;14.17</strong></p>
+</li>
+</ul>
+<p><img src="/aposts/66ac71c6/image-20211130103151709.png" alt="image-20211130103151709"></p>
+<ul>
+<li><p><strong>tps的值为27</strong>为最佳，不然后续出现巨大波动</p>
+<p><img src="/aposts/66ac71c6/image-20211130104030732.png" alt="image-20211130104030732"></p>
+</li>
+</ul>
+<h3 id="第三次结果分析"><a href="#第三次结果分析" class="headerlink" title="第三次结果分析"></a>第三次结果分析</h3><ul>
+<li>我们的<strong>最大请求数为84</strong></li>
+<li><strong>最大 TPS 为27</strong></li>
+<li><strong>最大系统并发数在 14左右</strong></li>
+<li>超出这些范围就开始出现波动</li>
+</ul>
+<h2 id="三次结果总结"><a href="#三次结果总结" class="headerlink" title="三次结果总结"></a>三次结果总结</h2><ul>
+<li>我们的<strong>最大请求数为84</strong></li>
+<li><strong>最大 TPS 为12-27</strong><ul>
+<li>CLI模式下TPS支持最大</li>
+</ul>
+</li>
+<li><strong>最大系统并发数在 14-17</strong></li>
+<li>这些范围就开始出现波动</li>
+</ul>
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><ul>
+<li>可以测试多次，取平均值</li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/limenglovechen/article/details/107685933">参考这里</a>的测试方式</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/jmeter/" rel="tag"># jmeter</a>
+              <a href="/tags/%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag"># 性能测试</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/aposts/cb7ef82f/" rel="prev" title="Concurrency Thread Group实例">
+      <i class="fa fa-chevron-left"></i> Concurrency Thread Group实例
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/aposts/f05ef477/" rel="next" title="第一章 大数据技术生态">
+      第一章 大数据技术生态 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+
+
+    <div class="sidebar-inner">
+
+
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%B4%E6%98%8E"><span class="nav-number">1.</span> <span class="nav-text">说明</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%B8%80%E6%AC%A1%E7%BA%BF%E7%A8%8B%E7%BB%84%E8%84%9A%E6%9C%AC%E9%85%8D%E7%BD%AE"><span class="nav-number">2.</span> <span class="nav-text">第一次线程组脚本配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%93%E6%9E%9C%E5%88%86%E6%9E%90"><span class="nav-number">2.1.</span> <span class="nav-text">结果分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%B8%80%E6%AC%A1%E8%BF%90%E8%A1%8C%E7%BB%93%E6%9E%9C%E6%80%BB%E7%BB%93"><span class="nav-number">2.2.</span> <span class="nav-text">第一次运行结果总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%BA%8C%E6%AC%A1%E8%B0%83%E6%95%B4%E8%BF%90%E8%A1%8C%E5%8F%82%E6%95%B0"><span class="nav-number">3.</span> <span class="nav-text">第二次调整运行参数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%90%E8%A1%8C%E7%BB%93%E6%9E%9C%E5%88%86%E6%9E%90"><span class="nav-number">3.1.</span> <span class="nav-text">运行结果分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%BA%8C%E6%AC%A1%E7%BB%93%E6%9E%9C%E5%88%86%E6%9E%90"><span class="nav-number">3.2.</span> <span class="nav-text">第二次结果分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CLI%E8%BF%90%E8%A1%8C"><span class="nav-number">4.</span> <span class="nav-text">CLI运行</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%91%BD%E4%BB%A4%E8%BF%90%E8%A1%8C"><span class="nav-number">4.1.</span> <span class="nav-text">命令运行</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8A%A5%E5%91%8A%E5%88%86%E6%9E%90"><span class="nav-number">4.2.</span> <span class="nav-text">报告分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%B8%89%E6%AC%A1%E7%BB%93%E6%9E%9C%E5%88%86%E6%9E%90"><span class="nav-number">4.3.</span> <span class="nav-text">第三次结果分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E6%AC%A1%E7%BB%93%E6%9E%9C%E6%80%BB%E7%BB%93"><span class="nav-number">5.</span> <span class="nav-text">三次结果总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B6%E4%BB%96"><span class="nav-number">6.</span> <span class="nav-text">其他</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt=""
+      src="/images/avatar.gif">
+  <p class="site-author-name" itemprop="name"></p>
+  <div class="site-description" itemprop="description">一个正经的测试工程师</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">143</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">25</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">62</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Louis-me" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Louis-me" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:shikun.job@foxmail.com" title="E-Mail → mailto:shikun.job@foxmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+  <!-- 标签云 -->
+
+<script type="text/javascript" charset="utf-8" src="/js/tagcloud.js"></script>
+<script type="text/javascript" charset="utf-8" src="/js/tagcanvas.js"></script>
+<div class="widget-wrap">
+    <!--<h3 class="widget-title">Tag Cloud</h3> -->
+    <div id="myCanvasContainer" class="widget tagcloud">
+        <canvas width="250" height="250" id="resCanvas" style="width=100%">
+            <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AWVS/" rel="tag">AWVS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Burp-Site/" rel="tag">Burp Site</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DVWA/" rel="tag">DVWA</a><span class="tag-list-count">15</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dependency-Check/" rel="tag">Dependency-Check</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/H5/" rel="tag">H5</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hadoop/" rel="tag">Hadoop</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hive/" rel="tag">Hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jenkins/" rel="tag">Jenkins</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Metasploit/" rel="tag">Metasploit</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Nessus/" rel="tag">Nessus</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Sonic/" rel="tag">Sonic</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/airtest/" rel="tag">airtest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">android性能测试</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/app%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">app安全测试</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aritest/" rel="tag">aritest</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/centos/" rel="tag">centos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/" rel="tag">chrome</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/datax/" rel="tag">datax</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/django/" rel="tag">django</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/drozer/" rel="tag">drozer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fisco-bcos/" rel="tag">fisco-bcos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flink/" rel="tag">flink</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gin/" rel="tag">gin</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/" rel="tag">go</a><span class="tag-list-count">16</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go-zero/" rel="tag">go-zero</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hive/" rel="tag">hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/httprunner/" rel="tag">httprunner</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jmeter/" rel="tag">jmeter</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka/" rel="tag">kafka</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kail/" rel="tag">kail</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode/" rel="tag">leetcode</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode-%E6%95%B0%E7%BB%84/" rel="tag">leetcode-数组</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mitmproxy/" rel="tag">mitmproxy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongodb/" rel="tag">mongodb</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/monkey/" rel="tag">monkey</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/" rel="tag">mysql</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pandas/" rel="tag">pandas</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pc%E8%87%AA%E5%8A%A8%E5%8C%96/" rel="tag">pc自动化</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/playwright/" rel="tag">playwright</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pytest/" rel="tag">pytest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a><span class="tag-list-count">23</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/" rel="tag">redis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/selenium/" rel="tag">selenium</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlite/" rel="tag">sqlite</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlmap/" rel="tag">sqlmap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tkinter/" rel="tag">tkinter</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/" rel="tag">vue</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue3/" rel="tag">vue3</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">云服务器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8C%BA%E5%9D%97%E9%93%BE/" rel="tag">区块链</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag">大数据</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">安全测试</a><span class="tag-list-count">29</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">性能测试</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%88%AC%E8%99%AB/" rel="tag">爬虫</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" rel="tag">环境搭建</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95/" rel="tag">自动化测试</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%8B%B1%E8%AF%AD%E5%AD%A6%E4%B9%A0/" rel="tag">英语学习</a><span class="tag-list-count">1</span></li></ul>
+        </canvas>
+    </div>
+</div>
+
+</div>
+<!-- 标签云 -->
+    </div>
+
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  <a href="https://beian.miit.gov.cn/" target="_blank">湘ICP备2022002212号-1</a><br />
+  <!--
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder"></span>
+  -->
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script src='../../../js/src/av-min.js'></script>
+<script src='../../../js/src/Valine.min.js'></script>
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : true,
+      notify     : false,
+      appId      : 'mhSm1aOQmnVeiAUJxrsKIFg5-gzGzoHsz',
+      appKey     : 'kW6GQVoeJac7wDgKvy9vXhn6',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : true,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+  
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

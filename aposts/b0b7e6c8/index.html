@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.shikun.work","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":true,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="playwright优点 Selenium需要通过WebDriver操作浏览器；Playwright通过开发者工具与浏览器交互，安装简洁，不需要安装各种Driver。  Playwright几乎支持所有语言，且不依赖于各种Driver，通过调用内置浏览器所以启动速度更快。  Selenium基于HTTP协议（单向通讯），Playwright基于Websocket（双向通讯）可自动获取浏览器实际情况">
+<meta property="og:type" content="article">
+<meta property="og:title" content="web自动化神器playwright">
+<meta property="og:url" content="http://www.shikun.work/aposts/b0b7e6c8/index.html">
+<meta property="og:site_name" content="施坤的博客">
+<meta property="og:description" content="playwright优点 Selenium需要通过WebDriver操作浏览器；Playwright通过开发者工具与浏览器交互，安装简洁，不需要安装各种Driver。  Playwright几乎支持所有语言，且不依赖于各种Driver，通过调用内置浏览器所以启动速度更快。  Selenium基于HTTP协议（单向通讯），Playwright基于Websocket（双向通讯）可自动获取浏览器实际情况">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://www.shikun.work/aposts/b0b7e6c8/image-20221011105539960.png">
+<meta property="og:image" content="http://www.shikun.work/aposts/b0b7e6c8/image-20221011152104439.png">
+<meta property="article:published_time" content="2022-10-10T01:33:25.000Z">
+<meta property="article:modified_time" content="2023-08-02T09:11:09.030Z">
+<meta property="article:tag" content="自动化测试">
+<meta property="article:tag" content="playwright">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://www.shikun.work/aposts/b0b7e6c8/image-20221011105539960.png">
+
+<link rel="canonical" href="http://www.shikun.work/aposts/b0b7e6c8/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>web自动化神器playwright | 施坤的博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">施坤的博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-简历">
+
+    <a href="/resume/" rel="section"><i class="fa fa-address-card fa-fw"></i>简历</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://www.shikun.work/aposts/b0b7e6c8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="一个正经的测试工程师">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="施坤的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          web自动化神器playwright
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-10-10 09:33:25" itemprop="dateCreated datePublished" datetime="2022-10-10T09:33:25+08:00">2022-10-10</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-08-02 17:11:09" itemprop="dateModified" datetime="2023-08-02T17:11:09+08:00">2023-08-02</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/playwright/" itemprop="url" rel="index"><span itemprop="name">playwright</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/aposts/b0b7e6c8/" class="post-meta-item leancloud_visitors" data-flag-title="web自动化神器playwright" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/aposts/b0b7e6c8/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/aposts/b0b7e6c8/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="playwright"><a href="#playwright" class="headerlink" title="playwright"></a>playwright</h1><h2 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h2><ul>
+<li><p>Selenium需要通过WebDriver操作浏览器；Playwright通过开发者工具与浏览器交互，安装简洁，不需要安装各种Driver。</p>
+</li>
+<li><p>Playwright几乎支持所有语言，且不依赖于各种Driver，通过调用内置浏览器所以启动速度更快。</p>
+</li>
+<li><p>Selenium基于HTTP协议（单向通讯），Playwright基于Websocket（双向通讯）可自动获取浏览器实际情况。</p>
+</li>
+<li><p>比如使用selenium时，操作元素需要对每个元素进行智能查询等待等，而Playwright为自动等待：</p>
+</li>
+<li><ul>
+<li>等待元素出现（定位元素时，自动等待30s，时间可以自定义，单位毫秒）</li>
+<li>等待事件发生</li>
+</ul>
+</li>
+<li><p>Playwright速度比selenium快很多，还支持异步方式</p>
+</li>
+<li><p>支持使用API的方式发送请求</p>
+</li>
+</ul>
+<h2 id="限制"><a href="#限制" class="headerlink" title="限制"></a>限制</h2><ul>
+<li>不支持旧版Edge和IE11。Playwright不支持传统的Microsoft Edge或IE11，支持新的Microsoft Edge (在Chromium上)。</li>
+<li>在真实移动设备上测试: Playwright使用桌面浏览器来模拟移动设备。</li>
+</ul>
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">#升级pip</span><br><span class="line">pip install --upgrade pip</span><br><span class="line">#安装playwright模块</span><br><span class="line">pip install playwright</span><br><span class="line">#安装主流浏览器依赖,时间可能较久</span><br><span class="line">playwright install</span><br></pre></td></tr></table></figure>
+
+<h2 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h2><ul>
+<li>录制代码，输入下面的命令，启动一个浏览器，一个代码记录器，然后再浏览器的所有步骤都自动记录到了代码记录器中</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python -m playwright codegen</span><br></pre></td></tr></table></figure>
+
+<p><img src="/aposts/b0b7e6c8/image-20221011105539960.png" alt="image-20221011105539960"></p>
+<ul>
+<li>录制代码如下</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> playwright.sync_api <span class="keyword">import</span> Playwright, sync_playwright, expect</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">run</span>(<span class="params">playwright: Playwright</span>) -&gt; <span class="literal">None</span>:</span><br><span class="line">    browser = playwright.chromium.launch(headless=<span class="literal">False</span>)</span><br><span class="line">    context = browser.new_context()</span><br><span class="line">    page = context.new_page()</span><br><span class="line">    page.goto(<span class="string">&quot;https://www.baidu.com/&quot;</span>)</span><br><span class="line">    page.locator(<span class="string">&quot;input[name=\&quot;wd\&quot;]&quot;</span>).click()</span><br><span class="line">    page.locator(<span class="string">&quot;input[name=\&quot;wd\&quot;]&quot;</span>).fill(<span class="string">&quot;python&quot;</span>)</span><br><span class="line">    page.get_by_role(<span class="string">&quot;button&quot;</span>, name=<span class="string">&quot;百度一下&quot;</span>).click()</span><br><span class="line">    page.wait_for_url(<span class="string">&quot;https://www.baidu.com/s?ie=utf-8&amp;f=8&amp;rsv_bp=1&amp;rsv_idx=1&amp;tn=baidu&amp;wd=python&amp;fenlei=256&amp;rsv_pq=0xc3da98d700012600&amp;rsv_t=a363ozUooWOMdrOI3S3PH3JauszohenVsQYNmRX6SyweDX91MOi0p89Sb4HG&amp;rqlang=en&amp;rsv_enter=0&amp;rsv_dl=tb&amp;rsv_sug3=6&amp;rsv_sug1=1&amp;rsv_sug7=100&amp;rsv_btype=i&amp;inputT=1846&amp;rsv_sug4=1847&amp;rsv_jmp=fail&quot;</span>)</span><br><span class="line">    <span class="comment"># ---------------------</span></span><br><span class="line">    context.close()</span><br><span class="line">    browser.close()</span><br><span class="line"><span class="keyword">with</span> sync_playwright() <span class="keyword">as</span> playwright:</span><br><span class="line">    run(playwright)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>通过以上代码可以了解到：</p>
+<ul>
+<li><p>playwright支持同步和异步两种使用方法</p>
+</li>
+<li><p>不需要为每个浏览器下载webdriver</p>
+</li>
+<li><p>相比selenium多了一层context抽象</p>
+</li>
+<li><p>支持无头浏览器，且较为推荐（headless默认值为True）</p>
+</li>
+<li><p>可以使用传统定位方式（CSS，XPATH等），也有自定义的新的定位方式（如文字定位）</p>
+</li>
+<li><p>没有使用selenium的先定位元素，再进行操作的方式，而是在操作方法中传入了元素定位，定位和操作同时进行（其实也playwright也提供了单独的定位方法，作为可选）</p>
+</li>
+<li><p>很多方法使用了with的上下文语法</p>
+</li>
+<li><p>当然更多的人愿意在Pycharm中手写用例</p>
+</li>
+</ul>
+<h2 id="playwright基本概念"><a href="#playwright基本概念" class="headerlink" title="playwright基本概念"></a>playwright基本概念</h2><ul>
+<li>来做<a target="_blank" rel="noopener" href="https://blog.csdn.net/Code_LT/article/details/120291277?spm=1001.2101.3001.6650.5&utm_medium=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~Rate-5-120291277-blog-125575408.t0_edu_mix&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~Rate-5-120291277-blog-125575408.t0_edu_mix&utm_relevant_index=6">这里</a></li>
+</ul>
+<p>PlayWright的核心概念包括：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://playwright.dev/python/docs/core-concepts#browser">Browser</a></li>
+<li><a target="_blank" rel="noopener" href="https://playwright.dev/python/docs/core-concepts#browser-contexts">Browser contexts</a></li>
+<li><a target="_blank" rel="noopener" href="https://playwright.dev/python/docs/core-concepts#pages-and-frames">Pages and frames</a></li>
+<li><a target="_blank" rel="noopener" href="https://playwright.dev/python/docs/core-concepts#selectors">Selectors</a></li>
+<li><a target="_blank" rel="noopener" href="https://playwright.dev/python/docs/core-concepts#auto-waiting">Auto-waiting</a></li>
+<li><a target="_blank" rel="noopener" href="https://playwright.dev/python/docs/core-concepts#execution-contexts-playwright-and-browser">Execution contexts: Playwright and Browser</a></li>
+<li><a target="_blank" rel="noopener" href="https://playwright.dev/python/docs/core-concepts#evaluation-argument">Evaluation Argument</a></li>
+</ul>
+<h3 id="Browser"><a href="#Browser" class="headerlink" title="Browser"></a>Browser</h3><ul>
+<li>一个Browser是一个Chromium, Firefox 或 WebKit（plarywright支持的三种浏览器）的实例plarywright脚本通常以启动浏览器实例开始，以关闭浏览器结束。浏览器实例可以在headless（没有 GUI）或head模式下启动。Browser实例创建：</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> playwright.sync_api <span class="keyword">import</span> sync_playwright</span><br><span class="line"> </span><br><span class="line"><span class="keyword">with</span> sync_playwright() <span class="keyword">as</span> p:</span><br><span class="line">    browser = p.chromium.launch(headless=<span class="literal">False</span>)</span><br><span class="line">    browser.close()</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>启动browser实例是比较耗费资源的，plarywright做的就是如何通过一个browser实例最大化多个BrowserContext的性能。</li>
+<li>API:<a target="_blank" rel="noopener" href="https://playwright.dev/python/docs/api/class-browser">Browser</a></li>
+</ul>
+<h3 id="BrowserContext"><a href="#BrowserContext" class="headerlink" title="BrowserContext"></a>BrowserContext</h3><ul>
+<li><p>一个BrowserContex就像是一个独立的匿名模式会话（session），非常轻量，但是又完全隔离。</p>
+</li>
+<li><p>（译者注：每个browser实例可有多个BrowserContex，且完全隔离。比如可以在两个BrowserContext中登录两个不同的账号，也可以在两个 context 中使用不同的代理。 ）</p>
+</li>
+<li><p>context创建：</p>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">browser = playwright.chromium.launch()</span><br><span class="line">context = browser.new_context()</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>context还可用于模拟涉及移动设备、权限、区域设置和配色方案的多页面场景，如移动端context创建：</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> playwright.sync_api <span class="keyword">import</span> sync_playwright</span><br><span class="line"> </span><br><span class="line"><span class="keyword">with</span> sync_playwright() <span class="keyword">as</span> p:</span><br><span class="line">    iphone_11 = p.devices[<span class="string">&#x27;iPhone 11 Pro&#x27;</span>]</span><br><span class="line">    browser = p.webkit.launch(headless=<span class="literal">False</span>)</span><br><span class="line">    context = browser.new_context(</span><br><span class="line">        **iphone_11,</span><br><span class="line">        locale=<span class="string">&#x27;de-DE&#x27;</span>,</span><br><span class="line">        geolocation=&#123; <span class="string">&#x27;longitude&#x27;</span>: <span class="number">12.492507</span>, <span class="string">&#x27;latitude&#x27;</span>: <span class="number">41.889938</span> &#125;,</span><br><span class="line">        permissions=[<span class="string">&#x27;geolocation&#x27;</span>]</span><br><span class="line">    )</span><br><span class="line">    browser.close()</span><br></pre></td></tr></table></figure>
+
+<p>API:</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://playwright.dev/python/docs/api/class-browsercontext">BrowserContext</a></li>
+<li><a target="_blank" rel="noopener" href="https://playwright.dev/python/docs/api/class-browser#browser-new-context">browser.new_context(**kwargs)</a></li>
+</ul>
+<h3 id="Page-和-Frame"><a href="#Page-和-Frame" class="headerlink" title="Page 和 Frame"></a>Page 和 Frame</h3><ul>
+<li>一个BrowserContext可以有多个page，每个page代表一个tab或者一个弹窗。page用于导航到URL并与page内的内容交互。创建page:</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">page = context.new_page()</span><br><span class="line"> </span><br><span class="line"># Navigate explicitly, similar to entering a URL in the browser.</span><br><span class="line">page.goto(&#x27;http://example.com&#x27;)</span><br><span class="line"># Fill an input.</span><br><span class="line">page.fill(&#x27;#search&#x27;, &#x27;query&#x27;)</span><br><span class="line"> </span><br><span class="line"># Navigate implicitly by clicking a link.</span><br><span class="line">page.click(&#x27;#submit&#x27;)</span><br><span class="line"># Expect a new url.</span><br><span class="line">print(page.url)</span><br><span class="line"> </span><br><span class="line"># Page can navigate from the script - this will be picked up by Playwright.</span><br><span class="line"># window.location.href = &#x27;https://example.com&#x27;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>一个page可以有多个frame对象，但只有一个主frame，所有page-level的操作(比如click），都是作用在主frame上的。page的其他frame会打上<code>iframe</code> HTML标签，这些frame可以在内部操作实现访问。</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 通过name属性获取frame</span></span><br><span class="line">frame = page.frame(<span class="string">&#x27;frame-login&#x27;</span>)</span><br><span class="line"> </span><br><span class="line"><span class="comment"># 通过URL获取frame</span></span><br><span class="line">frame = page.frame(url=<span class="string">r&#x27;.*domain.*&#x27;</span>)</span><br><span class="line"> </span><br><span class="line"><span class="comment"># 通过其他选择器(selector)获取frame</span></span><br><span class="line">frame_element_handle = page.query_selector(<span class="string">&#x27;.frame-class&#x27;</span>)</span><br><span class="line">frame = frame_element_handle.content_frame()</span><br><span class="line"> </span><br><span class="line"><span class="comment"># 与frame交互</span></span><br><span class="line">frame.fill(<span class="string">&#x27;#username-input&#x27;</span>, <span class="string">&#x27;John&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>在录制模式下，会自动识别是否是frame内的操作，不好定位frame时，那么可以使用录制模式来找。</li>
+</ul>
+<p>API：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://playwright.dev/python/docs/api/class-page">Page</a></li>
+<li><a target="_blank" rel="noopener" href="https://playwright.dev/python/docs/api/class-frame">Frame</a></li>
+<li><a target="_blank" rel="noopener" href="https://playwright.dev/python/docs/api/class-page#page-frame">page.frame(**kwargs</a></li>
+</ul>
+<h3 id="Selector"><a href="#Selector" class="headerlink" title="Selector"></a>Selector</h3><ul>
+<li><p>playwright可以通过 CSS selector, XPath selector, HTML 属性（比如 <code>id</code>, <code>data-test-id）或者是文本内容</code>定位元素。</p>
+</li>
+<li><p>除了xpath selector外，所有selector默认都是指向shadow DOM，如果要指向常规DOM，可使用*:light。不过通常不需要。</p>
+</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Using data-test-id= selector engine</span></span><br><span class="line">page.click(<span class="string">&#x27;data-test-id=foo&#x27;</span>)</span><br><span class="line"> </span><br><span class="line"><span class="comment"># CSS and XPath selector engines are automatically detected</span></span><br><span class="line">page.click(<span class="string">&#x27;div&#x27;</span>)</span><br><span class="line">page.click(<span class="string">&#x27;//html/body/div&#x27;</span>)</span><br><span class="line"> </span><br><span class="line"><span class="comment"># Find node by text substring</span></span><br><span class="line">page.click(<span class="string">&#x27;text=Hello w&#x27;</span>)</span><br><span class="line"> </span><br><span class="line"><span class="comment"># Explicit CSS and XPath notation</span></span><br><span class="line">page.click(<span class="string">&#x27;css=div&#x27;</span>)</span><br><span class="line">page.click(<span class="string">&#x27;xpath=//html/body/div&#x27;</span>)</span><br><span class="line"> </span><br><span class="line"><span class="comment"># Only search light DOM, outside WebComponent shadow DOM:</span></span><br><span class="line">page.click(<span class="string">&#x27;css:light=div&#x27;</span>)</span><br><span class="line"> </span><br><span class="line"><span class="comment"># 不同的selector可组合使用，用 &gt;&gt;连接</span></span><br><span class="line"><span class="comment"># Click an element with text &#x27;Sign Up&#x27; inside of a #free-month-promo.</span></span><br><span class="line">page.click(<span class="string">&#x27;#free-month-promo &gt;&gt; text=Sign Up&#x27;</span>)</span><br><span class="line"> </span><br><span class="line"><span class="comment"># Capture textContent of a section that contains an element with text &#x27;Selectors&#x27;.</span></span><br><span class="line">section_text = page.eval_on_selector(<span class="string">&#x27;*css=section &gt;&gt; text=Selectors&#x27;</span>, <span class="string">&#x27;e =&gt; e.textContent&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>详细：</p>
+<p><a target="_blank" rel="noopener" href="https://playwright.dev/python/docs/selectors/">Element selectors | Playwright Python</a></p>
+<h3 id="Auto-waiting"><a href="#Auto-waiting" class="headerlink" title="Auto-waiting"></a>Auto-waiting</h3><ul>
+<li><p>playwright在执行操作之前对元素执行一系列可操作性检查，以确保这些行动按预期运行。它会自动等待（auto-wait）所有相关检查通过，然后才执行请求的操作。如果所需的检查未在给定的范围内通过timeout，则操作将失败并显示TimeoutError </p>
+</li>
+<li><p>如 page.click(selector, **kwargs) 和 page.fill(selector, value, **kwargs) 这样的操作会执行auto-wait ，等待元素变成可见（visible）和 可操作（ actionable）。例如，click将会:</p>
+<ul>
+<li><p>等待selectorx选定元素出现在 DOM 中</p>
+</li>
+<li><p>待它变得可见（visible）：有非空的边界框且没有 <code>visibility:hidden</code></p>
+</li>
+<li><p>等待它停止移动：例如，等待 css 过渡（css transition）完成</p>
+</li>
+<li><p>将元素滚动到视图中</p>
+</li>
+<li><p>等待它在动作点接收点事件：例如，等待元素不被其他元素遮挡</p>
+</li>
+<li><p>如果在上述任何检查期间元素被分离，则重试</p>
+</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Playwright waits for #search element to be in the DOM</span></span><br><span class="line">page.fill(<span class="string">&#x27;#search&#x27;</span>, <span class="string">&#x27;query&#x27;</span>)</span><br><span class="line"> </span><br><span class="line"><span class="comment"># Playwright waits for element to stop animating</span></span><br><span class="line"><span class="comment"># and accept clicks.</span></span><br><span class="line">page.click(<span class="string">&#x27;#search&#x27;</span>)</span><br><span class="line"> </span><br><span class="line"><span class="comment">#也可显示执行等待动作</span></span><br><span class="line"> </span><br><span class="line"><span class="comment"># Wait for #search to appear in the DOM.</span></span><br><span class="line">page.wait_for_selector(<span class="string">&#x27;#search&#x27;</span>, state=<span class="string">&#x27;attached&#x27;</span>)</span><br><span class="line"><span class="comment"># Wait for #promo to become visible, for example with `visibility:visible`.</span></span><br><span class="line">page.wait_for_selector(<span class="string">&#x27;#promo&#x27;</span>)</span><br><span class="line"> </span><br><span class="line"><span class="comment"># Wait for #details to become hidden, for example with `display:none`.</span></span><br><span class="line">page.wait_for_selector(<span class="string">&#x27;#details&#x27;</span>, state=<span class="string">&#x27;hidden&#x27;</span>)</span><br><span class="line"><span class="comment"># Wait for #promo to be removed from the DOM.</span></span><br><span class="line">page.wait_for_selector(<span class="string">&#x27;#promo&#x27;</span>, state=<span class="string">&#x27;detached&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<h3 id="Execution-context"><a href="#Execution-context" class="headerlink" title="Execution context"></a>Execution context</h3><ul>
+<li>API <a target="_blank" rel="noopener" href="https://playwright.dev/python/docs/api/class-page#page-evaluate">page.evaluate(expression, **kwargs)</a> 可以用来运行web页面中的 JavaScript函数，并将结果返回到plarywright环境中。浏览器的全局变量，如 <code>window</code> 和 <code>document，</code> 可用于 <code>evaluate。</code></li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">href = page.evaluate(<span class="string">&#x27;() =&gt; document.location.href&#x27;</span>)</span><br><span class="line"> </span><br><span class="line"><span class="comment"># if the result is a Promise or if the function is asynchronous evaluate will automatically wait until it&#x27;s resolved</span></span><br><span class="line"> </span><br><span class="line">status = page.evaluate(<span class="string">&quot;&quot;&quot;async () =&gt; &#123;</span></span><br><span class="line"><span class="string">  response = fetch(location.href)</span></span><br><span class="line"><span class="string">  return response.status</span></span><br><span class="line"><span class="string">&#125;&quot;&quot;&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<h3 id="Evaluation-Argument"><a href="#Evaluation-Argument" class="headerlink" title="Evaluation Argument"></a>Evaluation Argument</h3><ul>
+<li><a target="_blank" rel="noopener" href="https://playwright.dev/python/docs/api/class-page#page-evaluate">page.evaluate(expression, **kwargs)</a> 方法接收单个可选参数。此参数可以是<a target="_blank" rel="noopener" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify#Description">Serializable</a>值和<a target="_blank" rel="noopener" href="https://playwright.dev/python/docs/api/class-jshandle">JSHandle</a>或<a target="_blank" rel="noopener" href="https://playwright.dev/python/docs/api/class-elementhandle">ElementHandle</a>实例的混合。句柄会自动转换为它们所代表的值</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line">result = page.evaluate(<span class="string">&quot;([x, y]) =&gt; Promise.resolve(x * y)&quot;</span>, [<span class="number">7</span>, <span class="number">8</span>])</span><br><span class="line"><span class="built_in">print</span>(result) <span class="comment"># prints &quot;56&quot;</span></span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line"><span class="built_in">print</span>(page.evaluate(<span class="string">&quot;1 + 2&quot;</span>)) <span class="comment"># prints &quot;3&quot;</span></span><br><span class="line">x = <span class="number">10</span></span><br><span class="line"><span class="built_in">print</span>(page.evaluate(<span class="string">f&quot;1 + <span class="subst">&#123;x&#125;</span>&quot;</span>)) <span class="comment"># prints &quot;11&quot;</span></span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">body_handle = page.query_selector(<span class="string">&quot;body&quot;</span>)</span><br><span class="line">html = page.evaluate(<span class="string">&quot;([body, suffix]) =&gt; body.innerHTML + suffix&quot;</span>, [body_handle, <span class="string">&quot;hello&quot;</span>])</span><br><span class="line">body_handle.dispose()</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line"><span class="comment"># A primitive value.</span></span><br><span class="line">page.evaluate(<span class="string">&#x27;num =&gt; num&#x27;</span>, <span class="number">42</span>)</span><br><span class="line"> </span><br><span class="line"><span class="comment"># An array.</span></span><br><span class="line">page.evaluate(<span class="string">&#x27;array =&gt; array.length&#x27;</span>, [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>])</span><br><span class="line"> </span><br><span class="line"><span class="comment"># An object.</span></span><br><span class="line">page.evaluate(<span class="string">&#x27;object =&gt; object.foo&#x27;</span>, &#123; <span class="string">&#x27;foo&#x27;</span>: <span class="string">&#x27;bar&#x27;</span> &#125;)</span><br><span class="line"> </span><br><span class="line"><span class="comment"># A single handle.</span></span><br><span class="line">button = page.query_selector(<span class="string">&#x27;button&#x27;</span>)</span><br><span class="line">page.evaluate(<span class="string">&#x27;button =&gt; button.textContent&#x27;</span>, button)</span><br><span class="line"> </span><br><span class="line"><span class="comment"># Alternative notation using elementHandle.evaluate.</span></span><br><span class="line">button.evaluate(<span class="string">&#x27;(button, from) =&gt; button.textContent.substring(from)&#x27;</span>, <span class="number">5</span>)</span><br><span class="line"> </span><br><span class="line"><span class="comment"># Object with multiple handles.</span></span><br><span class="line">button1 = page.query_selector(<span class="string">&#x27;.button1&#x27;</span>)</span><br><span class="line">button2 = page.query_selector(<span class="string">&#x27;.button2&#x27;</span>)</span><br><span class="line">page.evaluate(<span class="string">&quot;&quot;&quot;o =&gt; o.button1.textContent + o.button2.textContent&quot;&quot;&quot;</span>,</span><br><span class="line">    &#123; <span class="string">&#x27;button1&#x27;</span>: button1, <span class="string">&#x27;button2&#x27;</span>: button2 &#125;)</span><br><span class="line"> </span><br><span class="line"><span class="comment"># Object destructuring works. Note that property names must match</span></span><br><span class="line"><span class="comment"># between the destructured object and the argument.</span></span><br><span class="line"><span class="comment"># Also note the required parenthesis.</span></span><br><span class="line">page.evaluate(<span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    (&#123; button1, button2 &#125;) =&gt; button1.textContent + button2.textContent&quot;&quot;&quot;</span>,</span><br><span class="line">    &#123; <span class="string">&#x27;button1&#x27;</span>: button1, <span class="string">&#x27;button2&#x27;</span>: button2 &#125;)</span><br><span class="line"> </span><br><span class="line"><span class="comment"># Array works as well. Arbitrary names can be used for destructuring.</span></span><br><span class="line"><span class="comment"># Note the required parenthesis.</span></span><br><span class="line">page.evaluate(<span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    ([b1, b2]) =&gt; b1.textContent + b2.textContent&quot;&quot;&quot;</span>,</span><br><span class="line">    [button1, button2])</span><br><span class="line"> </span><br><span class="line"><span class="comment"># Any non-cyclic mix of serializables and handles works.</span></span><br><span class="line">page.evaluate(<span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    x =&gt; x.button1.textContent + x.list[0].textContent + String(x.foo)&quot;&quot;&quot;</span>,</span><br><span class="line">    &#123; <span class="string">&#x27;button1&#x27;</span>: button1, <span class="string">&#x27;list&#x27;</span>: [button2], <span class="string">&#x27;foo&#x27;</span>: <span class="literal">None</span> &#125;)</span><br></pre></td></tr></table></figure>
+
+<h2 id="结合pytest"><a href="#结合pytest" class="headerlink" title="结合pytest"></a>结合pytest</h2><ul>
+<li>testcas\conftest.py</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pytest</span><br><span class="line"><span class="keyword">from</span> playwright.sync_api <span class="keyword">import</span> sync_playwright</span><br><span class="line"><span class="keyword">from</span> py._xmlgen <span class="keyword">import</span> html</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@pytest.fixture()</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">browser</span>():</span><br><span class="line">    playwrigh = sync_playwright().start()</span><br><span class="line">    browser = playwrigh.chromium.launch(headless=<span class="literal">False</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 返回数据</span></span><br><span class="line">    <span class="keyword">yield</span> browser</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 实现用例后置</span></span><br><span class="line">    browser.close()</span><br><span class="line">    playwrigh.stop()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@pytest.mark.hookwrapper</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">pytest_runtest_makereport</span>(<span class="params">item, call</span>):</span><br><span class="line">    outcome = <span class="keyword">yield</span></span><br><span class="line">    report = outcome.get_result()</span><br><span class="line">    report.description = <span class="built_in">str</span>(item.function.__doc__)</span><br><span class="line">    report.nodeid = report.nodeid.encode(<span class="string">&quot;utf-8&quot;</span>).decode(<span class="string">&quot;unicode_escape&quot;</span>)  <span class="comment">#</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">pytest_html_results_table_header</span>(<span class="params">cells</span>):</span><br><span class="line">    cells.insert(<span class="number">1</span>, html.th(<span class="string">&#x27;用例名称&#x27;</span>))</span><br><span class="line">    cells.insert(<span class="number">2</span>, html.th(<span class="string">&#x27;Test_nodeid&#x27;</span>))</span><br><span class="line">    cells.pop(<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">pytest_html_results_table_row</span>(<span class="params">report, cells</span>):</span><br><span class="line">    cells.insert(<span class="number">1</span>, html.td(report.description))</span><br><span class="line">    cells.insert(<span class="number">2</span>, html.td(report.nodeid))</span><br><span class="line">    cells.pop(<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">pytest_html_results_table_html</span>(<span class="params">report, data</span>):</span><br><span class="line">    <span class="keyword">if</span> report.passed:</span><br><span class="line">        <span class="keyword">del</span> data[:]</span><br><span class="line">        data.append(html.div(<span class="string">&#x27;通过的用例未捕获日志输出.&#x27;</span>, class_=<span class="string">&#x27;empty log&#x27;</span>))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">pytest_html_report_title</span>(<span class="params">report</span>):</span><br><span class="line">    report.title = <span class="string">&quot;pytest示例项目测试报告&quot;</span></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>testcase\test1.py，<code>page.request.ge</code>t可以直接发送请求</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">import pytest</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class TestClassName:</span><br><span class="line">    @pytest.mark.usefixtures(&quot;browser&quot;)</span><br><span class="line">    def test_func_name1(self, browser):</span><br><span class="line">        context = browser.new_context()</span><br><span class="line">        page = context.new_page()</span><br><span class="line">        # 发送http请求</span><br><span class="line">        resp = page.request.get(&quot;http://www.kuaidi100.com/query?type=&quot;)</span><br><span class="line">        print(resp.text())</span><br><span class="line">        page.goto(&quot;https://www.baidu.com/&quot;)</span><br><span class="line">        assert page.title() == &quot;百度一下，你就知道&quot;</span><br><span class="line">        </span><br><span class="line">        page.locator(&quot;input[name=\&quot;wd\&quot;]&quot;).click()</span><br><span class="line">        page.locator(&quot;input[name=\&quot;wd\&quot;]&quot;).fill(&quot;python&quot;)</span><br><span class="line">        page.get_by_role(&quot;button&quot;, name=&quot;百度一下&quot;).click()</span><br><span class="line">        context.close()</span><br><span class="line"></span><br><span class="line">    @pytest.mark.usefixtures(&quot;browser&quot;)</span><br><span class="line">    def test_func_name1_1(self, browser):</span><br><span class="line">        context = browser.new_context()</span><br><span class="line">        page = context.new_page()</span><br><span class="line">        page.goto(&quot;https://www.baidu.com/&quot;)</span><br><span class="line">        assert page.title() == &quot;百度一下，你就知道1&quot;</span><br><span class="line">        page.locator(&quot;input[name=\&quot;wd\&quot;]&quot;).click()</span><br><span class="line">        page.locator(&quot;input[name=\&quot;wd\&quot;]&quot;).fill(&quot;python&quot;)</span><br><span class="line">        page.get_by_role(&quot;button&quot;, name=&quot;百度一下&quot;).click()</span><br><span class="line">        context.close()</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>执行用例</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># 批量运行用例</span><br><span class="line">pytest -s testcase\  --html=report.html --self-contained-html --capture=sys</span><br><span class="line"></span><br><span class="line"># 多线程运行用例 </span><br><span class="line">pip install pytest-multithreading -i https://pypi.douban.com/simple</span><br><span class="line">pytest -s testcase/ --th 10 --html=report.html --self-contained-html --capture=sys</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>查看执行结果</li>
+</ul>
+<p><img src="/aposts/b0b7e6c8/image-20221011152104439.png" alt="image-20221011152104439"></p>
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><ul>
+<li>如何集成到CI上待实践</li>
+<li>关于多机并行，可以多进程去启动，也可以在CI上新建几个节点去执行</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95/" rel="tag"># 自动化测试</a>
+              <a href="/tags/playwright/" rel="tag"># playwright</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/aposts/4d250642/" rel="prev" title="ab压力测试-突破最大线程数">
+      <i class="fa fa-chevron-left"></i> ab压力测试-突破最大线程数
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/aposts/8354ce0a/" rel="next" title="使用 mitmproxy + python">
+      使用 mitmproxy + python <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+
+
+    <div class="sidebar-inner">
+
+
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#playwright"><span class="nav-number">1.</span> <span class="nav-text">playwright</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BC%98%E7%82%B9"><span class="nav-number">1.1.</span> <span class="nav-text">优点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%99%90%E5%88%B6"><span class="nav-number">1.2.</span> <span class="nav-text">限制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85"><span class="nav-number">1.3.</span> <span class="nav-text">安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95"><span class="nav-number">1.4.</span> <span class="nav-text">测试</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#playwright%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="nav-number">1.5.</span> <span class="nav-text">playwright基本概念</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Browser"><span class="nav-number">1.5.1.</span> <span class="nav-text">Browser</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#BrowserContext"><span class="nav-number">1.5.2.</span> <span class="nav-text">BrowserContext</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Page-%E5%92%8C-Frame"><span class="nav-number">1.5.3.</span> <span class="nav-text">Page 和 Frame</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Selector"><span class="nav-number">1.5.4.</span> <span class="nav-text">Selector</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Auto-waiting"><span class="nav-number">1.5.5.</span> <span class="nav-text">Auto-waiting</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Execution-context"><span class="nav-number">1.5.6.</span> <span class="nav-text">Execution context</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Evaluation-Argument"><span class="nav-number">1.5.7.</span> <span class="nav-text">Evaluation Argument</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%93%E5%90%88pytest"><span class="nav-number">1.6.</span> <span class="nav-text">结合pytest</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B6%E4%BB%96"><span class="nav-number">1.7.</span> <span class="nav-text">其他</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt=""
+      src="/images/avatar.gif">
+  <p class="site-author-name" itemprop="name"></p>
+  <div class="site-description" itemprop="description">一个正经的测试工程师</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">143</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">25</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">62</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Louis-me" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Louis-me" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:shikun.job@foxmail.com" title="E-Mail → mailto:shikun.job@foxmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+  <!-- 标签云 -->
+
+<script type="text/javascript" charset="utf-8" src="/js/tagcloud.js"></script>
+<script type="text/javascript" charset="utf-8" src="/js/tagcanvas.js"></script>
+<div class="widget-wrap">
+    <!--<h3 class="widget-title">Tag Cloud</h3> -->
+    <div id="myCanvasContainer" class="widget tagcloud">
+        <canvas width="250" height="250" id="resCanvas" style="width=100%">
+            <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AWVS/" rel="tag">AWVS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Burp-Site/" rel="tag">Burp Site</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DVWA/" rel="tag">DVWA</a><span class="tag-list-count">15</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dependency-Check/" rel="tag">Dependency-Check</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/H5/" rel="tag">H5</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hadoop/" rel="tag">Hadoop</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hive/" rel="tag">Hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jenkins/" rel="tag">Jenkins</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Metasploit/" rel="tag">Metasploit</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Nessus/" rel="tag">Nessus</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Sonic/" rel="tag">Sonic</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/airtest/" rel="tag">airtest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">android性能测试</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/app%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">app安全测试</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aritest/" rel="tag">aritest</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/centos/" rel="tag">centos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/" rel="tag">chrome</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/datax/" rel="tag">datax</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/django/" rel="tag">django</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/drozer/" rel="tag">drozer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fisco-bcos/" rel="tag">fisco-bcos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flink/" rel="tag">flink</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gin/" rel="tag">gin</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/" rel="tag">go</a><span class="tag-list-count">16</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go-zero/" rel="tag">go-zero</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hive/" rel="tag">hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/httprunner/" rel="tag">httprunner</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jmeter/" rel="tag">jmeter</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka/" rel="tag">kafka</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kail/" rel="tag">kail</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode/" rel="tag">leetcode</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode-%E6%95%B0%E7%BB%84/" rel="tag">leetcode-数组</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mitmproxy/" rel="tag">mitmproxy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongodb/" rel="tag">mongodb</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/monkey/" rel="tag">monkey</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/" rel="tag">mysql</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pandas/" rel="tag">pandas</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pc%E8%87%AA%E5%8A%A8%E5%8C%96/" rel="tag">pc自动化</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/playwright/" rel="tag">playwright</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pytest/" rel="tag">pytest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a><span class="tag-list-count">23</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/" rel="tag">redis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/selenium/" rel="tag">selenium</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlite/" rel="tag">sqlite</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlmap/" rel="tag">sqlmap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tkinter/" rel="tag">tkinter</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/" rel="tag">vue</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue3/" rel="tag">vue3</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">云服务器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8C%BA%E5%9D%97%E9%93%BE/" rel="tag">区块链</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag">大数据</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">安全测试</a><span class="tag-list-count">29</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">性能测试</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%88%AC%E8%99%AB/" rel="tag">爬虫</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" rel="tag">环境搭建</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95/" rel="tag">自动化测试</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%8B%B1%E8%AF%AD%E5%AD%A6%E4%B9%A0/" rel="tag">英语学习</a><span class="tag-list-count">1</span></li></ul>
+        </canvas>
+    </div>
+</div>
+
+</div>
+<!-- 标签云 -->
+    </div>
+
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  <a href="https://beian.miit.gov.cn/" target="_blank">湘ICP备2022002212号-1</a><br />
+  <!--
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder"></span>
+  -->
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script src='../../../js/src/av-min.js'></script>
+<script src='../../../js/src/Valine.min.js'></script>
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : true,
+      notify     : false,
+      appId      : 'mhSm1aOQmnVeiAUJxrsKIFg5-gzGzoHsz',
+      appKey     : 'kW6GQVoeJac7wDgKvy9vXhn6',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : true,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+  
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

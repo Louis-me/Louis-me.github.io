@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.shikun.work","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":true,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="大数据技术生态 本文主要抄录《大数据测试技术与实践》  由下而上可以划分为：  数据采集 关系与非关系数据采集组件，分布式消息队列等，如kafka、sqoop   数据存储 分布式存储系统、关系和非关系数据库等，如HDFS、MySQL   管理调度 资源管理和调度YARN，容器Kubernetes、服务协调zookeeper、工作流调度平台（如Azkaban）等   计算机分析 批处理（MapRe">
+<meta property="og:type" content="article">
+<meta property="og:title" content="第一章 大数据技术生态">
+<meta property="og:url" content="http://www.shikun.work/aposts/f05ef477/index.html">
+<meta property="og:site_name" content="施坤的博客">
+<meta property="og:description" content="大数据技术生态 本文主要抄录《大数据测试技术与实践》  由下而上可以划分为：  数据采集 关系与非关系数据采集组件，分布式消息队列等，如kafka、sqoop   数据存储 分布式存储系统、关系和非关系数据库等，如HDFS、MySQL   管理调度 资源管理和调度YARN，容器Kubernetes、服务协调zookeeper、工作流调度平台（如Azkaban）等   计算机分析 批处理（MapRe">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://www.shikun.work/aposts/f05ef477/image-20211201095407758.png">
+<meta property="og:image" content="http://www.shikun.work/aposts/f05ef477/image-20211201100832525.png">
+<meta property="og:image" content="http://www.shikun.work/aposts/f05ef477/image-20211201102027603.png">
+<meta property="og:image" content="http://www.shikun.work/aposts/f05ef477/image-20211201104503379.png">
+<meta property="og:image" content="http://www.shikun.work/aposts/f05ef477/image-20211201111306662.png">
+<meta property="og:image" content="http://www.shikun.work/aposts/f05ef477/image-20211201102156648.png">
+<meta property="article:published_time" content="2021-12-01T01:35:36.000Z">
+<meta property="article:modified_time" content="2022-02-25T03:20:56.685Z">
+<meta property="article:tag" content="大数据">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://www.shikun.work/aposts/f05ef477/image-20211201095407758.png">
+
+<link rel="canonical" href="http://www.shikun.work/aposts/f05ef477/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>第一章 大数据技术生态 | 施坤的博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">施坤的博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-简历">
+
+    <a href="/resume/" rel="section"><i class="fa fa-address-card fa-fw"></i>简历</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://www.shikun.work/aposts/f05ef477/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="一个正经的测试工程师">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="施坤的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          第一章 大数据技术生态
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-12-01 09:35:36" itemprop="dateCreated datePublished" datetime="2021-12-01T09:35:36+08:00">2021-12-01</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-02-25 11:20:56" itemprop="dateModified" datetime="2022-02-25T11:20:56+08:00">2022-02-25</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/" itemprop="url" rel="index"><span itemprop="name">大数据</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/aposts/f05ef477/" class="post-meta-item leancloud_visitors" data-flag-title="第一章 大数据技术生态" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/aposts/f05ef477/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/aposts/f05ef477/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="大数据技术生态"><a href="#大数据技术生态" class="headerlink" title="大数据技术生态"></a>大数据技术生态</h1><blockquote>
+<p>本文主要抄录《大数据测试技术与实践》</p>
+</blockquote>
+<p>由下而上可以划分为：</p>
+<ul>
+<li>数据采集<ul>
+<li>关系与非关系数据采集组件，分布式消息队列等，如kafka、sqoop</li>
+</ul>
+</li>
+<li>数据存储<ul>
+<li>分布式存储系统、关系和非关系数据库等，如HDFS、MySQL</li>
+</ul>
+</li>
+<li>管理调度<ul>
+<li>资源管理和调度YARN，容器Kubernetes、服务协调zookeeper、工作流调度平台（如Azkaban）等</li>
+</ul>
+</li>
+<li>计算机分析<ul>
+<li>批处理（MapReduce）、流计算(Flink)、查询分析(Impala)和图计算(Gelly)等</li>
+</ul>
+</li>
+<li>组件应用<ul>
+<li>各种数据分析和机器学习工具，如Hive、Pig、TensorFlow</li>
+</ul>
+</li>
+</ul>
+<h2 id="大数据采集计算"><a href="#大数据采集计算" class="headerlink" title="大数据采集计算"></a>大数据采集计算</h2><ul>
+<li>系统日志采集，如kafka、Flume</li>
+<li>网络数据采集，如爬虫</li>
+<li>其他数据采集</li>
+</ul>
+<h2 id="大数据存储计算"><a href="#大数据存储计算" class="headerlink" title="大数据存储计算"></a>大数据存储计算</h2><h3 id="分布式文件系统-HDFS"><a href="#分布式文件系统-HDFS" class="headerlink" title="分布式文件系统 HDFS"></a>分布式文件系统 HDFS</h3><ul>
+<li><p>主要解决大数据存储问题</p>
+</li>
+<li><p>GFS（Google File System）的开源实现</p>
+</li>
+<li><p>Hadoop两大核心组成部分之一，另外一个是MapReduce</p>
+</li>
+<li><p>遵循主从（master&#x2F;salve）框架</p>
+</li>
+<li><p>可以由单台服务器扩展到数千台服务器</p>
+</li>
+<li><p>NameNode关联和维护HDFS文件系统的读写操作</p>
+</li>
+<li><p>多个DataNode1负责存储数据</p>
+</li>
+</ul>
+<p><img src="/aposts/f05ef477/image-20211201095407758.png" alt="image-20211201095407758"></p>
+<h4 id="HDFS优点"><a href="#HDFS优点" class="headerlink" title="HDFS优点"></a>HDFS优点</h4><ul>
+<li>具有高度容错能力，能实时监测错误并且自动恢复。<ul>
+<li>类似于服务器的容灾能力，当某台服务器挂了，就启用备用服务器，进行数据同步</li>
+</ul>
+</li>
+<li>数据存储为Streaming流式数据存储 。批处理数据，而不是实时处理，提高了大量处理数据的能力，但是会<strong>牺牲响应时间</strong></li>
+<li>大数据集。提供了<a target="_blank" rel="noopener" href="https://links.jianshu.com/go?to=%5Bhttps://www.ibm.com/developerworks/cn/linux/cluster/lw-clustering.html%5D(https://www.ibm.com/developerworks/cn/linux/cluster/lw-clustering.html)">cluster</a>集群架构，集群可扩展为数百个节点</li>
+<li>数据简单一致性。一次性写入多次读取，一个文件创建后就不可再修改，这样可以简化数据一致性</li>
+<li>跨硬件和跨软件。平台的可移植性</li>
+</ul>
+<h3 id="海量数据列式存储：Hbase"><a href="#海量数据列式存储：Hbase" class="headerlink" title="海量数据列式存储：Hbase"></a>海量数据列式存储：Hbase</h3><ul>
+<li><p>HDFS容错率很高，即便是在系统崩溃的情况下，也能够在节点之间快速传输数据。<strong>HBase是非关系数据库，是开源的Not-Only-SQL数据库</strong>，它的运行<strong>建立在Hadoop上</strong>。HBase依赖于CAP定理(Consistency, Availability, and Partition Tolerance）中的CP项</p>
+</li>
+<li><p>HDFS最适于执行批次分析。然而，<strong>它最大的缺点是无法执行实时分析</strong>，而实时分析是信息科技行业的标配。<strong>HBase能够处理大规模数据，它不适于批次分析，但它可以向Hadoop实时地调用数据</strong>。</p>
+</li>
+<li><p>HDFS和HBase都可以处理结构、半结构和非结构数据。因为HDFS建立在旧的MapReduce框架上，所以它缺乏内存引擎，数据分析速度较慢。相反，HBase使用了内存引擎，大大提高了数据的读写速度。</p>
+</li>
+<li><p>HDFS执行的数据分析过程是透明的。HBase与之相反，因为其结构基于NoSQL，它通过在不同的关键字下进行排序而获取数据。</p>
+</li>
+</ul>
+<p><img src="/aposts/f05ef477/image-20211201100832525.png" alt="image-20211201100832525"></p>
+<h2 id="大数据分析技术"><a href="#大数据分析技术" class="headerlink" title="大数据分析技术"></a>大数据分析技术</h2><ul>
+<li>批处理计算。针对大规模数据的批量处理，主要代表产品有MapReduce、Spark</li>
+<li>流计算。针对流数据的实时计算，主要代表产品有，Spark Streaming、Flink 、Storm等</li>
+<li>查询分析计算。针对大规模数据的存储管理和查询分析，主要代表产品有Hive、Impala等</li>
+<li>图计算。针对大规模图结构数据的处理，主要代表产品有Pregel、Gelly等</li>
+</ul>
+<h3 id="批处理计算-MapReduce"><a href="#批处理计算-MapReduce" class="headerlink" title="批处理计算-MapReduce"></a>批处理计算-MapReduce</h3><ul>
+<li><p>进行大量数据处理时，用MapReduce进行分布式计算，这样可大量减少计算时间，还有Spark、Pig等就是类似的代表产品或技术</p>
+</li>
+<li><p>Map将任务分割成更小任务，由每台服务器分别执行</p>
+</li>
+<li><p>Reduce将所有服务器返回的结果汇总，整理成最终结果</p>
+</li>
+</ul>
+<p><img src="/aposts/f05ef477/image-20211201102027603.png" alt="image-20211201102027603"></p>
+<h3 id="流计算"><a href="#流计算" class="headerlink" title="流计算"></a>流计算</h3><ul>
+<li><p>流式处理假设数据的潜在价值是数据的<strong>新鲜度、实时性</strong>，需要尽快处理得到结果。在这种方式下，数据以流的方式到达。在数据连续到达的过程中，由于流携带了大量数据，只有小部分的流数据被保存在有限的<strong>内存中</strong>。流处理方式用于在线应用，通常工作在<strong>秒或毫秒级</strong>别。</p>
+</li>
+<li><p>目前主流的流处理组件包括：<strong>Strom</strong>、<strong>Spark Streaming</strong>、KafKa、Flume、<strong>Flink</strong>、S3等</p>
+<ul>
+<li>Spark 和 Strom、Flink对比，无法在对实施要求很高的流处理场景中</li>
+</ul>
+</li>
+</ul>
+<p><img src="/aposts/f05ef477/image-20211201104503379.png" alt="image-20211201104503379"></p>
+<h3 id="OLAP引擎"><a href="#OLAP引擎" class="headerlink" title="OLAP引擎"></a>OLAP引擎</h3><ul>
+<li>即联机分析处理。OLAP对业务数据执行多维分析，并提供复杂计算，趋势分析和复杂数据建模的能力。它主要用于支持企业决策管理分析，是许多商务智能（BI）应用程序背后的技术。</li>
+<li>目前开源的引擎很多，如Hive、Impala、Persto等</li>
+</ul>
+<h4 id="Hive"><a href="#Hive" class="headerlink" title="Hive"></a>Hive</h4><p><img src="/aposts/f05ef477/image-20211201111306662.png" alt="image-20211201111306662"></p>
+<h4 id="其他参考"><a href="#其他参考" class="headerlink" title="其他参考"></a>其他参考</h4><ul>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_43665254/article/details/112552106">Hive SQL vs SQL 区别</a></li>
+</ul>
+<h2 id="大数据管理调度技术"><a href="#大数据管理调度技术" class="headerlink" title="大数据管理调度技术"></a>大数据管理调度技术</h2><h3 id="分布式集群资源调度框架-YARN"><a href="#分布式集群资源调度框架-YARN" class="headerlink" title="分布式集群资源调度框架-YARN"></a>分布式集群资源调度框架-YARN</h3><ul>
+<li>针对Hadoop1.0中MR的不足，引入了Yarn框架。Yarn框架中将JobTracker资源分配和作业控制分开，分为Resource Manager(RM)以及Application Master(AM)。</li>
+<li>Hadoop的MapReduce架构称为<a target="_blank" rel="noopener" href="https://links.jianshu.com/go?to=%5Bhttp://hadoop.apache.org/docs/current/hadoop-yarn/hadoop-yarn-site/YARN.html%5D(http://hadoop.apache.org/docs/current/hadoop-yarn/hadoop-yarn-site/YARN.html)">YARN</a>(另一种资源协助者)，是效率更高的资源管理器核心</li>
+<li>Client客户端，用户向Resource Manage请求执行运算</li>
+<li>在NameNode会有Resource Manage统筹管理运算请求</li>
+<li>在其他的DateNode会有 Node Manager负责运行，监督每个任务运行情况，并向Resource Manage 汇报状态</li>
+</ul>
+<p><img src="/aposts/f05ef477/image-20211201102156648.png" alt="image-20211201102156648"></p>
+<h3 id="容器管理系统：Kubernetes"><a href="#容器管理系统：Kubernetes" class="headerlink" title="容器管理系统：Kubernetes"></a>容器管理系统：Kubernetes</h3><ul>
+<li>常见的大数据技术组件一般有对应的开源项目支持部署，如Flink，Spark也有官方支持Spark on Kubernetes运行模式等</li>
+</ul>
+<h3 id="ZooKeeper"><a href="#ZooKeeper" class="headerlink" title="ZooKeeper"></a>ZooKeeper</h3><ul>
+<li><p>是大数据的动物管理员，是一个开源的分布式的，是Hadoop的一个子项目</p>
+</li>
+<li><p>Zookeeper从设计模式角度来理解：是一个基于观察者模式设计的分布式服务管理框架，它负责存储和管理大家都关心的数据，然后接受观察者的注册，一旦这些数据的状态发生变化，Zookeeper就将负责通知已经在Zookeeper上注册的那些观察者做出相应的反应，从而实现集群中类似Master&#x2F;Slave管理模式</p>
+</li>
+<li><p><strong>Zookeeper&#x3D;文件系统+通知机制</strong></p>
+</li>
+</ul>
+<h3 id="常用的工作流调度平台"><a href="#常用的工作流调度平台" class="headerlink" title="常用的工作流调度平台"></a>常用的工作流调度平台</h3><ul>
+<li>对于简单的任务调度，可以使用Linux Crontab，但是对于在多台机器上、任务之前有依赖关系时，Linux Crontab就不能满足需求，因此需要分布式任务调度系统来进行任务编排</li>
+<li>业界常用开源调度平台有：Azkaban、Oozie、Airflow等</li>
+</ul>
+<h2 id="大数据商业产品"><a href="#大数据商业产品" class="headerlink" title="大数据商业产品"></a>大数据商业产品</h2><ul>
+<li>大数据解决方案提供商</li>
+<li>大数据云计算服务商</li>
+<li>大数据SaaS服务商</li>
+<li>大数据开发平台</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag"># 大数据</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/aposts/66ac71c6/" rel="prev" title="寻找拐点">
+      <i class="fa fa-chevron-left"></i> 寻找拐点
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/aposts/ae5c089/" rel="next" title="pandas处理excel">
+      pandas处理excel <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+
+
+    <div class="sidebar-inner">
+
+
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A4%A7%E6%95%B0%E6%8D%AE%E6%8A%80%E6%9C%AF%E7%94%9F%E6%80%81"><span class="nav-number">1.</span> <span class="nav-text">大数据技术生态</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%A7%E6%95%B0%E6%8D%AE%E9%87%87%E9%9B%86%E8%AE%A1%E7%AE%97"><span class="nav-number">1.1.</span> <span class="nav-text">大数据采集计算</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%A7%E6%95%B0%E6%8D%AE%E5%AD%98%E5%82%A8%E8%AE%A1%E7%AE%97"><span class="nav-number">1.2.</span> <span class="nav-text">大数据存储计算</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F-HDFS"><span class="nav-number">1.2.1.</span> <span class="nav-text">分布式文件系统 HDFS</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#HDFS%E4%BC%98%E7%82%B9"><span class="nav-number">1.2.1.1.</span> <span class="nav-text">HDFS优点</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%B7%E9%87%8F%E6%95%B0%E6%8D%AE%E5%88%97%E5%BC%8F%E5%AD%98%E5%82%A8%EF%BC%9AHbase"><span class="nav-number">1.2.2.</span> <span class="nav-text">海量数据列式存储：Hbase</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%A7%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90%E6%8A%80%E6%9C%AF"><span class="nav-number">1.3.</span> <span class="nav-text">大数据分析技术</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%B9%E5%A4%84%E7%90%86%E8%AE%A1%E7%AE%97-MapReduce"><span class="nav-number">1.3.1.</span> <span class="nav-text">批处理计算-MapReduce</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%81%E8%AE%A1%E7%AE%97"><span class="nav-number">1.3.2.</span> <span class="nav-text">流计算</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#OLAP%E5%BC%95%E6%93%8E"><span class="nav-number">1.3.3.</span> <span class="nav-text">OLAP引擎</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Hive"><span class="nav-number">1.3.3.1.</span> <span class="nav-text">Hive</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%B6%E4%BB%96%E5%8F%82%E8%80%83"><span class="nav-number">1.3.3.2.</span> <span class="nav-text">其他参考</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%A7%E6%95%B0%E6%8D%AE%E7%AE%A1%E7%90%86%E8%B0%83%E5%BA%A6%E6%8A%80%E6%9C%AF"><span class="nav-number">1.4.</span> <span class="nav-text">大数据管理调度技术</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E9%9B%86%E7%BE%A4%E8%B5%84%E6%BA%90%E8%B0%83%E5%BA%A6%E6%A1%86%E6%9E%B6-YARN"><span class="nav-number">1.4.1.</span> <span class="nav-text">分布式集群资源调度框架-YARN</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%B9%E5%99%A8%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F%EF%BC%9AKubernetes"><span class="nav-number">1.4.2.</span> <span class="nav-text">容器管理系统：Kubernetes</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ZooKeeper"><span class="nav-number">1.4.3.</span> <span class="nav-text">ZooKeeper</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E7%9A%84%E5%B7%A5%E4%BD%9C%E6%B5%81%E8%B0%83%E5%BA%A6%E5%B9%B3%E5%8F%B0"><span class="nav-number">1.4.4.</span> <span class="nav-text">常用的工作流调度平台</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%A7%E6%95%B0%E6%8D%AE%E5%95%86%E4%B8%9A%E4%BA%A7%E5%93%81"><span class="nav-number">1.5.</span> <span class="nav-text">大数据商业产品</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt=""
+      src="/images/avatar.gif">
+  <p class="site-author-name" itemprop="name"></p>
+  <div class="site-description" itemprop="description">一个正经的测试工程师</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">143</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">25</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">62</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Louis-me" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Louis-me" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:shikun.job@foxmail.com" title="E-Mail → mailto:shikun.job@foxmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+  <!-- 标签云 -->
+
+<script type="text/javascript" charset="utf-8" src="/js/tagcloud.js"></script>
+<script type="text/javascript" charset="utf-8" src="/js/tagcanvas.js"></script>
+<div class="widget-wrap">
+    <!--<h3 class="widget-title">Tag Cloud</h3> -->
+    <div id="myCanvasContainer" class="widget tagcloud">
+        <canvas width="250" height="250" id="resCanvas" style="width=100%">
+            <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AWVS/" rel="tag">AWVS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Burp-Site/" rel="tag">Burp Site</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DVWA/" rel="tag">DVWA</a><span class="tag-list-count">15</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dependency-Check/" rel="tag">Dependency-Check</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/H5/" rel="tag">H5</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hadoop/" rel="tag">Hadoop</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hive/" rel="tag">Hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jenkins/" rel="tag">Jenkins</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Metasploit/" rel="tag">Metasploit</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Nessus/" rel="tag">Nessus</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Sonic/" rel="tag">Sonic</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/airtest/" rel="tag">airtest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">android性能测试</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/app%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">app安全测试</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aritest/" rel="tag">aritest</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/centos/" rel="tag">centos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/" rel="tag">chrome</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/datax/" rel="tag">datax</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/django/" rel="tag">django</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/drozer/" rel="tag">drozer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fisco-bcos/" rel="tag">fisco-bcos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flink/" rel="tag">flink</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gin/" rel="tag">gin</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/" rel="tag">go</a><span class="tag-list-count">16</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go-zero/" rel="tag">go-zero</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hive/" rel="tag">hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/httprunner/" rel="tag">httprunner</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jmeter/" rel="tag">jmeter</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka/" rel="tag">kafka</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kail/" rel="tag">kail</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode/" rel="tag">leetcode</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode-%E6%95%B0%E7%BB%84/" rel="tag">leetcode-数组</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mitmproxy/" rel="tag">mitmproxy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongodb/" rel="tag">mongodb</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/monkey/" rel="tag">monkey</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/" rel="tag">mysql</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pandas/" rel="tag">pandas</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pc%E8%87%AA%E5%8A%A8%E5%8C%96/" rel="tag">pc自动化</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/playwright/" rel="tag">playwright</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pytest/" rel="tag">pytest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a><span class="tag-list-count">23</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/" rel="tag">redis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/selenium/" rel="tag">selenium</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlite/" rel="tag">sqlite</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlmap/" rel="tag">sqlmap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tkinter/" rel="tag">tkinter</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/" rel="tag">vue</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue3/" rel="tag">vue3</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">云服务器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8C%BA%E5%9D%97%E9%93%BE/" rel="tag">区块链</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag">大数据</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">安全测试</a><span class="tag-list-count">29</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">性能测试</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%88%AC%E8%99%AB/" rel="tag">爬虫</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" rel="tag">环境搭建</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95/" rel="tag">自动化测试</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%8B%B1%E8%AF%AD%E5%AD%A6%E4%B9%A0/" rel="tag">英语学习</a><span class="tag-list-count">1</span></li></ul>
+        </canvas>
+    </div>
+</div>
+
+</div>
+<!-- 标签云 -->
+    </div>
+
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  <a href="https://beian.miit.gov.cn/" target="_blank">湘ICP备2022002212号-1</a><br />
+  <!--
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder"></span>
+  -->
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script src='../../../js/src/av-min.js'></script>
+<script src='../../../js/src/Valine.min.js'></script>
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : true,
+      notify     : false,
+      appId      : 'mhSm1aOQmnVeiAUJxrsKIFg5-gzGzoHsz',
+      appKey     : 'kW6GQVoeJac7wDgKvy9vXhn6',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : true,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+  
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>
