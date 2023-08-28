@@ -17,32 +17,32 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"www.shikun.work","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":true,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"louis-me.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":true,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="场景设计 在建立测试模型时已经确定了测试的业务种类，场景设计是组织虚拟用户、组合业务种类到一个测试单元，根据测试模型与测试目标，整理出如表 11-11 所示测试场景。 并发数的计算来源于这里    Sec_101 基准测试: 主要用来验证测试环境、验证脚本正确性、得到系统的性能基准，为后续的测试执行提供参考。基准测试采用单业务场景、单用户的方式来执行脚本;执行时长视响应时间调整，测试结果采样样本尽">
 <meta property="og:type" content="article">
 <meta property="og:title" content="jmeter场景设计">
-<meta property="og:url" content="http://www.shikun.work/aposts/42060b4c/index.html">
+<meta property="og:url" content="https://louis-me.github.io/aposts/42060b4c/index.html">
 <meta property="og:site_name" content="施坤的博客">
 <meta property="og:description" content="场景设计 在建立测试模型时已经确定了测试的业务种类，场景设计是组织虚拟用户、组合业务种类到一个测试单元，根据测试模型与测试目标，整理出如表 11-11 所示测试场景。 并发数的计算来源于这里    Sec_101 基准测试: 主要用来验证测试环境、验证脚本正确性、得到系统的性能基准，为后续的测试执行提供参考。基准测试采用单业务场景、单用户的方式来执行脚本;执行时长视响应时间调整，测试结果采样样本尽">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://www.shikun.work/aposts/42060b4c/image-20211026103114157.png">
-<meta property="og:image" content="http://www.shikun.work/aposts/42060b4c/image-20211026103138117.png">
-<meta property="og:image" content="http://www.shikun.work/aposts/42060b4c/image-20211026104416276.png">
-<meta property="og:image" content="http://www.shikun.work/aposts/42060b4c/image-20211026105457474.png">
-<meta property="og:image" content="http://www.shikun.work/aposts/42060b4c/image-20211026110301084.png">
-<meta property="og:image" content="http://www.shikun.work/aposts/42060b4c/image-20211026110321179.png">
-<meta property="og:image" content="http://www.shikun.work/aposts/42060b4c/image-20211026110338721.png">
-<meta property="og:image" content="http://www.shikun.work/aposts/42060b4c/image-20211026113216382.png">
+<meta property="og:image" content="https://louis-me.github.io/aposts/42060b4c/image-20211026103114157.png">
+<meta property="og:image" content="https://louis-me.github.io/aposts/42060b4c/image-20211026103138117.png">
+<meta property="og:image" content="https://louis-me.github.io/aposts/42060b4c/image-20211026104416276.png">
+<meta property="og:image" content="https://louis-me.github.io/aposts/42060b4c/image-20211026105457474.png">
+<meta property="og:image" content="https://louis-me.github.io/aposts/42060b4c/image-20211026110301084.png">
+<meta property="og:image" content="https://louis-me.github.io/aposts/42060b4c/image-20211026110321179.png">
+<meta property="og:image" content="https://louis-me.github.io/aposts/42060b4c/image-20211026110338721.png">
+<meta property="og:image" content="https://louis-me.github.io/aposts/42060b4c/image-20211026113216382.png">
 <meta property="article:published_time" content="2021-10-26T02:23:44.000Z">
 <meta property="article:modified_time" content="2022-02-25T03:20:56.590Z">
 <meta property="article:tag" content="jmeter">
 <meta property="article:tag" content="性能测试">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://www.shikun.work/aposts/42060b4c/image-20211026103114157.png">
+<meta name="twitter:image" content="https://louis-me.github.io/aposts/42060b4c/image-20211026103114157.png">
 
-<link rel="canonical" href="http://www.shikun.work/aposts/42060b4c/">
+<link rel="canonical" href="https://louis-me.github.io/aposts/42060b4c/">
 
 
 <script id="page-configurations">
@@ -203,7 +203,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://www.shikun.work/aposts/42060b4c/">
+    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/42060b4c/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">

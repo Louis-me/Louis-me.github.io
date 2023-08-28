@@ -17,29 +17,29 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"www.shikun.work","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":true,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"louis-me.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":true,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="说明本次主要针对在腾讯云服务器上对vue+django进行部署 vue本地配置 vue的请求接口修改为服务器上的ip或者域名  1234&#x2F;&#x2F; 设置接口访问的根目录axios.defaults.baseURL &#x3D; &quot;http:&#x2F;&#x2F;host:8081&#x2F;myapi&#x2F;&quot;&#x2F;&#x2F; 设置原型属性后,其他地方如果要调用，只要用this.$http.get就可以了Vue.prototype.$ht">
 <meta property="og:type" content="article">
 <meta property="og:title" content="腾讯云部署vue+django">
-<meta property="og:url" content="http://www.shikun.work/aposts/d7b393af/index.html">
+<meta property="og:url" content="https://louis-me.github.io/aposts/d7b393af/index.html">
 <meta property="og:site_name" content="施坤的博客">
 <meta property="og:description" content="说明本次主要针对在腾讯云服务器上对vue+django进行部署 vue本地配置 vue的请求接口修改为服务器上的ip或者域名  1234&#x2F;&#x2F; 设置接口访问的根目录axios.defaults.baseURL &#x3D; &quot;http:&#x2F;&#x2F;host:8081&#x2F;myapi&#x2F;&quot;&#x2F;&#x2F; 设置原型属性后,其他地方如果要调用，只要用this.$http.get就可以了Vue.prototype.$ht">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://www.shikun.work/aposts/d7b393af/image-20220314102924031.png">
-<meta property="og:image" content="http://www.shikun.work/aposts/d7b393af/image-20220314103056936.png">
-<meta property="og:image" content="http://www.shikun.work/aposts/d7b393af/image-20220314103209261.png">
-<meta property="og:image" content="http://www.shikun.work/aposts/d7b393af/image-20220314102334057.png">
-<meta property="og:image" content="http://www.shikun.work/aposts/d7b393af/image-20220314105945414.png">
+<meta property="og:image" content="https://louis-me.github.io/aposts/d7b393af/image-20220314102924031.png">
+<meta property="og:image" content="https://louis-me.github.io/aposts/d7b393af/image-20220314103056936.png">
+<meta property="og:image" content="https://louis-me.github.io/aposts/d7b393af/image-20220314103209261.png">
+<meta property="og:image" content="https://louis-me.github.io/aposts/d7b393af/image-20220314102334057.png">
+<meta property="og:image" content="https://louis-me.github.io/aposts/d7b393af/image-20220314105945414.png">
 <meta property="article:published_time" content="2022-03-14T02:16:52.000Z">
 <meta property="article:modified_time" content="2022-03-14T03:05:37.353Z">
 <meta property="article:tag" content="vue">
 <meta property="article:tag" content="django">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://www.shikun.work/aposts/d7b393af/image-20220314102924031.png">
+<meta name="twitter:image" content="https://louis-me.github.io/aposts/d7b393af/image-20220314102924031.png">
 
-<link rel="canonical" href="http://www.shikun.work/aposts/d7b393af/">
+<link rel="canonical" href="https://louis-me.github.io/aposts/d7b393af/">
 
 
 <script id="page-configurations">
@@ -200,7 +200,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://www.shikun.work/aposts/d7b393af/">
+    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/d7b393af/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">

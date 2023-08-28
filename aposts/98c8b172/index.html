@@ -17,31 +17,31 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"www.shikun.work","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":true,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"louis-me.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":true,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="chrome浏览器的开发工具network Finish,DOMLoaded和Load的区别DOMLoaded和Load DOMContentLoaded 和 Load 分别对应 页面 DOMContentLoaded 和 Load 事件触发的时间点 DOMContentLoaded：DOM树构建完成。即HTML页面由上向下解析HTML结构到末尾封闭标签&lt;&#x2F;html&gt; 。  Load:">
 <meta property="og:type" content="article">
 <meta property="og:title" content="web 与移动端 h5 页面加载时间分析">
-<meta property="og:url" content="http://www.shikun.work/aposts/98c8b172/index.html">
+<meta property="og:url" content="https://louis-me.github.io/aposts/98c8b172/index.html">
 <meta property="og:site_name" content="施坤的博客">
 <meta property="og:description" content="chrome浏览器的开发工具network Finish,DOMLoaded和Load的区别DOMLoaded和Load DOMContentLoaded 和 Load 分别对应 页面 DOMContentLoaded 和 Load 事件触发的时间点 DOMContentLoaded：DOM树构建完成。即HTML页面由上向下解析HTML结构到末尾封闭标签&lt;&#x2F;html&gt; 。  Load:">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://www.shikun.work/aposts/98c8b172/image-20220427160911385.png">
-<meta property="og:image" content="http://www.shikun.work/aposts/98c8b172/image-20220427160947950.png">
-<meta property="og:image" content="http://www.shikun.work/aposts/98c8b172/image-20220427161012309.png">
-<meta property="og:image" content="http://www.shikun.work/aposts/98c8b172/image-20220427161048311-16510470495321.png">
-<meta property="og:image" content="http://www.shikun.work/aposts/98c8b172/image-20220427161108589.png">
-<meta property="og:image" content="http://www.shikun.work/aposts/98c8b172/image-20220427161218594.png">
-<meta property="og:image" content="http://www.shikun.work/aposts/98c8b172/image-20220427161238398.png">
-<meta property="og:image" content="http://www.shikun.work/aposts/98c8b172/image-20220427161255522.png">
+<meta property="og:image" content="https://louis-me.github.io/aposts/98c8b172/image-20220427160911385.png">
+<meta property="og:image" content="https://louis-me.github.io/aposts/98c8b172/image-20220427160947950.png">
+<meta property="og:image" content="https://louis-me.github.io/aposts/98c8b172/image-20220427161012309.png">
+<meta property="og:image" content="https://louis-me.github.io/aposts/98c8b172/image-20220427161048311-16510470495321.png">
+<meta property="og:image" content="https://louis-me.github.io/aposts/98c8b172/image-20220427161108589.png">
+<meta property="og:image" content="https://louis-me.github.io/aposts/98c8b172/image-20220427161218594.png">
+<meta property="og:image" content="https://louis-me.github.io/aposts/98c8b172/image-20220427161238398.png">
+<meta property="og:image" content="https://louis-me.github.io/aposts/98c8b172/image-20220427161255522.png">
 <meta property="article:published_time" content="2022-04-27T07:04:12.000Z">
 <meta property="article:modified_time" content="2022-04-27T08:21:55.332Z">
 <meta property="article:tag" content="性能测试">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://www.shikun.work/aposts/98c8b172/image-20220427160911385.png">
+<meta name="twitter:image" content="https://louis-me.github.io/aposts/98c8b172/image-20220427160911385.png">
 
-<link rel="canonical" href="http://www.shikun.work/aposts/98c8b172/">
+<link rel="canonical" href="https://louis-me.github.io/aposts/98c8b172/">
 
 
 <script id="page-configurations">
@@ -202,7 +202,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://www.shikun.work/aposts/98c8b172/">
+    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/98c8b172/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">

@@ -17,43 +17,43 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"www.shikun.work","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":true,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"louis-me.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":true,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="总结 对于本篇的攻击方式，感觉应该有问题，其实无论安全等级为何种，只要在谷歌打开dvwa抓包到cookie值后，然后再火狐浏览器打开url，修改为谷歌dvwa中cookie值后，都能绕过登录  但是我搜索了其他博客，都是采用这样的方式来做的   概念 用户访问服务器的时候，一般服务器都会分配一个身份证 session id 给用户，用于标识。  获得session后，用户访问页面就不用登陆，只需要">
 <meta property="og:type" content="article">
 <meta property="og:title" content="DVWA通关指南-Weak Session IDs(弱会话ID)">
-<meta property="og:url" content="http://www.shikun.work/aposts/616944d0/index.html">
+<meta property="og:url" content="https://louis-me.github.io/aposts/616944d0/index.html">
 <meta property="og:site_name" content="施坤的博客">
 <meta property="og:description" content="总结 对于本篇的攻击方式，感觉应该有问题，其实无论安全等级为何种，只要在谷歌打开dvwa抓包到cookie值后，然后再火狐浏览器打开url，修改为谷歌dvwa中cookie值后，都能绕过登录  但是我搜索了其他博客，都是采用这样的方式来做的   概念 用户访问服务器的时候，一般服务器都会分配一个身份证 session id 给用户，用于标识。  获得session后，用户访问页面就不用登陆，只需要">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://www.shikun.work/aposts/616944d0/image-20220211105704983.png">
-<meta property="og:image" content="http://www.shikun.work/aposts/616944d0/image-20220211110634046.png">
-<meta property="og:image" content="http://www.shikun.work/aposts/616944d0/image-20220211153530303.png">
-<meta property="og:image" content="http://www.shikun.work/aposts/616944d0/image-20220211164333448.png">
-<meta property="og:image" content="http://www.shikun.work/aposts/616944d0/image-20220211164609202.png">
-<meta property="og:image" content="http://www.shikun.work/aposts/616944d0/image-20220211164918914.png">
-<meta property="og:image" content="http://www.shikun.work/aposts/616944d0/image-20220211112526717.png">
-<meta property="og:image" content="http://www.shikun.work/aposts/616944d0/image-20220211165037092.png">
-<meta property="og:image" content="http://www.shikun.work/aposts/616944d0/image-20220211160435148.png">
-<meta property="og:image" content="http://www.shikun.work/aposts/616944d0/image-20220211165419235.png">
-<meta property="og:image" content="http://www.shikun.work/aposts/616944d0/image-20220211165923234.png">
-<meta property="og:image" content="http://www.shikun.work/aposts/616944d0/image-20220211170403199.png">
-<meta property="og:image" content="http://www.shikun.work/aposts/616944d0/image-20220211172637304.png">
-<meta property="og:image" content="http://www.shikun.work/aposts/616944d0/image-20220211172716229.png">
-<meta property="og:image" content="http://www.shikun.work/aposts/616944d0/image-20220211171042169.png">
-<meta property="og:image" content="http://www.shikun.work/aposts/616944d0/image-20220211171315505.png">
-<meta property="og:image" content="http://www.shikun.work/aposts/616944d0/image-20220211172040526.png">
-<meta property="og:image" content="http://www.shikun.work/aposts/616944d0/image-20220211172118623.png">
-<meta property="og:image" content="http://www.shikun.work/aposts/616944d0/image-20220211173247187.png">
+<meta property="og:image" content="https://louis-me.github.io/aposts/616944d0/image-20220211105704983.png">
+<meta property="og:image" content="https://louis-me.github.io/aposts/616944d0/image-20220211110634046.png">
+<meta property="og:image" content="https://louis-me.github.io/aposts/616944d0/image-20220211153530303.png">
+<meta property="og:image" content="https://louis-me.github.io/aposts/616944d0/image-20220211164333448.png">
+<meta property="og:image" content="https://louis-me.github.io/aposts/616944d0/image-20220211164609202.png">
+<meta property="og:image" content="https://louis-me.github.io/aposts/616944d0/image-20220211164918914.png">
+<meta property="og:image" content="https://louis-me.github.io/aposts/616944d0/image-20220211112526717.png">
+<meta property="og:image" content="https://louis-me.github.io/aposts/616944d0/image-20220211165037092.png">
+<meta property="og:image" content="https://louis-me.github.io/aposts/616944d0/image-20220211160435148.png">
+<meta property="og:image" content="https://louis-me.github.io/aposts/616944d0/image-20220211165419235.png">
+<meta property="og:image" content="https://louis-me.github.io/aposts/616944d0/image-20220211165923234.png">
+<meta property="og:image" content="https://louis-me.github.io/aposts/616944d0/image-20220211170403199.png">
+<meta property="og:image" content="https://louis-me.github.io/aposts/616944d0/image-20220211172637304.png">
+<meta property="og:image" content="https://louis-me.github.io/aposts/616944d0/image-20220211172716229.png">
+<meta property="og:image" content="https://louis-me.github.io/aposts/616944d0/image-20220211171042169.png">
+<meta property="og:image" content="https://louis-me.github.io/aposts/616944d0/image-20220211171315505.png">
+<meta property="og:image" content="https://louis-me.github.io/aposts/616944d0/image-20220211172040526.png">
+<meta property="og:image" content="https://louis-me.github.io/aposts/616944d0/image-20220211172118623.png">
+<meta property="og:image" content="https://louis-me.github.io/aposts/616944d0/image-20220211173247187.png">
 <meta property="article:published_time" content="2022-02-11T02:43:23.000Z">
 <meta property="article:modified_time" content="2022-02-25T03:20:56.563Z">
 <meta property="article:tag" content="安全测试">
 <meta property="article:tag" content="DVWA">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://www.shikun.work/aposts/616944d0/image-20220211105704983.png">
+<meta name="twitter:image" content="https://louis-me.github.io/aposts/616944d0/image-20220211105704983.png">
 
-<link rel="canonical" href="http://www.shikun.work/aposts/616944d0/">
+<link rel="canonical" href="https://louis-me.github.io/aposts/616944d0/">
 
 
 <script id="page-configurations">
@@ -214,7 +214,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://www.shikun.work/aposts/616944d0/">
+    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/616944d0/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">

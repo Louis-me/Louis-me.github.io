@@ -17,31 +17,31 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"www.shikun.work","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":true,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"louis-me.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":true,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="DVWA简介DVWA（Damn Vulnerable Web App）是一个基于PHP&#x2F;MySql搭建的Web应用程序，旨在为安全专业人员测试自己的专业技能和工具提供合法的 环境，帮助Web开发者更好的理解Web应用安全防范的过程。DVWA一共包含十个模块分别是：  Bruce Force &#x2F;&#x2F;暴力破解  Command Injection &#x2F;&#x2F;命">
 <meta property="og:type" content="article">
 <meta property="og:title" content="安全测试-搭建漏洞环境">
-<meta property="og:url" content="http://www.shikun.work/aposts/97835086/index.html">
+<meta property="og:url" content="https://louis-me.github.io/aposts/97835086/index.html">
 <meta property="og:site_name" content="施坤的博客">
 <meta property="og:description" content="DVWA简介DVWA（Damn Vulnerable Web App）是一个基于PHP&#x2F;MySql搭建的Web应用程序，旨在为安全专业人员测试自己的专业技能和工具提供合法的 环境，帮助Web开发者更好的理解Web应用安全防范的过程。DVWA一共包含十个模块分别是：  Bruce Force &#x2F;&#x2F;暴力破解  Command Injection &#x2F;&#x2F;命">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://www.shikun.work/aposts/97835086/image-20220126100635195.png">
-<meta property="og:image" content="http://www.shikun.work/aposts/97835086/image-20220126100827029.png">
-<meta property="og:image" content="http://www.shikun.work/aposts/97835086/image-20220126150340578.png">
-<meta property="og:image" content="http://www.shikun.work/aposts/97835086/image-20220126151224710.png">
-<meta property="og:image" content="http://www.shikun.work/aposts/97835086/image-20220126152915786.png">
-<meta property="og:image" content="http://www.shikun.work/aposts/97835086/image-20220126153115113.png">
+<meta property="og:image" content="https://louis-me.github.io/aposts/97835086/image-20220126100635195.png">
+<meta property="og:image" content="https://louis-me.github.io/aposts/97835086/image-20220126100827029.png">
+<meta property="og:image" content="https://louis-me.github.io/aposts/97835086/image-20220126150340578.png">
+<meta property="og:image" content="https://louis-me.github.io/aposts/97835086/image-20220126151224710.png">
+<meta property="og:image" content="https://louis-me.github.io/aposts/97835086/image-20220126152915786.png">
+<meta property="og:image" content="https://louis-me.github.io/aposts/97835086/image-20220126153115113.png">
 <meta property="article:published_time" content="2022-01-25T09:30:30.000Z">
 <meta property="article:modified_time" content="2022-02-25T03:20:56.668Z">
 <meta property="article:tag" content="安全测试">
 <meta property="article:tag" content="DVWA">
 <meta property="article:tag" content="环境搭建">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://www.shikun.work/aposts/97835086/image-20220126100635195.png">
+<meta name="twitter:image" content="https://louis-me.github.io/aposts/97835086/image-20220126100635195.png">
 
-<link rel="canonical" href="http://www.shikun.work/aposts/97835086/">
+<link rel="canonical" href="https://louis-me.github.io/aposts/97835086/">
 
 
 <script id="page-configurations">
@@ -202,7 +202,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://www.shikun.work/aposts/97835086/">
+    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/97835086/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">

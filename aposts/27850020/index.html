@@ -17,34 +17,34 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"www.shikun.work","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":true,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"louis-me.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":true,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="详解XSS XSS(跨站脚本攻击)，是指恶意攻击者往Web页面里插入恶意Script代码，当用户浏览该页之时，嵌入其中Web里面的Script代码会被执行，从而达到恶意攻击用户的目的。 XSS存在的根本原因是,对URL中的参数和对用户输入提交给web server的内容,没有进行充分的过滤  分类 持久化 XSS：恶意代码通常来自网站数据库。 反射式 XSS：恶意代码通常来自用户请求。 基于 DO">
 <meta property="og:type" content="article">
 <meta property="og:title" content="DVWA通关指南-DOM-XSS-DOM型跨站脚本攻击">
-<meta property="og:url" content="http://www.shikun.work/aposts/27850020/index.html">
+<meta property="og:url" content="https://louis-me.github.io/aposts/27850020/index.html">
 <meta property="og:site_name" content="施坤的博客">
 <meta property="og:description" content="详解XSS XSS(跨站脚本攻击)，是指恶意攻击者往Web页面里插入恶意Script代码，当用户浏览该页之时，嵌入其中Web里面的Script代码会被执行，从而达到恶意攻击用户的目的。 XSS存在的根本原因是,对URL中的参数和对用户输入提交给web server的内容,没有进行充分的过滤  分类 持久化 XSS：恶意代码通常来自网站数据库。 反射式 XSS：恶意代码通常来自用户请求。 基于 DO">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://www.shikun.work/aposts/27850020/image-20220214103755950.png">
-<meta property="og:image" content="http://www.shikun.work/aposts/27850020/image-20220214104034792.png">
-<meta property="og:image" content="http://www.shikun.work/aposts/27850020/image-20220214151722967.png">
-<meta property="og:image" content="http://www.shikun.work/aposts/27850020/image-20220214110216672.png">
-<meta property="og:image" content="http://www.shikun.work/aposts/27850020/image-20220214104951307.png">
-<meta property="og:image" content="http://www.shikun.work/aposts/27850020/image-20220214110140539.png">
-<meta property="og:image" content="http://www.shikun.work/aposts/27850020/image-20220214111011079.png">
-<meta property="og:image" content="http://www.shikun.work/aposts/27850020/image-20220214111327747.png">
-<meta property="og:image" content="http://www.shikun.work/aposts/27850020/image-20220214112250124.png">
-<meta property="og:image" content="http://www.shikun.work/aposts/27850020/image-20220214152239910.png">
+<meta property="og:image" content="https://louis-me.github.io/aposts/27850020/image-20220214103755950.png">
+<meta property="og:image" content="https://louis-me.github.io/aposts/27850020/image-20220214104034792.png">
+<meta property="og:image" content="https://louis-me.github.io/aposts/27850020/image-20220214151722967.png">
+<meta property="og:image" content="https://louis-me.github.io/aposts/27850020/image-20220214110216672.png">
+<meta property="og:image" content="https://louis-me.github.io/aposts/27850020/image-20220214104951307.png">
+<meta property="og:image" content="https://louis-me.github.io/aposts/27850020/image-20220214110140539.png">
+<meta property="og:image" content="https://louis-me.github.io/aposts/27850020/image-20220214111011079.png">
+<meta property="og:image" content="https://louis-me.github.io/aposts/27850020/image-20220214111327747.png">
+<meta property="og:image" content="https://louis-me.github.io/aposts/27850020/image-20220214112250124.png">
+<meta property="og:image" content="https://louis-me.github.io/aposts/27850020/image-20220214152239910.png">
 <meta property="article:published_time" content="2022-02-14T01:34:27.000Z">
 <meta property="article:modified_time" content="2022-02-25T03:20:56.551Z">
 <meta property="article:tag" content="安全测试">
 <meta property="article:tag" content="DVWA">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://www.shikun.work/aposts/27850020/image-20220214103755950.png">
+<meta name="twitter:image" content="https://louis-me.github.io/aposts/27850020/image-20220214103755950.png">
 
-<link rel="canonical" href="http://www.shikun.work/aposts/27850020/">
+<link rel="canonical" href="https://louis-me.github.io/aposts/27850020/">
 
 
 <script id="page-configurations">
@@ -205,7 +205,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://www.shikun.work/aposts/27850020/">
+    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/27850020/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
