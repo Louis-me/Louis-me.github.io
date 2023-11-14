@@ -191,6 +191,423 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/65807ab6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="一个正经的测试工程师">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="施坤的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/aposts/65807ab6/" class="post-title-link" itemprop="url">centos7搭建jforum</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-10-20 10:15:30" itemprop="dateCreated datePublished" datetime="2021-10-20T10:15:30+08:00">2021-10-20</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-02-25 11:20:56" itemprop="dateModified" datetime="2022-02-25T11:20:56+08:00">2022-02-25</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" itemprop="url" rel="index"><span itemprop="name">性能测试</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/aposts/65807ab6/" class="post-meta-item leancloud_visitors" data-flag-title="centos7搭建jforum" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/aposts/65807ab6/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/aposts/65807ab6/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><p>作为性能测试的压测目标网站，本次教程主要是在centos7上搭建iforum论坛的步骤</p>
+<h3 id="按照mysql"><a href="#按照mysql" class="headerlink" title="按照mysql"></a>按照mysql</h3><ul>
+<li><p>去官网查看最新安装包<br><a target="_blank" rel="noopener" href="https://links.jianshu.com/go?to=https://dev.mysql.com/downloads/repo/yum/">https://dev.mysql.com/downloads/repo/yum/</a></p>
+</li>
+<li><p>下载MySQL源安装包</p>
+</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget hhttps:<span class="comment">//repo.mysql.com//mysql80-community-release-el7-3.noarch.rpm</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>安装MySql源</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@racknerd-4dbd89 <span class="built_in">local</span>]<span class="comment"># rpm -ivh mysql80-community-release-el7-3.noarch.rpm</span></span><br><span class="line">warning: mysql80-community-release-el7-3.noarch.rpm: Header V3 DSA/SHA1 Signature, key ID 5072e1f5: NOKEY</span><br><span class="line">Preparing...                          <span class="comment">################################# [100%]</span></span><br><span class="line">Updating / installing...</span><br><span class="line">   1:mysql80-community-release-el7-3  <span class="comment">################################# [100%]</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>安装MySQL服务器<br><code>yum install mysql-community-server</code></p>
+</li>
+<li><p>开启mysql服务</p>
+</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">service mysqld <span class="keyword">start</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>mysql安装成功后创建的超级用户‘root‘@’localhost’的密码会被存储在<code>/var/log/mysqld.log</code>，可以使用如下命令查看密码</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep <span class="string">&#x27;temporary password&#x27;</span> /var/log/mysqld.log</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>输入 <code>mysql -u root -p</code>,输入得到的密码，然后修改密码：</p>
+<figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ALTER USER <span class="comment">&#x27;root&#x27;@&#x27;localhost&#x27; IDENTIFIED BY &#x27;new password&#x27;;</span></span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>添加远程登录用户</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">use mysql;</span><br><span class="line">mysql&gt; select host, user from user;</span><br><span class="line">+-----------+------------------+</span><br><span class="line">| host      | user             |</span><br><span class="line">+-----------+------------------+</span><br><span class="line">| localhost | mysql.infoschema |</span><br><span class="line">| localhost | mysql.session    |</span><br><span class="line">| localhost | mysql.sys        |</span><br><span class="line">| localhost | root             |</span><br><span class="line">+-----------+------------------+</span><br><span class="line">4 rows <span class="keyword">in</span> <span class="built_in">set</span> (0.01 sec)</span><br><span class="line"><span class="comment"># 查看表格中 root 用户的 host，默认应该显示的 localhost，只支持本地访问，不允许远程访问。</span></span><br><span class="line"></span><br><span class="line">update user <span class="built_in">set</span> host=<span class="string">&#x27;%&#x27;</span> <span class="built_in">where</span> user =<span class="string">&#x27;root&#x27;</span>;</span><br><span class="line"><span class="comment"># 说明： % 代表任意的客户端,可替换成具体IP地址。</span></span><br><span class="line">flush privileges;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>防火墙中开放mysql的访问端口</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">firewall-cmd --zone=public --add-port=3306/tcp --permanent</span><br><span class="line">firewall-cmd --reload   <span class="comment"># 配置立即生效</span></span><br><span class="line">firewall-cmd --zone=public --list-port <span class="comment"># 查看防火墙所有开放的端口</span></span><br><span class="line">firewall-cmd --state <span class="comment"># 查看防火墙状态</span></span><br><span class="line">netstat -lnpt <span class="comment"># 查看监听的端口</span></span><br><span class="line">netstat -lnpt |grep 3306 <span class="comment"># 查看监听的具体端口</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>用HeidiSQL远程连接mysql成功</p>
+<p><img src="/aposts/65807ab6/image-20211020114616786.png" alt="image-20211020114616786"></p>
+</li>
+<li><p>新建数据库，名字为：iforum</p>
+<p><img src="/aposts/65807ab6/image-20211020163450656.png" alt="image-20211020163450656"></p>
+</li>
+</ul>
+<h3 id="安装java"><a href="#安装java" class="headerlink" title="安装java"></a>安装java</h3><ul>
+<li><p>我的服务器上已经按照好了java</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@racknerd-4dbd89 ~]<span class="comment"># java -version</span></span><br><span class="line">java version <span class="string">&quot;1.8.0_291&quot;</span></span><br><span class="line">Java(TM) SE Runtime Environment (build 1.8.0_291-b10)</span><br><span class="line">Java HotSpot(TM) 64-Bit Server VM (build 25.291-b10, mixed mode)</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="安装tomcat"><a href="#安装tomcat" class="headerlink" title="安装tomcat"></a>安装tomcat</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">wget https://dlcdn.apache.org/tomcat/tomcat-8/v8.5.72/bin/apache-tomcat-8.5.72.tar.gz</span><br><span class="line">tar  zxvf apache-tomcat-8.5.72.tar.gz</span><br><span class="line"></span><br><span class="line"><span class="comment"># 启动tomcat</span></span><br><span class="line">[root@racknerd-4dbd89 bin]<span class="comment"># sh startup.sh</span></span><br><span class="line">Using CATALINA_BASE:   /usr/local/apache-tomcat-8.5.72</span><br><span class="line">Using CATALINA_HOME:   /usr/local/apache-tomcat-8.5.72</span><br><span class="line">Using CATALINA_TMPDIR: /usr/local/apache-tomcat-8.5.72/temp</span><br><span class="line">Using JRE_HOME:        /usr/jdk1.8.0_291/jre</span><br><span class="line">Using CLASSPATH:       /usr/local/apache-tomcat-8.5.72/bin/bootstrap.jar:/usr/local/apache-tomcat-8.5.72/bin/tomcat-juli.jar</span><br><span class="line">Using CATALINA_OPTS:</span><br><span class="line">Tomcat started.</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h4 id="配置tomcat"><a href="#配置tomcat" class="headerlink" title="配置tomcat"></a>配置tomcat</h4><ul>
+<li>防火墙开发8080端口给tomcat</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">firewall-cmd --zone=public --add-port=8080/tcp --permanent</span><br><span class="line">firewall-cmd --reload</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>已经可以访问</p>
+<p><img src="/aposts/65807ab6/image-20211020162109704.png" alt="image-20211020162109704"></p>
+</li>
+</ul>
+<h3 id="安装jforum"><a href="#安装jforum" class="headerlink" title="安装jforum"></a>安装jforum</h3><ul>
+<li><p><a target="_blank" rel="noopener" href="https://sourceforge.net/projects/jforum2/files/latest/download">打开地址</a>并下载</p>
+</li>
+<li><p>将 jforum-2.6.2.war放到tomcat目录的webapps下；</p>
+</li>
+<li><p>重启tomcat，<code>sh shutdown.sh   sh startup.sh</code></p>
+</li>
+<li><p>输入 host:8080&#x2F;jforum-2.6.2 进入安装流程</p>
+<p><img src="/aposts/65807ab6/image-20211020165041066.png" alt="image-20211020165041066"></p>
+<p><img src="/aposts/65807ab6/image-20211020165234244.png" alt="image-20211020165234244"></p>
+</li>
+</ul>
+<p><img src="/aposts/65807ab6/image-20211020165311313.png" alt="image-20211020165311313"></p>
+<p><img src="/aposts/65807ab6/image-20211020171443069.png" alt="image-20211020171443069"></p>
+<h3 id="新增批量用户"><a href="#新增批量用户" class="headerlink" title="新增批量用户"></a>新增批量用户</h3><ul>
+<li><p>新增存储过程，批量新增用户，密码都是123456</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">BEGIN</span></span><br><span class="line"><span class="keyword">DECLARE</span> userName <span class="type">VARCHAR</span> (<span class="number">20</span>) ;</span><br><span class="line"><span class="keyword">DECLARE</span> userMail <span class="type">VARCHAR</span> (<span class="number">20</span>) ;</span><br><span class="line"><span class="keyword">DECLARE</span> i <span class="type">INT</span> <span class="keyword">DEFAULT</span> <span class="number">9</span>;#原来是<span class="number">1</span>，要看jforum_users表最新一个用户的id是多少，要比最新那个用户id大就行</span><br><span class="line">WHILE i<span class="operator">&lt;=</span> <span class="number">400</span> DO</span><br><span class="line"><span class="keyword">set</span> userName <span class="operator">=</span> CONCAT (<span class="string">&#x27;test1&#x27;</span>, LPAD ( i, <span class="number">3</span>, <span class="string">&#x27;0&#x27;</span> )) ;</span><br><span class="line"><span class="keyword">set</span> userMail <span class="operator">=</span> CONCAT (userName, <span class="string">&#x27;@test.com&#x27;</span> ) ;</span><br><span class="line">#密码<span class="number">123456</span></span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> jforum_users <span class="keyword">VALUES</span> (i, <span class="string">&#x27;1&#x27;</span>, userName,   <span class="string">&#x27;e10adc3949ba59abbe56e057f20f883e&#x27;</span>, <span class="string">&#x27;0&#x27;</span>, <span class="string">&#x27;0&#x27;</span>,</span><br><span class="line">  <span class="keyword">null</span>, <span class="string">&#x27;2015-05-06 09:33:18&#x27;</span>, <span class="keyword">NULL</span>,    <span class="string">&#x27;0&#x27;</span>, <span class="string">&#x27;&#x27;</span>, <span class="keyword">NULL</span>, <span class="string">&#x27;&#x27;</span>,   <span class="string">&#x27;%d/%M/%Y %H:%i&#x27;</span>, <span class="string">&#x27;0&#x27;</span>,    <span class="string">&#x27;0&#x27;</span>, <span class="keyword">null</span>, <span class="keyword">NULL</span>,    <span class="string">&#x27;0&#x27;</span>, <span class="string">&#x27;1&#x27;</span>,</span><br><span class="line"><span class="string">&#x27;0&#x27;</span>,    <span class="string">&#x27;1&#x27;</span>, <span class="string">&#x27;1&#x27;</span>, <span class="string">&#x27;1&#x27;</span>,    <span class="string">&#x27;1&#x27;</span>, <span class="string">&#x27;1&#x27;</span>, <span class="string">&#x27;0&#x27;</span>,    <span class="string">&#x27;0&#x27;</span>, <span class="string">&#x27;1&#x27;</span>, <span class="string">&#x27;1&#x27;</span>,   <span class="string">&#x27;0&#x27;</span>, <span class="keyword">NULL</span>,   <span class="string">&#x27;0&#x27;</span>,userMail, <span class="keyword">null</span>, <span class="keyword">null</span>, <span class="keyword">null</span>,</span><br><span class="line"><span class="keyword">null</span>, <span class="keyword">null</span>, <span class="keyword">null</span>, <span class="keyword">null</span>, <span class="keyword">null</span>, <span class="keyword">null</span>, <span class="keyword">null</span>, <span class="keyword">null</span>, <span class="keyword">null</span>, <span class="keyword">null</span>, <span class="keyword">null</span>, <span class="keyword">NULL</span>);</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> jforum_user_groups <span class="keyword">VALUES</span> (<span class="number">2</span>,i) ;</span><br><span class="line"><span class="keyword">SET</span> i <span class="operator">=</span> i<span class="operator">+</span><span class="number">1</span>;</span><br><span class="line"><span class="keyword">END</span> WHILE;</span><br><span class="line"><span class="keyword">END</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<p><img src="/aposts/65807ab6/image-20211111112111795.png" alt="image-20211111112111795"></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/da937c73/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="一个正经的测试工程师">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="施坤的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/aposts/da937c73/" class="post-title-link" itemprop="url">性能测试需求分析和目标确定</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-10-19 16:56:23" itemprop="dateCreated datePublished" datetime="2021-10-19T16:56:23+08:00">2021-10-19</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-02-25 11:20:56" itemprop="dateModified" datetime="2022-02-25T11:20:56+08:00">2022-02-25</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" itemprop="url" rel="index"><span itemprop="name">性能测试</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/aposts/da937c73/" class="post-meta-item leancloud_visitors" data-flag-title="性能测试需求分析和目标确定" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/aposts/da937c73/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/aposts/da937c73/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="需求采集"><a href="#需求采集" class="headerlink" title="需求采集"></a>需求采集</h2><ul>
+<li><p>下面以JForum 论坛为例进行需求采集，首先要了解系统物理架构与逻辑架构。</p>
+</li>
+<li><p>物理架构：指导进行测试环境建立，测试环境与生产环境的架构趋于一致。</p>
+</li>
+<li><p>逻辑架构：让我们对系统的逻辑组成有所了解，进行测试时能够清楚地划分问题出现地区域。</p>
+</li>
+</ul>
+<h3 id="系统架构"><a href="#系统架构" class="headerlink" title="系统架构"></a>系统架构</h3><p><img src="/aposts/da937c73/image-20211019170600141.png" alt="image-20211019170600141"></p>
+<ul>
+<li><p>WebServer 负责反向代理，静态请求处理；Tomcat7 负载动态请求处理；Mysql5.6 做双击热备</p>
+</li>
+<li><p>为了更准确地模拟生产环境负载，在物理架构上尽量保持与生产同步，在机器配置及数量上，可以缩小比例，由测试环境来推算出生产环境的性能。（如何用测试环境准确估算到生产环境，参考TPC-E标准进行评测）</p>
+</li>
+</ul>
+<h3 id="逻辑架构"><a href="#逻辑架构" class="headerlink" title="逻辑架构"></a>逻辑架构</h3><p><img src="/aposts/da937c73/image-20211019170654795.png" alt="image-20211019170654795"></p>
+<ul>
+<li>逻辑架构：逻辑架构展现的是软件系统中元件之间的关系，比如用户界面、数据库、外部系统结构等。下图是应用服务的逻辑结构，列出了系统服务组件、邮件服务、权限管理、业务服务（对于JForum 就是发帖、回帖、浏览帖子）。Web层是通过 JSP 与 Velocity Freemark 来展现的。       </li>
+<li>通过逻辑架构能迅速了解到系统的主要功能与服务，并且知道其逻辑关系，有助于我们设计测试场景</li>
+</ul>
+<h3 id="业务流程"><a href="#业务流程" class="headerlink" title="业务流程"></a>业务流程</h3><ul>
+<li>确定系统的主要业务流程，方便写性能测试用例。</li>
+</ul>
+<p><img src="/aposts/da937c73/image-20211019170922072.png" alt="image-20211019170922072"></p>
+<p><strong>需求文档中性能需求说明：</strong></p>
+<ul>
+<li><p>此论坛为一个技术讨论性质的论坛，注册用户规模预计是10万，每日活跃用户数预计为5%，即5000.</p>
+</li>
+<li><p>用户在论坛中的活动以浏览、发帖及回帖为主，日 PV 预计为 2 万 PV。其中浏览、发帖、回帖比例大约为 7:1:2.</p>
+<ul>
+<li>PV：用户每访问一个页面统计为一个PV。</li>
+</ul>
+<p>　</p>
+</li>
+<li><p>系统业务增长率为 30%，系统在 3年内不打算进行分库分表处理，需要系统在性能上能够支撑住，也就是测试时需要3年的存量数据。</p>
+</li>
+<li><p>要求系统能够提供良好的系统体验，比如浏览帖子、发帖、回帖应该控制在3秒内。</p>
+</li>
+<li><p>为了系统稳定，要求在日常营运时 CPU 使用率&lt;70%，磁盘 Disk ime&lt;70%且无网络瓶颈。</p>
+</li>
+</ul>
+<p>　</p>
+<p><img src="/aposts/da937c73/image-20211019171133583.png" alt="image-20211019171133583"></p>
+<h3 id="硬件指标"><a href="#硬件指标" class="headerlink" title="硬件指标"></a>硬件指标</h3><ul>
+<li>系统硬件指标对象是硬件资源，比如CPU、内存、磁盘、网络带宽等。下表列出了主要的性能指标及阈值，这些指标比较抽象，在监控分析时应该进一步细化；比如 CPU的性能指标在 Linux 中分为用户利用率、系统利用率及平均负载等重要指标。</li>
+</ul>
+<p><img src="/aposts/da937c73/image-20211019171302664.png" alt="image-20211019171302664"></p>
+<h2 id="需求分析"><a href="#需求分析" class="headerlink" title="需求分析"></a>需求分析</h2><ul>
+<li>需求分析的目的是确定性能测试范围，分析出哪些业务纳入性能测试范围及性能指标是什么？另外要分析用户使用行为、业务分布、分析业务量；估算出 TPS与并发用户数等性能测试执行依据。</li>
+</ul>
+<h3 id="圈定测试范围"><a href="#圈定测试范围" class="headerlink" title="圈定测试范围"></a>圈定测试范围</h3><p>如何圈定测试范围？</p>
+<ul>
+<li><p>（1）确定高频次的业务</p>
+</li>
+<li><p>（2)确定性能影响大的业务</p>
+</li>
+<li><p>（3）确定此功能的可验证性。比如使用支付宝来支付商品费用，如果余额不足，会引导选择使用银行卡来支付。这样支付宝会调用银行的接口来完成银行账户的扣减。银行的接口不提供支持时，需要模拟银行网关这个过程，这就是可验证性分析及解决方案，最终采用 Mock程序来配合测试。</p>
+</li>
+</ul>
+<h3 id="明确性能指标"><a href="#明确性能指标" class="headerlink" title="明确性能指标"></a>明确性能指标</h3><ul>
+<li>（1）吞吐量（PV、TPS）：</li>
+</ul>
+<p>　　　　　日 PV 是 2 万，3年 30%的增长，日 PV&#x3D;2*（1+30%）² ≈3.38万</p>
+<ul>
+<li><p>（2）响应时间：要求3秒以内</p>
+</li>
+<li><p>（3） 成功率：99%以上</p>
+</li>
+<li><p>（4）稳定波动正常范围</p>
+</li>
+<li><p>（5）其他各项硬件等性能指标。参照硬件指标</p>
+</li>
+</ul>
+<h3 id="分析业务量"><a href="#分析业务量" class="headerlink" title="分析业务量"></a>分析业务量</h3><ul>
+<li><p>测试数据的多少对测试结果会有影响，特别是数据成千万上亿条后，性能影响明显。</p>
+</li>
+<li><p>性能测试时，除了需要做足一定数量的历史数据，还得关注业务量的增长。需求中年业务增长率 30%，可以理解成年 PV 也会增加 30%。所以测试时要以第3年的业务量为标准来测试，避免错过积累一定数据后性能变差的情况，把问题提前暴露出来。</p>
+</li>
+</ul>
+<h4 id="计算-TPS"><a href="#计算-TPS" class="headerlink" title="计算 TPS"></a>计算 TPS</h4><ul>
+<li><p>TPS：表示每秒平均事务数。即吞吐量。</p>
+</li>
+<li><p>上面分析业务量的数据是以PV来统计的，要计算 TPS ，需要把 PV 转化成 TPS。一个 PV即是对服务器的一次请求，把一个请求放在一个事务中来统计服务器的响应耗时，响应完成即是一次事务完成，这么说一个 PV 即是一个事务（PV 并不能直接等同于 TPS，PV代表了一次客户请求，这次请求可能请求了很多信息，比如图片、样式、JS信息等，发新帖时我们通常只关心发帖的动作耗时，并不关心页面刷新时 JS、样式的耗时，此时就把 PV 等同于 TPS)；比如一个功能页面（浏览帖子）一秒会有 10 个 PV，那么此功能的 TPS 即为10。</p>
+</li>
+<li><p>TPS一般要取系统业务高峰期的值，虽然系统不是总处在高峰期，但高峰期 TPS 才能代表系统的实际处理能力。要得到高峰期的 TPS 我们需要分析业务发生时间。</p>
+</li>
+<li><p>UV：一天之内网站独立访客数（以 Cookie 为依据），一天内同一访客多次访问网站只计算 1 个访客（小于等于 PV）。</p>
+</li>
+<li><p>回到示例项目Jforum，找出日高峰。下表是高峰日 Jforum 论坛的 PV 数据统计（业务量单位为 PV）。</p>
+</li>
+</ul>
+<p><img src="/aposts/da937c73/image-20211019171719859.png" alt="image-20211019171719859"></p>
+<ul>
+<li><p>综合看上午十点是访问高峰，PV约为 5208（登录、浏览、回帖、发帖合计），那么这个时段 TPS&#x3D;5208&#x2F;3600≈1.45.</p>
+</li>
+<li><p>这样取平均值是不合适的，一个小时间隔时间太长，采集的业务数据并没有说明在这一个小时中吞吐量是平均的，还需要细分。如果能细分到每分钟的业务量数量，那 TPS 的估算就越准确。</p>
+</li>
+<li><p>可以采取 80&#x2F;20 原则来估算，在性能测试中，20%的时间做了 80%的事情。</p>
+</li>
+<li><p>80&#x2F;20 原则计算<code> TPS = 5208*80% / (3600*20%) ≈ 5.8</code>　，具体如下表</p>
+<ul>
+<li>登录的<code>tps=1300*0.8/720=1.4444</code></li>
+</ul>
+</li>
+</ul>
+<p><img src="/aposts/da937c73/image-20211020172516176.png" alt="image-20211020172516176"></p>
+<ul>
+<li>tps还可以用来计算并发数</li>
+</ul>
+<h2 id="并发数计算"><a href="#并发数计算" class="headerlink" title="并发数计算"></a>并发数计算</h2><ul>
+<li>三种估算方式：1.tps进行估算（我们采用这种） 2.由在线活动用户数估算 3.根据经验估算</li>
+<li>TPS&#x3D;事务数&#x2F;时间，假设所有的事务都来自不同的用户，那么并发数&#x3D;事务数&#x3D;tps<em>时间。</em></li>
+<li>vu&#x3D;tps*(runtime+thinktime)<ul>
+<li>vu表示此业务的虚拟用户数，即并发数</li>
+<li>runtime是测试程序&#x2F;脚本运行一次所消耗的时间，包含事务时间+非事务时间</li>
+<li>thinktime是模拟用户思考或者填写表单消耗的时间；</li>
+</ul>
+</li>
+<li>下图是发帖动作伪代码</li>
+</ul>
+<p><img src="/aposts/da937c73/image-20211019173149581.png" alt="image-20211019173149581"></p>
+<ul>
+<li><p>根据公式我们计算一下 Vu，上面计算TPS 为5.8</p>
+</li>
+<li><p>不包括非事务时间(ThinkTime 与程序消耗时间)情况下计算 VU; </p>
+<ul>
+<li><code>Vu=TPS*T2=5.8*2=12</code></li>
+</ul>
+</li>
+<li><p>包括非事务时间情况下计算 VU。</p>
+<ul>
+<li><code>Vu=TPS*(Runtime+ThinkTime)=5.8*(0.2+2+0.2+0.2+0.2+2+0.2+2+2)=53</code></li>
+</ul>
+</li>
+<li><p>可以看到两者之间的 Vu 数量相差巨大，如果我们不把 Runtime 与 ThinkTime 加进去，算出来的12个并发用户在测试执行时很有可能无法达到 TPS&#x3D;5.8 的目标。</p>
+</li>
+<li><p>业内一般把 Think Time 设为 3 秒，3 秒刚好符合用户在页面的停留平均时间。那么我们巴上面的 Think Time 时间换成3 秒。测试需求中要求响应时间小于3秒，那么我们以3秒为阀值。<br><code>VU=TPS*(Runtime+ThinkTime)=5.8*(T1+TT1+T2+T3+T4+T5+TT2+T6+T7)=5.802+3+3+0.2+0.2+0.2+3+3+0.2)=76。</code></p>
+</li>
+<li><p>由于我们计算并发数，取得是系统的tps（登录，浏览，发帖，回帖），实际计算出来的并发是系统业务的总并发数，如登录的并发数量<code>1.44*13=18.72</code>向上取值就算19，需要按比例分配到不同的业务中，</p>
+</li>
+</ul>
+<p><img src="/aposts/da937c73/image-20211019174220077.png" alt="image-20211019174220077"></p>
+<p><strong>本次文章抄录于《6 全栈性能测试修炼宝典JMeter实战》</strong></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/632627bf/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1226,245 +1643,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/57ceda08/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="一个正经的测试工程师">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="施坤的博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/aposts/57ceda08/" class="post-title-link" itemprop="url">Python多线程，单线程，协程爬虫某音乐实战对比</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-09-29 17:13:35" itemprop="dateCreated datePublished" datetime="2021-09-29T17:13:35+08:00">2021-09-29</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-06-20 18:59:22" itemprop="dateModified" datetime="2023-06-20T18:59:22+08:00">2023-06-20</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/" itemprop="url" rel="index"><span itemprop="name">python</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/aposts/57ceda08/" class="post-meta-item leancloud_visitors" data-flag-title="Python多线程，单线程，协程爬虫某音乐实战对比" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/aposts/57ceda08/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/aposts/57ceda08/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <ul>
-<li>单线程，多线程下载某云音乐</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br></pre></td><td class="code"><pre><span class="line">import re</span><br><span class="line">import urllib.request</span><br><span class="line">import requests</span><br><span class="line">from bs4 import BeautifulSoup</span><br><span class="line">import os</span><br><span class="line">import time</span><br><span class="line">from Threads import BaseThread</span><br><span class="line"></span><br><span class="line">PATH = lambda p: os.path.abspath(</span><br><span class="line">    os.path.join(os.path.dirname(__file__), p)</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">&#x27;&#x27;&#x27;</span><br><span class="line">https://music.163.com/playlist?id=  得到播放列表</span><br><span class="line">http://music.163.com/song/media/outer/url?id= 得到下载链接</span><br><span class="line">urllib.request.urlretrieve  把远程下载的mp3文件下载到本地</span><br><span class="line">&#x27;&#x27;&#x27;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Music163:</span><br><span class="line">    def __init__(self):</span><br><span class="line">        pass</span><br><span class="line">    def get_music_163(self, id):</span><br><span class="line">        user_agent = &#x27;Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.82 &#x27; \</span><br><span class="line">                     &#x27;Safari/537.36 &#x27;</span><br><span class="line">        headers = &#123;&#x27;User-Agent&#x27;: user_agent&#125;</span><br><span class="line">        data = requests.get(&quot;https://music.163.com/playlist?id=&quot; + id, headers).text</span><br><span class="line">        soup = BeautifulSoup(data, &#x27;lxml&#x27;)</span><br><span class="line">        temp = []</span><br><span class="line">        for i in soup.find(&quot;ul&quot;, &#123;&quot;class&quot;, &quot;f-hide&quot;&#125;).find_all(&quot;a&quot;):</span><br><span class="line">            pattern = re.compile(&#x27;&lt;a .*?id=(.*?)&quot;&gt;(.*?)&lt;/a&gt;&#x27;, re.S)</span><br><span class="line">            items = re.findall(pattern, str(i))</span><br><span class="line">            temp.append([items[0][0], items[0][1]])</span><br><span class="line">        return temp</span><br><span class="line"></span><br><span class="line">    # 批量下载</span><br><span class="line">    def download(self, value):</span><br><span class="line">        for i in value:</span><br><span class="line">            if os.path.isfile(PATH(&quot;mp3/&quot; + i[1] + &quot;.mp3&quot;)):</span><br><span class="line">                print(&quot;%s已经被下载了&quot; % i[1])</span><br><span class="line">            else:</span><br><span class="line">                url = &#x27;http://music.163.com/song/media/outer/url?id=&#x27; + i[0] + &#x27;.mp3&#x27;</span><br><span class="line">                urllib.request.urlretrieve(url, &#x27;%s&#x27; % PATH(&quot;mp3/&quot; + i[1] + &quot;.mp3&quot;))</span><br><span class="line">                print(&quot;%s下载成功&quot; % i[1])</span><br><span class="line"></span><br><span class="line">    # 单个下载</span><br><span class="line">    def get(self, value):</span><br><span class="line">        if os.path.isfile(PATH(&quot;mp3/&quot; + value[1] + &quot;.mp3&quot;)):</span><br><span class="line">            print(&quot;%s已经被下载了&quot; % value[1])</span><br><span class="line">        else:</span><br><span class="line">            url = &#x27;http://music.163.com/song/media/outer/url?id=&#x27; + value[0] + &#x27;.mp3&#x27;</span><br><span class="line">            urllib.request.urlretrieve(url, &#x27;%s&#x27; % PATH(&quot;mp3/&quot; + value[1] + &quot;.mp3&quot;))</span><br><span class="line">            print(&quot;%s下载成功&quot; % value[1])</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># 多线程</span><br><span class="line">def multi_thread():</span><br><span class="line">    id = &quot;2786226719&quot;  # 播放的列表id</span><br><span class="line">    start_time = time.time()</span><br><span class="line">    threads = []</span><br><span class="line">    mc = Music163()</span><br><span class="line">    data = mc.get_music_163(id)</span><br><span class="line">    count = len(data)</span><br><span class="line">    for i in range(0, count):</span><br><span class="line">        threads.append(BaseThread(mc.get(data[i])))</span><br><span class="line">    for j in range(0, count):</span><br><span class="line">        threads[j].start()</span><br><span class="line">    for k in range(0, count):</span><br><span class="line">        threads[k].join()</span><br><span class="line">    end_time = time.time()</span><br><span class="line">    print(&quot;共耗时%.2f&quot; % (end_time - start_time) + &quot;秒&quot;)</span><br><span class="line">    # 多线程47秒</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># 运行单线程</span><br><span class="line">def run():</span><br><span class="line">    id = &quot;2786226719&quot;  # 播放的列表id</span><br><span class="line">    start_time = time.time()</span><br><span class="line">    mc = Music163()</span><br><span class="line">    data = mc.get_music_163(id)</span><br><span class="line">    mc.download(data)</span><br><span class="line">    end_time = time.time()</span><br><span class="line">    print(&quot;共耗时%.2f&quot; % (end_time - start_time) + &quot;秒&quot;)</span><br><span class="line">    # 单线程43秒</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">if __name__ == &quot;__main__&quot;:</span><br><span class="line">    # run()</span><br><span class="line">    multi_thread()</span><br></pre></td></tr></table></figure>
-<ul>
-<li>单线程共下载100首歌,耗时9.09秒</li>
-</ul>
-<p><img src="/aposts/57ceda08/music1.png" alt="dan.png"></p>
-<ul>
-<li>多线程共下载100首歌,耗时9.60秒</li>
-</ul>
-<p><img src="/aposts/57ceda08/music2.png" alt="image.png"></p>
-<ul>
-<li>协程下载的代码</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">mport time</span><br><span class="line">from multiprocessing import Process</span><br><span class="line">from gevent import monkey</span><br><span class="line">import urllib.request</span><br><span class="line">import BaseMusic163</span><br><span class="line">monkey.patch_all()</span><br><span class="line">import gevent</span><br><span class="line">import os</span><br><span class="line"></span><br><span class="line">PATH = lambda p: os.path.abspath(</span><br><span class="line">    os.path.join(os.path.dirname(__file__), p)</span><br><span class="line">)</span><br><span class="line">&#x27;&#x27;&#x27;</span><br><span class="line">协程发请求,</span><br><span class="line">&#x27;&#x27;&#x27;</span><br><span class="line">class Producer(object):</span><br><span class="line">    def __init__(self):</span><br><span class="line">        self._rungevent()</span><br><span class="line"></span><br><span class="line">    def _rungevent(self):</span><br><span class="line">        jobs = []</span><br><span class="line">        id = &quot;2786226719&quot;  # 播放的列表id</span><br><span class="line">        start_time = time.time()</span><br><span class="line">        mc = BaseMusic163.Music163()</span><br><span class="line">        data = mc.get_music_163(id)</span><br><span class="line">        count = len(data)</span><br><span class="line">        for i in range(count):  # windows下有1024端口限制</span><br><span class="line">            jobs.append(gevent.spawn(self.produce(data[i])))</span><br><span class="line">        gevent.joinall(jobs)</span><br><span class="line">        end_time = time.time()</span><br><span class="line">        print(&quot;共耗时%.2f&quot; % (end_time - start_time) + &quot;秒&quot;)</span><br><span class="line"></span><br><span class="line">    def produce(self, value):</span><br><span class="line">        if os.path.isfile(PATH(&quot;mp3/&quot; + value[1] + &quot;.mp3&quot;)):</span><br><span class="line">            print(&quot;%s已经被下载了&quot; % value[1])</span><br><span class="line">        else:</span><br><span class="line">            url = &#x27;http://music.163.com/song/media/outer/url?id=&#x27; + value[0] + &#x27;.mp3&#x27;</span><br><span class="line">            urllib.request.urlretrieve(url, &#x27;%s&#x27; % PATH(&quot;mp3/&quot; + value[1] + &quot;.mp3&quot;))</span><br><span class="line">            print(&quot;%s下载成功&quot; % value[1])</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def main():</span><br><span class="line">    p1 = Process(target=Producer, args=())</span><br><span class="line">    p1.start()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">if __name__ == &#x27;__main__&#x27;:</span><br><span class="line">    main()</span><br></pre></td></tr></table></figure>
-<ul>
-<li>下载时间<br><img src="/aposts/57ceda08/result.png" alt="image.png"></li>
-</ul>
-<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><ul>
-<li>昨天测试，发现是协程&gt;多线程&gt;单线程</li>
-<li>今天测试却是：多线程&gt;协程&gt;单线程</li>
-<li>当然也会出现单线程耗时反而比多线程耗时短的情况</li>
-<li>一直流传多进程+协程，可以解决python的GIL问题，因为本次测试的数据不多，使用的也是单进程+协程的方式，后续对协程的测试，有机会进行大量数据的测试，采用多进程+协程的方式进行测试</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/Louis-me/PyCrawler">源码获取</a></li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/1d89e362/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="一个正经的测试工程师">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="施坤的博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/aposts/1d89e362/" class="post-title-link" itemprop="url">centos7-+-django+vue</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-09-29 17:13:35" itemprop="dateCreated datePublished" datetime="2021-09-29T17:13:35+08:00">2021-09-29</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-02-25 11:20:56" itemprop="dateModified" datetime="2022-02-25T11:20:56+08:00">2022-02-25</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/" itemprop="url" rel="index"><span itemprop="name">python</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/aposts/1d89e362/" class="post-meta-item leancloud_visitors" data-flag-title="centos7-+-django+vue" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/aposts/1d89e362/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/aposts/1d89e362/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <ul>
-<li>之前写过 <a target="_blank" rel="noopener" href="https://www.jianshu.com/p/e51a21388363">centos6部署django+mysql+vue</a>，本篇教程开始写centos7 + diango+vue</li>
-</ul>
-<h2 id="开放端口"><a href="#开放端口" class="headerlink" title="开放端口"></a>开放端口</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">firewall-cmd --zone=public --add-port=8100/tcp --permanent</span><br><span class="line">firewall-cmd --reload   # 配置立即生效</span><br><span class="line">firewall-cmd --zone=public --list-port # 查看防火墙所有开放的端口</span><br><span class="line"> firewall-cmd --state # 查看防火墙状态</span><br><span class="line">netstat -lnpt # 查看监听的端口</span><br><span class="line">netstat -lnpt |grep 5672 # 查看监听的具体端口</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>编写和启动脚本start.sh，启动sh start.sh<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># 后台启动django服务，输出日志到日志文件中，内容为标准输出和标准错误</span><br><span class="line">MYDATE=`date +%Y%m%d`</span><br><span class="line">ALL_LOGFILE=/usr/local/log/log_$MYDATE</span><br><span class="line"></span><br><span class="line">nohup python3 manage.py runserver 0.0.0.0:8100 &gt; $&#123;ALL_LOGFILE&#125; 2&gt;&amp;1 &amp;</span><br></pre></td></tr></table></figure></li>
-</ul>
-<h2 id="按照nginx"><a href="#按照nginx" class="headerlink" title="按照nginx"></a>按照nginx</h2><ul>
-<li><p>按照依赖文件</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">yum install gcc-c++</span><br><span class="line">yum install -y pcre pcre-devel</span><br><span class="line">yum install -y zlib zlib-devel</span><br><span class="line">yum install -y openssl openssl-devel</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
-<li><p>配置nginx</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">wget -c https://nginx.org/download/nginx-1.10.1.tar.gz</span><br><span class="line">tar -zxvf nginx-1.10.1.tar.gz</span><br><span class="line">cd nginx-1.10.1</span><br><span class="line">./configure # 使用默认配置</span><br><span class="line"># 编辑安装</span><br><span class="line">make</span><br><span class="line">make install</span><br><span class="line"></span><br><span class="line">whereis nginx # 查询安装路径</span><br><span class="line"># 启动、停止nginx</span><br><span class="line">cd /usr/local/nginx/sbin/</span><br><span class="line">./nginx  # 启动</span><br><span class="line">./nginx -t # 检查</span><br><span class="line">./nginx -s stop</span><br><span class="line">./nginx -s quit</span><br><span class="line">./nginx -s reload</span><br></pre></td></tr></table></figure></li>
-<li><p>修改配置</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br></pre></td><td class="code"><pre><span class="line">vim nginx.conf</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#user  nobody;</span><br><span class="line">worker_processes  1;</span><br><span class="line"></span><br><span class="line">#error_log  logs/error.log;</span><br><span class="line">#error_log  logs/error.log  notice;</span><br><span class="line">#error_log  logs/error.log  info;</span><br><span class="line"></span><br><span class="line">#pid        logs/nginx.pid;</span><br><span class="line"></span><br><span class="line">events &#123;</span><br><span class="line">    worker_connections  1024;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">http &#123;</span><br><span class="line">    include       mime.types;</span><br><span class="line">    default_type  application/octet-stream;</span><br><span class="line"></span><br><span class="line">    #log_format  main  &#x27;$remote_addr - $remote_user [$time_local] &quot;$request&quot; &#x27;</span><br><span class="line">    #                  &#x27;$status $body_bytes_sent &quot;$http_referer&quot; &#x27;</span><br><span class="line">    #                  &#x27;&quot;$http_user_agent&quot; &quot;$http_x_forwarded_for&quot;&#x27;;</span><br><span class="line"></span><br><span class="line">    #access_log  logs/access.log  main;</span><br><span class="line"></span><br><span class="line">    sendfile        on;</span><br><span class="line">    #tcp_nopush     on;</span><br><span class="line"></span><br><span class="line">    #keepalive_timeout  0;</span><br><span class="line">    keepalive_timeout  65;</span><br><span class="line">    </span><br><span class="line">    #gzip  on;</span><br><span class="line">    #upstream表示负载服务器池，定义名字为goserver的服务器池</span><br><span class="line">    #upstream goserver &#123;</span><br><span class="line">       # server 47.123.15.125:8887 weight=7;</span><br><span class="line">       # server 192.111.50.133:8888 weight=3;</span><br><span class="line">    #&#125;</span><br><span class="line">    #基于域名的虚拟主机</span><br><span class="line">    server &#123;</span><br><span class="line">    	#8880为监听端口号</span><br><span class="line">        listen       8880;</span><br><span class="line">        server_name  192.168.111.128;</span><br><span class="line">        index  index.html index.htm;</span><br><span class="line">        #root 是你的访问目录</span><br><span class="line">        root   /home/dist;</span><br><span class="line">        #charset koi8-r;</span><br><span class="line"></span><br><span class="line">        #access_log  logs/host.access.log  main;      </span><br><span class="line">        </span><br><span class="line">        #error_page  404              /404.html;</span><br><span class="line"></span><br><span class="line">        # redirect server error pages to the static page /50x.html</span><br><span class="line">        error_page   500 502 503 504  /50x.html;</span><br><span class="line">        location = /50x.html &#123;</span><br><span class="line">            root   html;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        # pass the PHP scripts to FastCGI server listening on 127.0.0.1:9000</span><br><span class="line">        #</span><br><span class="line">        #location ~ \.php$ &#123;</span><br><span class="line">        #    root           html;</span><br><span class="line">        #    fastcgi_pass   127.0.0.1:9000;</span><br><span class="line">        #    fastcgi_index  index.php;</span><br><span class="line">        #    fastcgi_param  SCRIPT_FILENAME  /scripts$fastcgi_script_name;</span><br><span class="line">        #    include        fastcgi_params;</span><br><span class="line">        #&#125;</span><br><span class="line"></span><br><span class="line">        # deny access to .htaccess files, if Apache&#x27;s document root</span><br><span class="line">        # concurs with nginx&#x27;s one</span><br><span class="line">        #</span><br><span class="line">        #location ~ /\.ht &#123;</span><br><span class="line">        #    deny  all;</span><br><span class="line">        #&#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>关掉防火墙的端口</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">//8088，自己指定端口</span><br><span class="line">firewall-cmd --permanent --add-port=8880/tcp --zone=public  </span><br><span class="line">//重新加载</span><br><span class="line">firewall-cmd --reload</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>重启nginx</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">//检查配置是否正确</span><br><span class="line">./nginx -t</span><br><span class="line">//启动nginx</span><br><span class="line">./nginx</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>前台正常访问<br><img src="/aposts/1d89e362/vue.png" alt="image.png"></p>
-</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1540,7 +1718,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">145</span>
+          <span class="site-state-item-count">147</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1578,7 +1756,7 @@
     <!--<h3 class="widget-title">Tag Cloud</h3> -->
     <div id="myCanvasContainer" class="widget tagcloud">
         <canvas width="250" height="250" id="resCanvas" style="width=100%">
-            <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AWVS/" rel="tag">AWVS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Burp-Site/" rel="tag">Burp Site</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DVWA/" rel="tag">DVWA</a><span class="tag-list-count">15</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dependency-Check/" rel="tag">Dependency-Check</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/H5/" rel="tag">H5</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hadoop/" rel="tag">Hadoop</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hive/" rel="tag">Hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jenkins/" rel="tag">Jenkins</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Metasploit/" rel="tag">Metasploit</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Nessus/" rel="tag">Nessus</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Sonic/" rel="tag">Sonic</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/airtest/" rel="tag">airtest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">android性能测试</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/app%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">app安全测试</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aritest/" rel="tag">aritest</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/centos/" rel="tag">centos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/" rel="tag">chrome</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/datax/" rel="tag">datax</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/django/" rel="tag">django</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/drozer/" rel="tag">drozer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fisco-bcos/" rel="tag">fisco-bcos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flink/" rel="tag">flink</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gin/" rel="tag">gin</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/" rel="tag">go</a><span class="tag-list-count">16</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go-zero/" rel="tag">go-zero</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hive/" rel="tag">hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/httprunner/" rel="tag">httprunner</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jmeter/" rel="tag">jmeter</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka/" rel="tag">kafka</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kail/" rel="tag">kail</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode/" rel="tag">leetcode</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode-%E6%95%B0%E7%BB%84/" rel="tag">leetcode-数组</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mitmproxy/" rel="tag">mitmproxy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongodb/" rel="tag">mongodb</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/monkey/" rel="tag">monkey</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/" rel="tag">mysql</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pandas/" rel="tag">pandas</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pc%E8%87%AA%E5%8A%A8%E5%8C%96/" rel="tag">pc自动化</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/playwright/" rel="tag">playwright</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pytest/" rel="tag">pytest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a><span class="tag-list-count">23</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/" rel="tag">redis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/selenium/" rel="tag">selenium</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlite/" rel="tag">sqlite</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlmap/" rel="tag">sqlmap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tkinter/" rel="tag">tkinter</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/" rel="tag">vue</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue3/" rel="tag">vue3</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">云服务器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8C%BA%E5%9D%97%E9%93%BE/" rel="tag">区块链</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag">大数据</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">安全测试</a><span class="tag-list-count">29</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">性能测试</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%88%AC%E8%99%AB/" rel="tag">爬虫</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" rel="tag">环境搭建</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95/" rel="tag">自动化测试</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%8B%B1%E8%AF%AD%E5%AD%A6%E4%B9%A0/" rel="tag">英语学习</a><span class="tag-list-count">1</span></li></ul>
+            <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AWVS/" rel="tag">AWVS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Burp-Site/" rel="tag">Burp Site</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DVWA/" rel="tag">DVWA</a><span class="tag-list-count">15</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dependency-Check/" rel="tag">Dependency-Check</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/H5/" rel="tag">H5</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hadoop/" rel="tag">Hadoop</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hive/" rel="tag">Hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jenkins/" rel="tag">Jenkins</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Metasploit/" rel="tag">Metasploit</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Nessus/" rel="tag">Nessus</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Sonic/" rel="tag">Sonic</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/airtest/" rel="tag">airtest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">android性能测试</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/app%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">app安全测试</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aritest/" rel="tag">aritest</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/centos/" rel="tag">centos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/" rel="tag">chrome</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/datax/" rel="tag">datax</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/django/" rel="tag">django</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/drozer/" rel="tag">drozer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fisco-bcos/" rel="tag">fisco-bcos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flink/" rel="tag">flink</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gin/" rel="tag">gin</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/" rel="tag">go</a><span class="tag-list-count">16</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go-zero/" rel="tag">go-zero</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hive/" rel="tag">hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/httprunner/" rel="tag">httprunner</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jmeter/" rel="tag">jmeter</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka/" rel="tag">kafka</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kail/" rel="tag">kail</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode/" rel="tag">leetcode</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode-%E6%95%B0%E7%BB%84/" rel="tag">leetcode-数组</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mitmproxy/" rel="tag">mitmproxy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongodb/" rel="tag">mongodb</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/monkey/" rel="tag">monkey</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/" rel="tag">mysql</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pandas/" rel="tag">pandas</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pc%E8%87%AA%E5%8A%A8%E5%8C%96/" rel="tag">pc自动化</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/playwright/" rel="tag">playwright</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pytest/" rel="tag">pytest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a><span class="tag-list-count">23</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/" rel="tag">redis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/selenium/" rel="tag">selenium</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlite/" rel="tag">sqlite</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlmap/" rel="tag">sqlmap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tkinter/" rel="tag">tkinter</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/" rel="tag">vue</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue3/" rel="tag">vue3</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">云服务器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8C%BA%E5%9D%97%E9%93%BE/" rel="tag">区块链</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag">大数据</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">安全测试</a><span class="tag-list-count">29</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">性能测试</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%88%AC%E8%99%AB/" rel="tag">爬虫</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" rel="tag">环境搭建</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95/" rel="tag">自动化测试</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%8B%B1%E8%AF%AD%E5%AD%A6%E4%B9%A0/" rel="tag">英语学习</a><span class="tag-list-count">1</span></li></ul>
         </canvas>
     </div>
 </div>

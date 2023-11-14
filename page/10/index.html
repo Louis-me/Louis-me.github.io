@@ -191,6 +191,342 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/5a751e2b/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="一个正经的测试工程师">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="施坤的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/aposts/5a751e2b/" class="post-title-link" itemprop="url">airtest多机并行设计解析</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-01-21 11:38:57" itemprop="dateCreated datePublished" datetime="2022-01-21T11:38:57+08:00">2022-01-21</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-02-25 11:20:56" itemprop="dateModified" datetime="2022-02-25T11:20:56+08:00">2022-02-25</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95/" itemprop="url" rel="index"><span itemprop="name">自动化测试</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/aposts/5a751e2b/" class="post-meta-item leancloud_visitors" data-flag-title="airtest多机并行设计解析" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/aposts/5a751e2b/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/aposts/5a751e2b/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><p>前文介绍了<a target="_blank" rel="noopener" href="https://moon-full.gitee.io/2022/01/18/aritest%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95%E6%A1%86%E6%9E%B6%E8%AE%BE%E8%AE%A1/">aritest自动化测试框架设计</a>，这次分析下如何设计多机并行，本次测试是安卓手机，雷电模拟器和真机，谷歌浏览器</p>
+<h2 id="多机安卓"><a href="#多机安卓" class="headerlink" title="多机安卓"></a>多机安卓</h2><h3 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h3><ul>
+<li><p>setting.yml</p>
+</li>
+<li><p>和前文配置差不多，加了个<code>boot=multi</code></p>
+<ul>
+<li><p>只要设置此指，就会读取下面的值，里面给不同设备指定了不同模块</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[<span class="string">multi</span>]</span><br><span class="line"><span class="string">test_case</span> <span class="string">=</span> [&#123;<span class="string">&quot;dev&quot;</span><span class="string">:&quot;ZL9LC685V86DNNMN&quot;</span>,<span class="attr">&quot;test_module&quot;:</span> [<span class="string">&quot;我的&quot;</span>],<span class="string">&quot;phone&quot;</span><span class="string">:&quot;真机1&quot;</span>&#125;, &#123;<span class="string">&quot;dev&quot;</span><span class="string">:&quot;emulator-5554&quot;</span>,<span class="string">&quot;test_module&quot;</span><span class="string">:</span>[<span class="string">&quot;他的&quot;</span>],<span class="string">&quot;phone&quot;</span><span class="string">:&quot;雷电&quot;</span>&#125;]</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">[<span class="string">default</span>]</span><br><span class="line"><span class="comment"># 包名</span></span><br><span class="line"><span class="string">pkg</span> <span class="string">=</span> <span class="string">com.jianshu.haruki</span></span><br><span class="line"><span class="comment"># 手机名字</span></span><br><span class="line"><span class="string">phone=雷电模拟器</span></span><br><span class="line"><span class="comment"># 设备连接名字</span></span><br><span class="line"><span class="string">dev_connect=Android://127.0.0.1:5037/</span></span><br><span class="line"><span class="comment"># 设备id,adb devices 获取，如果启动多设备，这里无效</span></span><br><span class="line"><span class="string">dev=emulator-5554</span></span><br><span class="line"><span class="comment"># 用例目录</span></span><br><span class="line"><span class="string">root_path=E:\proj\airtest_auto\air_case\android</span></span><br><span class="line"> <span class="comment"># test_plan=1 表示调试用例需要配合test_module使用，0表示全部用例;如果启动多设备,test_plan默认为0,设置1也无效</span></span><br><span class="line"><span class="string">test_plan=1</span></span><br><span class="line"><span class="string">test_module=[&quot;他的&quot;]</span></span><br><span class="line"><span class="comment"># false|true 表示是否运行用例之前，删除log文件夹，删除后会影响查看历史报告</span></span><br><span class="line"><span class="string">remove_log=true</span></span><br><span class="line"><span class="comment"># false|true 是否开启录屏,若传true就会自动录屏，但是在模拟器上录屏失败，只使用于真机</span></span><br><span class="line"><span class="string">recording=false</span></span><br><span class="line"><span class="comment"># android|ios|web，当填如web时，需要填写驱动文件位置</span></span><br><span class="line"><span class="string">platform</span> <span class="string">=android</span></span><br><span class="line"><span class="comment"># driver_path=E:\proj\airtest_auto\exe\chromedriver.exe</span></span><br><span class="line"><span class="string">driver_path=</span></span><br><span class="line"><span class="comment"># 服务器信的信息，比如本地的ip，用来展示报告</span></span><br><span class="line"><span class="string">report_host=172.31.105.196</span></span><br><span class="line"><span class="comment"># 本地服务器路径，我把源代码中的report也放在里面了</span></span><br><span class="line"><span class="string">local_host_path=E:\proj\aritest</span></span><br><span class="line"><span class="comment"># 本地服务器端口</span></span><br><span class="line"><span class="string">local_host_port=8000</span></span><br><span class="line"><span class="comment"># 启动什么模式，单机和多机</span></span><br><span class="line"><span class="comment"># 如果指定multi就是多机并行，读取multi的配置，否则就为单机模式</span></span><br><span class="line"><span class="string">boot=multi</span></span><br><span class="line">[<span class="string">multi</span>]</span><br><span class="line"><span class="comment"># 给不同的设备分配测试模块,dev中的设备id一定要填对</span></span><br><span class="line"><span class="string">test_case</span> <span class="string">=</span> [&#123;<span class="string">&quot;dev&quot;</span><span class="string">:&quot;ZL9LC685V86DNNMN&quot;</span>,<span class="attr">&quot;test_module&quot;:</span> [<span class="string">&quot;我的&quot;</span>],<span class="string">&quot;phone&quot;</span><span class="string">:&quot;真机1&quot;</span>&#125;, &#123;<span class="string">&quot;dev&quot;</span><span class="string">:&quot;emulator-5554&quot;</span>,<span class="string">&quot;test_module&quot;</span><span class="string">:</span>[<span class="string">&quot;他的&quot;</span>],<span class="string">&quot;phone&quot;</span><span class="string">:&quot;雷电&quot;</span>&#125;]</span><br><span class="line"><span class="comment">#test_case = [&#123;&quot;dev&quot;:&quot;emulator-5554&quot;,&quot;test_module&quot;:[&quot;他的&quot;],&quot;phone&quot;:&quot;雷电&quot;&#125;]</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="代码分析"><a href="#代码分析" class="headerlink" title="代码分析"></a>代码分析</h3><p>使用 <code>pool = Pool() pool.map(self.run_case1, data[&quot;test_case&quot;])</code>达到多进程并行设备</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## runner3.py</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 启动入口代码，和之前单机一样，读取配置文件</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">run_case</span>(<span class="params">data</span>):</span><br><span class="line">  	...</span><br><span class="line">    test = CustomAirtestCase(data[<span class="string">&quot;root_path&quot;</span>], data[<span class="string">&quot;dev_connect&quot;</span>])</span><br><span class="line">    test.run_air(data)</span><br><span class="line"></span><br><span class="line"> <span class="keyword">def</span> <span class="title function_">run_air</span>(<span class="params">self, data</span>):</span><br><span class="line">        self.recording = data[<span class="string">&quot;recording&quot;</span>]</span><br><span class="line">        self.report_host = <span class="string">&quot;http://&quot;</span> + data[<span class="string">&quot;report_host&quot;</span>] + <span class="string">&quot;:&quot;</span> + data[<span class="string">&quot;local_host_port&quot;</span>]</span><br><span class="line">        <span class="comment"># 开启本地http服务器</span></span><br><span class="line">        threading.Thread(target=HttpServer.start, args=(),</span><br><span class="line">                         kwargs=&#123;<span class="string">&quot;local_host_path&quot;</span>: data[<span class="string">&quot;local_host_path&quot;</span>], <span class="string">&quot;report_host&quot;</span>: data[<span class="string">&quot;report_host&quot;</span>],<span class="string">&quot;port&quot;</span>: data[<span class="string">&quot;local_host_port&quot;</span>]&#125;).start()</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 整个用例开始执行时间</span></span><br><span class="line">        start_time = datetime.now().strftime(<span class="string">&quot;%H:%M:%S&quot;</span>)</span><br><span class="line">        pool = Pool()</span><br><span class="line">        pool.<span class="built_in">map</span>(self.run_case1, data[<span class="string">&quot;test_case&quot;</span>])</span><br><span class="line">      	...</span><br><span class="line">        <span class="comment"># 记录数据采用放到json文件中</span></span><br><span class="line">        test_modules_dev = Runner3Common.get_case_module_dev(PATH(<span class="string">&quot;config/case_data.json&quot;</span>))</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;==设备=%s&quot;</span> % test_modules_dev)</span><br><span class="line">        Runner3Common.set_result_summary_json(&#123;<span class="string">&quot;total_time&quot;</span>: total_time, <span class="string">&quot;phone&quot;</span>: test_modules_dev[<span class="string">&quot;test_dev&quot;</span>], <span class="string">&quot;modules&quot;</span>: test_modules_dev[<span class="string">&quot;test_modules&quot;</span>]&#125;)</span><br><span class="line">      </span><br><span class="line"><span class="comment"># 不同的手机执行不同模块用例</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">run_case1</span>(<span class="params">self, data_item</span>):</span><br><span class="line">    _dev = data_item[<span class="string">&quot;dev&quot;</span>]</span><br><span class="line">    <span class="comment"># 记录测试设备</span></span><br><span class="line">    Runner3Common.set_case_module_dev(&#123;<span class="string">&quot;test_dev&quot;</span>: _dev&#125;)</span><br><span class="line">    <span class="comment"># 记录测试模块</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> data_item[<span class="string">&quot;test_module&quot;</span>]:</span><br><span class="line">        <span class="comment"># 获取到用例列表</span></span><br><span class="line">        get_case_data = Runner3Common.get_cases(data_item, _dev, self.root_path)</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> get_case_data:</span><br><span class="line">            air_device = [self.dev_connect + _dev]  <span class="comment"># 取设备</span></span><br><span class="line">            <span class="comment"># 执行用例</span></span><br><span class="line">            run(root_dir=self.root_path, test_case=i, device=air_device, local_host_path=self.local_host_path,log_date=self.log_date,</span><br><span class="line">                recording=self.recording, report_host=self.report_host, phone=data_item[<span class="string">&quot;phone&quot;</span>])</span><br><span class="line">     </span><br><span class="line"><span class="comment"># 执行用例这里代码和单机的代码相差不多，把 rpt = report.LogToHtml这里生成日志文件代码写在了这里</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">run</span>(<span class="params">root_dir, test_case, device, local_host_path, log_date, recording, report_host, phone</span>):</span><br><span class="line">    script = os.path.join(root_dir, test_case[<span class="string">&quot;module&quot;</span>], test_case[<span class="string">&quot;case&quot;</span>])</span><br><span class="line">    log_host_path = os.path.join(test_case[<span class="string">&quot;module&quot;</span>], test_case[<span class="string">&quot;case&quot;</span>].replace(<span class="string">&#x27;.air&#x27;</span>, <span class="string">&#x27;&#x27;</span>))</span><br><span class="line">    log = os.path.join(local_host_path, log_host_path)</span><br><span class="line">    os.makedirs(log)</span><br><span class="line">    <span class="built_in">print</span>(<span class="built_in">str</span>(log) + <span class="string">&#x27; 创建日志文件成功&#x27;</span>)</span><br><span class="line">    output_file = os.path.join(log, <span class="string">&#x27;log.html&#x27;</span>)</span><br><span class="line">    args = Namespace(device=device, log=log, compress=<span class="literal">None</span>, recording=recording, script=script, no_image=<span class="literal">None</span>)</span><br><span class="line">    <span class="comment"># 用例开始执行日期</span></span><br><span class="line">    st_date = datetime.now().strftime(<span class="string">&quot;%Y-%m-%d %H:%M:%S&quot;</span>)</span><br><span class="line">    <span class="comment"># 用例开始执行时间</span></span><br><span class="line">    s_time = datetime.now().strftime(<span class="string">&quot;%H:%M:%S&quot;</span>)</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        run_script(args, AirtestCase)</span><br><span class="line">        is_success = <span class="literal">True</span></span><br><span class="line">    <span class="keyword">except</span>:</span><br><span class="line">        is_success = <span class="literal">False</span></span><br><span class="line">    end_date = datetime.now().strftime(<span class="string">&quot;%Y-%m-%d %H:%M:%S&quot;</span>)</span><br><span class="line">    <span class="comment"># 用例结束执行时间</span></span><br><span class="line">    e_time = datetime.now().strftime(<span class="string">&quot;%H:%M:%S&quot;</span>)</span><br><span class="line">    <span class="comment"># 用例耗时时间</span></span><br><span class="line">    sum_time = get_case_total_time(s_time, e_time)</span><br><span class="line">    <span class="comment"># 生成测试用例的详情报告</span></span><br><span class="line">    rpt = report.LogToHtml(script, log, report_host + <span class="string">&quot;/report&quot;</span>,</span><br><span class="line">                           log_host=report_host + <span class="string">&quot;/log/&quot;</span> + log_date + <span class="string">&quot;/&quot;</span> + log_host_path)</span><br><span class="line"></span><br><span class="line">    rpt.report(<span class="string">&quot;log_template.html&quot;</span>, output_file=output_file)</span><br></pre></td></tr></table></figure>
+
+<h3 id="测试结果"><a href="#测试结果" class="headerlink" title="测试结果"></a>测试结果</h3><p><img src="/aposts/5a751e2b/image-20220121115858698.png" alt="image-20220121115858698"></p>
+<ul>
+<li>测试结果的列表页面，优化了下页面</li>
+</ul>
+<p><img src="/aposts/5a751e2b/image-20220124111600060.png" alt="image-20220124111600060"></p>
+<p><img src="/aposts/5a751e2b/image-20220121120048939.png" alt="image-20220121120048939"></p>
+<h3 id="关键字驱动"><a href="#关键字驱动" class="headerlink" title="关键字驱动"></a>关键字驱动</h3><ul>
+<li>airtest中也能实现关键字驱动？当然也可以</li>
+<li>用例调用逻辑</li>
+</ul>
+<p><img src="/aposts/5a751e2b/image-20220124112127781.png" alt="image-20220124112127781"></p>
+<ul>
+<li>yml中的用例格式</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">-</span> <span class="string">poco(text=&quot;取消&quot;).click()</span> <span class="string">if</span> <span class="string">poco(text=&quot;取消&quot;).exists()</span> <span class="string">else</span> <span class="string">print(&quot;&quot;)</span></span><br><span class="line"><span class="comment"># 点击我的关注</span></span><br><span class="line"><span class="bullet">-</span> <span class="string">poco(&quot;com.jianshu.haruki:id/tv_guanzhu&quot;).click()</span></span><br><span class="line"><span class="comment"># 点击动态下最近更新的作者第一条数据</span></span><br><span class="line"><span class="bullet">-</span> <span class="string">poco(&quot;com.jianshu.haruki:id/userIcon&quot;).click()</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>解析yml中的用例，知道此逻辑后，可以定义任意关键字</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">operate_test_case</span>(<span class="params">poco, yml</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    读取yml用例文件,执行用例</span></span><br><span class="line"><span class="string">    :param poco:</span></span><br><span class="line"><span class="string">    :param yml:</span></span><br><span class="line"><span class="string">    :return:</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    handing_error(poco)</span><br><span class="line">    <span class="keyword">with</span> <span class="built_in">open</span>(yml, encoding=<span class="string">&#x27;utf-8&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">        d = yaml.safe_load(f)</span><br><span class="line">    <span class="comment"># 启动应用后的容错</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> d:</span><br><span class="line">        <span class="comment"># 寻找关键字click</span></span><br><span class="line">        event_click = i.split(<span class="string">&quot;.click()&quot;</span>)</span><br><span class="line">        <span class="comment"># 寻找关键字if</span></span><br><span class="line">        event_if = i.split(<span class="string">&quot;if&quot;</span>)</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;元素为：%s&quot;</span> % i)</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;操作元素开始时间：%s&quot;</span> % datetime.now().strftime(<span class="string">&quot;%Y-%m-%d %H:%M:%S&quot;</span>))</span><br><span class="line">        <span class="comment"># 非if语句的click事件</span></span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">len</span>(event_click) &gt; <span class="number">1</span> <span class="keyword">and</span> <span class="built_in">len</span>(event_if) == <span class="number">1</span>:</span><br><span class="line">            <span class="comment"># 利用eval把字符串转换为函数,每次点击之前智能等待</span></span><br><span class="line">            <span class="built_in">eval</span>(event_click[<span class="number">0</span>] + <span class="string">&quot;.wait_for_appearance(5)&quot;</span>)</span><br><span class="line">            <span class="comment"># 执行用例</span></span><br><span class="line">            <span class="built_in">eval</span>(i)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="comment"># 其他的poco事件</span></span><br><span class="line">            sleep(<span class="number">2</span>)</span><br><span class="line">            <span class="built_in">eval</span>(i)</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;操作元素结束时间：%s&quot;</span> % datetime.now().strftime(<span class="string">&quot;%Y-%m-%d %H:%M:%S&quot;</span>))</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 操作元素后的容错</span></span><br><span class="line">        handing_error(poco)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>如果有写逻辑比较复杂，不适合写到yml中，可以混合使用，比如下面这样写用例：</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">operate</span>():</span><br><span class="line">    poco = AndroidUiautomationPoco(use_airtest_input=<span class="literal">True</span>, screenshot_each_action=<span class="literal">False</span>)</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        <span class="comment"># 初始化用例</span></span><br><span class="line">        init_app()</span><br><span class="line">        poco(text=<span class="string">&quot;取消&quot;</span>).click() <span class="keyword">if</span> poco(text=<span class="string">&quot;取消&quot;</span>).exists() <span class="keyword">else</span> <span class="built_in">print</span>(<span class="string">&quot;&quot;</span>)</span><br><span class="line">         </span><br><span class="line">        </span><br><span class="line">        case_path = os.path.join(path, <span class="string">&quot;yml&quot;</span>, <span class="string">&quot;xxx&quot;</span>)</span><br><span class="line">        operate_test_case(poco, case_path)</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 点击我的</span></span><br><span class="line">        poco(<span class="string">&quot;com.jianshu.haruki:id/tv_more_menu&quot;</span>).wait(<span class="number">5</span>).click()</span><br><span class="line">        <span class="comment"># 点击我的文章</span></span><br><span class="line">        poco(text=<span class="string">&quot;我的文章&quot;</span>).wait(<span class="number">5</span>).click()</span><br><span class="line">        <span class="comment"># 向上滑动</span></span><br><span class="line">        poco(<span class="string">&quot;com.jianshu.haruki:id/refresh_view&quot;</span>).focus([<span class="number">0.5</span>, <span class="number">0.5</span>]).swipe([<span class="number">0.5</span>, -<span class="number">0.5</span>])</span><br><span class="line">        </span><br><span class="line">        case_path = os.path.join(path, <span class="string">&quot;yml&quot;</span>, <span class="string">&quot;oooo&quot;</span>)</span><br><span class="line">        operate_test_case(poco, case_path)</span><br><span class="line">        </span><br><span class="line">    <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">        snapshot(msg=<span class="string">&quot;报错后截图&quot;</span>)</span><br><span class="line">        <span class="keyword">raise</span> e</span><br></pre></td></tr></table></figure>
+
+<h2 id="多机web"><a href="#多机web" class="headerlink" title="多机web"></a>多机web</h2><ul>
+<li>代码逻辑几乎一样，只是把Namespace方法中的devicec传为None</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">   <span class="keyword">if</span> device == <span class="string">&quot;web&quot;</span>:</span><br><span class="line">       air_device = <span class="literal">None</span></span><br><span class="line">   <span class="keyword">else</span>:</span><br><span class="line">       air_device = [dev_connect + device] </span><br><span class="line">...</span><br><span class="line">   args = Namespace(device=air_device, log=log, compress=<span class="literal">None</span>, recording=recording, script=script, no_image=<span class="literal">None</span>)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>配置文件略有不同</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"># setting1.yaml</span><br><span class="line">[default]</span><br><span class="line"># 手机名字</span><br><span class="line">phone=谷歌浏览器</span><br><span class="line"></span><br><span class="line"># android|ios|web，当填如web时，需要填写驱动文件位置</span><br><span class="line">platform =web</span><br><span class="line">driver_path=E:\proj\airtest_auto\util\chromedriver.exe</span><br><span class="line"></span><br><span class="line">[multi]</span><br><span class="line"># 如果是web测试，dev一定要填web</span><br><span class="line">test_case = [&#123;&quot;dev&quot;:&quot;web&quot;,&quot;test_module&quot;: [&quot;home&quot;],&quot;phone&quot;:&quot;谷歌浏览器1&quot;&#125;, &#123;&quot;dev&quot;:&quot;web&quot;,&quot;test_module&quot;:[&quot;home2&quot;],&quot;phone&quot;:&quot;谷歌浏览器2&quot;&#125;]</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>用例编写</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- encoding=utf8 -*-</span></span><br><span class="line"><span class="keyword">from</span> airtest.core.api <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="comment"># pip3 install pynput</span></span><br><span class="line"><span class="comment"># pip3 install airtest-selenium</span></span><br><span class="line"><span class="comment"># 得到绝对路径</span></span><br><span class="line"></span><br><span class="line">abs_path = os.path.abspath(os.path.dirname(__file__))</span><br><span class="line"><span class="comment"># 得到公共用例目录</span></span><br><span class="line">common_path = os.path.join(abs_path.split(<span class="string">&quot;airtest_auto&quot;</span>)[<span class="number">0</span>], <span class="string">&quot;airtest_auto&quot;</span>, <span class="string">&quot;web_util&quot;</span>)</span><br><span class="line">sys.path.append(common_path)</span><br><span class="line"><span class="keyword">from</span> web_util <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">driver = get_driver()</span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    driver.get(<span class="string">&quot;http://www.baidu.com&quot;</span>)</span><br><span class="line">    driver.find_element_by_id(<span class="string">&quot;kw&quot;</span>).send_keys(<span class="string">&quot;test&quot;</span>)</span><br><span class="line">    driver.find_element_by_id(<span class="string">&quot;su&quot;</span>).click()</span><br><span class="line"><span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">    snapshot(msg=<span class="string">&quot;报错后截图&quot;</span>)</span><br><span class="line">    <span class="keyword">raise</span> e</span><br><span class="line"><span class="keyword">finally</span>:</span><br><span class="line">    driver.close()</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>测试结果</li>
+</ul>
+<p><img src="/aposts/5a751e2b/image-20220124173817575.png" alt="image-20220124173817575"></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
+<li>还有一种最优方案是，后台有个监控任务，不停的读取用例队列，每台手机运行20条用例（可设置）多台并行，手机(设备)不够就等待，手机有空闲后，分配用例队列中的用例，直到用例全部分配完毕。</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/6e64669e/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="一个正经的测试工程师">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="施坤的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/aposts/6e64669e/" class="post-title-link" itemprop="url">aritest自动化测试框架设计</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-01-18 15:16:03" itemprop="dateCreated datePublished" datetime="2022-01-18T15:16:03+08:00">2022-01-18</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-02-25 11:20:56" itemprop="dateModified" datetime="2022-02-25T11:20:56+08:00">2022-02-25</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95/" itemprop="url" rel="index"><span itemprop="name">自动化测试</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/aposts/6e64669e/" class="post-meta-item leancloud_visitors" data-flag-title="aritest自动化测试框架设计" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/aposts/6e64669e/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/aposts/6e64669e/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><ul>
+<li>基于Airtest设计的自动化测试框架</li>
+</ul>
+<h2 id="环境设置"><a href="#环境设置" class="headerlink" title="环境设置"></a>环境设置</h2><ul>
+<li>AirtestIDE-win-1.2.13 请自行安装，用来调试用例</li>
+<li>此次装的python版本为 3.7.9</li>
+<li>本地电脑的adb设置为AirtestIDE中的路径</li>
+</ul>
+<p><img src="/aposts/6e64669e/image-20220118152720452.png" alt="image-20220118152720452"></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">C:\Users\Admin&gt;adb</span><br><span class="line">Android Debug Bridge version 1.0.40</span><br><span class="line">Version 4986621</span><br><span class="line">Installed as E:\exe\AirtestIDE\airtest\core\android\static\adb\windows\adb.exe</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>安装依赖文件</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">pip install -U airtest</span><br><span class="line">pip install -U pocoui</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>本次测试机器使用雷电模拟器，真机也可以</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">C:\Users\Admin&gt;adb devices</span><br><span class="line">List of devices attached</span><br><span class="line">emulator-5554   device</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>安装测试apk文件</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt;adb install -g -r C:\Users\Admin\Downloads\com.jianshu.haruki_6.4.4_liqucn.com.apk</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>在模拟器中打开手动登录</li>
+<li>复制python环境中的Lib目录的airtest下的report文件到新建文件夹下面（E:\proj\aritest）<ul>
+<li>放生成的测试报告和日志文件，默认放到项目中，对项目管理非常不友好</li>
+</ul>
+</li>
+</ul>
+<p><img src="/aposts/6e64669e/image-20220118164513042.png" alt="image-20220118164513042"></p>
+<ul>
+<li>然后新建一个log文件，用来放测试用例报告的</li>
+</ul>
+<p><img src="/aposts/6e64669e/image-20220118164740800.png" alt="image-20220118164740800"></p>
+<h2 id="代码分析"><a href="#代码分析" class="headerlink" title="代码分析"></a>代码分析</h2><h3 id="启动器"><a href="#启动器" class="headerlink" title="启动器"></a>启动器</h3><ul>
+<li><p>启动器代码做到和用例文件分离，现在启动器支撑ios(待测试)，android（已测试），web（待测试），理论上airtest支持的都支持</p>
+</li>
+<li><p>启动器需要取配置文件进行，配置文件如下</p>
+</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">[<span class="string">default</span>]</span><br><span class="line"><span class="comment"># 包名</span></span><br><span class="line"><span class="string">pkg</span> <span class="string">=</span> <span class="string">com.jianshu.haruki</span></span><br><span class="line"><span class="comment"># 手机名字</span></span><br><span class="line"><span class="string">phone=雷电模拟器</span></span><br><span class="line"><span class="comment"># 设备连接名字</span></span><br><span class="line"><span class="string">dev_connect=Android://127.0.0.1:5037/emulator-5554</span></span><br><span class="line"><span class="comment">#dev_connect=Android://127.0.0.1:5037/ZL9LC685V86DNNMN</span></span><br><span class="line"><span class="comment"># 用例目录</span></span><br><span class="line"><span class="string">root_path=E:\proj\airtest_auto\air_case\android</span></span><br><span class="line"> <span class="comment"># test_plan=1 表示调试用例需要配合test_module使用，0表示全部用例</span></span><br><span class="line"><span class="string">test_plan=1</span></span><br><span class="line"><span class="string">test_module=[&quot;我的&quot;]</span></span><br><span class="line"><span class="comment"># false|true 表示是否运行用例之前，删除log文件夹，删除后会影响查看历史报告</span></span><br><span class="line"><span class="string">remove_log=true</span></span><br><span class="line"><span class="comment"># false|true 是否开启录屏,若传true就会自动录屏，但是在模拟器上录屏失败，只使用于真机</span></span><br><span class="line"><span class="string">recording=false</span></span><br><span class="line"><span class="comment"># android|ios|web，当填如web时，需要填写驱动文件位置</span></span><br><span class="line"><span class="string">platform</span> <span class="string">=android</span></span><br><span class="line"><span class="comment"># driver_path=E:\proj\airtest_auto\exe\chromedriver.exe</span></span><br><span class="line"><span class="string">driver_path=</span></span><br><span class="line"><span class="comment"># 服务器信的信息，比如本地的http服务器，用来展示报告</span></span><br><span class="line"><span class="string">report_host=http://172.31.105.196:8000</span></span><br><span class="line"><span class="comment"># 本地服务器路径，我把源代码中的report也放在里面了</span></span><br><span class="line"><span class="string">local_host_path=E:\proj\aritest</span></span><br><span class="line"><span class="comment"># 本地服务器端口</span></span><br><span class="line"><span class="string">local_host_port=8000</span></span><br><span class="line">[<span class="string">mail</span>]</span><br><span class="line"><span class="comment"># 是否启动发送邮件,传false|true</span></span><br><span class="line"><span class="string">enable</span> <span class="string">=false</span></span><br><span class="line"><span class="comment"># 收件人</span></span><br><span class="line"><span class="string">recipient</span> <span class="string">=[&quot;284772894@qq.com&quot;,&quot;284772895@qq.com&quot;]</span></span><br><span class="line"><span class="comment"># 发件人smtp</span></span><br><span class="line"><span class="string">mail_host</span> <span class="string">=</span> <span class="string">smtp.126.com</span></span><br><span class="line"><span class="comment"># 发件人</span></span><br><span class="line"><span class="string">mail_user</span> <span class="string">=</span> <span class="string">ashikun@126.com</span></span><br><span class="line"><span class="comment"># 授权码</span></span><br><span class="line"><span class="string">mail_pass</span> <span class="string">=</span> <span class="string">XXXXX</span></span><br><span class="line"><span class="string">port</span> <span class="string">=</span> <span class="number">465</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>启动器代码分析</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 读取配置文件，进行运行函数</span></span><br><span class="line">PATH = <span class="keyword">lambda</span> p: os.path.abspath(</span><br><span class="line">    os.path.join(os.path.dirname(__file__), p)</span><br><span class="line">)</span><br><span class="line">path = PATH(<span class="string">&quot;config/setting1.ini&quot;</span>)</span><br><span class="line">data = ReadIni(path).get_ini_list()</span><br><span class="line">run_case(data)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">run_case</span>(<span class="params">data</span>):</span><br><span class="line">    <span class="comment"># 当平台为安卓时，检查是否连接成功</span></span><br><span class="line">    <span class="keyword">if</span> data.get(<span class="string">&quot;platform&quot;</span>, <span class="string">&quot;1&quot;</span>) == <span class="string">&quot;android&quot;</span>:</span><br><span class="line">        devices = attached_devices()</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> devices:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&quot;无可用设备&quot;</span>)</span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line">    <span class="keyword">elif</span> data.get(<span class="string">&quot;platform&quot;</span>, <span class="string">&quot;1&quot;</span>) == <span class="string">&quot;ios&quot;</span>:</span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line">    <span class="keyword">elif</span> data.get(<span class="string">&quot;platform&quot;</span>, <span class="string">&quot;1&quot;</span>) == <span class="string">&quot;web&quot;</span>:</span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line">    test = CustomAirtestCase(data[<span class="string">&quot;root_path&quot;</span>])</span><br><span class="line">    device = [data[<span class="string">&quot;dev_connect&quot;</span>]]</span><br><span class="line">    test.run_air(device, data)</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line"><span class="keyword">def</span> <span class="title function_">run_air</span>(<span class="params">self, device, data</span>):</span><br><span class="line">    get_data_list = get_test_case(data)</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> get_data_list:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;无可用用例&quot;</span>)</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    <span class="comment"># 开启本地http服务器</span></span><br><span class="line">    HttpServer.start(data[<span class="string">&quot;local_host_path&quot;</span>], data[<span class="string">&quot;local_host_port&quot;</span>])</span><br><span class="line">	<span class="comment"># 循环执行用例</span></span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> get_data_list:</span><br><span class="line">        ...</span><br><span class="line">        <span class="comment"># 执行用例</span></span><br><span class="line">        get_run = run(data[<span class="string">&quot;root_path&quot;</span>], j, device, local_host_path, data[<span class="string">&quot;recording&quot;</span>])</span><br><span class="line">        </span><br><span class="line">        ..</span><br><span class="line">         <span class="comment"># 生成测试用例的详情报告,注意这里修改了lib目录下的report.py中源代码，主要为了达到通过服务器ip访问测试报告</span></span><br><span class="line">       rpt = report.LogToHtml(get_run[<span class="string">&quot;script&quot;</span>], get_run[<span class="string">&quot;log&quot;</span>], data[<span class="string">&quot;report_host&quot;</span>]+<span class="string">&quot;/report&quot;</span>, log_host=</span><br><span class="line">                              data[<span class="string">&quot;report_host&quot;</span>] + <span class="string">&quot;/log/&quot;</span> + log_date + <span class="string">&quot;/&quot;</span> + get_run[<span class="string">&quot;log_host_path&quot;</span>])</span><br><span class="line">      rpt.report(<span class="string">&quot;log_template.html&quot;</span>, output_file=get_run[<span class="string">&quot;output_file&quot;</span>])</span><br><span class="line">      <span class="comment"># self。results主要记录测试用例结果，通过解析summary_template.html生成测试报告</span></span><br><span class="line">      result = &#123;<span class="string">&quot;result&quot;</span>: get_run[<span class="string">&quot;is_success&quot;</span>], <span class="string">&quot;start_date&quot;</span>: st_date,<span class="string">&quot;end_date&quot;</span>: end_date, <span class="string">&quot;sum_time&quot;</span>: sum_time,<span class="string">&quot;log&quot;</span>: s_log, <span class="string">&quot;name&quot;</span>: s_name&#125;</span><br><span class="line">        modules.append(j[<span class="string">&quot;module&quot;</span>])</span><br><span class="line">        self.results[<span class="string">&quot;data&quot;</span>].append(result)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>from airtest.report import report</code> 里面的report.py文件修改，实际文件目录如图：</li>
+</ul>
+<p><img src="/aposts/6e64669e/image-20220120112555007.png" alt="image-20220120112555007"></p>
+<ul>
+<li>report.py文件修改</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">LogToHtml</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line">    scale = <span class="number">0.5</span></span><br><span class="line">    <span class="comment"># 这里的log_host是我新增的日志文件服务器地址，这样新增一个字段，不影响到其他代码逻辑</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, script_root, log_root=<span class="string">&quot;&quot;</span>, static_root=<span class="string">&quot;&quot;</span>, export_dir=<span class="literal">None</span>, script_name=<span class="string">&quot;&quot;</span>, logfile=<span class="literal">None</span>, lang=<span class="string">&quot;en&quot;</span>, plugins=<span class="literal">None</span>, log_host=<span class="literal">None</span></span>):</span><br><span class="line">        ...</span><br><span class="line">      self.log_host = log_host <span class="comment"># shikun 2022-1-19</span></span><br><span class="line">    </span><br><span class="line"> <span class="comment"># 这个函数，主要生成log.html文件中的图片展示</span></span><br><span class="line"> <span class="keyword">def</span> <span class="title function_">_translate_screen</span>(<span class="params">self, step, code</span>):</span><br><span class="line">        ...</span><br><span class="line">          <span class="keyword">for</span> item <span class="keyword">in</span> step[<span class="string">&quot;__children__&quot;</span>]:</span><br><span class="line">            <span class="keyword">if</span> item[<span class="string">&quot;data&quot;</span>][<span class="string">&quot;name&quot;</span>] == <span class="string">&quot;try_log_screen&quot;</span>:</span><br><span class="line">                snapshot = item[<span class="string">&quot;data&quot;</span>].get(<span class="string">&quot;ret&quot;</span>, <span class="literal">None</span>)</span><br><span class="line">                <span class="keyword">if</span> <span class="built_in">isinstance</span>(snapshot, six.text_type):</span><br><span class="line">                    src = snapshot</span><br><span class="line">                <span class="keyword">elif</span> <span class="built_in">isinstance</span>(snapshot, <span class="built_in">dict</span>):</span><br><span class="line">                    src = snapshot[<span class="string">&#x27;screen&#x27;</span>]</span><br><span class="line">                    screen[<span class="string">&#x27;resolution&#x27;</span>] = snapshot[<span class="string">&#x27;resolution&#x27;</span>]</span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    <span class="keyword">continue</span></span><br><span class="line">                <span class="keyword">if</span> self.export_dir:  <span class="comment"># all relative path</span></span><br><span class="line">                    screen[<span class="string">&#x27;_filepath&#x27;</span>] = os.path.join(DEFAULT_LOG_DIR, src)</span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    screen[<span class="string">&#x27;_filepath&#x27;</span>] = os.path.abspath(os.path.join(self.log_root, src))</span><br><span class="line"></span><br><span class="line">                <span class="comment"># 修改了这里逻辑， screen[&#x27;src&#x27;]展示的图片路径就Log.html中img src中的路径</span></span><br><span class="line">                <span class="keyword">if</span> self.log_host:</span><br><span class="line">                    screen[<span class="string">&#x27;_filepath&#x27;</span>] = self.log_host + <span class="string">&quot;/&quot;</span> + src</span><br><span class="line">                screen[<span class="string">&#x27;src&#x27;</span>] = screen[<span class="string">&#x27;_filepath&#x27;</span>]</span><br><span class="line"> <span class="comment"># 根据模板文件生成测试报告，这里主要对视频文件路径进行处理  </span></span><br><span class="line"> <span class="keyword">def</span> <span class="title function_">report</span>(<span class="params">self, template_name=HTML_TPL, output_file=HTML_FILE, record_list=<span class="literal">None</span></span>):</span><br><span class="line">       ....</span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">not</span> record_list:</span><br><span class="line">            record_list = [f <span class="keyword">for</span> f <span class="keyword">in</span> os.listdir(self.log_root) <span class="keyword">if</span> f.endswith(<span class="string">&quot;.mp4&quot;</span>)]</span><br><span class="line">        <span class="comment"># 源代码时这样，我多加了个log_host</span></span><br><span class="line">        <span class="comment"># data = self.report_data(output_file=output_file, record_list=record_list)</span></span><br><span class="line">        <span class="comment"># shikun-2121-1-19</span></span><br><span class="line">        data = self.report_data(output_file=output_file, record_list=record_list, log_host=self.log_host)</span><br><span class="line">        </span><br><span class="line">   <span class="comment"># log_host 为我新增</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">report_data</span>(<span class="params">self, output_file=<span class="literal">None</span>, record_list=<span class="literal">None</span>, log_host=<span class="literal">None</span></span>):</span><br><span class="line">	...</span><br><span class="line">       <span class="keyword">if</span> record_list:</span><br><span class="line">            records = [os.path.join(DEFAULT_LOG_DIR, f) <span class="keyword">if</span> self.export_dir</span><br><span class="line">                       <span class="keyword">else</span> os.path.abspath(os.path.join(self.log_root, f)) <span class="keyword">for</span> f <span class="keyword">in</span> record_list]</span><br><span class="line">            <span class="comment"># 对视频路径进行处理</span></span><br><span class="line">            <span class="keyword">if</span> log_host:</span><br><span class="line">                records = []</span><br><span class="line">                <span class="keyword">for</span> i <span class="keyword">in</span> record_list:</span><br><span class="line">                    records.append(log_host + <span class="string">&quot;/&quot;</span> + i)</span><br><span class="line">    </span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>运行runner5.py</li>
+</ul>
+<p><img src="/aposts/6e64669e/image-20220120113714163.png" alt="image-20220120113714163"></p>
+<ul>
+<li>通过http服务查看运行结果</li>
+</ul>
+<p><img src="/aposts/6e64669e/image-20220120113910981.png" alt="image-20220120113910981"></p>
+<p><img src="/aposts/6e64669e/image-20220120113940586.png" alt="image-20220120113940586"></p>
+<p><img src="/aposts/6e64669e/image-20220120114713093.png" alt="image-20220120114713093"></p>
+<ul>
+<li>实际上http服务，定位到的就是在配置文件中的：local_host_path&#x3D;E:\proj\aritest</li>
+</ul>
+<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">E:\<span class="title">proj</span>\<span class="title">aritest</span>&gt;<span class="title">dir</span> <span class="title">log</span>\2022-01-20-10-56-21</span></span><br><span class="line"><span class="function"> 驱动器 <span class="title">E</span> 中的卷是 软件盘</span></span><br><span class="line"><span class="function"> 卷的序列号是 240<span class="title">F</span>-1787</span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"> <span class="title">E</span>:\<span class="title">proj</span>\<span class="title">aritest</span>\<span class="title">log</span>\2022-01-20-10-56-21 的目录</span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">2022/01/20  10:58    &lt;<span class="title">DIR</span>&gt;          .</span></span><br><span class="line"><span class="function">2022/01/20  10:58    &lt;<span class="title">DIR</span>&gt;          ..</span></span><br><span class="line"><span class="function">2022/01/20  10:58             2,803 <span class="title">summary_2022</span>-01-20-10-58-33.<span class="title">html</span></span></span><br><span class="line"><span class="function">2022/01/20  10:58             1,568 <span class="title">summary_template.html</span></span></span><br><span class="line"><span class="function">2022/01/20  10:57    &lt;<span class="title">DIR</span>&gt;          他的</span></span><br><span class="line"><span class="function">2022/01/20  10:57    &lt;<span class="title">DIR</span>&gt;          我的</span></span><br><span class="line"><span class="function">               2 个文件          4,371 字节</span></span><br><span class="line"><span class="function">               4 个目录 19,213,107,200 可用字节</span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"><span class="title">E</span>:\<span class="title">proj</span>\<span class="title">aritest</span>&gt;<span class="title">dir</span> <span class="title">report</span></span></span><br><span class="line"><span class="function"> 驱动器 <span class="title">E</span> 中的卷是 软件盘</span></span><br><span class="line"><span class="function"> 卷的序列号是 240<span class="title">F</span>-1787</span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"> <span class="title">E</span>:\<span class="title">proj</span>\<span class="title">aritest</span>\<span class="title">report</span> 的目录</span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">2022/01/18  16:43    &lt;<span class="title">DIR</span>&gt;          .</span></span><br><span class="line"><span class="function">2022/01/18  16:43    &lt;<span class="title">DIR</span>&gt;          ..</span></span><br><span class="line"><span class="function">2022/01/18  16:42    &lt;<span class="title">DIR</span>&gt;          <span class="title">css</span></span></span><br><span class="line"><span class="function">2022/01/18  16:42    &lt;<span class="title">DIR</span>&gt;          <span class="title">fonts</span></span></span><br><span class="line"><span class="function">2022/01/18  16:42    &lt;<span class="title">DIR</span>&gt;          <span class="title">image</span></span></span><br><span class="line"><span class="function">2022/01/18  16:42    &lt;<span class="title">DIR</span>&gt;          <span class="title">js</span></span></span><br><span class="line"><span class="function">2021/05/21  10:28            10,634 <span class="title">log_template.html</span></span></span><br><span class="line"><span class="function">2021/08/16  10:43            21,860 <span class="title">report.py</span></span></span><br><span class="line"><span class="function">2021/06/23  16:53            22,405 <span class="title">test.py</span></span></span><br><span class="line"><span class="function">2018/08/28  11:39                 0 <span class="title">__init__.py</span></span></span><br><span class="line"><span class="function">               4 个文件         54,899 字节</span></span><br><span class="line"><span class="function">               6 个目录 19,213,107,200 可用字节</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>修改好的report.py文件已经放在项目跟目录，可以覆盖到各自目录即可</li>
+</ul>
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><ul>
+<li><p>查看<a target="_blank" rel="noopener" href="https://github.com/Louis-me/airtest_auto">github源代码</a></p>
+</li>
+<li><p>查看<a target="_blank" rel="noopener" href="https://gitee.com/moon-full/airtest_auto">gitee源代码</a></p>
+</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/d4ea272f/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2264,420 +2600,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/f05ef477/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="一个正经的测试工程师">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="施坤的博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/aposts/f05ef477/" class="post-title-link" itemprop="url">第一章 大数据技术生态</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-12-01 09:35:36" itemprop="dateCreated datePublished" datetime="2021-12-01T09:35:36+08:00">2021-12-01</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-02-25 11:20:56" itemprop="dateModified" datetime="2022-02-25T11:20:56+08:00">2022-02-25</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/" itemprop="url" rel="index"><span itemprop="name">大数据</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/aposts/f05ef477/" class="post-meta-item leancloud_visitors" data-flag-title="第一章 大数据技术生态" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/aposts/f05ef477/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/aposts/f05ef477/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="大数据技术生态"><a href="#大数据技术生态" class="headerlink" title="大数据技术生态"></a>大数据技术生态</h1><blockquote>
-<p>本文主要抄录《大数据测试技术与实践》</p>
-</blockquote>
-<p>由下而上可以划分为：</p>
-<ul>
-<li>数据采集<ul>
-<li>关系与非关系数据采集组件，分布式消息队列等，如kafka、sqoop</li>
-</ul>
-</li>
-<li>数据存储<ul>
-<li>分布式存储系统、关系和非关系数据库等，如HDFS、MySQL</li>
-</ul>
-</li>
-<li>管理调度<ul>
-<li>资源管理和调度YARN，容器Kubernetes、服务协调zookeeper、工作流调度平台（如Azkaban）等</li>
-</ul>
-</li>
-<li>计算机分析<ul>
-<li>批处理（MapReduce）、流计算(Flink)、查询分析(Impala)和图计算(Gelly)等</li>
-</ul>
-</li>
-<li>组件应用<ul>
-<li>各种数据分析和机器学习工具，如Hive、Pig、TensorFlow</li>
-</ul>
-</li>
-</ul>
-<h2 id="大数据采集计算"><a href="#大数据采集计算" class="headerlink" title="大数据采集计算"></a>大数据采集计算</h2><ul>
-<li>系统日志采集，如kafka、Flume</li>
-<li>网络数据采集，如爬虫</li>
-<li>其他数据采集</li>
-</ul>
-<h2 id="大数据存储计算"><a href="#大数据存储计算" class="headerlink" title="大数据存储计算"></a>大数据存储计算</h2><h3 id="分布式文件系统-HDFS"><a href="#分布式文件系统-HDFS" class="headerlink" title="分布式文件系统 HDFS"></a>分布式文件系统 HDFS</h3><ul>
-<li><p>主要解决大数据存储问题</p>
-</li>
-<li><p>GFS（Google File System）的开源实现</p>
-</li>
-<li><p>Hadoop两大核心组成部分之一，另外一个是MapReduce</p>
-</li>
-<li><p>遵循主从（master&#x2F;salve）框架</p>
-</li>
-<li><p>可以由单台服务器扩展到数千台服务器</p>
-</li>
-<li><p>NameNode关联和维护HDFS文件系统的读写操作</p>
-</li>
-<li><p>多个DataNode1负责存储数据</p>
-</li>
-</ul>
-<p><img src="/aposts/f05ef477/image-20211201095407758.png" alt="image-20211201095407758"></p>
-<h4 id="HDFS优点"><a href="#HDFS优点" class="headerlink" title="HDFS优点"></a>HDFS优点</h4><ul>
-<li>具有高度容错能力，能实时监测错误并且自动恢复。<ul>
-<li>类似于服务器的容灾能力，当某台服务器挂了，就启用备用服务器，进行数据同步</li>
-</ul>
-</li>
-<li>数据存储为Streaming流式数据存储 。批处理数据，而不是实时处理，提高了大量处理数据的能力，但是会<strong>牺牲响应时间</strong></li>
-<li>大数据集。提供了<a target="_blank" rel="noopener" href="https://links.jianshu.com/go?to=%5Bhttps://www.ibm.com/developerworks/cn/linux/cluster/lw-clustering.html%5D(https://www.ibm.com/developerworks/cn/linux/cluster/lw-clustering.html)">cluster</a>集群架构，集群可扩展为数百个节点</li>
-<li>数据简单一致性。一次性写入多次读取，一个文件创建后就不可再修改，这样可以简化数据一致性</li>
-<li>跨硬件和跨软件。平台的可移植性</li>
-</ul>
-<h3 id="海量数据列式存储：Hbase"><a href="#海量数据列式存储：Hbase" class="headerlink" title="海量数据列式存储：Hbase"></a>海量数据列式存储：Hbase</h3><ul>
-<li><p>HDFS容错率很高，即便是在系统崩溃的情况下，也能够在节点之间快速传输数据。<strong>HBase是非关系数据库，是开源的Not-Only-SQL数据库</strong>，它的运行<strong>建立在Hadoop上</strong>。HBase依赖于CAP定理(Consistency, Availability, and Partition Tolerance）中的CP项</p>
-</li>
-<li><p>HDFS最适于执行批次分析。然而，<strong>它最大的缺点是无法执行实时分析</strong>，而实时分析是信息科技行业的标配。<strong>HBase能够处理大规模数据，它不适于批次分析，但它可以向Hadoop实时地调用数据</strong>。</p>
-</li>
-<li><p>HDFS和HBase都可以处理结构、半结构和非结构数据。因为HDFS建立在旧的MapReduce框架上，所以它缺乏内存引擎，数据分析速度较慢。相反，HBase使用了内存引擎，大大提高了数据的读写速度。</p>
-</li>
-<li><p>HDFS执行的数据分析过程是透明的。HBase与之相反，因为其结构基于NoSQL，它通过在不同的关键字下进行排序而获取数据。</p>
-</li>
-</ul>
-<p><img src="/aposts/f05ef477/image-20211201100832525.png" alt="image-20211201100832525"></p>
-<h2 id="大数据分析技术"><a href="#大数据分析技术" class="headerlink" title="大数据分析技术"></a>大数据分析技术</h2><ul>
-<li>批处理计算。针对大规模数据的批量处理，主要代表产品有MapReduce、Spark</li>
-<li>流计算。针对流数据的实时计算，主要代表产品有，Spark Streaming、Flink 、Storm等</li>
-<li>查询分析计算。针对大规模数据的存储管理和查询分析，主要代表产品有Hive、Impala等</li>
-<li>图计算。针对大规模图结构数据的处理，主要代表产品有Pregel、Gelly等</li>
-</ul>
-<h3 id="批处理计算-MapReduce"><a href="#批处理计算-MapReduce" class="headerlink" title="批处理计算-MapReduce"></a>批处理计算-MapReduce</h3><ul>
-<li><p>进行大量数据处理时，用MapReduce进行分布式计算，这样可大量减少计算时间，还有Spark、Pig等就是类似的代表产品或技术</p>
-</li>
-<li><p>Map将任务分割成更小任务，由每台服务器分别执行</p>
-</li>
-<li><p>Reduce将所有服务器返回的结果汇总，整理成最终结果</p>
-</li>
-</ul>
-<p><img src="/aposts/f05ef477/image-20211201102027603.png" alt="image-20211201102027603"></p>
-<h3 id="流计算"><a href="#流计算" class="headerlink" title="流计算"></a>流计算</h3><ul>
-<li><p>流式处理假设数据的潜在价值是数据的<strong>新鲜度、实时性</strong>，需要尽快处理得到结果。在这种方式下，数据以流的方式到达。在数据连续到达的过程中，由于流携带了大量数据，只有小部分的流数据被保存在有限的<strong>内存中</strong>。流处理方式用于在线应用，通常工作在<strong>秒或毫秒级</strong>别。</p>
-</li>
-<li><p>目前主流的流处理组件包括：<strong>Strom</strong>、<strong>Spark Streaming</strong>、KafKa、Flume、<strong>Flink</strong>、S3等</p>
-<ul>
-<li>Spark 和 Strom、Flink对比，无法在对实施要求很高的流处理场景中</li>
-</ul>
-</li>
-</ul>
-<p><img src="/aposts/f05ef477/image-20211201104503379.png" alt="image-20211201104503379"></p>
-<h3 id="OLAP引擎"><a href="#OLAP引擎" class="headerlink" title="OLAP引擎"></a>OLAP引擎</h3><ul>
-<li>即联机分析处理。OLAP对业务数据执行多维分析，并提供复杂计算，趋势分析和复杂数据建模的能力。它主要用于支持企业决策管理分析，是许多商务智能（BI）应用程序背后的技术。</li>
-<li>目前开源的引擎很多，如Hive、Impala、Persto等</li>
-</ul>
-<h4 id="Hive"><a href="#Hive" class="headerlink" title="Hive"></a>Hive</h4><p><img src="/aposts/f05ef477/image-20211201111306662.png" alt="image-20211201111306662"></p>
-<h4 id="其他参考"><a href="#其他参考" class="headerlink" title="其他参考"></a>其他参考</h4><ul>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_43665254/article/details/112552106">Hive SQL vs SQL 区别</a></li>
-</ul>
-<h2 id="大数据管理调度技术"><a href="#大数据管理调度技术" class="headerlink" title="大数据管理调度技术"></a>大数据管理调度技术</h2><h3 id="分布式集群资源调度框架-YARN"><a href="#分布式集群资源调度框架-YARN" class="headerlink" title="分布式集群资源调度框架-YARN"></a>分布式集群资源调度框架-YARN</h3><ul>
-<li>针对Hadoop1.0中MR的不足，引入了Yarn框架。Yarn框架中将JobTracker资源分配和作业控制分开，分为Resource Manager(RM)以及Application Master(AM)。</li>
-<li>Hadoop的MapReduce架构称为<a target="_blank" rel="noopener" href="https://links.jianshu.com/go?to=%5Bhttp://hadoop.apache.org/docs/current/hadoop-yarn/hadoop-yarn-site/YARN.html%5D(http://hadoop.apache.org/docs/current/hadoop-yarn/hadoop-yarn-site/YARN.html)">YARN</a>(另一种资源协助者)，是效率更高的资源管理器核心</li>
-<li>Client客户端，用户向Resource Manage请求执行运算</li>
-<li>在NameNode会有Resource Manage统筹管理运算请求</li>
-<li>在其他的DateNode会有 Node Manager负责运行，监督每个任务运行情况，并向Resource Manage 汇报状态</li>
-</ul>
-<p><img src="/aposts/f05ef477/image-20211201102156648.png" alt="image-20211201102156648"></p>
-<h3 id="容器管理系统：Kubernetes"><a href="#容器管理系统：Kubernetes" class="headerlink" title="容器管理系统：Kubernetes"></a>容器管理系统：Kubernetes</h3><ul>
-<li>常见的大数据技术组件一般有对应的开源项目支持部署，如Flink，Spark也有官方支持Spark on Kubernetes运行模式等</li>
-</ul>
-<h3 id="ZooKeeper"><a href="#ZooKeeper" class="headerlink" title="ZooKeeper"></a>ZooKeeper</h3><ul>
-<li><p>是大数据的动物管理员，是一个开源的分布式的，是Hadoop的一个子项目</p>
-</li>
-<li><p>Zookeeper从设计模式角度来理解：是一个基于观察者模式设计的分布式服务管理框架，它负责存储和管理大家都关心的数据，然后接受观察者的注册，一旦这些数据的状态发生变化，Zookeeper就将负责通知已经在Zookeeper上注册的那些观察者做出相应的反应，从而实现集群中类似Master&#x2F;Slave管理模式</p>
-</li>
-<li><p><strong>Zookeeper&#x3D;文件系统+通知机制</strong></p>
-</li>
-</ul>
-<h3 id="常用的工作流调度平台"><a href="#常用的工作流调度平台" class="headerlink" title="常用的工作流调度平台"></a>常用的工作流调度平台</h3><ul>
-<li>对于简单的任务调度，可以使用Linux Crontab，但是对于在多台机器上、任务之前有依赖关系时，Linux Crontab就不能满足需求，因此需要分布式任务调度系统来进行任务编排</li>
-<li>业界常用开源调度平台有：Azkaban、Oozie、Airflow等</li>
-</ul>
-<h2 id="大数据商业产品"><a href="#大数据商业产品" class="headerlink" title="大数据商业产品"></a>大数据商业产品</h2><ul>
-<li>大数据解决方案提供商</li>
-<li>大数据云计算服务商</li>
-<li>大数据SaaS服务商</li>
-<li>大数据开发平台</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/66ac71c6/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="一个正经的测试工程师">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="施坤的博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/aposts/66ac71c6/" class="post-title-link" itemprop="url">寻找拐点</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-11-24 11:42:59" itemprop="dateCreated datePublished" datetime="2021-11-24T11:42:59+08:00">2021-11-24</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-02-25 11:20:56" itemprop="dateModified" datetime="2022-02-25T11:20:56+08:00">2022-02-25</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/jmeter/" itemprop="url" rel="index"><span itemprop="name">jmeter</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/aposts/66ac71c6/" class="post-meta-item leancloud_visitors" data-flag-title="寻找拐点" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/aposts/66ac71c6/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/aposts/66ac71c6/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><ul>
-<li>jmeter 5.4.1</li>
-<li>测试论坛登录并发的拐点</li>
-</ul>
-<h2 id="第一次线程组脚本配置"><a href="#第一次线程组脚本配置" class="headerlink" title="第一次线程组脚本配置"></a>第一次线程组脚本配置</h2><ul>
-<li><p>设置并发10个请求，永远</p>
-<p><img src="/aposts/66ac71c6/image-20211126145852042.png" alt="image-20211126145852042"></p>
-</li>
-<li><p>设置RPS定时器，将RPS逐渐增加到50&#x2F;S，并持续一段时间</p>
-</li>
-</ul>
-<p><img src="/aposts/66ac71c6/image-20211126150023226.png" alt="image-20211126150023226"></p>
-<h3 id="结果分析"><a href="#结果分析" class="headerlink" title="结果分析"></a>结果分析</h3><ul>
-<li><p>首先分析Hits per Second，在54秒后，RPS为84.7&#x2F;S（可以理解为：<strong>最大支持1秒内84.7个用户同时登录</strong>），<strong>出现拐点</strong>，请求曲线开始收窄，有同学会问，怎么会是RPS？不是HPS吗？因为在单接口请求下，我么可以认为HPS和RPS是相等的</p>
-<p><img src="/aposts/66ac71c6/image-20211129113816875.png" alt="image-20211129113816875"></p>
-</li>
-<li><p>查看聚合报告，得到RT的响应时间，平均值为203，，这时候可能会有同学说，你这里不能取平均时间，不具有代表性，我们还应该考虑90%,95%，99%不同比例的接口响应时间。对的，个人认为，这些数值在和平均值没有过大的区别的情况下，我们可以取平均值来计算，如果说出现了较大的波动，那么我们需要考虑是不是服务器的内存,cpu出现了问题。</p>
-</li>
-<li><p>这里我们算下并发数：<code>84.7*0.203=17.19</code>，可以理解为，<strong>支持17.19个用户在1s内同时登录</strong></p>
-</li>
-<li><p>查看TPS ，发现在16秒支持<strong>最大tps为12</strong>，不然就会出现明显波动</p>
-<p><img src="/aposts/66ac71c6/image-20211129114833158.png" alt="image-20211129114833158"></p>
-</li>
-</ul>
-<h3 id="第一次运行结果总结"><a href="#第一次运行结果总结" class="headerlink" title="第一次运行结果总结"></a>第一次运行结果总结</h3><ul>
-<li>我们的<strong>最大请求数为84</strong></li>
-<li><strong>最大 TPS 为12</strong></li>
-<li><strong>最大系统并发数在 17左右</strong></li>
-<li>超出这些范围就开始出现波动</li>
-</ul>
-<h2 id="第二次调整运行参数"><a href="#第二次调整运行参数" class="headerlink" title="第二次调整运行参数"></a>第二次调整运行参数</h2><ul>
-<li><p>并发数调整为<strong>5个</strong></p>
-<p><img src="/aposts/66ac71c6/image-20211129145513074.png" alt="image-20211129145513074"></p>
-<h3 id="运行结果分析"><a href="#运行结果分析" class="headerlink" title="运行结果分析"></a>运行结果分析</h3></li>
-<li><p>在54秒时，RPS的值为<strong>84.3&#x2F;S</strong></p>
-<p><img src="/aposts/66ac71c6/image-20211129145631570.png" alt="image-20211129145631570"></p>
-</li>
-<li><p>查看聚合报告，得到RT的响应时间，平均值为175，这里我们算下<strong>并发数：84.3*0.175&#x3D;14.17</strong></p>
-</li>
-</ul>
-<p><img src="/aposts/66ac71c6/image-20211129145944164.png" alt="image-20211129145944164"></p>
-<ul>
-<li>查看TPS，在21秒是，<strong>tps的值为18</strong>为最佳，不然后续出现巨大波动</li>
-</ul>
-<p><img src="/aposts/66ac71c6/image-20211129150633788.png" alt="image-20211129150633788"></p>
-<h3 id="第二次结果分析"><a href="#第二次结果分析" class="headerlink" title="第二次结果分析"></a>第二次结果分析</h3><ul>
-<li>我们的<strong>最大请求数为84</strong></li>
-<li><strong>最大 TPS 为18</strong></li>
-<li><strong>最大系统并发数在 14左右</strong></li>
-<li>超出这些范围就开始出现波动</li>
-</ul>
-<h2 id="CLI运行"><a href="#CLI运行" class="headerlink" title="CLI运行"></a>CLI运行</h2><ul>
-<li>10个并发</li>
-</ul>
-<h3 id="命令运行"><a href="#命令运行" class="headerlink" title="命令运行"></a>命令运行</h3><ul>
-<li>发起压测请求<code>jmeter -n -t resp.jmx -l result/report.jtl</code></li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">E:\jmeter&gt;jmeter -n -t resp.jmx -l result/report.jtl</span><br><span class="line">Creating summariser &lt;summary&gt;</span><br><span class="line">Created the tree successfully using resp.jmx</span><br><span class="line">Starting standalone <span class="built_in">test</span> @ Tue Nov 30 10:06:56 CST 2021 (1638238016471)</span><br><span class="line">Waiting <span class="keyword">for</span> possible Shutdown/StopTestNow/HeapDump/ThreadDump message on port 4445</span><br><span class="line">summary +      9 <span class="keyword">in</span> 00:00:03 =    2.6/s Avg:   140 Min:   117 Max:   230 Err:     0 (0.00%) Active: 5 Started: 5 Finished: 0</span><br><span class="line">summary +    406 <span class="keyword">in</span> 00:00:30 =   13.7/s Avg:   148 Min:   108 Max:  1160 Err:     0 (0.00%) Active: 5 Started: 5 Finished: 0</span><br><span class="line">summary =    415 <span class="keyword">in</span> 00:00:33 =   12.5/s Avg:   148 Min:   108 Max:  1160 Err:     0 (0.00%)</span><br><span class="line">summary +    516 <span class="keyword">in</span> 00:00:30 =   17.2/s Avg:   232 Min:   108 Max: 15728 Err:     0 (0.00%) Active: 5 Started: 5 Finished: 0</span><br><span class="line">.....</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p>压测完毕后，转变为测试报告</p>
-<p><code>jmeter -g report.jtl -o report</code></p>
-<p><img src="/aposts/66ac71c6/image-20211130102551759.png" alt="image-20211130102551759"></p>
-<h3 id="报告分析"><a href="#报告分析" class="headerlink" title="报告分析"></a>报告分析</h3></li>
-<li><p>RPS为<strong>80.48&#x2F;S</strong></p>
-<p><img src="/aposts/66ac71c6/image-20211130102819087.png" alt="image-20211130102819087"></p>
-</li>
-<li><p>得到RT的响应时间，平均值为121.14，这里我们算下<strong>并发数：80.4*0.121&#x3D;14.17</strong></p>
-</li>
-</ul>
-<p><img src="/aposts/66ac71c6/image-20211130103151709.png" alt="image-20211130103151709"></p>
-<ul>
-<li><p><strong>tps的值为27</strong>为最佳，不然后续出现巨大波动</p>
-<p><img src="/aposts/66ac71c6/image-20211130104030732.png" alt="image-20211130104030732"></p>
-</li>
-</ul>
-<h3 id="第三次结果分析"><a href="#第三次结果分析" class="headerlink" title="第三次结果分析"></a>第三次结果分析</h3><ul>
-<li>我们的<strong>最大请求数为84</strong></li>
-<li><strong>最大 TPS 为27</strong></li>
-<li><strong>最大系统并发数在 14左右</strong></li>
-<li>超出这些范围就开始出现波动</li>
-</ul>
-<h2 id="三次结果总结"><a href="#三次结果总结" class="headerlink" title="三次结果总结"></a>三次结果总结</h2><ul>
-<li>我们的<strong>最大请求数为84</strong></li>
-<li><strong>最大 TPS 为12-27</strong><ul>
-<li>CLI模式下TPS支持最大</li>
-</ul>
-</li>
-<li><strong>最大系统并发数在 14-17</strong></li>
-<li>这些范围就开始出现波动</li>
-</ul>
-<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><ul>
-<li>可以测试多次，取平均值</li>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/limenglovechen/article/details/107685933">参考这里</a>的测试方式</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -2753,7 +2675,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">145</span>
+          <span class="site-state-item-count">147</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -2791,7 +2713,7 @@
     <!--<h3 class="widget-title">Tag Cloud</h3> -->
     <div id="myCanvasContainer" class="widget tagcloud">
         <canvas width="250" height="250" id="resCanvas" style="width=100%">
-            <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AWVS/" rel="tag">AWVS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Burp-Site/" rel="tag">Burp Site</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DVWA/" rel="tag">DVWA</a><span class="tag-list-count">15</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dependency-Check/" rel="tag">Dependency-Check</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/H5/" rel="tag">H5</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hadoop/" rel="tag">Hadoop</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hive/" rel="tag">Hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jenkins/" rel="tag">Jenkins</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Metasploit/" rel="tag">Metasploit</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Nessus/" rel="tag">Nessus</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Sonic/" rel="tag">Sonic</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/airtest/" rel="tag">airtest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">android性能测试</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/app%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">app安全测试</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aritest/" rel="tag">aritest</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/centos/" rel="tag">centos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/" rel="tag">chrome</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/datax/" rel="tag">datax</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/django/" rel="tag">django</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/drozer/" rel="tag">drozer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fisco-bcos/" rel="tag">fisco-bcos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flink/" rel="tag">flink</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gin/" rel="tag">gin</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/" rel="tag">go</a><span class="tag-list-count">16</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go-zero/" rel="tag">go-zero</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hive/" rel="tag">hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/httprunner/" rel="tag">httprunner</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jmeter/" rel="tag">jmeter</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka/" rel="tag">kafka</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kail/" rel="tag">kail</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode/" rel="tag">leetcode</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode-%E6%95%B0%E7%BB%84/" rel="tag">leetcode-数组</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mitmproxy/" rel="tag">mitmproxy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongodb/" rel="tag">mongodb</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/monkey/" rel="tag">monkey</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/" rel="tag">mysql</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pandas/" rel="tag">pandas</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pc%E8%87%AA%E5%8A%A8%E5%8C%96/" rel="tag">pc自动化</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/playwright/" rel="tag">playwright</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pytest/" rel="tag">pytest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a><span class="tag-list-count">23</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/" rel="tag">redis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/selenium/" rel="tag">selenium</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlite/" rel="tag">sqlite</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlmap/" rel="tag">sqlmap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tkinter/" rel="tag">tkinter</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/" rel="tag">vue</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue3/" rel="tag">vue3</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">云服务器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8C%BA%E5%9D%97%E9%93%BE/" rel="tag">区块链</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag">大数据</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">安全测试</a><span class="tag-list-count">29</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">性能测试</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%88%AC%E8%99%AB/" rel="tag">爬虫</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" rel="tag">环境搭建</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95/" rel="tag">自动化测试</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%8B%B1%E8%AF%AD%E5%AD%A6%E4%B9%A0/" rel="tag">英语学习</a><span class="tag-list-count">1</span></li></ul>
+            <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AWVS/" rel="tag">AWVS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Burp-Site/" rel="tag">Burp Site</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DVWA/" rel="tag">DVWA</a><span class="tag-list-count">15</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dependency-Check/" rel="tag">Dependency-Check</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/H5/" rel="tag">H5</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hadoop/" rel="tag">Hadoop</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hive/" rel="tag">Hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jenkins/" rel="tag">Jenkins</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Metasploit/" rel="tag">Metasploit</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Nessus/" rel="tag">Nessus</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Sonic/" rel="tag">Sonic</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/airtest/" rel="tag">airtest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">android性能测试</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/app%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">app安全测试</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aritest/" rel="tag">aritest</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/centos/" rel="tag">centos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/" rel="tag">chrome</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/datax/" rel="tag">datax</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/django/" rel="tag">django</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/drozer/" rel="tag">drozer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fisco-bcos/" rel="tag">fisco-bcos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flink/" rel="tag">flink</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gin/" rel="tag">gin</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/" rel="tag">go</a><span class="tag-list-count">16</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go-zero/" rel="tag">go-zero</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hive/" rel="tag">hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/httprunner/" rel="tag">httprunner</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jmeter/" rel="tag">jmeter</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka/" rel="tag">kafka</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kail/" rel="tag">kail</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode/" rel="tag">leetcode</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode-%E6%95%B0%E7%BB%84/" rel="tag">leetcode-数组</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mitmproxy/" rel="tag">mitmproxy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongodb/" rel="tag">mongodb</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/monkey/" rel="tag">monkey</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/" rel="tag">mysql</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pandas/" rel="tag">pandas</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pc%E8%87%AA%E5%8A%A8%E5%8C%96/" rel="tag">pc自动化</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/playwright/" rel="tag">playwright</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pytest/" rel="tag">pytest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a><span class="tag-list-count">23</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/" rel="tag">redis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/selenium/" rel="tag">selenium</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlite/" rel="tag">sqlite</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlmap/" rel="tag">sqlmap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tkinter/" rel="tag">tkinter</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/" rel="tag">vue</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue3/" rel="tag">vue3</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">云服务器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8C%BA%E5%9D%97%E9%93%BE/" rel="tag">区块链</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag">大数据</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">安全测试</a><span class="tag-list-count">29</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">性能测试</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%88%AC%E8%99%AB/" rel="tag">爬虫</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" rel="tag">环境搭建</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95/" rel="tag">自动化测试</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%8B%B1%E8%AF%AD%E5%AD%A6%E4%B9%A0/" rel="tag">英语学习</a><span class="tag-list-count">1</span></li></ul>
         </canvas>
     </div>
 </div>

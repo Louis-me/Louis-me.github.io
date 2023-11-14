@@ -191,6 +191,245 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/57ceda08/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="一个正经的测试工程师">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="施坤的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/aposts/57ceda08/" class="post-title-link" itemprop="url">Python多线程，单线程，协程爬虫某音乐实战对比</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-09-29 17:13:35" itemprop="dateCreated datePublished" datetime="2021-09-29T17:13:35+08:00">2021-09-29</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-06-20 18:59:22" itemprop="dateModified" datetime="2023-06-20T18:59:22+08:00">2023-06-20</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/" itemprop="url" rel="index"><span itemprop="name">python</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/aposts/57ceda08/" class="post-meta-item leancloud_visitors" data-flag-title="Python多线程，单线程，协程爬虫某音乐实战对比" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/aposts/57ceda08/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/aposts/57ceda08/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <ul>
+<li>单线程，多线程下载某云音乐</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br></pre></td><td class="code"><pre><span class="line">import re</span><br><span class="line">import urllib.request</span><br><span class="line">import requests</span><br><span class="line">from bs4 import BeautifulSoup</span><br><span class="line">import os</span><br><span class="line">import time</span><br><span class="line">from Threads import BaseThread</span><br><span class="line"></span><br><span class="line">PATH = lambda p: os.path.abspath(</span><br><span class="line">    os.path.join(os.path.dirname(__file__), p)</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">&#x27;&#x27;&#x27;</span><br><span class="line">https://music.163.com/playlist?id=  得到播放列表</span><br><span class="line">http://music.163.com/song/media/outer/url?id= 得到下载链接</span><br><span class="line">urllib.request.urlretrieve  把远程下载的mp3文件下载到本地</span><br><span class="line">&#x27;&#x27;&#x27;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Music163:</span><br><span class="line">    def __init__(self):</span><br><span class="line">        pass</span><br><span class="line">    def get_music_163(self, id):</span><br><span class="line">        user_agent = &#x27;Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.82 &#x27; \</span><br><span class="line">                     &#x27;Safari/537.36 &#x27;</span><br><span class="line">        headers = &#123;&#x27;User-Agent&#x27;: user_agent&#125;</span><br><span class="line">        data = requests.get(&quot;https://music.163.com/playlist?id=&quot; + id, headers).text</span><br><span class="line">        soup = BeautifulSoup(data, &#x27;lxml&#x27;)</span><br><span class="line">        temp = []</span><br><span class="line">        for i in soup.find(&quot;ul&quot;, &#123;&quot;class&quot;, &quot;f-hide&quot;&#125;).find_all(&quot;a&quot;):</span><br><span class="line">            pattern = re.compile(&#x27;&lt;a .*?id=(.*?)&quot;&gt;(.*?)&lt;/a&gt;&#x27;, re.S)</span><br><span class="line">            items = re.findall(pattern, str(i))</span><br><span class="line">            temp.append([items[0][0], items[0][1]])</span><br><span class="line">        return temp</span><br><span class="line"></span><br><span class="line">    # 批量下载</span><br><span class="line">    def download(self, value):</span><br><span class="line">        for i in value:</span><br><span class="line">            if os.path.isfile(PATH(&quot;mp3/&quot; + i[1] + &quot;.mp3&quot;)):</span><br><span class="line">                print(&quot;%s已经被下载了&quot; % i[1])</span><br><span class="line">            else:</span><br><span class="line">                url = &#x27;http://music.163.com/song/media/outer/url?id=&#x27; + i[0] + &#x27;.mp3&#x27;</span><br><span class="line">                urllib.request.urlretrieve(url, &#x27;%s&#x27; % PATH(&quot;mp3/&quot; + i[1] + &quot;.mp3&quot;))</span><br><span class="line">                print(&quot;%s下载成功&quot; % i[1])</span><br><span class="line"></span><br><span class="line">    # 单个下载</span><br><span class="line">    def get(self, value):</span><br><span class="line">        if os.path.isfile(PATH(&quot;mp3/&quot; + value[1] + &quot;.mp3&quot;)):</span><br><span class="line">            print(&quot;%s已经被下载了&quot; % value[1])</span><br><span class="line">        else:</span><br><span class="line">            url = &#x27;http://music.163.com/song/media/outer/url?id=&#x27; + value[0] + &#x27;.mp3&#x27;</span><br><span class="line">            urllib.request.urlretrieve(url, &#x27;%s&#x27; % PATH(&quot;mp3/&quot; + value[1] + &quot;.mp3&quot;))</span><br><span class="line">            print(&quot;%s下载成功&quot; % value[1])</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># 多线程</span><br><span class="line">def multi_thread():</span><br><span class="line">    id = &quot;2786226719&quot;  # 播放的列表id</span><br><span class="line">    start_time = time.time()</span><br><span class="line">    threads = []</span><br><span class="line">    mc = Music163()</span><br><span class="line">    data = mc.get_music_163(id)</span><br><span class="line">    count = len(data)</span><br><span class="line">    for i in range(0, count):</span><br><span class="line">        threads.append(BaseThread(mc.get(data[i])))</span><br><span class="line">    for j in range(0, count):</span><br><span class="line">        threads[j].start()</span><br><span class="line">    for k in range(0, count):</span><br><span class="line">        threads[k].join()</span><br><span class="line">    end_time = time.time()</span><br><span class="line">    print(&quot;共耗时%.2f&quot; % (end_time - start_time) + &quot;秒&quot;)</span><br><span class="line">    # 多线程47秒</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># 运行单线程</span><br><span class="line">def run():</span><br><span class="line">    id = &quot;2786226719&quot;  # 播放的列表id</span><br><span class="line">    start_time = time.time()</span><br><span class="line">    mc = Music163()</span><br><span class="line">    data = mc.get_music_163(id)</span><br><span class="line">    mc.download(data)</span><br><span class="line">    end_time = time.time()</span><br><span class="line">    print(&quot;共耗时%.2f&quot; % (end_time - start_time) + &quot;秒&quot;)</span><br><span class="line">    # 单线程43秒</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">if __name__ == &quot;__main__&quot;:</span><br><span class="line">    # run()</span><br><span class="line">    multi_thread()</span><br></pre></td></tr></table></figure>
+<ul>
+<li>单线程共下载100首歌,耗时9.09秒</li>
+</ul>
+<p><img src="/aposts/57ceda08/music1.png" alt="dan.png"></p>
+<ul>
+<li>多线程共下载100首歌,耗时9.60秒</li>
+</ul>
+<p><img src="/aposts/57ceda08/music2.png" alt="image.png"></p>
+<ul>
+<li>协程下载的代码</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">mport time</span><br><span class="line">from multiprocessing import Process</span><br><span class="line">from gevent import monkey</span><br><span class="line">import urllib.request</span><br><span class="line">import BaseMusic163</span><br><span class="line">monkey.patch_all()</span><br><span class="line">import gevent</span><br><span class="line">import os</span><br><span class="line"></span><br><span class="line">PATH = lambda p: os.path.abspath(</span><br><span class="line">    os.path.join(os.path.dirname(__file__), p)</span><br><span class="line">)</span><br><span class="line">&#x27;&#x27;&#x27;</span><br><span class="line">协程发请求,</span><br><span class="line">&#x27;&#x27;&#x27;</span><br><span class="line">class Producer(object):</span><br><span class="line">    def __init__(self):</span><br><span class="line">        self._rungevent()</span><br><span class="line"></span><br><span class="line">    def _rungevent(self):</span><br><span class="line">        jobs = []</span><br><span class="line">        id = &quot;2786226719&quot;  # 播放的列表id</span><br><span class="line">        start_time = time.time()</span><br><span class="line">        mc = BaseMusic163.Music163()</span><br><span class="line">        data = mc.get_music_163(id)</span><br><span class="line">        count = len(data)</span><br><span class="line">        for i in range(count):  # windows下有1024端口限制</span><br><span class="line">            jobs.append(gevent.spawn(self.produce(data[i])))</span><br><span class="line">        gevent.joinall(jobs)</span><br><span class="line">        end_time = time.time()</span><br><span class="line">        print(&quot;共耗时%.2f&quot; % (end_time - start_time) + &quot;秒&quot;)</span><br><span class="line"></span><br><span class="line">    def produce(self, value):</span><br><span class="line">        if os.path.isfile(PATH(&quot;mp3/&quot; + value[1] + &quot;.mp3&quot;)):</span><br><span class="line">            print(&quot;%s已经被下载了&quot; % value[1])</span><br><span class="line">        else:</span><br><span class="line">            url = &#x27;http://music.163.com/song/media/outer/url?id=&#x27; + value[0] + &#x27;.mp3&#x27;</span><br><span class="line">            urllib.request.urlretrieve(url, &#x27;%s&#x27; % PATH(&quot;mp3/&quot; + value[1] + &quot;.mp3&quot;))</span><br><span class="line">            print(&quot;%s下载成功&quot; % value[1])</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def main():</span><br><span class="line">    p1 = Process(target=Producer, args=())</span><br><span class="line">    p1.start()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">if __name__ == &#x27;__main__&#x27;:</span><br><span class="line">    main()</span><br></pre></td></tr></table></figure>
+<ul>
+<li>下载时间<br><img src="/aposts/57ceda08/result.png" alt="image.png"></li>
+</ul>
+<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><ul>
+<li>昨天测试，发现是协程&gt;多线程&gt;单线程</li>
+<li>今天测试却是：多线程&gt;协程&gt;单线程</li>
+<li>当然也会出现单线程耗时反而比多线程耗时短的情况</li>
+<li>一直流传多进程+协程，可以解决python的GIL问题，因为本次测试的数据不多，使用的也是单进程+协程的方式，后续对协程的测试，有机会进行大量数据的测试，采用多进程+协程的方式进行测试</li>
+<li><a target="_blank" rel="noopener" href="https://github.com/Louis-me/PyCrawler">源码获取</a></li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/1d89e362/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="一个正经的测试工程师">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="施坤的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/aposts/1d89e362/" class="post-title-link" itemprop="url">centos7-+-django+vue</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-09-29 17:13:35" itemprop="dateCreated datePublished" datetime="2021-09-29T17:13:35+08:00">2021-09-29</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-02-25 11:20:56" itemprop="dateModified" datetime="2022-02-25T11:20:56+08:00">2022-02-25</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/" itemprop="url" rel="index"><span itemprop="name">python</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/aposts/1d89e362/" class="post-meta-item leancloud_visitors" data-flag-title="centos7-+-django+vue" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/aposts/1d89e362/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/aposts/1d89e362/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <ul>
+<li>之前写过 <a target="_blank" rel="noopener" href="https://www.jianshu.com/p/e51a21388363">centos6部署django+mysql+vue</a>，本篇教程开始写centos7 + diango+vue</li>
+</ul>
+<h2 id="开放端口"><a href="#开放端口" class="headerlink" title="开放端口"></a>开放端口</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">firewall-cmd --zone=public --add-port=8100/tcp --permanent</span><br><span class="line">firewall-cmd --reload   # 配置立即生效</span><br><span class="line">firewall-cmd --zone=public --list-port # 查看防火墙所有开放的端口</span><br><span class="line"> firewall-cmd --state # 查看防火墙状态</span><br><span class="line">netstat -lnpt # 查看监听的端口</span><br><span class="line">netstat -lnpt |grep 5672 # 查看监听的具体端口</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>编写和启动脚本start.sh，启动sh start.sh<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># 后台启动django服务，输出日志到日志文件中，内容为标准输出和标准错误</span><br><span class="line">MYDATE=`date +%Y%m%d`</span><br><span class="line">ALL_LOGFILE=/usr/local/log/log_$MYDATE</span><br><span class="line"></span><br><span class="line">nohup python3 manage.py runserver 0.0.0.0:8100 &gt; $&#123;ALL_LOGFILE&#125; 2&gt;&amp;1 &amp;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="按照nginx"><a href="#按照nginx" class="headerlink" title="按照nginx"></a>按照nginx</h2><ul>
+<li><p>按照依赖文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">yum install gcc-c++</span><br><span class="line">yum install -y pcre pcre-devel</span><br><span class="line">yum install -y zlib zlib-devel</span><br><span class="line">yum install -y openssl openssl-devel</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+<li><p>配置nginx</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">wget -c https://nginx.org/download/nginx-1.10.1.tar.gz</span><br><span class="line">tar -zxvf nginx-1.10.1.tar.gz</span><br><span class="line">cd nginx-1.10.1</span><br><span class="line">./configure # 使用默认配置</span><br><span class="line"># 编辑安装</span><br><span class="line">make</span><br><span class="line">make install</span><br><span class="line"></span><br><span class="line">whereis nginx # 查询安装路径</span><br><span class="line"># 启动、停止nginx</span><br><span class="line">cd /usr/local/nginx/sbin/</span><br><span class="line">./nginx  # 启动</span><br><span class="line">./nginx -t # 检查</span><br><span class="line">./nginx -s stop</span><br><span class="line">./nginx -s quit</span><br><span class="line">./nginx -s reload</span><br></pre></td></tr></table></figure></li>
+<li><p>修改配置</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br></pre></td><td class="code"><pre><span class="line">vim nginx.conf</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#user  nobody;</span><br><span class="line">worker_processes  1;</span><br><span class="line"></span><br><span class="line">#error_log  logs/error.log;</span><br><span class="line">#error_log  logs/error.log  notice;</span><br><span class="line">#error_log  logs/error.log  info;</span><br><span class="line"></span><br><span class="line">#pid        logs/nginx.pid;</span><br><span class="line"></span><br><span class="line">events &#123;</span><br><span class="line">    worker_connections  1024;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">http &#123;</span><br><span class="line">    include       mime.types;</span><br><span class="line">    default_type  application/octet-stream;</span><br><span class="line"></span><br><span class="line">    #log_format  main  &#x27;$remote_addr - $remote_user [$time_local] &quot;$request&quot; &#x27;</span><br><span class="line">    #                  &#x27;$status $body_bytes_sent &quot;$http_referer&quot; &#x27;</span><br><span class="line">    #                  &#x27;&quot;$http_user_agent&quot; &quot;$http_x_forwarded_for&quot;&#x27;;</span><br><span class="line"></span><br><span class="line">    #access_log  logs/access.log  main;</span><br><span class="line"></span><br><span class="line">    sendfile        on;</span><br><span class="line">    #tcp_nopush     on;</span><br><span class="line"></span><br><span class="line">    #keepalive_timeout  0;</span><br><span class="line">    keepalive_timeout  65;</span><br><span class="line">    </span><br><span class="line">    #gzip  on;</span><br><span class="line">    #upstream表示负载服务器池，定义名字为goserver的服务器池</span><br><span class="line">    #upstream goserver &#123;</span><br><span class="line">       # server 47.123.15.125:8887 weight=7;</span><br><span class="line">       # server 192.111.50.133:8888 weight=3;</span><br><span class="line">    #&#125;</span><br><span class="line">    #基于域名的虚拟主机</span><br><span class="line">    server &#123;</span><br><span class="line">    	#8880为监听端口号</span><br><span class="line">        listen       8880;</span><br><span class="line">        server_name  192.168.111.128;</span><br><span class="line">        index  index.html index.htm;</span><br><span class="line">        #root 是你的访问目录</span><br><span class="line">        root   /home/dist;</span><br><span class="line">        #charset koi8-r;</span><br><span class="line"></span><br><span class="line">        #access_log  logs/host.access.log  main;      </span><br><span class="line">        </span><br><span class="line">        #error_page  404              /404.html;</span><br><span class="line"></span><br><span class="line">        # redirect server error pages to the static page /50x.html</span><br><span class="line">        error_page   500 502 503 504  /50x.html;</span><br><span class="line">        location = /50x.html &#123;</span><br><span class="line">            root   html;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        # pass the PHP scripts to FastCGI server listening on 127.0.0.1:9000</span><br><span class="line">        #</span><br><span class="line">        #location ~ \.php$ &#123;</span><br><span class="line">        #    root           html;</span><br><span class="line">        #    fastcgi_pass   127.0.0.1:9000;</span><br><span class="line">        #    fastcgi_index  index.php;</span><br><span class="line">        #    fastcgi_param  SCRIPT_FILENAME  /scripts$fastcgi_script_name;</span><br><span class="line">        #    include        fastcgi_params;</span><br><span class="line">        #&#125;</span><br><span class="line"></span><br><span class="line">        # deny access to .htaccess files, if Apache&#x27;s document root</span><br><span class="line">        # concurs with nginx&#x27;s one</span><br><span class="line">        #</span><br><span class="line">        #location ~ /\.ht &#123;</span><br><span class="line">        #    deny  all;</span><br><span class="line">        #&#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>关掉防火墙的端口</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">//8088，自己指定端口</span><br><span class="line">firewall-cmd --permanent --add-port=8880/tcp --zone=public  </span><br><span class="line">//重新加载</span><br><span class="line">firewall-cmd --reload</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>重启nginx</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">//检查配置是否正确</span><br><span class="line">./nginx -t</span><br><span class="line">//启动nginx</span><br><span class="line">./nginx</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>前台正常访问<br><img src="/aposts/1d89e362/vue.png" alt="image.png"></p>
+</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/d632d4bf/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -734,6 +973,122 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/b6a0a5a1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="一个正经的测试工程师">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="施坤的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/aposts/b6a0a5a1/" class="post-title-link" itemprop="url">python-schematics的使用</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-09-29 17:13:35" itemprop="dateCreated datePublished" datetime="2021-09-29T17:13:35+08:00">2021-09-29</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-02-25 11:20:56" itemprop="dateModified" datetime="2022-02-25T11:20:56+08:00">2022-02-25</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/" itemprop="url" rel="index"><span itemprop="name">python</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/aposts/b6a0a5a1/" class="post-meta-item leancloud_visitors" data-flag-title="python-schematics的使用" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/aposts/b6a0a5a1/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/aposts/b6a0a5a1/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <ul>
+<li>schematics代替model层的功能 </li>
+<li>schematics自动的字段有验证功能</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">from schematics.models import Model</span><br><span class="line">from schematics.types import StringType, URLType</span><br><span class="line">import json</span><br><span class="line">class Person(Model):</span><br><span class="line">     name = StringType(required=True) #不能为空</span><br><span class="line">     website = URLType()</span><br><span class="line">person = Person(&#123;&#x27;name&#x27;:&#x27;sss&#x27;,</span><br><span class="line">                &#x27;website&#x27;: &#x27;http://soundcloud.com/joestrummer&#x27;&#125;)</span><br><span class="line">person.name=u&quot;哈哈&quot;</span><br><span class="line">js = json.dumps(person.to_primitive())</span><br><span class="line">print(js)</span><br><span class="line">f = person.validate() ##验证字段是否正确，如果不正确会报错，如果正确返回的就是none</span><br><span class="line">print(f)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>列表嵌套字典<ul>
+<li>你也可以嵌套其他的model层</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">from schematics.models import Model</span><br><span class="line">from schematics.types import StringType, IntType</span><br><span class="line">from schematics.types.compound import ListType,MultiType</span><br><span class="line">class Person(Model):</span><br><span class="line">    mls = ListType(MultiType())</span><br><span class="line">    shi = StringType()</span><br><span class="line">    code = IntType()</span><br><span class="line">mls_test = Person(&#123;&#x27;mls&#x27;: [&#123;</span><br><span class="line">     &#x27;en_US&#x27;: &#x27;Hello, world!&#x27;,</span><br><span class="line">    &#x27;fr_FR&#x27;: &#x27;Bonjour tout le monde!&#x27;,</span><br><span class="line">    &#x27;es_MX&#x27;: &#x27;¡Hola, mundo!&#x27;,</span><br><span class="line">     &#125;],&#x27;shi&#x27;:&#x27;kun&#x27;,&#x27;code&#x27;:0&#125;)</span><br><span class="line">print(mls_test.mls[0][&quot;en_US&quot;])</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>字典</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">from schematics.models import Model</span><br><span class="line">from schematics.types import StringType, IntType,MultilingualStringType</span><br><span class="line">class Person(Model):</span><br><span class="line">    mls = MultilingualStringType()</span><br><span class="line">    shi = StringType()</span><br><span class="line">    code = IntType()</span><br><span class="line">mls_test = Person(&#123;&#x27;mls&#x27;: &#123;</span><br><span class="line">     &#x27;en_US&#x27;: &#x27;Hello, world!&#x27;,</span><br><span class="line">    &#x27;fr_FR&#x27;: &#x27;Bonjour tout le monde!&#x27;,</span><br><span class="line">    &#x27;es_MX&#x27;: &#x27;¡Hola, mundo!&#x27;,</span><br><span class="line">     &#125;,&#x27;shi&#x27;:&#x27;kun&#x27;,&#x27;code&#x27;:0&#125;)</span><br><span class="line">print(mls_test.mls[&quot;en_US&quot;])</span><br></pre></td></tr></table></figure>
+
+<h1 id="更多schematics高级的用法"><a href="#更多schematics高级的用法" class="headerlink" title="更多schematics高级的用法"></a><a target="_blank" rel="noopener" href="http://schematics.readthedocs.io/en/latest/usage/exporting.html?highlight=MultilingualStringType">更多schematics高级的用法</a></h1><ul>
+<li>jsonschema 是验证json的正确性</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">from jsonschema import validate</span><br><span class="line"></span><br><span class="line">schema = &#123;</span><br><span class="line">    &quot;type&quot; : &quot;object&quot;,</span><br><span class="line">    &quot;properties&quot; : &#123;</span><br><span class="line">        &quot;price&quot; : &#123;&quot;type&quot; : &quot;number&quot;&#125;,</span><br><span class="line">        &quot;name&quot; : &#123;&quot;type&quot; : &quot;string&quot;&#125;,</span><br><span class="line">        &quot;list&quot;:&#123;&quot;maxItems&quot;:2&#125;,</span><br><span class="line">        &quot;address&quot;:&#123;&#x27;regex&#x27;:&#x27;bj&#x27;&#125;,</span><br><span class="line">    &#125;,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">validate(&#123;&quot;name&quot; : &quot;Eggs&quot;, &quot;price&quot; : &quot;dfda&quot;,&#x27;list&#x27;:[1,5],&#x27;address&#x27;:&#x27;bj-jiuxianqiao&#x27;&#125;, schema)</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/aaee9c81/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -953,122 +1308,6 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/b6a0a5a1/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="一个正经的测试工程师">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="施坤的博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/aposts/b6a0a5a1/" class="post-title-link" itemprop="url">python-schematics的使用</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-09-29 17:13:35" itemprop="dateCreated datePublished" datetime="2021-09-29T17:13:35+08:00">2021-09-29</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-02-25 11:20:56" itemprop="dateModified" datetime="2022-02-25T11:20:56+08:00">2022-02-25</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/" itemprop="url" rel="index"><span itemprop="name">python</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/aposts/b6a0a5a1/" class="post-meta-item leancloud_visitors" data-flag-title="python-schematics的使用" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/aposts/b6a0a5a1/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/aposts/b6a0a5a1/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <ul>
-<li>schematics代替model层的功能 </li>
-<li>schematics自动的字段有验证功能</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">from schematics.models import Model</span><br><span class="line">from schematics.types import StringType, URLType</span><br><span class="line">import json</span><br><span class="line">class Person(Model):</span><br><span class="line">     name = StringType(required=True) #不能为空</span><br><span class="line">     website = URLType()</span><br><span class="line">person = Person(&#123;&#x27;name&#x27;:&#x27;sss&#x27;,</span><br><span class="line">                &#x27;website&#x27;: &#x27;http://soundcloud.com/joestrummer&#x27;&#125;)</span><br><span class="line">person.name=u&quot;哈哈&quot;</span><br><span class="line">js = json.dumps(person.to_primitive())</span><br><span class="line">print(js)</span><br><span class="line">f = person.validate() ##验证字段是否正确，如果不正确会报错，如果正确返回的就是none</span><br><span class="line">print(f)</span><br></pre></td></tr></table></figure>
-<ul>
-<li>列表嵌套字典<ul>
-<li>你也可以嵌套其他的model层</li>
-</ul>
-</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">from schematics.models import Model</span><br><span class="line">from schematics.types import StringType, IntType</span><br><span class="line">from schematics.types.compound import ListType,MultiType</span><br><span class="line">class Person(Model):</span><br><span class="line">    mls = ListType(MultiType())</span><br><span class="line">    shi = StringType()</span><br><span class="line">    code = IntType()</span><br><span class="line">mls_test = Person(&#123;&#x27;mls&#x27;: [&#123;</span><br><span class="line">     &#x27;en_US&#x27;: &#x27;Hello, world!&#x27;,</span><br><span class="line">    &#x27;fr_FR&#x27;: &#x27;Bonjour tout le monde!&#x27;,</span><br><span class="line">    &#x27;es_MX&#x27;: &#x27;¡Hola, mundo!&#x27;,</span><br><span class="line">     &#125;],&#x27;shi&#x27;:&#x27;kun&#x27;,&#x27;code&#x27;:0&#125;)</span><br><span class="line">print(mls_test.mls[0][&quot;en_US&quot;])</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>字典</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">from schematics.models import Model</span><br><span class="line">from schematics.types import StringType, IntType,MultilingualStringType</span><br><span class="line">class Person(Model):</span><br><span class="line">    mls = MultilingualStringType()</span><br><span class="line">    shi = StringType()</span><br><span class="line">    code = IntType()</span><br><span class="line">mls_test = Person(&#123;&#x27;mls&#x27;: &#123;</span><br><span class="line">     &#x27;en_US&#x27;: &#x27;Hello, world!&#x27;,</span><br><span class="line">    &#x27;fr_FR&#x27;: &#x27;Bonjour tout le monde!&#x27;,</span><br><span class="line">    &#x27;es_MX&#x27;: &#x27;¡Hola, mundo!&#x27;,</span><br><span class="line">     &#125;,&#x27;shi&#x27;:&#x27;kun&#x27;,&#x27;code&#x27;:0&#125;)</span><br><span class="line">print(mls_test.mls[&quot;en_US&quot;])</span><br></pre></td></tr></table></figure>
-
-<h1 id="更多schematics高级的用法"><a href="#更多schematics高级的用法" class="headerlink" title="更多schematics高级的用法"></a><a target="_blank" rel="noopener" href="http://schematics.readthedocs.io/en/latest/usage/exporting.html?highlight=MultilingualStringType">更多schematics高级的用法</a></h1><ul>
-<li>jsonschema 是验证json的正确性</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">from jsonschema import validate</span><br><span class="line"></span><br><span class="line">schema = &#123;</span><br><span class="line">    &quot;type&quot; : &quot;object&quot;,</span><br><span class="line">    &quot;properties&quot; : &#123;</span><br><span class="line">        &quot;price&quot; : &#123;&quot;type&quot; : &quot;number&quot;&#125;,</span><br><span class="line">        &quot;name&quot; : &#123;&quot;type&quot; : &quot;string&quot;&#125;,</span><br><span class="line">        &quot;list&quot;:&#123;&quot;maxItems&quot;:2&#125;,</span><br><span class="line">        &quot;address&quot;:&#123;&#x27;regex&#x27;:&#x27;bj&#x27;&#125;,</span><br><span class="line">    &#125;,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">validate(&#123;&quot;name&quot; : &quot;Eggs&quot;, &quot;price&quot; : &quot;dfda&quot;,&#x27;list&#x27;:[1,5],&#x27;address&#x27;:&#x27;bj-jiuxianqiao&#x27;&#125;, schema)</span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/a2f19617/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1207,293 +1446,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/4c7badec/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="一个正经的测试工程师">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="施坤的博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/aposts/4c7badec/" class="post-title-link" itemprop="url">python-多线程知识全面解析</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-09-29 17:13:35" itemprop="dateCreated datePublished" datetime="2021-09-29T17:13:35+08:00">2021-09-29</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-02-25 11:20:56" itemprop="dateModified" datetime="2022-02-25T11:20:56+08:00">2022-02-25</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/" itemprop="url" rel="index"><span itemprop="name">python</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/aposts/4c7badec/" class="post-meta-item leancloud_visitors" data-flag-title="python-多线程知识全面解析" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/aposts/4c7badec/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/aposts/4c7badec/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="非阻塞启动线程"><a href="#非阻塞启动线程" class="headerlink" title="非阻塞启动线程"></a>非阻塞启动线程</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">import threading</span><br><span class="line">import time</span><br><span class="line">def one_thread(name,id):</span><br><span class="line">    print(&quot;start....&quot;)</span><br><span class="line">    print(name)</span><br><span class="line">    print(id)</span><br><span class="line">    time.sleep(5)</span><br><span class="line">    print(&quot;end...&quot;)</span><br><span class="line"></span><br><span class="line">print(&quot;start thread&quot;)</span><br><span class="line">threading.Thread(target=one_thread, args=(), kwargs=&#123;&quot;name&quot;: 111, &quot;id&quot;: 222&#125;).start()</span><br><span class="line"># args是一个list</span><br><span class="line"># kwargs是一个字典，需要对应函数的key</span><br><span class="line">print(&quot;end thread&quot;)</span><br></pre></td></tr></table></figure>
-<ul>
-<li>得到值如下，线程启动函数后，非阻塞执行<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">start thread</span><br><span class="line">start....</span><br><span class="line">111</span><br><span class="line">222</span><br><span class="line">end thread</span><br><span class="line">end...</span><br></pre></td></tr></table></figure></li>
-</ul>
-<h2 id="多线程并发处理"><a href="#多线程并发处理" class="headerlink" title="多线程并发处理"></a>多线程并发处理</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">import threading</span><br><span class="line">import time</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class myThread(threading.Thread):</span><br><span class="line">    def __init__(self, threadID, name):</span><br><span class="line">        threading.Thread.__init__(self)</span><br><span class="line">        self.threadID = threadID</span><br><span class="line">        self.name = name</span><br><span class="line"></span><br><span class="line">    def run(self):</span><br><span class="line">        print_time(self.threadID, self.name)</span><br><span class="line"></span><br><span class="line">num = 0</span><br><span class="line">def print_time(threadID, name):</span><br><span class="line">    global num</span><br><span class="line">    # 每一个线程循环10次，最终总循环次数为30次</span><br><span class="line">    for i in range(10):</span><br><span class="line">        print(&quot;start run&quot;)</span><br><span class="line">        time.sleep(2)</span><br><span class="line">        print(i)</span><br><span class="line">        num += 1</span><br><span class="line">    print(&quot;thread_id=%s:name=%s&quot; % (threadID, name))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">if __name__ == &#x27;__main__&#x27;:</span><br><span class="line">    threads = []</span><br><span class="line">    # 新增三个线程</span><br><span class="line">    for i in range(3):</span><br><span class="line">        name = &quot;Thread-%d&quot; % i</span><br><span class="line">        t = myThread(i, name)</span><br><span class="line">        t.start()</span><br><span class="line">        threads.append(t)</span><br><span class="line">    for t in threads:</span><br><span class="line">        t.join()</span><br><span class="line">    print(&quot;所有线程执行完毕&quot;)</span><br><span class="line">    print(&quot;总循环次数为：%s&quot; % num)</span><br></pre></td></tr></table></figure>
-<ul>
-<li>打印结果：每次运行三个线程，每个线程循环打印10次<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">start run</span><br><span class="line">start run</span><br><span class="line">start run</span><br><span class="line">0</span><br><span class="line">0</span><br><span class="line">...</span><br><span class="line">thread_id=1:name=Thread-1</span><br><span class="line">所有线程执行完毕</span><br><span class="line">总循环次数为：30</span><br></pre></td></tr></table></figure></li>
-<li>多线程共享资源，可以使用全局变量<code>global </code></li>
-</ul>
-<h2 id="多线程加锁"><a href="#多线程加锁" class="headerlink" title="多线程加锁"></a>多线程加锁</h2><ul>
-<li>对于那些需要每次只允许一个线程操作的数据，可以将其操作放到 acquire 和 release 方法之间</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"># -*- coding: utf-8 -*-</span><br><span class="line">import time</span><br><span class="line">import threading</span><br><span class="line"># 创建锁对象</span><br><span class="line">lock = threading.Lock()</span><br><span class="line">num = 0</span><br><span class="line"></span><br><span class="line">def run(n):</span><br><span class="line">    global num</span><br><span class="line">    for i in range(10):</span><br><span class="line">        # 加锁  为了确保下面代码只能由一个线程从头到尾的执行</span><br><span class="line">        # 会阻止多线程的并发执行，所以效率会大大降低</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        lock.acquire()</span><br><span class="line">        try:</span><br><span class="line">            num = num - n</span><br><span class="line">            num = num + n</span><br><span class="line">        finally:</span><br><span class="line">            # 解锁</span><br><span class="line">            lock.release()</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        with lock:</span><br><span class="line">            time.sleep(2)</span><br><span class="line">            print(&quot;start&quot;)</span><br><span class="line">            num = num + 1</span><br><span class="line">            print(&quot;==============&quot;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">if __name__ == &#x27;__main__&#x27;:</span><br><span class="line">    t1 = threading.Thread(target=run,args=(6,))</span><br><span class="line">    t2 = threading.Thread(target=run,args=(9,))</span><br><span class="line">    t1.start()</span><br><span class="line">    t2.start()</span><br><span class="line">    t1.join()</span><br><span class="line">    t2.join()</span><br><span class="line">    print(&quot;num = %s&quot;%(num))</span><br></pre></td></tr></table></figure>
-<ul>
-<li>打印结果是每次只能运行一个线程</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">start</span><br><span class="line">==============</span><br><span class="line">...</span><br><span class="line">num = 20</span><br></pre></td></tr></table></figure>
-<h2 id="多线程与队列"><a href="#多线程与队列" class="headerlink" title="多线程与队列"></a>多线程与队列</h2><ul>
-<li>我们经常会遇到这样的一个问题，这里有成千上万条数据，每次需要取出其中的一条数据进行处理，那么引入多线程该怎么进行任务分配？</li>
-<li>我们可以将数据进行分割然后交给多个线程去跑，可是这并不是一个明智的做法。在这里我们可以使用队列与线程相结合的方式进行任务分配。</li>
-<li><strong>队列线程的思想</strong>： 首先创建一个全局共享的队列，队列中只存在有限个元素，并将所有的数据逐条加入到队列中，并调用队列的join函数进行等待。之后便可以开启若干线程，线程的任务就是不断的从队列中取数据进行处理就可以了。</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line">import threading</span><br><span class="line">import time</span><br><span class="line">import queue</span><br><span class="line"></span><br><span class="line">q = queue.Queue(10)</span><br><span class="line"></span><br><span class="line">threadLock = threading.Lock()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class myThread(threading.Thread):</span><br><span class="line">    def __init__(self, threadID, name):</span><br><span class="line">        threading.Thread.__init__(self)</span><br><span class="line">        self.threadID = threadID</span><br><span class="line">        self.name = name</span><br><span class="line">        self.exitFlag = 0</span><br><span class="line"></span><br><span class="line">    def run(self):</span><br><span class="line">        while not self.exitFlag:</span><br><span class="line">            threadLock.acquire()</span><br><span class="line">            if not q.empty():</span><br><span class="line">                id = q.get()</span><br><span class="line">                print_time(self.name, id)</span><br><span class="line">                threadLock.release()</span><br><span class="line">            else:</span><br><span class="line">                threadLock.release()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def print_time(threadName, id):</span><br><span class="line">    print (&quot;%s:%s:%s&quot;%(threadName,time.ctime(time.time()),id))</span><br><span class="line">    # pass</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># 创建3个线程</span><br><span class="line">threads = []</span><br><span class="line">for i in range(3):</span><br><span class="line">    name = &quot;Thread-%d&quot; % i</span><br><span class="line">    t = myThread(i, name)</span><br><span class="line">    t.start()</span><br><span class="line">    threads.append(t)</span><br><span class="line">print(threads)</span><br><span class="line"></span><br><span class="line"># 新增队列数据</span><br><span class="line">for i in range(10000):</span><br><span class="line">    q_name = &quot;Queue:%d&quot; % i</span><br><span class="line">    q.put(q_name)</span><br><span class="line"></span><br><span class="line"># 等待队列清空</span><br><span class="line">while not q.empty():</span><br><span class="line">    pass</span><br><span class="line"></span><br><span class="line"># 也可以join方法，与上同效</span><br><span class="line"># q.join()</span><br><span class="line"></span><br><span class="line"># 通知线程，处理完之后关闭</span><br><span class="line">for t in threads:</span><br><span class="line">    t.exitFlag = 1</span><br><span class="line"></span><br><span class="line"># 等待所有线程结束之后才退出</span><br><span class="line">for t in threads:</span><br><span class="line">    t.join()</span><br><span class="line"></span><br><span class="line">print(&quot;Exiting Main Thread&quot;)</span><br></pre></td></tr></table></figure>
-<ul>
-<li>这里必须要在判断<code>q.empty()</code>前加上线程锁，因为可能会出现这样的一种情况。</li>
-<li>某一时刻，队列中还有一个元素，该元素正在被线程A取出，而与此同时线程B正在判断队列q是否为空，而此时线程B中队列q不为空进入后面的操作，但是待B去取元素时，最后一个元素已经被A取出，造成线程等待，显示出被挂起的状态。</li>
-<li>我们也可以通过加入<code>q.get(timeout=10)</code>超时操作来弥补这一问题。</li>
-<li>打印的结果<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[&lt;myThread(Thread-0, started 6568)&gt;, &lt;myThread(Thread-1, started 7724)&gt;, &lt;myThread(Thread-2, started 7796)&gt;]</span><br><span class="line">Thread-1:Sat Aug 22 11:36:29 2020:Queue:0</span><br><span class="line">Thread-1:Sat Aug 22 11:36:29 2020:Queue:1</span><br><span class="line">...</span><br><span class="line">Thread-1:Sat Aug 22 11:36:30 2020:Queue:9998</span><br><span class="line">Thread-1:Sat Aug 22 11:36:30 2020:Queue:9999</span><br><span class="line">Exiting Main Thread</span><br></pre></td></tr></table></figure></li>
-</ul>
-<h2 id="ThreadPoolExecutor线程池的使用"><a href="#ThreadPoolExecutor线程池的使用" class="headerlink" title="ThreadPoolExecutor线程池的使用"></a>ThreadPoolExecutor线程池的使用</h2><ul>
-<li><strong>锁依然可以运用到线程池</strong></li>
-<li><code>map</code>的使用，接受一个List的数据，会循环调用<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">from concurrent.futures.thread import ThreadPoolExecutor</span><br><span class="line">import time</span><br><span class="line">num = 0</span><br><span class="line">def print_time(data):</span><br><span class="line">    global num</span><br><span class="line">    num += 1</span><br><span class="line">    time.sleep(2)</span><br><span class="line">    print(&quot;start_%s&quot; % data)</span><br><span class="line">    print(&quot;============&quot;)</span><br><span class="line">data = []</span><br><span class="line">for i in range(50):</span><br><span class="line">    data.append(i)</span><br><span class="line">with ThreadPoolExecutor(10) as pool:</span><br><span class="line">    result = pool.map(print_time, data)</span><br><span class="line"># 等待所有线程执行完毕</span><br><span class="line">for i in result:</span><br><span class="line">    pass</span><br><span class="line">print(&quot;循环次数=%s&quot; % num)</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
-<li>打印结果为：每次启动10个线程，启动了5次<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">============</span><br><span class="line">start_46</span><br><span class="line">start_49</span><br><span class="line">============</span><br><span class="line">============</span><br><span class="line">循环次数=50</span><br></pre></td></tr></table></figure></li>
-<li><code>submit</code>接受list的数据，也可以接受字典<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">rom concurrent.futures.thread import ThreadPoolExecutor</span><br><span class="line">from concurrent.futures import as_completed</span><br><span class="line"></span><br><span class="line">import time</span><br><span class="line">def print_time(data):</span><br><span class="line">    time.sleep(2)</span><br><span class="line">    print(&quot;start_%s&quot; % data)</span><br><span class="line">    print(&quot;============&quot;)</span><br><span class="line">data = []</span><br><span class="line">for i in range(50):</span><br><span class="line">    data.append(i)</span><br><span class="line">with ThreadPoolExecutor(10) as executor:</span><br><span class="line">    future_list = []</span><br><span class="line">    for i in range(10):</span><br><span class="line">        # future = executor.submit(print_time,data)</span><br><span class="line">        future = executor.submit(print_time, &#123;&quot;name&quot;: 111, &quot;id&quot;: 222&#125;)</span><br><span class="line">        future_list.append(future)</span><br><span class="line">    for res in as_completed(future_list):  # 这个futrure_list是你future对象的列表</span><br><span class="line">        print(res.result())</span><br></pre></td></tr></table></figure></li>
-</ul>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
-<li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/dd1b4077666e">https://www.jianshu.com/p/dd1b4077666e</a></li>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/vspiders/article/details/80724583">https://blog.csdn.net/vspiders/article/details/80724583</a></li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/61a75a58/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="一个正经的测试工程师">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="施坤的博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/aposts/61a75a58/" class="post-title-link" itemprop="url">python-执行外部命令的几种方式</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-09-29 17:13:35" itemprop="dateCreated datePublished" datetime="2021-09-29T17:13:35+08:00">2021-09-29</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-02-25 11:20:56" itemprop="dateModified" datetime="2022-02-25T11:20:56+08:00">2022-02-25</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/" itemprop="url" rel="index"><span itemprop="name">python</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/aposts/61a75a58/" class="post-meta-item leancloud_visitors" data-flag-title="python-执行外部命令的几种方式" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/aposts/61a75a58/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/aposts/61a75a58/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="os-system"><a href="#os-system" class="headerlink" title="os.system"></a><code>os.system</code></h2><ul>
-<li>执行的时候程序会打出cmd在linux上执行的信息</li>
-<li>执行命令成功返回为0，否则为1</li>
-<li>如果想获取在cmd输出的内容，是没办法获到的<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">t2 = os.system(&quot;1adb devices&quot;)</span><br><span class="line">t3 = os.system(&quot;adb devices&quot;)</span><br><span class="line">print(t2)  # 打印为1</span><br><span class="line">print(t3) # 打印为0</span><br></pre></td></tr></table></figure></li>
-</ul>
-<h2 id="subprocess-call"><a href="#subprocess-call" class="headerlink" title="subprocess.call"></a><code>subprocess.call</code></h2><ul>
-<li>取代<code>os.system</code>，但是也是无法获取cmd输出的内容</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">import subprocess</span><br><span class="line">t = subprocess.call(&#x27;adb devices&#x27;)</span><br><span class="line">print(t) # 打印为0</span><br></pre></td></tr></table></figure>
-
-<h2 id="os-popen"><a href="#os-popen" class="headerlink" title="os.popen"></a><code>os.popen</code></h2><ul>
-<li>popen返回的是一个file对象，跟open打开文件一样操作了，r是以读的方式打开</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">output = os.popen(&#x27;adb devices&#x27;)</span><br><span class="line">print(output.read()) # 得到List of devices attached</span><br></pre></td></tr></table></figure>
-
-<h2 id="subprocess-Popen"><a href="#subprocess-Popen" class="headerlink" title="subprocess.Popen"></a><code>subprocess.Popen</code></h2><ul>
-<li><code>subprocess</code>模块代替<code>os.system</code>、<code>os.popen</code>,能够得到命令输出的值</li>
-</ul>
-<h3 id="shell参数"><a href="#shell参数" class="headerlink" title="shell参数"></a><code>shell</code>参数</h3><ul>
-<li>在<code>linux</code>下，当<code>shell=False</code>（默认）时，<code>Popen</code>使用<code>os.execvp()</code>来执行子程序。<code>args</code>一般要是一个【列表】。如果<code>args</code>是个字符串的<br>话，会被当做是可执行文件的路径，这样就不能传入任何参数了。<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">subprocess.Popen(&quot;cat test.txt&quot;, shell=True)</span><br><span class="line">这是因为它相当于</span><br><span class="line">subprocess.Popen([&quot;/bin/sh&quot;, &quot;-c&quot;, &quot;cat test.txt&quot;])</span><br></pre></td></tr></table></figure></li>
-</ul>
-<h3 id="stdin-stdout-stderr-参数"><a href="#stdin-stdout-stderr-参数" class="headerlink" title="stdin stdout stderr 参数"></a><code>stdin</code> <code>stdout</code> <code>stderr</code> 参数</h3><ul>
-<li>分别表示程序的标准输入、输出、错误句柄。他们可以是<code>PIPE</code>，文件描述符或文件对象，也可以设置为<code>None</code>表示从父进程继承</li>
-<li><strong>执行结果使用管道输出的实例：</strong></li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">pipe=subprocess.Popen(&quot;adb devices&quot;,shell=True,stdout=subprocess.PIPE).stdout</span><br><span class="line">print(pipe.read()) # 得到值b&#x27;List of devices attached\r\n\r\n&#x27;</span><br></pre></td></tr></table></figure>
-<ul>
-<li><p><strong>执行结果保存在文件实例</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cmd = &quot;adb shell ls /sdcard/ | findstr aa.png&quot;  </span><br><span class="line">fhandle = open(r&quot;e:\aa.txt&quot;, &quot;w&quot;)  </span><br><span class="line">pipe = subprocess.Popen(cmd, shell=True, stdout=fhandle).stdout  </span><br><span class="line">fhandle.close()</span><br></pre></td></tr></table></figure></li>
-<li><p>子进程的文本流控制</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">#!/usr/bin/env python</span><br><span class="line"></span><br><span class="line">import subprocess</span><br><span class="line"></span><br><span class="line">child1 = subprocess.Popen([&quot;ls&quot;,&quot;-l&quot;], stdout=subprocess.PIPE)</span><br><span class="line">child2 = subprocess.Popen([&quot;wc&quot;], stdin=child1.stdout,stdout=subprocess.PIPE)</span><br><span class="line">out = child2.communicate()</span><br><span class="line">print out</span><br></pre></td></tr></table></figure></li>
-<li><p>child1.stdout–&gt;subprocess.PIPE</p>
-</li>
-<li><p>child2.stdin&lt;–subprocess.PIPE        </p>
-</li>
-<li><p>child2.stdout–&gt;subprocess.PIPE</p>
-</li>
-<li><p>相当于将child1.stdout–&gt;child2.stdin-&gt;child2.stdout-&gt;subprocess.PIPE</p>
-</li>
-<li><p>subprocess.PIPE实际上为文本流提供一个缓存区。child1的stdout将文本输出到缓存区，随后child2的stdin从该PIPE中将文本读取走。child2的输出文本也被存放在PIPE中，直到<code>communicate()</code>方法从PIPE中读取出PIPE中的文本。</p>
-</li>
-<li><p>要注意的是，<code>communicate()</code>是Popen对象的一个方法，该方法会阻塞父进程，直到子进程完成。</p>
-</li>
-<li><p><strong>我们还可以利用communicate()方法来使用PIPE给子进程输入:</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">import subprocess</span><br><span class="line">child = subprocess.Popen([&quot;cat&quot;], stdin=subprocess.PIPE)</span><br><span class="line">child.communicate(&quot;vamei&quot;) //()不为空，则写入subprocess.PIPE，为空，则从subprocess.PIPE读取</span><br></pre></td></tr></table></figure></li>
-<li><p>subprocess.PIPE–&gt;child.stdin</p>
-</li>
-<li><p>commiuncate相当于写入subprocess.PIPE，然后child从subprocess.PIPE读取</p>
-</li>
-<li><p><strong>利用python的subprocess模块执行外部命令, 并捕获stdout, stderr的输出</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">import subprocess</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># print ’popen3:’</span><br><span class="line"></span><br><span class="line">def external_cmd(cmd, msg_in=&#x27;&#x27;):</span><br><span class="line">    try:</span><br><span class="line">        proc = subprocess.Popen(cmd,</span><br><span class="line">                                shell=True,</span><br><span class="line">                                stdin=subprocess.PIPE,</span><br><span class="line">                                stdout=subprocess.PIPE,</span><br><span class="line">                                stderr=subprocess.PIPE,</span><br><span class="line">                                )</span><br><span class="line">        stdout_value, stderr_value = proc.communicate(msg_in)</span><br><span class="line">        return stdout_value, stderr_value</span><br><span class="line">    except ValueError as err:</span><br><span class="line">        # log(&quot;ValueError: %s&quot; % err)</span><br><span class="line">        return None, None</span><br><span class="line">    except IOError as err:</span><br><span class="line">        # log(&quot;IOError: %s&quot; % err)</span><br><span class="line">        return None, None</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">if __name__ == &#x27;__main__&#x27;:</span><br><span class="line">    stdout_val, stderr_val = external_cmd(&#x27;dir&#x27;)</span><br><span class="line">    print (&#x27;Standard Output: %s&#x27; % stdout_val)</span><br><span class="line">    print (&#x27;Standard Error: %s&#x27; % stderr_val)</span><br></pre></td></tr></table></figure>
-</li>
-<li><p><strong>得到命令的返回值，wait</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">p=subprocess.Popen(&quot;dir&quot;, shell=True)  </span><br><span class="line">p.wait()</span><br></pre></td></tr></table></figure></li>
-<li><p>但是Popen函数有一个缺陷，就是它是一个阻塞的方法。如果运行cmd时产生的内容非常多，函数非常容易阻塞住。解决办法是不使用wait()方法，但是也不能获得执行的返回值了。</p>
-</li>
-</ul>
-<h2 id="commands-getstatusoutput"><a href="#commands-getstatusoutput" class="headerlink" title="commands.getstatusoutput"></a><code>commands.getstatusoutput</code></h2><ul>
-<li>不推荐使用，因为在python3中被废弃</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1569,7 +1521,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">145</span>
+          <span class="site-state-item-count">147</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1607,7 +1559,7 @@
     <!--<h3 class="widget-title">Tag Cloud</h3> -->
     <div id="myCanvasContainer" class="widget tagcloud">
         <canvas width="250" height="250" id="resCanvas" style="width=100%">
-            <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AWVS/" rel="tag">AWVS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Burp-Site/" rel="tag">Burp Site</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DVWA/" rel="tag">DVWA</a><span class="tag-list-count">15</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dependency-Check/" rel="tag">Dependency-Check</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/H5/" rel="tag">H5</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hadoop/" rel="tag">Hadoop</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hive/" rel="tag">Hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jenkins/" rel="tag">Jenkins</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Metasploit/" rel="tag">Metasploit</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Nessus/" rel="tag">Nessus</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Sonic/" rel="tag">Sonic</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/airtest/" rel="tag">airtest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">android性能测试</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/app%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">app安全测试</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aritest/" rel="tag">aritest</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/centos/" rel="tag">centos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/" rel="tag">chrome</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/datax/" rel="tag">datax</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/django/" rel="tag">django</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/drozer/" rel="tag">drozer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fisco-bcos/" rel="tag">fisco-bcos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flink/" rel="tag">flink</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gin/" rel="tag">gin</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/" rel="tag">go</a><span class="tag-list-count">16</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go-zero/" rel="tag">go-zero</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hive/" rel="tag">hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/httprunner/" rel="tag">httprunner</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jmeter/" rel="tag">jmeter</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka/" rel="tag">kafka</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kail/" rel="tag">kail</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode/" rel="tag">leetcode</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode-%E6%95%B0%E7%BB%84/" rel="tag">leetcode-数组</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mitmproxy/" rel="tag">mitmproxy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongodb/" rel="tag">mongodb</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/monkey/" rel="tag">monkey</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/" rel="tag">mysql</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pandas/" rel="tag">pandas</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pc%E8%87%AA%E5%8A%A8%E5%8C%96/" rel="tag">pc自动化</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/playwright/" rel="tag">playwright</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pytest/" rel="tag">pytest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a><span class="tag-list-count">23</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/" rel="tag">redis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/selenium/" rel="tag">selenium</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlite/" rel="tag">sqlite</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlmap/" rel="tag">sqlmap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tkinter/" rel="tag">tkinter</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/" rel="tag">vue</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue3/" rel="tag">vue3</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">云服务器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8C%BA%E5%9D%97%E9%93%BE/" rel="tag">区块链</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag">大数据</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">安全测试</a><span class="tag-list-count">29</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">性能测试</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%88%AC%E8%99%AB/" rel="tag">爬虫</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" rel="tag">环境搭建</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95/" rel="tag">自动化测试</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%8B%B1%E8%AF%AD%E5%AD%A6%E4%B9%A0/" rel="tag">英语学习</a><span class="tag-list-count">1</span></li></ul>
+            <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AWVS/" rel="tag">AWVS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Burp-Site/" rel="tag">Burp Site</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DVWA/" rel="tag">DVWA</a><span class="tag-list-count">15</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dependency-Check/" rel="tag">Dependency-Check</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/H5/" rel="tag">H5</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hadoop/" rel="tag">Hadoop</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hive/" rel="tag">Hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jenkins/" rel="tag">Jenkins</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Metasploit/" rel="tag">Metasploit</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Nessus/" rel="tag">Nessus</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Sonic/" rel="tag">Sonic</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/airtest/" rel="tag">airtest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">android性能测试</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/app%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">app安全测试</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aritest/" rel="tag">aritest</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/centos/" rel="tag">centos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/" rel="tag">chrome</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/datax/" rel="tag">datax</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/django/" rel="tag">django</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/drozer/" rel="tag">drozer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fisco-bcos/" rel="tag">fisco-bcos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flink/" rel="tag">flink</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gin/" rel="tag">gin</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/" rel="tag">go</a><span class="tag-list-count">16</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go-zero/" rel="tag">go-zero</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hive/" rel="tag">hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/httprunner/" rel="tag">httprunner</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jmeter/" rel="tag">jmeter</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka/" rel="tag">kafka</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kail/" rel="tag">kail</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode/" rel="tag">leetcode</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode-%E6%95%B0%E7%BB%84/" rel="tag">leetcode-数组</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mitmproxy/" rel="tag">mitmproxy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongodb/" rel="tag">mongodb</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/monkey/" rel="tag">monkey</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/" rel="tag">mysql</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pandas/" rel="tag">pandas</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pc%E8%87%AA%E5%8A%A8%E5%8C%96/" rel="tag">pc自动化</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/playwright/" rel="tag">playwright</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pytest/" rel="tag">pytest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a><span class="tag-list-count">23</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/" rel="tag">redis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/selenium/" rel="tag">selenium</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlite/" rel="tag">sqlite</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlmap/" rel="tag">sqlmap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tkinter/" rel="tag">tkinter</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/" rel="tag">vue</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue3/" rel="tag">vue3</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">云服务器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8C%BA%E5%9D%97%E9%93%BE/" rel="tag">区块链</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag">大数据</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">安全测试</a><span class="tag-list-count">29</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">性能测试</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%88%AC%E8%99%AB/" rel="tag">爬虫</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" rel="tag">环境搭建</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95/" rel="tag">自动化测试</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%8B%B1%E8%AF%AD%E5%AD%A6%E4%B9%A0/" rel="tag">英语学习</a><span class="tag-list-count">1</span></li></ul>
         </canvas>
     </div>
 </div>

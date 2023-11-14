@@ -191,6 +191,326 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/c6e613d8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="一个正经的测试工程师">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="施坤的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/aposts/c6e613d8/" class="post-title-link" itemprop="url">maven</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2023-11-14 16:40:17 / 修改时间：18:03:43" itemprop="dateCreated datePublished" datetime="2023-11-14T16:40:17+08:00">2023-11-14</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/aposts/c6e613d8/" class="post-meta-item leancloud_visitors" data-flag-title="maven" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/aposts/c6e613d8/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/aposts/c6e613d8/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><ul>
+<li>打开<a target="_blank" rel="noopener" href="https://maven.apache.org/download.cgi">官网</a> 下载bin.zip压缩文件，解压到本地后，设置环境变量</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">C:\Users\Administrator&gt;mvn -version</span><br><span class="line">Apache Maven 3.9.5 (57804ffe001d7215b5e7bcb531cf83df38f93546)</span><br><span class="line">Maven home: E:\exe\apache-maven-3.9.5</span><br><span class="line">Java version: 1.8.0_381, vendor: Oracle Corporation, runtime: E:\app\Java\jdk-1.8\jre</span><br><span class="line">Default locale: zh_CN, platform encoding: GBK</span><br><span class="line">OS name: &quot;windows 10&quot;, version: &quot;10.0&quot;, arch: &quot;amd64&quot;, family: &quot;windows&quot;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>在文件中我们要在文件中对下载相对于的jar包进行镜像配置，一般是使用阿里云镜像。</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">// apache-maven-3.9.5\conf\setting.xml</span><br><span class="line">&lt;!-- 拉去阿里镜像--&gt;</span><br><span class="line">	&lt;mirror&gt;</span><br><span class="line">		&lt;id&gt;nexus-aliyun&lt;/id&gt;</span><br><span class="line">		&lt;mirrorOf&gt;*&lt;/mirrorOf&gt;</span><br><span class="line">		&lt;name&gt;Nexus aliyun&lt;/name&gt;</span><br><span class="line">		&lt;url&gt;http://maven.aliyun.com/nexus/content/groups/public&lt;/url&gt;</span><br><span class="line">	&lt;/mirror&gt;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>们还需要在里面配置本地的Maven仓库。下面这句话就是我的本地仓库位置。</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;localRepository&gt;D:\Maven\mm&lt;/localRepository&gt;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>打开Idea然后选择File &#x3D;》New &#x3D;》 Project 得到下面的界面</li>
+</ul>
+<p><img src="/aposts/c6e613d8/image-20231114165504799.png" alt="image-20231114165504799"></p>
+<ul>
+<li>在文件的创建过程中我们要选择修改Maven的仓库为本地的仓库</li>
+</ul>
+<p><img src="/aposts/c6e613d8/image-20231114170122121.png" alt="image-20231114170122121"></p>
+<ul>
+<li>一个使用Maven管理的普通的Java项目，它的目录结构默认如下，如果没有就手动新建</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">testMvn</span><br><span class="line">├── pom.xml</span><br><span class="line">├── src</span><br><span class="line">│   ├── main</span><br><span class="line">│   │   ├── java</span><br><span class="line">│   │   └── resources</span><br><span class="line">│   └── test</span><br><span class="line">│       ├── java</span><br><span class="line">│       └── resources</span><br><span class="line">└── target</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p><code>pom.xml</code>就是引用依赖包</p>
+</li>
+<li><p>存放Java源码的目录是<code>src/main/java</code></p>
+</li>
+<li><p>存放资源文件的目录是<code>src/main/resources</code></p>
+</li>
+<li><p>存放测试源码的目录是<code>src/test/java</code>，存放测试资源的目录是<code>src/test/resources</code></p>
+</li>
+<li><p>最后，所有编译、打包生成的文件都放在<code>target</code>目录里</p>
+</li>
+</ul>
+<h2 id="分析pom"><a href="#分析pom" class="headerlink" title="分析pom"></a>分析pom</h2><ul>
+<li>分析pom.xml</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=<span class="string">&quot;1.0&quot;</span> encoding=<span class="string">&quot;UTF-8&quot;</span>?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">project</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://maven.apache.org/POM/4.0.0&quot;</span></span></span><br><span class="line"><span class="tag">         <span class="attr">xmlns:xsi</span>=<span class="string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span></span></span><br><span class="line"><span class="tag">         <span class="attr">xsi:schemaLocation</span>=<span class="string">&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">modelVersion</span>&gt;</span>4.0.0<span class="tag">&lt;/<span class="name">modelVersion</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.example<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span> <span class="comment">&lt;!--类似于Java的包名，通常是公司或组织名称 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>testMvn<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span> <span class="comment">&lt;!--类似于Java的类名，通常是项目名称 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.0-SNAPSHOT<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">maven.compiler.source</span>&gt;</span>8<span class="tag">&lt;/<span class="name">maven.compiler.source</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">maven.compiler.target</span>&gt;</span>8<span class="tag">&lt;/<span class="name">maven.compiler.target</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">project.build.sourceEncoding</span>&gt;</span>UTF-8<span class="tag">&lt;/<span class="name">project.build.sourceEncoding</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">project</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>一个Maven工程就是由<code>groupId</code>，<code>artifactId</code>和<code>version</code>作为唯一标识。我们在引用其他第三方库的时候，也是通过这3个变量确定。例如，依赖<code>commons-logging</code></li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=<span class="string">&quot;1.0&quot;</span> encoding=<span class="string">&quot;UTF-8&quot;</span>?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">project</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://maven.apache.org/POM/4.0.0&quot;</span></span></span><br><span class="line"><span class="tag">         <span class="attr">xmlns:xsi</span>=<span class="string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span></span></span><br><span class="line"><span class="tag">         <span class="attr">xsi:schemaLocation</span>=<span class="string">&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">modelVersion</span>&gt;</span>4.0.0<span class="tag">&lt;/<span class="name">modelVersion</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.example<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>testMvn<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.0-SNAPSHOT<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">maven.compiler.source</span>&gt;</span>8<span class="tag">&lt;/<span class="name">maven.compiler.source</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">maven.compiler.target</span>&gt;</span>8<span class="tag">&lt;/<span class="name">maven.compiler.target</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">project.build.sourceEncoding</span>&gt;</span>UTF-8<span class="tag">&lt;/<span class="name">project.build.sourceEncoding</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>commons-logging<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>commons-logging<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.2<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">project</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>使用<code>&lt;dependency&gt;</code>声明一个依赖后，Maven就会自动下载这个依赖包并把它放到classpath中</p>
+<p>在D:\Maven\mm 本地仓库中可以看到自动下载的依赖文件</p>
+</blockquote>
+<h3 id="依赖关系"><a href="#依赖关系" class="headerlink" title="依赖关系"></a>依赖关系</h3><p>Maven定义了几种依赖关系，分别是<code>compile</code>、<code>test</code>、<code>runtime</code>和<code>provided</code>：</p>
+<table>
+<thead>
+<tr>
+<th align="left">scope</th>
+<th align="left">说明</th>
+<th align="left">示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">compile</td>
+<td align="left">编译时需要用到该jar包（默认）</td>
+<td align="left">commons-logging</td>
+</tr>
+<tr>
+<td align="left">test</td>
+<td align="left">编译Test时需要用到该jar包</td>
+<td align="left">junit</td>
+</tr>
+<tr>
+<td align="left">runtime</td>
+<td align="left">编译时不需要，但运行时需要用到</td>
+<td align="left">mysql</td>
+</tr>
+<tr>
+<td align="left">provided</td>
+<td align="left">编译时需要用到，但运行时由JDK或某个服务器提供</td>
+<td align="left">servlet-api</td>
+</tr>
+</tbody></table>
+<ul>
+<li><p>其中，默认的<code>compile</code>是最常用的，Maven会把这种类型的依赖直接放入classpath。</p>
+</li>
+<li><p><code>test</code>依赖表示仅在测试时使用，正常运行时并不需要。最常用的<code>test</code>依赖就是JUnit：</p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.junit.jupiter&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;junit-jupiter-api&lt;/artifactId&gt;</span><br><span class="line">    &lt;version&gt;<span class="number">5.3</span><span class="number">.2</span>&lt;/version&gt;</span><br><span class="line">    &lt;scope&gt;test&lt;/scope&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
+
+<p><strong>搜索第三方组件</strong></p>
+<p>后一个问题：如果我们要引用一个第三方组件，比如<code>okhttp</code>，如何确切地获得它的<code>groupId</code>、<code>artifactId</code>和<code>version</code>？方法是通过<a target="_blank" rel="noopener" href="https://search.maven.org/">search.maven.org</a>搜索关键字，找到对应的组件后，直接复制：</p>
+<p><img src="/aposts/c6e613d8/image-20231114174716157.png" alt="image-20231114174716157"></p>
+<h2 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h2><ul>
+<li><p><code>mvn clean</code>：清理所有生成的class和jar；</p>
+</li>
+<li><p><code>mvn clean compile</code>：先清理，再执行到<code>compile</code>；</p>
+</li>
+<li><p><code>mvn clean test</code>：先清理，再执行到<code>test</code>，因为执行<code>test</code>前必须执行<code>compile</code>，所以这里不必指定<code>compile</code>；</p>
+</li>
+<li><p><code>mvn clean package</code>：先清理，再执行到<code>package</code>。</p>
+</li>
+</ul>
+<p>更多详解参考<a target="_blank" rel="noopener" href="https://www.liaoxuefeng.com/wiki/1252599548343744/1309301196980257">这里</a>，后续这里还有很多关于maven的知识等能用到的时候回头继续学习</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/96d8c349/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="一个正经的测试工程师">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="施坤的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/aposts/96d8c349/" class="post-title-link" itemprop="url">java网络编程</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2023-11-14 09:44:32 / 修改时间：18:03:43" itemprop="dateCreated datePublished" datetime="2023-11-14T09:44:32+08:00">2023-11-14</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/aposts/96d8c349/" class="post-meta-item leancloud_visitors" data-flag-title="java网络编程" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/aposts/96d8c349/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/aposts/96d8c349/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="socker"><a href="#socker" class="headerlink" title="socker"></a>socker</h2><ul>
+<li>Socket又称“套接字”，应用程序通常通过“套接字”向网络发出请求或者应答网络请求</li>
+<li>常用的Socket类型有两种：流式Socket和数据报式Socket，流式是一种面向连接的Socket，针对于面向连接的TCP服务应用，数据报式Socket是一种无连接的Socket，针对于无连接的UDP服务应用</li>
+<li>TCP：比较靠谱，面向连接，比较慢</li>
+<li>UDP：不是太靠谱，比较快</li>
+<li>举个例子：TCP就像货到付款的快递，送到家还必须见到你人才算一整套流程。UDP就像某快递快递柜一扔就走管你收到收不到，一般直播用UDP。</li>
+</ul>
+<h3 id="TCP编程"><a href="#TCP编程" class="headerlink" title="TCP编程"></a>TCP编程</h3><p><strong>server</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.net.*;</span><br><span class="line"><span class="keyword">import</span> java.io.*;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">GreetingServer</span> <span class="keyword">extends</span> <span class="title class_">Thread</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> ServerSocket serverSocket;</span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">GreetingServer</span><span class="params">(<span class="type">int</span> port)</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">        serverSocket = <span class="keyword">new</span> <span class="title class_">ServerSocket</span>(port);</span><br><span class="line"><span class="comment">//        serverSocket.setSoTimeout(1000);</span></span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">()</span> &#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                System.out.println(<span class="string">&quot;等待远程连接，端口号为：&quot;</span> + serverSocket.getLocalPort() + <span class="string">&quot;...&quot;</span>);</span><br><span class="line">                <span class="comment">// 连接服务器</span></span><br><span class="line">                <span class="type">Socket</span> <span class="variable">server</span> <span class="operator">=</span> serverSocket.accept();</span><br><span class="line">                System.out.println(<span class="string">&quot;客户端已连接：&quot;</span> + server.getInetAddress());</span><br><span class="line">                <span class="comment">//构建IO流</span></span><br><span class="line">                <span class="keyword">while</span>(<span class="literal">true</span>)&#123;</span><br><span class="line">                    <span class="comment">// 接受客户端</span></span><br><span class="line">                    <span class="type">BufferedReader</span> <span class="variable">br</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">BufferedReader</span>(<span class="keyword">new</span> <span class="title class_">InputStreamReader</span>(server.getInputStream()));</span><br><span class="line">                    <span class="type">String</span> <span class="variable">mess</span> <span class="operator">=</span> br.readLine();</span><br><span class="line">                    System.out.println(<span class="string">&quot;接受客户端：&quot;</span> + mess);</span><br><span class="line"></span><br><span class="line">                    <span class="comment">// 发送信息到客户端</span></span><br><span class="line">                    <span class="type">BufferedWriter</span> <span class="variable">bw</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">BufferedWriter</span>(<span class="keyword">new</span> <span class="title class_">OutputStreamWriter</span>(server.getOutputStream()));</span><br><span class="line">                    <span class="comment">//如果客户端发送内容q，那么服务器就断开连接</span></span><br><span class="line">                    <span class="keyword">if</span> (mess.equals(<span class="string">&quot;q&quot;</span>)) &#123;</span><br><span class="line">                        <span class="type">String</span> <span class="variable">str1</span> <span class="operator">=</span> <span class="string">&quot;服务器返回&gt;&gt;bye\n&quot;</span>;</span><br><span class="line">                        bw.write(str1);</span><br><span class="line">                        bw.flush();</span><br><span class="line">                        System.out.println(<span class="string">&quot;服务器关闭&quot;</span>);</span><br><span class="line"></span><br><span class="line">                        <span class="keyword">break</span>;</span><br><span class="line">                    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                        <span class="type">String</span> <span class="variable">str</span> <span class="operator">=</span> <span class="string">&quot;服务器返回&gt;&gt;&quot;</span>+mess+<span class="string">&quot;\n&quot;</span>;</span><br><span class="line">                        bw.write(str);</span><br><span class="line">                        bw.flush();</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="keyword">try</span>&#123;</span><br><span class="line">            <span class="type">Thread</span> <span class="variable">t</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">GreetingServer</span>(<span class="number">6666</span>);</span><br><span class="line">            t.run();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(e);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>如果客户端发送内容q，那么服务器就断开连接</p>
+</blockquote>
+<p><strong>client</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 文件名 GreetingClient.java</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.net.*;</span><br><span class="line"><span class="keyword">import</span> java.io.*;</span><br><span class="line"><span class="keyword">import</span> java.util.Scanner;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">GreetingClient</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String [] args)</span></span><br><span class="line">    &#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="type">Socket</span> <span class="variable">s</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Socket</span>(<span class="string">&quot;127.0.0.1&quot;</span>,<span class="number">6666</span>);</span><br><span class="line">            System.out.println(<span class="string">&quot;客户端IP:&quot;</span>+s.getLocalAddress()+<span class="string">&quot;端口&quot;</span>+s.getPort());</span><br><span class="line">            <span class="comment">//构建IO流</span></span><br><span class="line">            <span class="type">BufferedWriter</span> <span class="variable">bw</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">BufferedWriter</span>(<span class="keyword">new</span> <span class="title class_">OutputStreamWriter</span>(s.getOutputStream()));</span><br><span class="line"></span><br><span class="line">            <span class="comment">//建立键盘输入：</span></span><br><span class="line">            <span class="type">Scanner</span> <span class="variable">scanner</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Scanner</span>(System.in);</span><br><span class="line">            <span class="keyword">while</span>(<span class="literal">true</span>)&#123;</span><br><span class="line">                System.out.println(<span class="string">&quot;请输入发送消息内容：&quot;</span>);</span><br><span class="line">                bw.write(scanner.nextLine()+<span class="string">&quot;\n&quot;</span>);</span><br><span class="line">                bw.newLine();</span><br><span class="line">                bw.flush();</span><br><span class="line">                <span class="type">BufferedReader</span> <span class="variable">br</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">BufferedReader</span>(<span class="keyword">new</span> <span class="title class_">InputStreamReader</span>(s.getInputStream()));</span><br><span class="line">                <span class="comment">//读取服务器返回的消息数据</span></span><br><span class="line">                <span class="type">String</span> <span class="variable">ser_msg</span> <span class="operator">=</span> br.readLine();</span><br><span class="line">                System.out.println(ser_msg);</span><br><span class="line">                System.out.println(s.getInetAddress().getLocalHost()+<span class="string">&quot;:&quot;</span>+s.getPort()+<span class="string">&quot;&gt;&gt;&quot;</span>+ser_msg);</span><br><span class="line">                <span class="comment">// 服务器发送bye的内容后，服务器就主动断开链接，客户端也要关闭</span></span><br><span class="line">                <span class="keyword">if</span> (ser_msg.contains(<span class="string">&quot;bye&quot;</span>)) &#123;</span><br><span class="line">                    System.out.println(<span class="string">&quot;客户端关闭&quot;</span>);</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">        &#125; <span class="keyword">catch</span> (UnknownHostException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>客户端输入q后，接收到服务器发送bye的内容后，服务器就主动断开链接，客户端也要关闭</p>
+</blockquote>
+<h2 id="http"><a href="#http" class="headerlink" title="http"></a>http</h2><p><strong>server</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.io.OutputStream;</span><br><span class="line"><span class="keyword">import</span> java.net.InetSocketAddress;</span><br><span class="line"><span class="keyword">import</span> com.sun.net.httpserver.HttpHandler;</span><br><span class="line"><span class="keyword">import</span> com.sun.net.httpserver.HttpExchange;</span><br><span class="line"><span class="keyword">import</span> com.sun.net.httpserver.HttpServer;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">SimpleHttpServer</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="type">HttpServer</span> <span class="variable">server</span> <span class="operator">=</span> HttpServer.create(<span class="keyword">new</span> <span class="title class_">InetSocketAddress</span>(<span class="number">8000</span>), <span class="number">0</span>);</span><br><span class="line">        server.createContext(<span class="string">&quot;/get&quot;</span>, <span class="keyword">new</span> <span class="title class_">GetHandler</span>());</span><br><span class="line">        server.createContext(<span class="string">&quot;/post&quot;</span>, <span class="keyword">new</span> <span class="title class_">PostHandler</span>());</span><br><span class="line">        server.setExecutor(<span class="literal">null</span>); <span class="comment">// creates a default executor</span></span><br><span class="line">        server.start();</span><br><span class="line">        System.out.println(<span class="string">&quot;Server is listening on port 8000&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// get请求处理</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">GetHandler</span> <span class="keyword">implements</span> <span class="title class_">HttpHandler</span> &#123;</span><br><span class="line">        <span class="comment">// 重写handle方法</span></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">handle</span><span class="params">(HttpExchange exchange)</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">            <span class="type">String</span> <span class="variable">requestParamValue</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">            <span class="keyword">if</span> (<span class="string">&quot;GET&quot;</span>.equals(exchange.getRequestMethod())) &#123;</span><br><span class="line">                requestParamValue = handleGetRequest(exchange);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="type">String</span> <span class="variable">response</span> <span class="operator">=</span> <span class="string">&quot;GET request received with parameter: &quot;</span> + requestParamValue;</span><br><span class="line">            sendResponse(exchange, response);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// post请求处理</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">PostHandler</span> <span class="keyword">implements</span> <span class="title class_">HttpHandler</span> &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">handle</span><span class="params">(HttpExchange exchange)</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">            <span class="type">String</span> <span class="variable">requestParamValue</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">            <span class="keyword">if</span> (<span class="string">&quot;POST&quot;</span>.equals(exchange.getRequestMethod())) &#123;</span><br><span class="line">                requestParamValue = handlePostRequest(exchange);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="type">String</span> <span class="variable">response</span> <span class="operator">=</span> <span class="string">&quot;POST request received with JSON data: &quot;</span> + requestParamValue;</span><br><span class="line">            sendResponse(exchange, response);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 获取get请求的参数</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> String <span class="title function_">handleGetRequest</span><span class="params">(HttpExchange exchange)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> exchange.getRequestURI().getQuery();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 获取post请求的参数</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> String <span class="title function_">handlePostRequest</span><span class="params">(HttpExchange exchange)</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">        <span class="comment">// 读取客户端发送的JSON数据</span></span><br><span class="line">        <span class="type">StringBuilder</span> <span class="variable">sb</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">StringBuilder</span>();</span><br><span class="line">        <span class="type">int</span> i;</span><br><span class="line">        <span class="keyword">while</span> ((i = exchange.getRequestBody().read()) != -<span class="number">1</span>) &#123;</span><br><span class="line">            sb.append((<span class="type">char</span>) i);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> sb.toString();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 发送请求到客户端</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">sendResponse</span><span class="params">(HttpExchange exchange, String response)</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">        exchange.sendResponseHeaders(<span class="number">200</span>, response.length());</span><br><span class="line">        <span class="type">OutputStream</span> <span class="variable">os</span> <span class="operator">=</span> exchange.getResponseBody();</span><br><span class="line">        os.write(response.getBytes());</span><br><span class="line">        os.close();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><strong>client</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.net.HttpURLConnection;</span><br><span class="line"><span class="keyword">import</span> java.net.URL;</span><br><span class="line"><span class="keyword">import</span> java.io.BufferedReader;</span><br><span class="line"><span class="keyword">import</span> java.io.InputStreamReader;</span><br><span class="line"><span class="keyword">import</span> java.io.OutputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.UnsupportedEncodingException;</span><br><span class="line"><span class="keyword">import</span> java.net.URLEncoder;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">SimpleHttpClient</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        sendGetRequest();</span><br><span class="line">        sendPostRequest();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">sendGetRequest</span><span class="params">()</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">url</span> <span class="operator">=</span> <span class="string">&quot;http://localhost:8000/get?param1=value1&amp;param2=value2&quot;</span>;</span><br><span class="line">        <span class="type">URL</span> <span class="variable">obj</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">URL</span>(url);</span><br><span class="line">        <span class="type">HttpURLConnection</span> <span class="variable">con</span> <span class="operator">=</span> (HttpURLConnection) obj.openConnection();</span><br><span class="line">        <span class="comment">// 发送get请求</span></span><br><span class="line">        con.setRequestMethod(<span class="string">&quot;GET&quot;</span>);</span><br><span class="line">        <span class="comment">// 通过con.getInputStream() 获取到与服务器建立的输入流，即服务端返回的数据流</span></span><br><span class="line">        <span class="comment">//InputStreamReader将字节流转换为字符流，而BufferedReader提供了缓冲和高效读取的功能，常常用来包装InputStreamReader以提供更好的读取性能。</span></span><br><span class="line">        <span class="type">BufferedReader</span> <span class="variable">in</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">BufferedReader</span>(<span class="keyword">new</span> <span class="title class_">InputStreamReader</span>(con.getInputStream()));</span><br><span class="line">        String inputLine;</span><br><span class="line">        <span class="type">StringBuffer</span> <span class="variable">response</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">StringBuffer</span>();</span><br><span class="line">        <span class="comment">//不断地调用 BufferedReader 的 readLine() 方法，每次读取一行数据，并将其加入到 StringBuffer 中。</span></span><br><span class="line">        <span class="comment">// 当 readLine() 方法返回 null 时，表示已经读取完了所有的数据，循环结束</span></span><br><span class="line">        <span class="keyword">while</span> ((inputLine=in.readLine()) != <span class="literal">null</span>) &#123;</span><br><span class="line">            response.append(inputLine);</span><br><span class="line">        &#125;</span><br><span class="line">        in.close();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 打印服务器的响应</span></span><br><span class="line">        System.out.println(<span class="string">&quot;GET Response from server: &quot;</span> + response.toString());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">sendPostRequest</span><span class="params">()</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">url</span> <span class="operator">=</span> <span class="string">&quot;http://localhost:8000/post&quot;</span>;</span><br><span class="line">        <span class="type">URL</span> <span class="variable">obj</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">URL</span>(url);</span><br><span class="line">        <span class="type">HttpURLConnection</span> <span class="variable">con</span> <span class="operator">=</span> (HttpURLConnection) obj.openConnection();</span><br><span class="line">        con.setRequestMethod(<span class="string">&quot;POST&quot;</span>);</span><br><span class="line">        con.setRequestProperty(<span class="string">&quot;Content-Type&quot;</span>, <span class="string">&quot;application/json&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="type">String</span> <span class="variable">jsonInputString</span> <span class="operator">=</span> <span class="string">&quot;&#123;\&quot;name\&quot;:\&quot;John\&quot;, \&quot;age\&quot;:30, \&quot;city\&quot;:\&quot;New York\&quot;&#125;&quot;</span>;</span><br><span class="line"></span><br><span class="line">        con.setDoOutput(<span class="literal">true</span>);</span><br><span class="line">        <span class="keyword">try</span> (<span class="type">OutputStream</span> <span class="variable">os</span> <span class="operator">=</span> con.getOutputStream()) &#123;</span><br><span class="line">            <span class="type">byte</span>[] input = jsonInputString.getBytes(<span class="string">&quot;utf-8&quot;</span>);</span><br><span class="line">            os.write(input, <span class="number">0</span>, input.length);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="type">BufferedReader</span> <span class="variable">in</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">BufferedReader</span>(<span class="keyword">new</span> <span class="title class_">InputStreamReader</span>(con.getInputStream()));</span><br><span class="line">        String inputLine;</span><br><span class="line">        <span class="type">StringBuffer</span> <span class="variable">response</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">StringBuffer</span>();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span> ((inputLine = in.readLine()) != <span class="literal">null</span>) &#123;</span><br><span class="line">            response.append(inputLine);</span><br><span class="line">        &#125;</span><br><span class="line">        in.close();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 打印服务器的响应</span></span><br><span class="line">        System.out.println(<span class="string">&quot;POST Response from server: &quot;</span> + response.toString());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<ul>
+<li><p>BufferedReader 和InputStreamReader用法，一般都是BufferedReader 包装InputStreamReader。</p>
+</li>
+<li><p>StringBuffer 是一个可变字符串，作用是在处理大量字符串拼接操作时提供更高效的性能</p>
+</li>
+</ul>
+</blockquote>
+<ul>
+<li>运行服务端和客户端代码得到结果：</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">GET Response from server: GET request received with parameter: param1=value1&amp;param2=value2</span><br><span class="line">POST Response from server: POST request received with JSON data: &#123;<span class="string">&quot;name&quot;</span>:<span class="string">&quot;John&quot;</span>, <span class="string">&quot;age&quot;</span>:<span class="number">30</span>, <span class="string">&quot;city&quot;</span>:<span class="string">&quot;New York&quot;</span>&#125;</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/239281b1/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2112,354 +2432,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/93e757c2/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="一个正经的测试工程师">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="施坤的博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/aposts/93e757c2/" class="post-title-link" itemprop="url">go-zero入门实践</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2023-07-26 10:44:13 / 修改时间：17:36:33" itemprop="dateCreated datePublished" datetime="2023-07-26T10:44:13+08:00">2023-07-26</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/go/" itemprop="url" rel="index"><span itemprop="name">go</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/aposts/93e757c2/" class="post-meta-item leancloud_visitors" data-flag-title="go-zero入门实践" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/aposts/93e757c2/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/aposts/93e757c2/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><p>本次教程主要来自于<a target="_blank" rel="noopener" href="https://www.w3cschool.cn/gozero/">这里</a></p>
-<h2 id="安装依赖"><a href="#安装依赖" class="headerlink" title="安装依赖"></a>安装依赖</h2><ul>
-<li>安装依赖goctl，用命令进行安装：<code>go install github.com/zeromicro/go-zero/tools/goctl@latest</code><ul>
-<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/kevinwan/p/16325802.html">微服务效率工具 goctl 深度解析</a></li>
-</ul>
-</li>
-<li>安装成功后，输入<code>go env</code> 找到<code>GOPATH</code></li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">E:\proj\gowork\studyGoZero&gt;go env</span><br><span class="line">set GO111MODULE=on</span><br><span class="line">set GOPATH=C:\Users\Administrator\go</span><br><span class="line">set GOROOT=E:\app\Go</span><br><span class="line">....</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>把<code>C:\Users\Administrator\go\bin\goctl.exe</code> 拷贝到GOROOT\bin目录下</li>
-<li>查看版本成功</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">E:\proj\gowork&gt; goctl --version</span><br><span class="line">goctl version 1.5.4 windows/amd64</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>安装<code>protoc</code> ，查看他的<a target="_blank" rel="noopener" href="https://go-zero.dev/docs/tasks/installation/protoc">作用</a></li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">goctl env check --install --verbose --force</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>安装<code>protoc</code> 成功后，把<code>C:\Users\Administrator\go\bin\</code> 的相关文件拷贝到<code>GOROOT\bin</code></li>
-</ul>
-<h2 id="go-zero单体服务"><a href="#go-zero单体服务" class="headerlink" title="go-zero单体服务"></a>go-zero单体服务</h2><ul>
-<li>创建并初始化项目，生成greet服务为api层（对外接口）</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">E:\proj\gowork&gt;mkdir go-zero-demo</span><br><span class="line">E:\proj\gowork&gt;cd go-zero-demo</span><br><span class="line">E:\proj\gowork\go-zero-demo&gt;go mod init go-zero-demo</span><br><span class="line">go: creating new go.mod: module go-zero-demo</span><br><span class="line">E:\proj\gowork\go-zero-demo&gt;goctl api new greet</span><br><span class="line">Done.</span><br><span class="line">E:\proj\gowork\go-zero-demo&gt;go mod tidy</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>查看greet的服务目录</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">E:\proj\gowork\go-zero-demo&gt;tree /f</span><br><span class="line"></span><br><span class="line">│  go.mod</span><br><span class="line">│  go.sum</span><br><span class="line">│</span><br><span class="line">└─greet</span><br><span class="line">    │  greet.api</span><br><span class="line">    │  greet.go</span><br><span class="line">    │</span><br><span class="line">    ├─etc</span><br><span class="line">    │      greet-api.yaml</span><br><span class="line">    │</span><br><span class="line">    └─internal</span><br><span class="line">        ├─config</span><br><span class="line">        │      config.go</span><br><span class="line">        │</span><br><span class="line">        ├─handler</span><br><span class="line">        │      greethandler.go</span><br><span class="line">        │      routes.go</span><br><span class="line">        │</span><br><span class="line">        ├─logic</span><br><span class="line">        │      greetlogic.go</span><br><span class="line">        │</span><br><span class="line">        ├─svc</span><br><span class="line">        │      servicecontext.go</span><br><span class="line">        │</span><br><span class="line">        └─types</span><br><span class="line">                types.go</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><code> greet\greet.api</code> 中就是对外的接口</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">type Request &#123;</span><br><span class="line">	Name string `path:&quot;name,options=you|me&quot;`</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">type Response &#123;</span><br><span class="line">	Message string `json:&quot;message&quot;`</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">service greet-api &#123;</span><br><span class="line">	@handler GreetHandler</span><br><span class="line">	get /from/:name(Request) returns (Response) // 对外访问接口路径为：/from/name</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="编写逻辑"><a href="#编写逻辑" class="headerlink" title="编写逻辑"></a>编写逻辑</h3><p><code>E:\proj\gowork\go-zero-demo\greet\internal\logic\greetlogic.go1</code> 代码中编写如下逻辑：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">func (l *GreetLogic) Greet(req *types.Request) (resp *types.Response, err error) &#123;</span><br><span class="line">	return &amp;types.Response&#123;</span><br><span class="line">		Message: &quot;Hello go-zero&quot;,</span><br><span class="line">	&#125;, nil</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="启动并访问服务"><a href="#启动并访问服务" class="headerlink" title="启动并访问服务"></a>启动并访问服务</h3><ul>
-<li>启动服务</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">go run .\greet.go </span><br><span class="line">Starting server at 0.0.0.0:8888...</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>浏览器访问:<code>http://localhost:8888/from/you</code></li>
-</ul>
-<p><img src="/aposts/93e757c2/image-20230726113435097.png" alt="image-20230726113435097"></p>
-<h2 id="go-zero-微服务"><a href="#go-zero-微服务" class="headerlink" title="go-zero 微服务"></a>go-zero 微服务</h2><ul>
-<li><p>api部分其实和单体服务的创建逻辑是一样的，只是在单体服务中没有服务间的通讯而已， 且微服务中api服务会多一些rpc调用的配置。</p>
-</li>
-<li><p>假设我们在开发一个商城项目，而开发者小明负责**用户模块(user)<strong>和</strong>订单模块(order)**的开发，我们姑且将这两个模块拆分成两个微服务</p>
-</li>
-</ul>
-<h3 id="演示功能目标"><a href="#演示功能目标" class="headerlink" title="演示功能目标"></a>演示功能目标</h3><ul>
-<li>订单服务(order)提供一个查询接口</li>
-<li>用户服务(user)提供一个方法供订单服务获取用户信息</li>
-</ul>
-<h3 id="服务设计分析"><a href="#服务设计分析" class="headerlink" title="服务设计分析"></a>服务设计分析</h3><p>根据情景提要我们可以得知，订单是直接面向用户，通过http协议访问数据，而订单内部需要获取用户的一些基础数据，既然我们的服务是采用微服务的架构设计， 那么两个服务（user, order）就必须要进行数据交换，服务间的数据交换即服务间的通讯，到了这里，采用合理的通讯协议也是一个开发人员需要 考虑的事情，可以通过http，rpc等方式来进行通讯，这里我们选择rpc来实现服务间的通讯，相信这里我已经对”rpc服务存在有什么作用？”已经作了一个比较好的场景描述。 当然，一个服务开发前远不止这点设计分析，我们这里就不详细描述了。从上文得知，我们需要一个</p>
-<ul>
-<li>user rpc</li>
-<li>order api</li>
-</ul>
-<p>两个服务来初步实现这个小demo。</p>
-<h3 id="创建工程"><a href="#创建工程" class="headerlink" title="创建工程"></a>创建工程</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">E:\proj\gowork&gt;mkdir study-gozero-demo</span><br><span class="line">E:\proj\gowork&gt;cd study-gozero-demo</span><br><span class="line">E:\proj\gowork\study-gozero-demo&gt;go mod init study-gozero-demo</span><br></pre></td></tr></table></figure>
-
-<h3 id="创建user-rpc服务"><a href="#创建user-rpc服务" class="headerlink" title="创建user rpc服务"></a>创建user rpc服务</h3><ul>
-<li>创建user rpc服务的目录里</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">E:\proj\gowork\study-gozero-demo\&gt;mkdir -p mall/user/rpc</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>注意在win中，我使用的git窗口编写的mkdri命令，在cmd中这样创建有问题</p>
-</blockquote>
-<ul>
-<li>添加<code>user.proto</code>文件，增加<code>getUser</code>方法</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">syntax = &quot;proto3&quot;;</span><br><span class="line"></span><br><span class="line">package user;</span><br><span class="line"></span><br><span class="line">// protoc-gen-go 版本大于1.4.0, proto文件需要加上go_package,否则无法生成</span><br><span class="line">option go_package = &quot;./user&quot;;</span><br><span class="line"></span><br><span class="line">message IdRequest &#123;</span><br><span class="line">    string id = 1;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">message UserResponse &#123;</span><br><span class="line">    // 用户id</span><br><span class="line">    string id = 1;</span><br><span class="line">    // 用户名称</span><br><span class="line">    string name = 2;</span><br><span class="line">    // 用户性别</span><br><span class="line">    string gender = 3;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">service User &#123;</span><br><span class="line">    rpc getUser(IdRequest) returns(UserResponse);  //对外开发的接口</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>生成rpc目录和代码</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">E:\proj\gowork\study-gozero-demo\mall\user\rpc&gt; goctl rpc protoc user.proto --go_out=. --go-grpc_out=. --zrpc_out=.</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Done.</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>vs code ide的终端中执行的此命令.最终生成的go服务源代码文件在目录：E:\proj\gowork\study-gozero-demo\mall\user\rpc\userclient\user.go</p>
-</blockquote>
-<ul>
-<li>填充业务逻辑其实就是user.proto中生成的getUser，目录为：<code>E:\proj\gowork\study-gozero-demo\mall\user\rpc\internal\logic\getuserlogic.go</code></li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">func (l *GetUserLogic) GetUser(in *user.IdRequest) (*user.UserResponse, error) &#123;</span><br><span class="line">	// todo: add your logic here and delete this line</span><br><span class="line"></span><br><span class="line">	// 新增的代码</span><br><span class="line"> return &amp;user.UserResponse&#123;</span><br><span class="line">            Id:   &quot;1&quot;,</span><br><span class="line">            Name: &quot;test&quot;,</span><br><span class="line">    &#125;, nil</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>若发现这里引用包报错，可以使用<code>go mod tidy</code> 下载依赖</p>
-</blockquote>
-<h3 id="创建order-api服务"><a href="#创建order-api服务" class="headerlink" title="创建order api服务"></a>创建order api服务</h3><ul>
-<li>创建 <code>order api</code>服务</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Administrator@WIN-20230710BAT MINGW64 /e/proj/gowork/study-gozero-demo/mall</span><br><span class="line">$ mkdir -p order/api &amp;&amp; cd order/api</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>git 窗口执行</p>
-</blockquote>
-<ul>
-<li>编写添加api文件目录为：<code>E:\proj\gowork\study-gozero-demo\mall\order\api\order.api</code></li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">type(</span><br><span class="line">    OrderReq &#123;</span><br><span class="line">        Id string `path:&quot;id&quot;`</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    OrderReply &#123;</span><br><span class="line">        Id string `json:&quot;id&quot;`</span><br><span class="line">        Name string `json:&quot;name&quot;`</span><br><span class="line">    &#125;</span><br><span class="line">)</span><br><span class="line">service order &#123;</span><br><span class="line">    @handler getOrder</span><br><span class="line">    get /api/order/get/:id (OrderReq) returns (OrderReply)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>生成order服务，<strong>非rpc</strong></li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">PS E:\proj\gowork\study-gozero-demo\mall\order\api&gt; goctl api go -api order.api -dir .</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p>添加user rpc配置目录地址为</p>
-<p><code>E:\proj\gowork\study-gozero-demo\mall\order\api\internal\config\config.go</code></p>
-</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">package config</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line">	&quot;github.com/zeromicro/go-zero/rest&quot;</span><br><span class="line">	&quot;github.com/zeromicro/go-zero/zrpc&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">type Config struct &#123;</span><br><span class="line">	rest.RestConf</span><br><span class="line">	UserRpc zrpc.RpcClientConf // 这个就是新增的user rpc服务</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>添加yaml配置目录为<code>E\proj\gowork\study-gozero-demo\mall\order\api\etc\order.yaml</code></li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Name: order</span><br><span class="line">Host: 0.0.0.0</span><br><span class="line">Port: 8888</span><br><span class="line">UserRpc: -- 从这里开始为新增</span><br><span class="line">  Etcd:</span><br><span class="line">    Hosts:</span><br><span class="line">    - 127.0.0.1:2379</span><br><span class="line">    Key: user.rpc</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-<ul>
-<li><p>完善服务依赖目录为</p>
-<p><code>E:\proj\gowork\study-gozero-demo\mall\order\api\internal\svc\servicecontext.go</code></p>
-</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">package svc</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line">	&quot;study-gozero-demo/mall/order/api/internal/config&quot;</span><br><span class="line">	&quot;study-gozero-demo/mall/user/rpc/userclient&quot; // 引用最终生成user服务代码路径</span><br><span class="line"></span><br><span class="line">	&quot;github.com/zeromicro/go-zero/zrpc&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">type ServiceContext struct &#123;</span><br><span class="line">	Config  config.Config</span><br><span class="line">	UserRpc userclient.User // 引用User服务中的GetUser函数</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func NewServiceContext(c config.Config) *ServiceContext &#123;</span><br><span class="line">	return &amp;ServiceContext&#123;</span><br><span class="line">		Config: c,</span><br><span class="line">		//加入user rpc服务</span><br><span class="line">		UserRpc: userclient.NewUser(zrpc.MustNewClient(c.UserRpc)),</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p>添加order演示逻辑</p>
-<p>给<code>E:\proj\gowork\study-gozero-demo\mall\order\api\internal\logic\getorderlogic</code> 添加业务逻辑</p>
-</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line">package logic</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line">	&quot;context&quot;</span><br><span class="line">	&quot;errors&quot;</span><br><span class="line"></span><br><span class="line">	&quot;study-gozero-demo/mall/order/api/internal/svc&quot;</span><br><span class="line">	&quot;study-gozero-demo/mall/order/api/internal/types&quot;</span><br><span class="line"></span><br><span class="line">	// 引用</span><br><span class="line">	&quot;study-gozero-demo/mall/user/rpc/user&quot;</span><br><span class="line"></span><br><span class="line">	&quot;github.com/zeromicro/go-zero/core/logx&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">type GetOrderLogic struct &#123;</span><br><span class="line">	logx.Logger</span><br><span class="line">	ctx    context.Context</span><br><span class="line">	svcCtx *svc.ServiceContext</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func NewGetOrderLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetOrderLogic &#123;</span><br><span class="line">	return &amp;GetOrderLogic&#123;</span><br><span class="line">		Logger: logx.WithContext(ctx),</span><br><span class="line">		ctx:    ctx,</span><br><span class="line">		svcCtx: svcCtx, // 引用order的服务，然后才能调用order服务中的user rpc</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func (l *GetOrderLogic) GetOrder(req *types.OrderReq) (resp *types.OrderReply, err error) &#123;</span><br><span class="line">	// todo: add your logic here and delete this line</span><br><span class="line"></span><br><span class="line">	// 新增代码，注意这里的&amp;user，应用的是user rpc的user/user.pb.go中内容,IdRequest其实就是对应入参（user.proto定义的）</span><br><span class="line">		// 获取订单之前，需要盘点用户的id是否存在，若不存在则返回用户不存在报错，若存在则返回test order</span><br><span class="line">	user, err := l.svcCtx.UserRpc.GetUser(l.ctx, &amp;user.IdRequest&#123;</span><br><span class="line">		Id: &quot;1&quot;,</span><br><span class="line">	&#125;)</span><br><span class="line">	if err != nil &#123;</span><br><span class="line">		return nil, err</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	if user.Name != &quot;test&quot; &#123;</span><br><span class="line">		return nil, errors.New(&quot;用户不存在&quot;)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	return &amp;types.OrderReply&#123;</span><br><span class="line">		Id:   req.Id,</span><br><span class="line">		Name: &quot;test order&quot;,</span><br><span class="line">	&#125;, nil</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h3 id="启动服务并验证"><a href="#启动服务并验证" class="headerlink" title="启动服务并验证"></a>启动服务并验证</h3><ul>
-<li>启动本地etcd</li>
-</ul>
-<blockquote>
-<p> 注意本地安装<a target="_blank" rel="noopener" href="https://github.com/etcd-io/etcd/releases">etcd</a>，打开<code>E:\app\etcd-v3.4.27-windows-amd64\etcd.exe</code>启动服务</p>
-<p>etcd是一个分布式一致性键值存储，其主要用于分布式系统的共享配置和服务发现。</p>
-</blockquote>
-<ul>
-<li>启动user rpc</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">E:\proj\gowork\study-gozero-demo\mall\user\rpc&gt; go run .\user.go</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>启动order api</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">PS E:\proj\gowork\study-gozero-demo\mall\order\api&gt; go run order.go</span><br><span class="line">Starting server at 0.0.0.0:8888...</span><br><span class="line">&#123;&quot;@timestamp&quot;:&quot;2023-07-26T16:36:58.057+08:00&quot;,&quot;caller&quot;:&quot;stat/usage.go:61&quot;,&quot;content&quot;:&quot;CPU: 0m, MEMORY: Alloc=3.2Mi, TotalAlloc=6.1Mi, Sys=17.9Mi, NumGC=3&quot;,&quot;level&quot;:&quot;stat&quot;&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>访问order api</li>
-</ul>
-<p><img src="/aposts/93e757c2/image-20230726164009157.png" alt="image-20230726164009157"></p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>如上代码展示了，单体服务和微服务分别运用，下一篇文章我们将会加上数据库、jwt鉴权、以及具体的增删改查</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/76adab24/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="一个正经的测试工程师">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="施坤的博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/aposts/76adab24/" class="post-title-link" itemprop="url">go-zero实战系列二</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2023-07-25 15:00:00 / 修改时间：15:12:54" itemprop="dateCreated datePublished" datetime="2023-07-25T15:00:00+08:00">2023-07-25</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/go/" itemprop="url" rel="index"><span itemprop="name">go</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/aposts/76adab24/" class="post-meta-item leancloud_visitors" data-flag-title="go-zero实战系列二" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/aposts/76adab24/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/aposts/76adab24/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><ul>
-<li><a href="/aposts/4d2d858d/">go-zero实战系列一</a> 中已经编写好api代码、order、product的rpc服务等，下面我们开始绩继续的实践过程</li>
-<li>本章主要对数据库的表新建，以及常见的增删改查</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -2535,7 +2507,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">145</span>
+          <span class="site-state-item-count">147</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -2573,7 +2545,7 @@
     <!--<h3 class="widget-title">Tag Cloud</h3> -->
     <div id="myCanvasContainer" class="widget tagcloud">
         <canvas width="250" height="250" id="resCanvas" style="width=100%">
-            <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AWVS/" rel="tag">AWVS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Burp-Site/" rel="tag">Burp Site</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DVWA/" rel="tag">DVWA</a><span class="tag-list-count">15</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dependency-Check/" rel="tag">Dependency-Check</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/H5/" rel="tag">H5</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hadoop/" rel="tag">Hadoop</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hive/" rel="tag">Hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jenkins/" rel="tag">Jenkins</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Metasploit/" rel="tag">Metasploit</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Nessus/" rel="tag">Nessus</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Sonic/" rel="tag">Sonic</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/airtest/" rel="tag">airtest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">android性能测试</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/app%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">app安全测试</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aritest/" rel="tag">aritest</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/centos/" rel="tag">centos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/" rel="tag">chrome</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/datax/" rel="tag">datax</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/django/" rel="tag">django</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/drozer/" rel="tag">drozer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fisco-bcos/" rel="tag">fisco-bcos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flink/" rel="tag">flink</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gin/" rel="tag">gin</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/" rel="tag">go</a><span class="tag-list-count">16</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go-zero/" rel="tag">go-zero</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hive/" rel="tag">hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/httprunner/" rel="tag">httprunner</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jmeter/" rel="tag">jmeter</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka/" rel="tag">kafka</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kail/" rel="tag">kail</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode/" rel="tag">leetcode</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode-%E6%95%B0%E7%BB%84/" rel="tag">leetcode-数组</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mitmproxy/" rel="tag">mitmproxy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongodb/" rel="tag">mongodb</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/monkey/" rel="tag">monkey</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/" rel="tag">mysql</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pandas/" rel="tag">pandas</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pc%E8%87%AA%E5%8A%A8%E5%8C%96/" rel="tag">pc自动化</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/playwright/" rel="tag">playwright</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pytest/" rel="tag">pytest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a><span class="tag-list-count">23</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/" rel="tag">redis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/selenium/" rel="tag">selenium</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlite/" rel="tag">sqlite</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlmap/" rel="tag">sqlmap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tkinter/" rel="tag">tkinter</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/" rel="tag">vue</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue3/" rel="tag">vue3</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">云服务器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8C%BA%E5%9D%97%E9%93%BE/" rel="tag">区块链</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag">大数据</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">安全测试</a><span class="tag-list-count">29</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">性能测试</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%88%AC%E8%99%AB/" rel="tag">爬虫</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" rel="tag">环境搭建</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95/" rel="tag">自动化测试</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%8B%B1%E8%AF%AD%E5%AD%A6%E4%B9%A0/" rel="tag">英语学习</a><span class="tag-list-count">1</span></li></ul>
+            <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AWVS/" rel="tag">AWVS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Burp-Site/" rel="tag">Burp Site</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DVWA/" rel="tag">DVWA</a><span class="tag-list-count">15</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dependency-Check/" rel="tag">Dependency-Check</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/H5/" rel="tag">H5</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hadoop/" rel="tag">Hadoop</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hive/" rel="tag">Hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jenkins/" rel="tag">Jenkins</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Metasploit/" rel="tag">Metasploit</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Nessus/" rel="tag">Nessus</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Sonic/" rel="tag">Sonic</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/airtest/" rel="tag">airtest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">android性能测试</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/app%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">app安全测试</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aritest/" rel="tag">aritest</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/centos/" rel="tag">centos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/" rel="tag">chrome</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/datax/" rel="tag">datax</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/django/" rel="tag">django</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/drozer/" rel="tag">drozer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fisco-bcos/" rel="tag">fisco-bcos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flink/" rel="tag">flink</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gin/" rel="tag">gin</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/" rel="tag">go</a><span class="tag-list-count">16</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go-zero/" rel="tag">go-zero</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hive/" rel="tag">hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/httprunner/" rel="tag">httprunner</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jmeter/" rel="tag">jmeter</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka/" rel="tag">kafka</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kail/" rel="tag">kail</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode/" rel="tag">leetcode</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode-%E6%95%B0%E7%BB%84/" rel="tag">leetcode-数组</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mitmproxy/" rel="tag">mitmproxy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongodb/" rel="tag">mongodb</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/monkey/" rel="tag">monkey</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/" rel="tag">mysql</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pandas/" rel="tag">pandas</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pc%E8%87%AA%E5%8A%A8%E5%8C%96/" rel="tag">pc自动化</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/playwright/" rel="tag">playwright</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pytest/" rel="tag">pytest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a><span class="tag-list-count">23</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/" rel="tag">redis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/selenium/" rel="tag">selenium</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlite/" rel="tag">sqlite</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlmap/" rel="tag">sqlmap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tkinter/" rel="tag">tkinter</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/" rel="tag">vue</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue3/" rel="tag">vue3</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">云服务器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8C%BA%E5%9D%97%E9%93%BE/" rel="tag">区块链</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag">大数据</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">安全测试</a><span class="tag-list-count">29</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">性能测试</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%88%AC%E8%99%AB/" rel="tag">爬虫</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" rel="tag">环境搭建</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95/" rel="tag">自动化测试</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%8B%B1%E8%AF%AD%E5%AD%A6%E4%B9%A0/" rel="tag">英语学习</a><span class="tag-list-count">1</span></li></ul>
         </canvas>
     </div>
 </div>
