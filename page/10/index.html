@@ -191,6 +191,194 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/97835086/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="一个正经的测试工程师">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="施坤的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/aposts/97835086/" class="post-title-link" itemprop="url">安全测试-搭建漏洞环境</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-01-25 17:30:30" itemprop="dateCreated datePublished" datetime="2022-01-25T17:30:30+08:00">2022-01-25</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-02-25 11:20:56" itemprop="dateModified" datetime="2022-02-25T11:20:56+08:00">2022-02-25</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" itemprop="url" rel="index"><span itemprop="name">安全测试</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/aposts/97835086/" class="post-meta-item leancloud_visitors" data-flag-title="安全测试-搭建漏洞环境" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/aposts/97835086/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/aposts/97835086/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="DVWA简介"><a href="#DVWA简介" class="headerlink" title="DVWA简介"></a>DVWA简介</h1><p>DVWA（Damn Vulnerable Web App）是一个基于PHP&#x2F;MySql搭建的Web应用程序，旨在为安全专业人员测试自己的专业技能和工具提供合法的 环境，帮助Web开发者更好的理解Web应用安全防范的过程。DVWA一共包含十个模块分别是：</p>
+<ul>
+<li><p>Bruce Force &#x2F;&#x2F;暴力破解</p>
+</li>
+<li><p>Command Injection &#x2F;&#x2F;命令注入</p>
+</li>
+<li><p>CSRF &#x2F;&#x2F;跨站请求伪造</p>
+</li>
+<li><p>File Inclusion &#x2F;&#x2F;文件包含</p>
+</li>
+<li><p>File Upload &#x2F;&#x2F;文件上传漏洞</p>
+</li>
+<li><p>Insecure CAPTCHA &#x2F;&#x2F;不安全的验证</p>
+</li>
+<li><p>SQL Injection &#x2F;&#x2F;sql注入</p>
+</li>
+<li><p>SQL Injection（Blind） &#x2F;&#x2F;sql注入（盲注）</p>
+</li>
+<li><p>XSS（Reflected） &#x2F;&#x2F;反射型XSS</p>
+</li>
+<li><p>XSS（Stored） &#x2F;&#x2F;存储型XSS</p>
+</li>
+</ul>
+<p>同时每个模块的代码都有4种安全等级：Low、Medium、High、Impossible。通过从低难度到高难度的测试并参考代码变化可帮助学习者更快的理解漏洞的原理。</p>
+<h1 id="DVWA的搭建"><a href="#DVWA的搭建" class="headerlink" title="DVWA的搭建"></a>DVWA的搭建</h1><ul>
+<li>DVWA是由PHP代码开发的，可以采用更简单的搭建方式，就是用<a target="_blank" rel="noopener" href="https://sourceforge.net/projects/xampp/">xampp</a></li>
+<li>我本次搭建到腾讯云服务器上，采用手动安装服务的方式，并不安装mariadb和mariadb-server，因为我服务器已经安装了mysql</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install php php-mysql php-gd  httpd -y</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>下载最新的DVWA并解压</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">[root@VM-24-13-centos local]# wget https://codeload.github.com/digininja/DVWA/zip/refs/tags/2.0.1</span><br><span class="line">[root@VM-24-13-centos local]# unzip 2.0.1 -d  dvwa</span><br><span class="line">[root@VM-24-13-centos local]# cd  dvwa</span><br><span class="line">[root@VM-24-13-centos dvwa]# ll</span><br><span class="line">total 4</span><br><span class="line">drwxr-xr-x 10 root root 4096 Sep  1  2020 DVWA-2.0.1</span><br><span class="line">[root@VM-24-13-centos dvwa]# cd DVWA-2.0.1/</span><br><span class="line">[root@VM-24-13-centos DVWA-2.0.1]# ll</span><br><span class="line">total 148</span><br><span class="line">-rw-r--r--  1 root root  3415 Sep  1  2020 about.php</span><br><span class="line">-rw-r--r--  1 root root  7296 Sep  1  2020 CHANGELOG.md</span><br><span class="line">drwxr-xr-x  2 root root  4096 Sep  1  2020 config</span><br><span class="line">-rw-r--r--  1 root root 33107 Sep  1  2020 COPYING.txt</span><br><span class="line">drwxr-xr-x  2 root root  4096 Sep  1  2020 docs</span><br><span class="line">drwxr-xr-x  6 root root  4096 Sep  1  2020 dvwa</span><br><span class="line">drwxr-xr-x  4 root root  4096 Sep  1  2020 external</span><br><span class="line">-rw-r--r--  1 root root  1406 Sep  1  2020 favicon.ico</span><br><span class="line">drwxr-xr-x  5 root root  4096 Sep  1  2020 hackable</span><br><span class="line">-rw-r--r--  1 root root   895 Sep  1  2020 ids_log.php</span><br><span class="line">-rw-r--r--  1 root root  4393 Sep  1  2020 index.php</span><br><span class="line">-rw-r--r--  1 root root  1869 Sep  1  2020 instructions.php</span><br><span class="line">-rw-r--r--  1 root root  4183 Sep  1  2020 login.php</span><br><span class="line">-rw-r--r--  1 root root   414 Sep  1  2020 logout.php</span><br><span class="line">-rw-r--r--  1 root root   199 Sep  1  2020 phpinfo.php</span><br><span class="line">-rw-r--r--  1 root root   154 Sep  1  2020 php.ini</span><br><span class="line">-rw-r--r--  1 root root 15490 Sep  1  2020 README.md</span><br><span class="line">-rw-r--r--  1 root root    26 Sep  1  2020 robots.txt</span><br><span class="line">-rw-r--r--  1 root root  4724 Sep  1  2020 security.php</span><br><span class="line">-rw-r--r--  1 root root  3063 Sep  1  2020 setup.php</span><br><span class="line">drwxr-xr-x  2 root root  4096 Sep  1  2020 tests</span><br><span class="line">drwxr-xr-x 16 root root  4096 Sep  1  2020 vulnerabilities</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>开启服务</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl start  httpd </span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>移动到apache根目录下</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@VM-24-13-centos dvwa]# cp -r DVWA-2.0.1/ /var/www/html/</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>配置文件</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">[root@VM-24-13-centos config]# pwd</span><br><span class="line">/var/www/html/DVWA-2.0.1/config</span><br><span class="line"></span><br><span class="line">[root@VM-24-13-centos config]# cp config.inc.php.dist config.inc.php</span><br><span class="line"></span><br><span class="line">[root@VM-24-13-centos config]#  vi config.inc.php</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">_DVWA = array();</span><br><span class="line"><span class="meta prompt_">$</span><span class="language-bash">_DVWA[ <span class="string">&#x27;db_server&#x27;</span> ]   = <span class="string">&#x27;127.0.0.1&#x27;</span>;</span></span><br><span class="line"><span class="meta prompt_">$</span><span class="language-bash">_DVWA[ <span class="string">&#x27;db_database&#x27;</span> ] = <span class="string">&#x27;dvwa&#x27;</span>;</span></span><br><span class="line"><span class="meta prompt_">$</span><span class="language-bash">_DVWA[ <span class="string">&#x27;db_user&#x27;</span> ]     = <span class="string">&#x27;dvwa&#x27;</span>;</span></span><br><span class="line"><span class="meta prompt_">$</span><span class="language-bash">_DVWA[ <span class="string">&#x27;db_password&#x27;</span> ] = <span class="string">&#x27;dvwa1234&#x27;</span>;</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">$</span><span class="language-bash">_DVWA[ <span class="string">&#x27;db_port &#x27;</span>] = <span class="string">&#x27;3306&#x27;</span>;</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">$</span><span class="language-bash">_DVWA[ <span class="string">&#x27;recaptcha_public_key&#x27;</span> ]  = <span class="string">&#x27;XXXXXAAAKPoVVMvbWSGeo4rm0D-Ev5TKSTr&#x27;</span>;</span></span><br><span class="line"><span class="meta prompt_">$</span><span class="language-bash">_DVWA[ <span class="string">&#x27;recaptcha_private_key&#x27;</span> ] = <span class="string">&#x27;XXXXAJfPh10KQCdJZizM0yfmQTHQjA3y&#x27;</span>;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>recaptcha_public_key和recaptcha_private_key 的生成</li>
+<li>打开<a target="_blank" rel="noopener" href="https://www.google.com/recaptcha/admin%E8%BF%9B%E8%A1%8C%E5%88%9B%E5%BB%BA">https://www.google.com/recaptcha/admin进行创建</a></li>
+</ul>
+<p><img src="/aposts/97835086/image-20220126100635195.png" alt="image-20220126100635195"></p>
+<p><img src="/aposts/97835086/image-20220126100827029.png" alt="image-20220126100827029"></p>
+<ul>
+<li>创建数据库</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">[root@VM-24-13-centos config]# mysql -u root -p</span><br><span class="line">mysql&gt; create database dvwa;</span><br><span class="line">mysql&gt;use dvwa;</span><br><span class="line">mysql&gt; set global validate_password.policy=&#x27;LOW&#x27;; # mysql8后，有密码策略要求，改为低</span><br><span class="line">mysql &gt;create user &#x27;dvwa&#x27;@&#x27;%&#x27; identified by &#x27;dvwa1234&#x27;; # 创建用户和密码</span><br><span class="line">mysql&gt;use mysql;</span><br><span class="line">mysql&gt; select host, user, authentication_string, plugin from user;</span><br><span class="line">+-----------+------------------+------------------------------------------------------------------------+-----------------------+</span><br><span class="line">| host      | user             | authentication_string                                                  | plugin                |</span><br><span class="line">+-----------+------------------+------------------------------------------------------------------------+-----------------------+</span><br><span class="line">X3%         | dvwa             | $A$005$6?yx</span><br><span class="line"></span><br><span class="line">mysql&gt;use dvwa;</span><br><span class="line">mysql&gt; grant all privileges on dvwa.* to &#x27;dvwa&#x27;@&#x27;%&#x27;; # 授权数据库给用户</span><br><span class="line">mysql&gt;flush privileges;</span><br><span class="line">mysql&gt;exit;</span><br><span class="line"></span><br><span class="line"># 登录成功</span><br><span class="line">mysql -u dvwa -p</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>80端口腾讯云在规则中已经默认打开，设置下防火墙</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"># 开启防火墙</span><br><span class="line">systemctl start firewalld</span><br><span class="line"># 防火墙打开80端口</span><br><span class="line">[root@VM-24-13-centos config]# firewall-cmd --zone=public --add-port=80/tcp --permane</span><br><span class="line"># 重启httpd服务</span><br><span class="line">service httpd restart</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>用外网ip打开安装目录</li>
+</ul>
+<p><img src="/aposts/97835086/image-20220126150340578.png" alt="image-20220126150340578"></p>
+<ul>
+<li>出现一些红色错误，一个个来解决</li>
+</ul>
+<p><img src="/aposts/97835086/image-20220126151224710.png" alt="image-20220126151224710"></p>
+<ul>
+<li>设置php.ini</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/php.ini</span><br><span class="line"></span><br><span class="line">allow_url_fopen = On</span><br><span class="line">allow_url_include = On</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>设置权限</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@VM-24-13-centos hackable]# pwd</span><br><span class="line">/var/www/html/DVWA-2.0.1/hackable</span><br><span class="line"></span><br><span class="line">[root@VM-24-13-centos hackable]# chmod 777 uploads</span><br><span class="line">[root@VM-24-13-centos DVWA-2.0.1]# chmod 777 external/phpids/0.6/lib/IDS/tmp/phpids_log.txt</span><br><span class="line"></span><br><span class="line">[root@VM-24-13-centos DVWA-2.0.1]# chmod 7777 config/</span><br><span class="line"># 重启httpd服务</span><br><span class="line">service httpd restart</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>出现加密的插件不存在</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mysql -uroot -p</span><br><span class="line">set global validate_password.policy=&#x27;LOW&#x27;</span><br><span class="line">ALTER USER &#x27;dvwa&#x27;@&#x27;%&#x27; IDENTIFIED WITH mysql_native_password BY &#x27;dvwa1234&#x27;;</span><br><span class="line">flush privileges;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>再次打开页面，就可以了，点击登录，用户名和密码为：admin&#x2F;password</li>
+</ul>
+<p><img src="/aposts/97835086/image-20220126152915786.png" alt="image-20220126152915786"></p>
+<p><img src="/aposts/97835086/image-20220126153115113.png" alt="image-20220126153115113"></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/5a751e2b/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2492,114 +2680,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/ae5c089/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="一个正经的测试工程师">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="施坤的博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/aposts/ae5c089/" class="post-title-link" itemprop="url">pandas处理excel</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-12-03 17:37:40" itemprop="dateCreated datePublished" datetime="2021-12-03T17:37:40+08:00">2021-12-03</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-02-25 11:20:56" itemprop="dateModified" datetime="2022-02-25T11:20:56+08:00">2022-02-25</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/" itemprop="url" rel="index"><span itemprop="name">python</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/aposts/ae5c089/" class="post-meta-item leancloud_visitors" data-flag-title="pandas处理excel" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/aposts/ae5c089/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/aposts/ae5c089/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h2><ul>
-<li><p>现有一excel如下，需要把日期和金额合并成一行</p>
-<p><img src="/aposts/ae5c089/image-20211203173955957.png" alt="image-20211203173955957"></p>
-</li>
-<li><p>最终需要实现效果如下：</p>
-<p><img src="/aposts/ae5c089/image-20211203174051646.png" alt="image-20211203174051646"></p>
-</li>
-</ul>
-<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">import</span> math</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">OperateExcel</span>():</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, file_path</span>):</span><br><span class="line">        self.file_path = file_path</span><br><span class="line">        <span class="comment"># 注意header参数，取值为前面两行</span></span><br><span class="line">        self.df = pd.read_excel(file_path, sheet_name=<span class="string">&quot;日记帐&quot;</span>, header=[<span class="number">0</span>, <span class="number">1</span>])</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">get_head</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        头部处理，格式：</span></span><br><span class="line"><span class="string">        :return:</span></span><br><span class="line"><span class="string">        [year, headers]</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">        year为年，如2021年</span></span><br><span class="line"><span class="string">        headers=[]，把所有头部值存到[]中，日期	凭证编号	车牌号	拿货吨位	卖出吨位	摘要	收入	支出	余额</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        headers = []</span><br><span class="line">        <span class="comment"># 取头部数据</span></span><br><span class="line">        head = self.df.head(<span class="number">0</span>)</span><br><span class="line">        year = <span class="string">&quot;&quot;</span></span><br><span class="line">        <span class="keyword">for</span> items <span class="keyword">in</span> head:</span><br><span class="line">            <span class="comment"># ------ 处理日期,取年</span></span><br><span class="line">            <span class="keyword">for</span> i <span class="keyword">in</span> items:</span><br><span class="line">                <span class="keyword">if</span> i.find(<span class="string">&quot;年&quot;</span>) != -<span class="number">1</span>:</span><br><span class="line">                    year = i</span><br><span class="line">                    <span class="keyword">break</span></span><br><span class="line">            <span class="comment"># ------- 处理其他头部</span></span><br><span class="line">            <span class="keyword">if</span> items[<span class="number">1</span>].replace(<span class="string">&quot; &quot;</span>, <span class="string">&quot;&quot;</span>).find(<span class="string">&quot;Unnamed&quot;</span>) != -<span class="number">1</span>:</span><br><span class="line">                headers.append(items[<span class="number">0</span>].replace(<span class="string">&quot; &quot;</span>, <span class="string">&quot;&quot;</span>))</span><br><span class="line">            <span class="comment"># ---- 金额后的头部，只取收入、支出、余额；</span></span><br><span class="line">            <span class="keyword">if</span> items[<span class="number">0</span>].replace(<span class="string">&quot; &quot;</span>, <span class="string">&quot;&quot;</span>).find(<span class="string">&quot;金额&quot;</span>) != -<span class="number">1</span>:</span><br><span class="line">                headers.append(items[<span class="number">1</span>].replace(<span class="string">&quot; &quot;</span>, <span class="string">&quot;&quot;</span>))</span><br><span class="line"></span><br><span class="line">        headers.insert(<span class="number">0</span>, <span class="string">&quot;日期&quot;</span>)</span><br><span class="line">        <span class="keyword">return</span> year, headers</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">get_data</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">         处理数据</span></span><br><span class="line"><span class="string">        :return:</span></span><br><span class="line"><span class="string">         [file_name, data]</span></span><br><span class="line"><span class="string">         file_name表示将要保持的名字</span></span><br><span class="line"><span class="string">         data 表示处理好的数据，给pd.DataFrame使用，格式 &#123;&quot;金额&quot;:[1,2,3],&quot;收入&quot;:[]&#125;</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">        g_head = self.get_head()</span><br><span class="line">        headers = g_head[<span class="number">1</span>]</span><br><span class="line">        year = g_head[<span class="number">0</span>]</span><br><span class="line">        month = <span class="string">&quot;&quot;</span></span><br><span class="line">        data = &#123;&#125;</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> headers:</span><br><span class="line">            data[i] = []</span><br><span class="line">        <span class="keyword">for</span> items <span class="keyword">in</span> self.df.values:</span><br><span class="line">            <span class="comment"># 合计不取数据；第一个单元格为空值说明此行为无效数据，也不取值</span></span><br><span class="line">            <span class="keyword">if</span> items[<span class="number">0</span>] == <span class="string">&#x27;合计&#x27;</span> <span class="keyword">or</span> math.isnan(items[<span class="number">0</span>]):</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">            <span class="comment"># 处理日期值为：2021年1月1日</span></span><br><span class="line">            month = <span class="built_in">str</span>(items[<span class="number">0</span>]) + <span class="string">&quot;月&quot;</span></span><br><span class="line">            m_date = year + month + <span class="built_in">str</span>(<span class="built_in">int</span>(items[<span class="number">1</span>])) + <span class="string">&quot;日&quot;</span></span><br><span class="line">            data[<span class="string">&quot;日期&quot;</span>].append(m_date)</span><br><span class="line">            <span class="comment"># 凭证编号</span></span><br><span class="line">            num = <span class="number">0</span></span><br><span class="line">            <span class="keyword">if</span> <span class="built_in">str</span>(items[<span class="number">2</span>]) != <span class="string">&quot;nan&quot;</span>:</span><br><span class="line">                num = items[<span class="number">2</span>]</span><br><span class="line">            data[<span class="string">&quot;凭证编号&quot;</span>].append(num)</span><br><span class="line"></span><br><span class="line">            <span class="comment"># 车牌号</span></span><br><span class="line">            car_num = <span class="number">0</span></span><br><span class="line">            <span class="keyword">if</span> <span class="built_in">str</span>(items[<span class="number">3</span>]) != <span class="string">&quot;nan&quot;</span>:</span><br><span class="line">                car_num = items[<span class="number">3</span>]</span><br><span class="line">            data[<span class="string">&quot;车牌号&quot;</span>].append(car_num)</span><br><span class="line"></span><br><span class="line">            <span class="comment"># 拿货吨位</span></span><br><span class="line">            take_tonnage = <span class="number">0</span></span><br><span class="line">            <span class="keyword">if</span> <span class="built_in">str</span>(items[<span class="number">4</span>]) != <span class="string">&quot;nan&quot;</span>:</span><br><span class="line">                take_tonnage = items[<span class="number">4</span>]</span><br><span class="line">            data[<span class="string">&quot;拿货吨位&quot;</span>].append(take_tonnage)</span><br><span class="line"></span><br><span class="line">            <span class="comment"># 卖出吨位</span></span><br><span class="line">            sell_tonnage = <span class="number">0</span></span><br><span class="line">            <span class="keyword">if</span> <span class="built_in">str</span>(items[<span class="number">5</span>]) != <span class="string">&quot;nan&quot;</span>:</span><br><span class="line">                sell_tonnage = items[<span class="number">5</span>]</span><br><span class="line">            data[<span class="string">&quot;卖出吨位&quot;</span>].append(sell_tonnage)</span><br><span class="line"></span><br><span class="line">            <span class="comment"># 摘要</span></span><br><span class="line">            summary = <span class="string">&quot;&quot;</span></span><br><span class="line">            <span class="keyword">if</span> <span class="built_in">str</span>(items[<span class="number">6</span>]) != <span class="string">&quot;nan&quot;</span>:</span><br><span class="line">                summary = items[<span class="number">6</span>]</span><br><span class="line">            data[<span class="string">&quot;摘要&quot;</span>].append(summary)</span><br><span class="line"></span><br><span class="line">            <span class="comment"># 收入</span></span><br><span class="line">            revenue = <span class="number">0</span></span><br><span class="line">            <span class="keyword">if</span> <span class="built_in">str</span>(items[<span class="number">7</span>]) != <span class="string">&quot;nan&quot;</span>:</span><br><span class="line">                revenue = items[<span class="number">7</span>]</span><br><span class="line">            data[<span class="string">&quot;收入&quot;</span>].append(revenue)</span><br><span class="line"></span><br><span class="line">            <span class="comment"># 支出</span></span><br><span class="line">            spend = <span class="number">0</span></span><br><span class="line">            <span class="keyword">if</span> <span class="built_in">str</span>(items[<span class="number">8</span>]) != <span class="string">&quot;nan&quot;</span>:</span><br><span class="line">                spend = items[<span class="number">8</span>]</span><br><span class="line">            data[<span class="string">&quot;支出&quot;</span>].append(spend)</span><br><span class="line"></span><br><span class="line">            <span class="comment"># 余额</span></span><br><span class="line">            balance = <span class="number">0</span></span><br><span class="line">            <span class="keyword">if</span> <span class="built_in">str</span>(items[<span class="number">9</span>]) != <span class="string">&quot;nan&quot;</span>:</span><br><span class="line">                balance = items[<span class="number">9</span>]</span><br><span class="line">            data[<span class="string">&quot;余额&quot;</span>].append(balance)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 生成的文件名</span></span><br><span class="line">        file_name = year + month + <span class="string">&quot;.xlsx&quot;</span></span><br><span class="line">        <span class="keyword">return</span> file_name, data</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">sum_data</span>(<span class="params">self, data</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">       新增统计处理的数据，最终给pd.DataFrame使用</span></span><br><span class="line"><span class="string">       :param data: list|表示处理好的数据，给pd.DataFrame使用，格式 &#123;&quot;金额&quot;:[1,2,3],&quot;收入&quot;:[]&#125;</span></span><br><span class="line"><span class="string">       :return: list</span></span><br><span class="line"><span class="string">       &quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> data:</span><br><span class="line">            <span class="comment"># 插入一行空行</span></span><br><span class="line">            data[i].append(<span class="number">0</span>)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 手动合计拿货吨位、卖出吨位、收入、支出、余额</span></span><br><span class="line">        data[<span class="string">&quot;日期&quot;</span>].append(<span class="string">&quot;合计&quot;</span>)</span><br><span class="line">        <span class="comment"># data[&quot;拿货吨位&quot;].append(sum(map(float,data[&quot;拿货吨位&quot;])))</span></span><br><span class="line">        data[<span class="string">&quot;拿货吨位&quot;</span>].append(<span class="built_in">sum</span>(data[<span class="string">&quot;拿货吨位&quot;</span>]))</span><br><span class="line">        data[<span class="string">&quot;卖出吨位&quot;</span>].append(<span class="built_in">sum</span>(data[<span class="string">&quot;卖出吨位&quot;</span>]))</span><br><span class="line">        data[<span class="string">&quot;收入&quot;</span>].append(<span class="built_in">sum</span>(data[<span class="string">&quot;收入&quot;</span>]))</span><br><span class="line">        data[<span class="string">&quot;支出&quot;</span>].append(<span class="built_in">sum</span>(data[<span class="string">&quot;支出&quot;</span>]))</span><br><span class="line">        data[<span class="string">&quot;余额&quot;</span>].append(<span class="built_in">sum</span>(data[<span class="string">&quot;余额&quot;</span>]))</span><br><span class="line">        <span class="comment"># 对手动合计拿货吨位、卖出吨位、收入、支出、余额、日期之外的合计行，写入空值</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> data:</span><br><span class="line">            <span class="keyword">if</span> i <span class="keyword">not</span> <span class="keyword">in</span> [<span class="string">&quot;日期&quot;</span>, <span class="string">&quot;拿货吨位&quot;</span>, <span class="string">&quot;卖出吨位&quot;</span>, <span class="string">&quot;收入&quot;</span>, <span class="string">&quot;支出&quot;</span>, <span class="string">&quot;余额&quot;</span>]:</span><br><span class="line">                data[i].append(<span class="string">&quot;&quot;</span>)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 如果数据为0，填入到excel中不美观，因此改为”“，默认填进去就是不可见</span></span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> data:</span><br><span class="line">            <span class="keyword">for</span> k <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(data[j])):</span><br><span class="line">                <span class="keyword">if</span> data[j][k] == <span class="number">0</span>:</span><br><span class="line">                    data[j][k] = <span class="string">&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> data</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">generate_excel</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        重新生成excel</span></span><br><span class="line"><span class="string">        :return:</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        g_data = self.get_data()</span><br><span class="line">        <span class="comment"># 得到要保存的文件名</span></span><br><span class="line">        file_name = g_data[<span class="number">0</span>]</span><br><span class="line">        <span class="comment"># 得到处理好的数据，不包括统计</span></span><br><span class="line">        l_data = g_data[<span class="number">1</span>]</span><br><span class="line">        <span class="comment"># 得到处理好的数据，包括统计</span></span><br><span class="line">        s_data = self.sum_data(l_data)</span><br><span class="line">        info_marks = pd.DataFrame(s_data)</span><br><span class="line">        writer = pd.ExcelWriter(file_name)</span><br><span class="line">        info_marks.to_excel(writer, index=<span class="literal">False</span>)</span><br><span class="line">        writer.save()</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;生成excel成功，文件名为：%s&#x27;</span> % file_name)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    file_path = <span class="string">&#x27;XXXX.xls&#x27;</span></span><br><span class="line">    o_excel = OperateExcel(file_path)</span><br><span class="line">    o_excel.generate_excel()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>取头部要取两行</li>
-<li>注意nan的处理</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -2675,7 +2755,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">147</span>
+          <span class="site-state-item-count">148</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -2713,7 +2793,7 @@
     <!--<h3 class="widget-title">Tag Cloud</h3> -->
     <div id="myCanvasContainer" class="widget tagcloud">
         <canvas width="250" height="250" id="resCanvas" style="width=100%">
-            <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AWVS/" rel="tag">AWVS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Burp-Site/" rel="tag">Burp Site</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DVWA/" rel="tag">DVWA</a><span class="tag-list-count">15</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dependency-Check/" rel="tag">Dependency-Check</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/H5/" rel="tag">H5</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hadoop/" rel="tag">Hadoop</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hive/" rel="tag">Hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jenkins/" rel="tag">Jenkins</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Metasploit/" rel="tag">Metasploit</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Nessus/" rel="tag">Nessus</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Sonic/" rel="tag">Sonic</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/airtest/" rel="tag">airtest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">android性能测试</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/app%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">app安全测试</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aritest/" rel="tag">aritest</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/centos/" rel="tag">centos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/" rel="tag">chrome</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/datax/" rel="tag">datax</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/django/" rel="tag">django</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/drozer/" rel="tag">drozer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fisco-bcos/" rel="tag">fisco-bcos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flink/" rel="tag">flink</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gin/" rel="tag">gin</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/" rel="tag">go</a><span class="tag-list-count">16</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go-zero/" rel="tag">go-zero</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hive/" rel="tag">hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/httprunner/" rel="tag">httprunner</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jmeter/" rel="tag">jmeter</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka/" rel="tag">kafka</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kail/" rel="tag">kail</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode/" rel="tag">leetcode</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode-%E6%95%B0%E7%BB%84/" rel="tag">leetcode-数组</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mitmproxy/" rel="tag">mitmproxy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongodb/" rel="tag">mongodb</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/monkey/" rel="tag">monkey</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/" rel="tag">mysql</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pandas/" rel="tag">pandas</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pc%E8%87%AA%E5%8A%A8%E5%8C%96/" rel="tag">pc自动化</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/playwright/" rel="tag">playwright</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pytest/" rel="tag">pytest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a><span class="tag-list-count">23</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/" rel="tag">redis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/selenium/" rel="tag">selenium</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlite/" rel="tag">sqlite</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlmap/" rel="tag">sqlmap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tkinter/" rel="tag">tkinter</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/" rel="tag">vue</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue3/" rel="tag">vue3</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">云服务器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8C%BA%E5%9D%97%E9%93%BE/" rel="tag">区块链</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag">大数据</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">安全测试</a><span class="tag-list-count">29</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">性能测试</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%88%AC%E8%99%AB/" rel="tag">爬虫</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" rel="tag">环境搭建</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95/" rel="tag">自动化测试</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%8B%B1%E8%AF%AD%E5%AD%A6%E4%B9%A0/" rel="tag">英语学习</a><span class="tag-list-count">1</span></li></ul>
+            <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AWVS/" rel="tag">AWVS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Burp-Site/" rel="tag">Burp Site</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DVWA/" rel="tag">DVWA</a><span class="tag-list-count">15</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dependency-Check/" rel="tag">Dependency-Check</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/H5/" rel="tag">H5</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hadoop/" rel="tag">Hadoop</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hive/" rel="tag">Hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jenkins/" rel="tag">Jenkins</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Metasploit/" rel="tag">Metasploit</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Nessus/" rel="tag">Nessus</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Sonic/" rel="tag">Sonic</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/airtest/" rel="tag">airtest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">android性能测试</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/app%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">app安全测试</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aritest/" rel="tag">aritest</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/centos/" rel="tag">centos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/" rel="tag">chrome</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/datax/" rel="tag">datax</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/django/" rel="tag">django</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/drozer/" rel="tag">drozer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fisco-bcos/" rel="tag">fisco-bcos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flink/" rel="tag">flink</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gin/" rel="tag">gin</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/" rel="tag">go</a><span class="tag-list-count">16</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go-zero/" rel="tag">go-zero</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hive/" rel="tag">hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/httprunner/" rel="tag">httprunner</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jmeter/" rel="tag">jmeter</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka/" rel="tag">kafka</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kail/" rel="tag">kail</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode/" rel="tag">leetcode</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode-%E6%95%B0%E7%BB%84/" rel="tag">leetcode-数组</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mitmproxy/" rel="tag">mitmproxy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongodb/" rel="tag">mongodb</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/monkey/" rel="tag">monkey</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/" rel="tag">mysql</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pandas/" rel="tag">pandas</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pc%E8%87%AA%E5%8A%A8%E5%8C%96/" rel="tag">pc自动化</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/playwright/" rel="tag">playwright</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pytest/" rel="tag">pytest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a><span class="tag-list-count">23</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/" rel="tag">redis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/selenium/" rel="tag">selenium</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlite/" rel="tag">sqlite</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlmap/" rel="tag">sqlmap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tkinter/" rel="tag">tkinter</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/" rel="tag">vue</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue3/" rel="tag">vue3</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">云服务器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8C%BA%E5%9D%97%E9%93%BE/" rel="tag">区块链</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag">大数据</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">安全测试</a><span class="tag-list-count">29</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">性能测试</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%88%AC%E8%99%AB/" rel="tag">爬虫</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" rel="tag">环境搭建</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95/" rel="tag">自动化测试</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%8B%B1%E8%AF%AD%E5%AD%A6%E4%B9%A0/" rel="tag">英语学习</a><span class="tag-list-count">1</span></li></ul>
         </canvas>
     </div>
 </div>
