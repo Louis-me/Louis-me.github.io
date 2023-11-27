@@ -191,6 +191,496 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/5c600320/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="一个正经的测试工程师">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="施坤的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/aposts/5c600320/" class="post-title-link" itemprop="url">go环境搭建</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-05-25 11:24:01" itemprop="dateCreated datePublished" datetime="2023-05-25T11:24:01+08:00">2023-05-25</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-08-01 09:30:01" itemprop="dateModified" datetime="2023-08-01T09:30:01+08:00">2023-08-01</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/go/" itemprop="url" rel="index"><span itemprop="name">go</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/aposts/5c600320/" class="post-meta-item leancloud_visitors" data-flag-title="go环境搭建" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/aposts/5c600320/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/aposts/5c600320/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h2><ul>
+<li><p>打开<a target="_blank" rel="noopener" href="https://go.dev/dl/">官网</a>，下载win平台下的msi安装文件，环境变量设置<code>E:\app\Go\bin</code></p>
+</li>
+<li><p>本地新建目录，<code>E:\proj\gowork</code>作为工作空间</p>
+</li>
+<li><p>初始化项目</p>
+</li>
+</ul>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">cd E:\proj\gowork</span><br><span class="line">mkdir hello_work</span><br><span class="line">cd hello_work</span><br><span class="line"><span class="keyword">go</span> mod init example.com/hello_work</span><br><span class="line"></span><br><span class="line">$ <span class="keyword">go</span> mod init example.com/hello_work</span><br><span class="line"><span class="keyword">go</span>: creating <span class="built_in">new</span> <span class="keyword">go</span>.mod: module example.com/hello_work</span><br><span class="line"><span class="keyword">go</span>: to add module requirements and sums:</span><br><span class="line">        <span class="keyword">go</span> mod tidy</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>go mod tidy 执行后，把当前项目中不需要用的依赖文件删除，也就是go.mod中添加的依赖文件</p>
+</blockquote>
+<ul>
+<li>当前最新的工作目录如下</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Administrator@WIN-5TF67LA12I4 MINGW64 /e/proj/gowork</span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">ls</span></span></span><br><span class="line">go.mod  hello_work/</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li>下载并打开<a target="_blank" rel="noopener" href="https://code.visualstudio.com/Download">Visual Studio Code</a>，作为开发go的工具，扩展中安装GO</li>
+<li>按快捷键<code>ctrl+shift+x</code>，打开扩展，安装GO和chinese</li>
+</ul>
+<p><img src="/aposts/5c600320/image-20230525113031586.png" alt="image-20230525113031586"></p>
+<ul>
+<li>安装go tools的依赖插件</li>
+</ul>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">go</span> env -w GO111MODULE=on</span><br><span class="line"><span class="keyword">go</span> env -w GOPROXY=https:<span class="comment">//proxy.golang.com.cn,direct</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>按<code>Ctrl+Shift+P</code> 然后搜索<code>&gt;Go:Install/Update Tools</code> 然后勾选全部项目即可。</li>
+</ul>
+<p><img src="/aposts/5c600320/image-20230525114744401.png" alt="image-20230525114744401"></p>
+<h2 id="实践"><a href="#实践" class="headerlink" title="实践"></a>实践</h2><ul>
+<li>vscode 打开<code>E:\proj\gowork</code>目录</li>
+<li>在终端中拉取远程的依赖项目代码：<code>go get github.com/georgehao/gomodtestc</code></li>
+<li>拉取远程代码成功后，<code>go.mod</code>文件中生产的代码如下</li>
+</ul>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">module example.com/hello_work</span><br><span class="line"></span><br><span class="line"><span class="keyword">go</span> <span class="number">1.20</span></span><br><span class="line"></span><br><span class="line">require (</span><br><span class="line">		github.com/georgehao/gomodtestc v1<span class="number">.0</span><span class="number">.1</span> <span class="comment">// indirect</span></span><br><span class="line">)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="源码分析"><a href="#源码分析" class="headerlink" title="源码分析"></a>源码分析</h3><p><img src="/aposts/5c600320/image-20230531170143420.png" alt="image-20230531170143420"></p>
+<ul>
+<li><code>hello_wrok/main.go</code></li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line">	&quot;fmt&quot;</span><br><span class="line"></span><br><span class="line">	&quot;example.com/hello_work/hello_work/util&quot; // 引用本地其他目录下的文件</span><br><span class="line">	&quot;github.com/georgehao/gomodtestc&quot; // 引用远程项目地址</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">func main() &#123;</span><br><span class="line">	fmt.Println(gomodtestc.PrintStr(&quot;Hello&quot;, 100)) // 调用远程项目的代码</span><br><span class="line">	Print_hello() // 相同文件夹内的函数直接调用，来自于代码hello.go</span><br><span class="line">	util.Print_work() //util是包名</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>在编写代码中，比如输入Print_hello，import自动导入依赖包</p>
+</blockquote>
+<ul>
+<li><code>hello_work/hello.go</code></li>
+</ul>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">&quot;fmt&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Print_hello</span><span class="params">()</span></span> &#123;</span><br><span class="line">	fmt.Println(<span class="string">&quot;Print_hello!&quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>hello_work/util/work.go</code></li>
+</ul>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> util</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">&quot;fmt&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">init</span><span class="params">()</span></span> &#123;</span><br><span class="line">	fmt.Println(<span class="string">&quot;imp-init() come here.&quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Print_work</span><span class="params">()</span></span> &#123;</span><br><span class="line">	fmt.Println(<span class="string">&quot;Hello!&quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>执行命令，如下go run 执行了两个go文件，因为不这样执行无法调用到hello.go中的函数，理论上根目录下只有一个main.go函数，其他函数写到其他目录下</li>
+</ul>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">PS E:\proj\gowork&gt; <span class="keyword">go</span> run .\hello_work\main.<span class="keyword">go</span> .\hello_work\hello.<span class="keyword">go</span></span><br><span class="line">imp-init() come here.</span><br><span class="line">project C Hello_100</span><br><span class="line">Print_hello!       </span><br><span class="line">Hello!</span><br></pre></td></tr></table></figure>
+
+<h2 id="基础语法"><a href="#基础语法" class="headerlink" title="基础语法"></a>基础语法</h2><p><img src="/aposts/5c600320/98a11ab7c2d04b9a9aa01c447b5aace4.png"></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
+<li><p><code>go1.18</code>以后的版本，不在使用<code>GOPATH </code>进行项目依赖管理，因此在搭建环境过程中就不在需要新建<code>src,bin,pkg</code>目录</p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/xyc1211/article/details/121204654">go mod依赖管理</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1970405">Go 1.18 workspace 使用初体验</a></p>
+</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/6df9a046/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="一个正经的测试工程师">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="施坤的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/aposts/6df9a046/" class="post-title-link" itemprop="url">tkinter学习</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-05-17 15:54:12" itemprop="dateCreated datePublished" datetime="2023-05-17T15:54:12+08:00">2023-05-17</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-05-18 15:17:10" itemprop="dateModified" datetime="2023-05-18T15:17:10+08:00">2023-05-18</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/tkinter/" itemprop="url" rel="index"><span itemprop="name">tkinter</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/aposts/6df9a046/" class="post-meta-item leancloud_visitors" data-flag-title="tkinter学习" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/aposts/6df9a046/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/aposts/6df9a046/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <ul>
+<li>本文主要来源于<a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_44634704/article/details/122571178">这里</a></li>
+</ul>
+<h2 id="常用组件汇总"><a href="#常用组件汇总" class="headerlink" title="常用组件汇总"></a>常用组件汇总</h2><ul>
+<li>看如下代码</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> tkinter <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> tkinter <span class="keyword">import</span> messagebox</span><br><span class="line"></span><br><span class="line">root = Tk()</span><br><span class="line">root.title(<span class="string">&#x27;我的gui程序&#x27;</span>)</span><br><span class="line">root.geometry(<span class="string">&#x27;500x300+100+200&#x27;</span>)</span><br><span class="line"><span class="comment"># 500宽度  300高度   距屏幕左侧100像素 顶部200像素</span></span><br><span class="line">bt = Button(root)</span><br><span class="line">bt[<span class="string">&#x27;text&#x27;</span>] = <span class="string">&#x27;点我&#x27;</span></span><br><span class="line">bt.pack()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">click</span>(<span class="params">e</span>):</span><br><span class="line">    <span class="built_in">print</span>(e)</span><br><span class="line">    messagebox.showinfo(<span class="string">&#x27;message&#x27;</span>, <span class="string">&#x27;give flower&#x27;</span>)  <span class="comment"># 提示框</span></span><br><span class="line">    </span><br><span class="line">bt.bind(<span class="string">&#x27;&lt;Button-1&gt;&#x27;</span>, click)  <span class="comment"># 绑定点击事件</span></span><br><span class="line">root.mainloop()  <span class="comment"># 进入事件循环</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>查看<code>root = Tk()</code>，查看源码，发现其实就是实例化<code>class Tk(Misc, Wm)</code>，发现注释中写明了是<code>Base class</code>，经过搜索发现了6个基类，这6个基类包含了常见的组件</li>
+</ul>
+<p><img src="/aposts/6df9a046/image-20230517161613275.png" alt="image-20230517161613275"></p>
+<ul>
+<li>组件汇总如下</li>
+</ul>
+<p><img src="/aposts/6df9a046/image-20230517161741836.png" alt="image-20230517161741836"></p>
+<p><img src="/aposts/6df9a046/image-20230517161833878.png" alt="image-20230517161833878"></p>
+<h3 id="面向对象写法"><a href="#面向对象写法" class="headerlink" title="面向对象写法"></a>面向对象写法</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">from tkinter import *</span><br><span class="line">from tkinter import messagebox</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Application(Frame):</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    继承Frame容器类</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    def __init__(self, master=None):</span><br><span class="line">        super().__init__(master)</span><br><span class="line">        self.master = master</span><br><span class="line">        self.pack()</span><br><span class="line"></span><br><span class="line">        self.createWidget()</span><br><span class="line"></span><br><span class="line">    def createWidget(self):</span><br><span class="line">        # 创建组件</span><br><span class="line">        self.btn01 = Button(self)</span><br><span class="line">        self.btn01[&#x27;text&#x27;] = &#x27;点击送花&#x27;</span><br><span class="line">        self.btn01.pack()</span><br><span class="line">        self.btn01[&#x27;command&#x27;] = self.songhua</span><br><span class="line">        # 创建一个退出按钮</span><br><span class="line">        self.btnQuit = Button(self, text=&#x27;退出&#x27;, command=root.destroy)</span><br><span class="line">        self.btnQuit.pack()</span><br><span class="line"></span><br><span class="line">    def songhua(self):</span><br><span class="line">        messagebox.showinfo(&#x27;送花&#x27;, &#x27;送你99朵玫瑰花&#x27;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">root = Tk()</span><br><span class="line">root.geometry(&#x27;400x100+200+300&#x27;)</span><br><span class="line">root.title(&#x27;一个经典的GUI程序类的测试&#x27;)</span><br><span class="line">app = Application(master=root)</span><br><span class="line">root.mainloop()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="常见组件用法"><a href="#常见组件用法" class="headerlink" title="常见组件用法"></a>常见组件用法</h3><h4 id="label"><a href="#label" class="headerlink" title="label"></a>label</h4><ul>
+<li><p>主要用于显示文本信息，也可以显示图像，常见属性如下</p>
+</li>
+<li><p><code>width,height</code><br>用于指定区域大小，如果显示是文本，则以单个英文字符大小为单位(一个汉字宽度占 2 个字符位置，高度和英文字符一样)；如果显示是图像，则以像素为单位。默认值是根据具体显示的内容动态调整。</p>
+</li>
+<li><p><code>font</code><br>指定字体和字体大小，如：font &#x3D;(font_name,size)</p>
+</li>
+<li><p><code>image</code><br>显示在 Label 上的图像，目前 tkinter 只支持 gif 格式。</p>
+</li>
+<li><p><code>fg</code> 和 <code>bg</code><br><code>fg（foreground</code>）:前景色、<code>bg（background）</code>:背景色</p>
+</li>
+<li><p><code>justify</code><br>针对多行文字的对齐，可设置 justify 属性，可选值”left” “center” “right”</p>
+</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> tkinter <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Application</span>(<span class="title class_ inherited__">Frame</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, master=<span class="literal">None</span></span>):</span><br><span class="line">        <span class="built_in">super</span>().__init__(master)</span><br><span class="line">        self.master = master</span><br><span class="line">        self.pack()</span><br><span class="line">        self.createWidget()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">createWidget</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="comment"># 创建组件</span></span><br><span class="line">        self.label01 = Label(self, text=<span class="string">&#x27;关关雎鸠&#x27;</span>, width=<span class="number">10</span>, height=<span class="number">2</span>,</span><br><span class="line">                             bg=<span class="string">&#x27;black&#x27;</span>, fg=<span class="string">&#x27;white&#x27;</span>)</span><br><span class="line">        self.label01.pack() <span class="comment"># self.label01.pack(side=TOP)</span></span><br><span class="line">        self.label02 = Label(self, text=<span class="string">&#x27;hebut&#x27;</span>, width=<span class="number">10</span>, height=<span class="number">2</span>,</span><br><span class="line">                             bg=<span class="string">&#x27;blue&#x27;</span>, fg=<span class="string">&#x27;white&#x27;</span>, font=(<span class="string">&#x27;黑体&#x27;</span>, <span class="number">30</span>))</span><br><span class="line">        self.label02.pack()</span><br><span class="line">        <span class="comment"># 显示图像</span></span><br><span class="line">        <span class="keyword">global</span> photo</span><br><span class="line">        <span class="comment"># photo = PhotoImage(file=&#x27;pic01.gif&#x27;)</span></span><br><span class="line">        <span class="comment"># self.label03 = Label(self, image=photo)</span></span><br><span class="line">        <span class="comment"># self.label03.pack()</span></span><br><span class="line">        <span class="comment"># 显示多行文本</span></span><br><span class="line">        self.label04 = Label(self, text=<span class="string">&#x27;hebut\n关关雎鸠&#x27;</span>, borderwidth=<span class="number">1</span>, relief=<span class="string">&#x27;groove&#x27;</span>, justify=<span class="string">&#x27;right&#x27;</span>)</span><br><span class="line">        self.label04.pack()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    root = Tk()</span><br><span class="line">    root.geometry(<span class="string">&#x27;400x500+200+300&#x27;</span>)</span><br><span class="line">    app = Application(master=root)</span><br><span class="line">    root.mainloop()</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>上述例子中，注意pack()的用法，是tkinter中一种布局管理的方法，文章后面介绍了三种布局</p>
+</blockquote>
+<p><img src="/aposts/6df9a046/image-20230518093353160.png" alt="image-20230518093353160"></p>
+<h4 id="options"><a href="#options" class="headerlink" title="options"></a>options</h4><p>我们可以通过 Options 设置组件的属性，从而控制组件的各种状态。比如：宽度、高度、颜色、位置等等。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Application</span>(<span class="title class_ inherited__">Frame</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, master=<span class="literal">None</span></span>):</span><br><span class="line">        <span class="built_in">super</span>().__init__(master)</span><br><span class="line">        self.master = master</span><br><span class="line">        self.pack()</span><br><span class="line">        self.createWidget()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">createWidget</span>(<span class="params">self</span>):</span><br><span class="line">        fred = Label(self, text=<span class="string">&#x27;什么？&#x27;</span>, fg=<span class="string">&quot;red&quot;</span>, bg=<span class="string">&quot;blue&quot;</span>)</span><br><span class="line">        fred[<span class="string">&quot;fg&quot;</span>] = <span class="string">&quot;red&quot;</span></span><br><span class="line">        fred[<span class="string">&quot;bg&quot;</span>] = <span class="string">&quot;blue&quot;</span></span><br><span class="line">        fred.config(fg=<span class="string">&quot;white&quot;</span>, bg=<span class="string">&quot;blue&quot;</span>)</span><br><span class="line">        fred.pack()</span><br><span class="line"></span><br><span class="line">        self.btn01 = Button(self, text=<span class="string">&quot;点击送花,变色&quot;</span>)</span><br><span class="line">        <span class="comment"># self.btn01.pack()</span></span><br><span class="line">        self.btn01[<span class="string">&quot;command&quot;</span>] = self.click()</span><br><span class="line"> <span class="keyword">def</span> <span class="title function_">click</span>(<span class="params">self</span>):</span><br><span class="line">        messagebox.showinfo(<span class="string">&quot;送花&quot;</span>,<span class="string">&quot;送你99朵花&quot;</span>)</span><br><span class="line">        self.btn01.config(fg=<span class="string">&quot;white&quot;</span>, bg=<span class="string">&quot;black&quot;</span>)</span><br><span class="line">        <span class="built_in">print</span>(self.btn01.config()) <span class="comment"># 查看 Options 选项的方法</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><code>print(self.btn01.config())</code> 可查看到options中的常用方法</p>
+<h4 id="Button-Entry"><a href="#Button-Entry" class="headerlink" title="Button-Entry"></a>Button-Entry</h4><ul>
+<li>Button（按钮）用来执行用户的单击操作。Button 可以包含文本，也可以包含图像。按钮被单击后会自动调用对应事件绑定的方法。</li>
+<li>Entry，是单行文本框</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> tkinter <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> tkinter <span class="keyword">import</span> messagebox</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Application</span>(<span class="title class_ inherited__">Frame</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, master=<span class="literal">None</span></span>):  <span class="comment"># super()代表的是父类的定义，而不是父类对象</span></span><br><span class="line">        <span class="built_in">super</span>().__init__(master)</span><br><span class="line">        self.master = master</span><br><span class="line">        self.pack()</span><br><span class="line">        self.createWidget()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">createWidget</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="comment"># 创建登录界面的组件</span></span><br><span class="line">        self.label01 = Label(self, text=<span class="string">&quot;用户名&quot;</span>)</span><br><span class="line">        self.label01.pack()</span><br><span class="line"></span><br><span class="line">        <span class="comment"># StringVar 变量绑定到指定的组件。</span></span><br><span class="line">        <span class="comment"># StringVar 变量的值发生变化，组件内容也变化；</span></span><br><span class="line">        <span class="comment"># 组件内容发生变化，StringVar 变量的值也发生变化。 v1 = StringVar()</span></span><br><span class="line">        v1 = StringVar()</span><br><span class="line">        self.entry01 = Entry(self, textvariable=v1)</span><br><span class="line">        self.entry01.pack()</span><br><span class="line">        v1.<span class="built_in">set</span>(<span class="string">&quot;admin&quot;</span>)</span><br><span class="line">        <span class="built_in">print</span>(v1.get())</span><br><span class="line">        <span class="built_in">print</span>(self.entry01.get())</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 创建密码框</span></span><br><span class="line">        self.label02 = Label(self, text=<span class="string">&quot;密码&quot;</span>)</span><br><span class="line">        self.label02.pack()</span><br><span class="line"></span><br><span class="line">        v2 = StringVar()</span><br><span class="line">        self.entry02 = Entry(self, textvariable=v2, show=<span class="string">&quot;*&quot;</span>)</span><br><span class="line">        self.entry02.pack()</span><br><span class="line"></span><br><span class="line">        Button(self, text=<span class="string">&quot;登陆&quot;</span>, command=self.login).pack()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">login</span>(<span class="params">self</span>):</span><br><span class="line">        username = self.entry01.get()</span><br><span class="line">        pwd = self.entry02.get()</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;去数据库比对用户名和密码！&quot;</span>)</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;用户名：&quot;</span> + username)</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;密码：&quot;</span> + pwd)</span><br><span class="line">        <span class="keyword">if</span> username == <span class="string">&quot;关关雎鸠&quot;</span> <span class="keyword">and</span> pwd == <span class="string">&quot;123456&quot;</span>:</span><br><span class="line">            messagebox.showinfo(<span class="string">&quot;学习系统&quot;</span>, <span class="string">&quot;登录成功！欢迎开始学习！&quot;</span>)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            messagebox.showinfo(<span class="string">&quot;学习系统&quot;</span>, <span class="string">&quot;登录失败！用户名或密码错误！&quot;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    root = Tk()</span><br><span class="line">    root.geometry(<span class="string">&quot;400x130+200+300&quot;</span>)</span><br><span class="line">    app = Application(master=root)</span><br><span class="line">    root.mainloop()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>常见的组件比如Text多行文本框、Radiobutton 单选按钮、Checkbutton 复选按钮、canvas 画布等不做演示</li>
+</ul>
+<h2 id="布局管理"><a href="#布局管理" class="headerlink" title="布局管理"></a>布局管理</h2><p><code>tkinter</code> 提供了三种管理器：<code>pack、grid、place</code>。</p>
+<h3 id="grid-布局管理器"><a href="#grid-布局管理器" class="headerlink" title="grid 布局管理器"></a>grid 布局管理器</h3><p>grid 表格布局，采用表格结构组织组件。子组件的位置由行和列的单元格来确定，并且可以跨行和跨列，从而实现复杂的布局。</p>
+<p><img src="/aposts/6df9a046/image-20230518094805637.png" alt="image-20230518094805637"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 测试 Grid 布局管理器的基本用法，使用面向对象的方式</span></span><br><span class="line"><span class="keyword">from</span> tkinter <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Application</span>(<span class="title class_ inherited__">Frame</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, master=<span class="literal">None</span></span>):</span><br><span class="line">        <span class="comment"># super()代表的是父类的定义，而不是父类对象</span></span><br><span class="line">        <span class="built_in">super</span>().__init__(master)</span><br><span class="line">        self.master = master</span><br><span class="line">        self.pack()</span><br><span class="line">        self.createWidget()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">createWidget</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="comment"># 通过 grid 布局实现登录界面</span></span><br><span class="line">        Label(self,text=<span class="string">&quot;用户名&quot;</span>).grid(row=<span class="number">0</span>,column=<span class="number">0</span>)</span><br><span class="line">        Entry(self).grid(row=<span class="number">0</span>,column=<span class="number">1</span>)</span><br><span class="line">        Label(self,text=<span class="string">&quot;用户名为手机号&quot;</span>).grid(row=<span class="number">0</span>,column=<span class="number">2</span>)</span><br><span class="line">        Label(self, text=<span class="string">&quot;密码&quot;</span>).grid(row=<span class="number">1</span>, column=<span class="number">0</span>)</span><br><span class="line">        Entry(self, show=<span class="string">&quot;*&quot;</span>).grid(row=<span class="number">1</span>, column=<span class="number">1</span>)</span><br><span class="line">        Button(self, text=<span class="string">&quot;登录&quot;</span>).grid(row=<span class="number">2</span>, column=<span class="number">1</span>, sticky=EW)</span><br><span class="line">        Button(self, text=<span class="string">&quot;取消&quot;</span>).grid(row=<span class="number">2</span>, column=<span class="number">2</span>, sticky=EW)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    root = Tk()</span><br><span class="line">    root.geometry(<span class="string">&quot;400x90+200+300&quot;</span>)</span><br><span class="line">    app = Application(master=root)</span><br><span class="line">    root.mainloop()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><img src="/aposts/6df9a046/image-20230518100007136.png" alt="image-20230518100007136"></p>
+<h3 id="pack布局"><a href="#pack布局" class="headerlink" title="pack布局"></a>pack布局</h3><ul>
+<li>三种布局中最简单的</li>
+<li>pack 按照组件的创建顺序将子组件添加到父组件中，按照垂直或者水平的方向自然排布。如果不指定任何选项，默认在父组件中自顶向下垂直添加组件。</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 测试 pack 布局管理</span></span><br><span class="line"><span class="keyword">from</span> tkinter <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">root = Tk()</span><br><span class="line">root.geometry(<span class="string">&quot;700x220&quot;</span>)</span><br><span class="line"><span class="comment"># Frame 是一个矩形区域，就是用来防止其他子组件</span></span><br><span class="line">f1 = Frame(root)</span><br><span class="line">f1.pack()</span><br><span class="line">f2 = Frame(root)</span><br><span class="line">f2.pack()</span><br><span class="line">btnText = (<span class="string">&quot;流行风&quot;</span>, <span class="string">&quot;中国风&quot;</span>, <span class="string">&quot;日本风&quot;</span>, <span class="string">&quot;重金属&quot;</span>, <span class="string">&quot;轻音乐&quot;</span>)</span><br><span class="line"><span class="keyword">for</span> txt <span class="keyword">in</span> btnText:</span><br><span class="line">    Button(f1, text=txt).pack(side=<span class="string">&quot;left&quot;</span>, padx=<span class="string">&quot;10&quot;</span>)</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, <span class="number">20</span>):</span><br><span class="line">    Button(f2, width=<span class="number">5</span>, height=<span class="number">10</span>, bg=<span class="string">&quot;black&quot;</span> <span class="keyword">if</span> i % <span class="number">2</span> == <span class="number">0</span> <span class="keyword">else</span> <span class="string">&quot;white&quot;</span>).pack(side=<span class="string">&quot;left&quot;</span>)</span><br><span class="line">root.mainloop()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>常用方法</li>
+</ul>
+<p><img src="/aposts/6df9a046/image-20230518113530055.png" alt="image-20230518113530055"></p>
+<h3 id="place-布局管理器"><a href="#place-布局管理器" class="headerlink" title="place 布局管理器"></a>place 布局管理器</h3><p>place 布局管理器可以通过坐标精确控制组件的位置，适用于一些布局更加灵活的场景</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">from tkinter import *</span><br><span class="line"></span><br><span class="line">root= Tk()</span><br><span class="line">root.geometry(&quot;500x300&quot;)</span><br><span class="line">root.title(&quot;布局管理 place&quot;)</span><br><span class="line">root[&quot;bg&quot;]=&quot;white&quot;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">f1= Frame(root,width=200,height=200,bg=&quot;green&quot;)</span><br><span class="line">f1.place(x=30,y=30)</span><br><span class="line">Button(root,text=&quot;hebut&quot;).place(relx=0.5,rely=0,x=100,y=200,relwidth=0.2,relheight=0.2)</span><br><span class="line">Button(f1,text=&quot;programmer&quot;).place(relx=0.6,rely=0.7)</span><br><span class="line">Button(f1,text=&quot;关关雎鸠&quot;).place(relx=0.2,rely=0.2)</span><br><span class="line"></span><br><span class="line">root.mainloop()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p><img src="/aposts/6df9a046/image-20230518114625901.png" alt="image-20230518114625901"></p>
+<h2 id="打包"><a href="#打包" class="headerlink" title="打包"></a>打包</h2><ul>
+<li>源代码</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">from</span> tkinter <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> tkinter <span class="keyword">import</span> messagebox</span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Application</span>(<span class="title class_ inherited__">Frame</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, master=<span class="literal">None</span></span>):  <span class="comment"># super()代表的是父类的定义，而不是父类对象</span></span><br><span class="line">        <span class="built_in">super</span>().__init__(master)</span><br><span class="line">        self.master = master</span><br><span class="line">        self.pack()</span><br><span class="line">        self.createWidget()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">createWidget</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="comment"># 创建登录界面的组件</span></span><br><span class="line">        self.label01 = Label(self, text=<span class="string">&quot;用户名&quot;</span>)</span><br><span class="line">        self.label01.pack()</span><br><span class="line"></span><br><span class="line">        <span class="comment"># StringVar 变量绑定到指定的组件。</span></span><br><span class="line">        <span class="comment"># StringVar 变量的值发生变化，组件内容也变化；</span></span><br><span class="line">        <span class="comment"># 组件内容发生变化，StringVar 变量的值也发生变化。 v1 = StringVar()</span></span><br><span class="line">        v1 = StringVar()</span><br><span class="line">        self.entry01 = Entry(self, textvariable=v1)</span><br><span class="line">        self.entry01.pack()</span><br><span class="line">        v1.<span class="built_in">set</span>(<span class="string">&quot;admin&quot;</span>)</span><br><span class="line">        <span class="built_in">print</span>(v1.get())</span><br><span class="line">        <span class="built_in">print</span>(self.entry01.get())</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 创建密码框</span></span><br><span class="line">        self.label02 = Label(self, text=<span class="string">&quot;密码&quot;</span>)</span><br><span class="line">        self.label02.pack()</span><br><span class="line"></span><br><span class="line">        v2 = StringVar()</span><br><span class="line">        self.entry02 = Entry(self, textvariable=v2, show=<span class="string">&quot;*&quot;</span>)</span><br><span class="line">        self.entry02.pack()</span><br><span class="line"></span><br><span class="line">        Button(self, text=<span class="string">&quot;登陆&quot;</span>, command=self.login).pack()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">login</span>(<span class="params">self</span>):</span><br><span class="line">        username = self.entry01.get()</span><br><span class="line">        pwd = self.entry02.get()</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;去数据库比对用户名和密码！&quot;</span>)</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;用户名：&quot;</span> + username)</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;密码：&quot;</span> + pwd)</span><br><span class="line">        <span class="keyword">if</span> username == <span class="string">&quot;admin&quot;</span> <span class="keyword">and</span> pwd == <span class="string">&quot;123456&quot;</span>:</span><br><span class="line">            messagebox.showinfo(<span class="string">&quot;学习系统&quot;</span>, <span class="string">&quot;登录成功！欢迎开始学习！&quot;</span>)</span><br><span class="line">            res = requests.get(<span class="string">&quot;http://www.baidu.com&quot;</span>)</span><br><span class="line">            <span class="built_in">print</span>(res.status_code)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            messagebox.showinfo(<span class="string">&quot;学习系统&quot;</span>, <span class="string">&quot;登录失败！用户名或密码错误！&quot;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    root = Tk()</span><br><span class="line">    root.geometry(<span class="string">&quot;400x130+200+300&quot;</span>)</span><br><span class="line">    app = Application(master=root)</span><br><span class="line">    root.mainloop()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li>安装打包依赖文件</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install pyinstaller  -i https://pypi.tuna.tsinghua.edu.cn/simple</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>打包</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">D:\project\studyTK&gt;pyinstaller -F main.py</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>执行命令完成后，在dist目录就发现了打包好的exe文件，运行即可</li>
+</ul>
+<p><img src="/aposts/6df9a046/image-20230518151216662.png" alt="image-20230518151216662"></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/12cb96d0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="一个正经的测试工程师">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="施坤的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/aposts/12cb96d0/" class="post-title-link" itemprop="url">迭代器和生成器</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-03-31 10:56:44" itemprop="dateCreated datePublished" datetime="2023-03-31T10:56:44+08:00">2023-03-31</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-04-03 16:10:11" itemprop="dateModified" datetime="2023-04-03T16:10:11+08:00">2023-04-03</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/" itemprop="url" rel="index"><span itemprop="name">python</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/aposts/12cb96d0/" class="post-meta-item leancloud_visitors" data-flag-title="迭代器和生成器" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/aposts/12cb96d0/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/aposts/12cb96d0/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="迭代器"><a href="#迭代器" class="headerlink" title="迭代器"></a>迭代器</h2><ul>
+<li>内部含有<code>_iter_</code>方法和<code>_next_</code>方法都是迭代器<ul>
+<li>可迭代对象 都可以通过内置函数<code> iter</code>转换为迭代器</li>
+<li>内置函数 <code>next</code> 进行迭代操作,当所有数据迭代完毕后，再使用 <code>next</code> 迭代，会抛出异常 <code>StopIteration</code>。</li>
+</ul>
+</li>
+<li>使用<code>for</code>循环<strong>容器</strong>取值的都是<strong>可迭代的</strong></li>
+</ul>
+<blockquote>
+<p>容器就是将多个元素在一起的单元，并且，是可以迭代的，比如列表，字典，元组，字符串</p>
+</blockquote>
+<ul>
+<li>如下代码</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># 将列表转换为一个迭代器</span><br><span class="line">iter_li = iter([11,22)</span><br><span class="line"># 通过next对迭代器进行迭代操作，每次可以迭代出来一个数据</span><br><span class="line">s1 = next(iter_li)</span><br><span class="line">print(&#x27;s1:&#x27;,s1)</span><br><span class="line">s2 = next(iter_li) # s1 :11</span><br><span class="line">print(&#x27;s2:&#x27;,s2)  # s2 :22</span><br><span class="line">s3 = next(iter_li)  # StopIteration 错误</span><br></pre></td></tr></table></figure>
+
+<h2 id="生成器"><a href="#生成器" class="headerlink" title="生成器"></a>生成器</h2><ul>
+<li><p>是一种<strong>特殊的迭代器</strong>，具备迭代器所有的特性。但其相比与迭代器，占用的内存更少</p>
+</li>
+<li><p>他本质上是一个函数，只不过函数的<code>return</code>改为了<code>yield</code>语句，正常的<code>for</code>循环语句，会不停的遍历容器的对象，然后返回（如果有return的话），当我们用<code>yield</code>取而代之</p>
+</li>
+<li><p>每当函数执行时遇到<code>yield</code>时，他会记住此时的一个位置并挂起，等到使用__next__操作时，才由上一次挂起的位置继续执行。<strong>生成器不仅“记住”了它的数据状态，生成还记住了程序执行的位置</strong></p>
+</li>
+<li><p>python 中定义生成器，一共有两种方式，一种是生成器表达式，另一种是生成器函数。</p>
+</li>
+</ul>
+<h3 id="生成器表达式"><a href="#生成器表达式" class="headerlink" title="生成器表达式"></a>生成器表达式</h3><p>生成器表达式的语法其实就是把<strong>列表推导式</strong>的中括号改成小括号，如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">gen_ =(item <span class="keyword">for</span> item <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">2</span>))</span><br><span class="line"><span class="built_in">print</span>(gen_)</span><br><span class="line">s1 = <span class="built_in">next</span>(gen_)</span><br><span class="line"><span class="built_in">print</span>(s1)</span><br><span class="line"><span class="built_in">next</span>(gen_)</span><br><span class="line"><span class="built_in">next</span>(gen_) <span class="comment"># 报错StopIteration</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="生成器函数"><a href="#生成器函数" class="headerlink" title="生成器函数"></a>生成器函数</h3><p>在函数中使用 <code>yield</code>关键字可以定义一个生成器函数</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">func</span>():</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>):</span><br><span class="line">        <span class="keyword">yield</span> i</span><br><span class="line"></span><br><span class="line">gen_list = func()</span><br><span class="line"><span class="comment"># 调用函数</span></span><br><span class="line">gen_lsit = func()</span><br><span class="line">s2 = <span class="built_in">next</span>(gen_list)</span><br><span class="line"><span class="built_in">print</span>(s2)</span><br><span class="line"><span class="built_in">next</span>(gen_list)  <span class="comment"># 报错StopIteration</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="自定义类生成器"><a href="#自定义类生成器" class="headerlink" title="自定义类生成器"></a>自定义类生成器</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line">from collections import Iterable</span><br><span class="line">from collections import Iterator</span><br><span class="line">import time</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Classmate(object):</span><br><span class="line">    &quot;&quot;&quot;定义一个同学类&quot;&quot;&quot;</span><br><span class="line"></span><br><span class="line">    def __init__(self):</span><br><span class="line">        self.name = list()</span><br><span class="line">        self.name_num = 0</span><br><span class="line"></span><br><span class="line">    def add(self, name):</span><br><span class="line">        self.name.append(name)</span><br><span class="line"></span><br><span class="line">    def __iter__(self):</span><br><span class="line">        return self  # 返回本身</span><br><span class="line"></span><br><span class="line">    def __next__(self):</span><br><span class="line">        if self.name_num &lt; len(self.name):</span><br><span class="line">            ret = self.name[self.name_num]</span><br><span class="line">            self.name_num += 1</span><br><span class="line">            return ret</span><br><span class="line"></span><br><span class="line">        # 抛出异常，当循环后自动结束</span><br><span class="line">        else:</span><br><span class="line">            print(&quot;-------StopIteration---&quot;)</span><br><span class="line">            raise StopIteration</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class1 = Classmate()</span><br><span class="line">class1.add(&quot;张三&quot;)</span><br><span class="line">class1.add(&quot;李四&quot;)</span><br><span class="line">class1.add(&quot;王五&quot;)</span><br><span class="line"></span><br><span class="line">print(&quot;判断是否是可迭代的对象：&quot;, isinstance(class1, Iterable))</span><br><span class="line"></span><br><span class="line">print(&quot;判断是否是迭代器：&quot;, isinstance(class1, Iterator))</span><br><span class="line"></span><br><span class="line">for name in class1:</span><br><span class="line">    print(name)</span><br><span class="line">    time.sleep(1)</span><br><span class="line">    </span><br><span class="line"># 结果为</span><br><span class="line">判断是否是可迭代的对象： True</span><br><span class="line">判断是否是迭代器： True</span><br><span class="line">张三</span><br><span class="line">李四</span><br><span class="line">王五</span><br><span class="line">-------StopIteration---</span><br></pre></td></tr></table></figure>
+
+<h2 id="总结两者的区别"><a href="#总结两者的区别" class="headerlink" title="总结两者的区别"></a>总结两者的区别</h2><ul>
+<li>生成器就是迭代器，反之则不是</li>
+<li>迭代器，在创建的时候已经生成(比如上面迭代器的列子)，在需要的时候再去操作迭代器<strong>加载元素</strong>到内存中</li>
+<li>而生成器，本质是一个可以暂时挂起的函数，等到需要时再继续执行去<strong>生成元素</strong>，这样子，使得生成器比迭代器更省内存。</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/5ca15e59/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1684,585 +2174,10 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/aa9cf483/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="一个正经的测试工程师">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="施坤的博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/aposts/aa9cf483/" class="post-title-link" itemprop="url">httprunner的安装和使用</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-09-05 11:08:41 / 修改时间：16:41:33" itemprop="dateCreated datePublished" datetime="2022-09-05T11:08:41+08:00">2022-09-05</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/httprunner/" itemprop="url" rel="index"><span itemprop="name">httprunner</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/aposts/aa9cf483/" class="post-meta-item leancloud_visitors" data-flag-title="httprunner的安装和使用" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/aposts/aa9cf483/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/aposts/aa9cf483/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><ul>
-<li>本次搭建的为在win10下搭建httprunner</li>
-</ul>
-<h2 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h2><ul>
-<li><p>通过<a target="_blank" rel="noopener" href="https://github.com/httprunner/httprunner/releases">github</a>下载最新的版本，进行编译，我现在下载的版本为：<code>hrp-v4.2.0-windows-amd64.tar</code></p>
-</li>
-<li><p>配置环境变量PATH中的hrp的exe路径，<code>D:\app\hrp-v4.2.0-windows-amd64</code></p>
-</li>
-<li><p>检查配置环境，打开cmd输入：<code>hrp -h</code></p>
-</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">C:\Users\Administrator&gt;hrp -h</span><br><span class="line"></span><br><span class="line">License: Apache-2.0</span><br><span class="line">Website: https://httprunner.com</span><br><span class="line">Github: https://github.com/httprunner/httprunner</span><br><span class="line">Copyright 2017 debugtalk</span><br><span class="line"></span><br><span class="line">Usage:</span><br><span class="line">  hrp [command]</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>创建项目,选择py插件</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">D:\project&gt;hrp startproject demo --py</span><br><span class="line">...</span><br><span class="line">1:23AM INF python package is ready name=httprunner version=v4.2.0</span><br><span class="line">11:23AM INF set python3 executable path Python3Executable=&quot;C:\\Users\\Administrator\\.hrp\\venv\\Scripts\\python.exe&quot;</span><br><span class="line">11:23AM INF create scaffold success projectName=demo</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>本地python版本为3.7</p>
-<p>hrp startproject demo –go 选择go插件</p>
-</blockquote>
-<h2 id="代码分析"><a href="#代码分析" class="headerlink" title="代码分析"></a>代码分析</h2><ul>
-<li>查看项目代码结构如下：</li>
-</ul>
-<p><img src="/aposts/aa9cf483/image-20220905153421725.png" alt="image-20220905153421725"></p>
-<h3 id="har"><a href="#har" class="headerlink" title="har"></a>har</h3><p> 用 Charles 等抓包工具，以及 Chrome 等浏览器均可以导出 HAR 格式的请求文件，查看<a target="_blank" rel="noopener" href="https://httprunner.com/docs/user-guide/gen-tests/record/">这里</a></p>
-<h3 id="reports"><a href="#reports" class="headerlink" title="reports"></a>reports</h3><p>存放测试报告的目录</p>
-<h3 id="testcases"><a href="#testcases" class="headerlink" title="testcases"></a>testcases</h3><p> 放测试用例的目录，支持json和yml，看下demo.json的代码</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    &quot;config&quot;: &#123;</span><br><span class="line">        &quot;name&quot;: &quot;demo with complex mechanisms&quot;,</span><br><span class="line">        &quot;base_url&quot;: &quot;https://postman-echo.com&quot;,</span><br><span class="line">        &quot;variables&quot;: &#123;</span><br><span class="line">            &quot;a&quot;: &quot;$&#123;sum(10, 2.3)&#125;&quot;,</span><br><span class="line">            &quot;b&quot;: 3.45,</span><br><span class="line">            &quot;n&quot;: &quot;$&#123;sum_ints(1, 2, 2)&#125;&quot;,</span><br><span class="line">            &quot;varFoo1&quot;: &quot;$&#123;gen_random_string($n)&#125;&quot;,</span><br><span class="line">            &quot;varFoo2&quot;: &quot;$&#123;max($a, $b)&#125;&quot;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    &quot;teststeps&quot;: [</span><br><span class="line">        &#123;</span><br><span class="line">            &quot;name&quot;: &quot;transaction 1 start&quot;,</span><br><span class="line">            &quot;transaction&quot;: &#123;</span><br><span class="line">                &quot;name&quot;: &quot;tran1&quot;,</span><br><span class="line">                &quot;type&quot;: &quot;start&quot;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">            &quot;name&quot;: &quot;get with params&quot;,</span><br><span class="line">            &quot;request&quot;: &#123;</span><br><span class="line">                &quot;method&quot;: &quot;GET&quot;,</span><br><span class="line">                &quot;url&quot;: &quot;/get&quot;,</span><br><span class="line">                &quot;params&quot;: &#123;</span><br><span class="line">                    &quot;foo1&quot;: &quot;$varFoo1&quot;,</span><br><span class="line">                    &quot;foo2&quot;: &quot;$varFoo2&quot;</span><br><span class="line">                &#125;,</span><br><span class="line">                &quot;headers&quot;: &#123;</span><br><span class="line">                    &quot;User-Agent&quot;: &quot;HttpRunnerPlus&quot;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;,</span><br><span class="line">            &quot;variables&quot;: &#123;</span><br><span class="line">                &quot;b&quot;: 34.5,</span><br><span class="line">                &quot;n&quot;: 3,</span><br><span class="line">                &quot;name&quot;: &quot;get with params&quot;,</span><br><span class="line">                &quot;varFoo2&quot;: &quot;$&#123;max($a, $b)&#125;&quot;</span><br><span class="line">            &#125;,</span><br><span class="line">            &quot;setup_hooks&quot;: [</span><br><span class="line">                &quot;$&#123;setup_hook_example($name)&#125;&quot;</span><br><span class="line">            ],</span><br><span class="line">            &quot;teardown_hooks&quot;: [</span><br><span class="line">                &quot;$&#123;teardown_hook_example($name)&#125;&quot;</span><br><span class="line">            ],</span><br><span class="line">            &quot;extract&quot;: &#123;</span><br><span class="line">                &quot;varFoo1&quot;: &quot;body.args.foo1&quot;</span><br><span class="line">            &#125;,</span><br><span class="line">            &quot;validate&quot;: [</span><br><span class="line">                &#123;</span><br><span class="line">                    &quot;check&quot;: &quot;status_code&quot;,</span><br><span class="line">                    &quot;assert&quot;: &quot;equals&quot;,</span><br><span class="line">                    &quot;expect&quot;: 200,</span><br><span class="line">                    &quot;msg&quot;: &quot;check response status code&quot;</span><br><span class="line">                &#125;,</span><br><span class="line">                &#123;</span><br><span class="line">                    &quot;check&quot;: &quot;headers.\&quot;Content-Type\&quot;&quot;,</span><br><span class="line">                    &quot;assert&quot;: &quot;startswith&quot;,</span><br><span class="line">                    &quot;expect&quot;: &quot;application/json&quot;</span><br><span class="line">                &#125;,</span><br><span class="line">                &#123;</span><br><span class="line">                    &quot;check&quot;: &quot;body.args.foo1&quot;,</span><br><span class="line">                    &quot;assert&quot;: &quot;length_equals&quot;,</span><br><span class="line">                    &quot;expect&quot;: 5,</span><br><span class="line">                    &quot;msg&quot;: &quot;check args foo1&quot;</span><br><span class="line">                &#125;,</span><br><span class="line">                &#123;</span><br><span class="line">                    &quot;check&quot;: &quot;$varFoo1&quot;,</span><br><span class="line">                    &quot;assert&quot;: &quot;length_equals&quot;,</span><br><span class="line">                    &quot;expect&quot;: 5,</span><br><span class="line">                    &quot;msg&quot;: &quot;check args foo1&quot;</span><br><span class="line">                &#125;,</span><br><span class="line">                &#123;</span><br><span class="line">                    &quot;check&quot;: &quot;body.args.foo2&quot;,</span><br><span class="line">                    &quot;assert&quot;: &quot;equals&quot;,</span><br><span class="line">                    &quot;expect&quot;: &quot;34.5&quot;,</span><br><span class="line">                    &quot;msg&quot;: &quot;check args foo2&quot;</span><br><span class="line">                &#125;</span><br><span class="line">            ]</span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">            &quot;name&quot;: &quot;transaction 1 end&quot;,</span><br><span class="line">            &quot;transaction&quot;: &#123;</span><br><span class="line">                &quot;name&quot;: &quot;tran1&quot;,</span><br><span class="line">                &quot;type&quot;: &quot;end&quot;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">            &quot;name&quot;: &quot;post json data&quot;,</span><br><span class="line">            &quot;request&quot;: &#123;</span><br><span class="line">                &quot;method&quot;: &quot;POST&quot;,</span><br><span class="line">                &quot;url&quot;: &quot;/post&quot;,</span><br><span class="line">                &quot;body&quot;: &#123;</span><br><span class="line">                    &quot;foo1&quot;: &quot;$varFoo1&quot;,</span><br><span class="line">                    &quot;foo2&quot;: &quot;$&#123;max($a, $b)&#125;&quot;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;,</span><br><span class="line">            &quot;validate&quot;: [</span><br><span class="line">                &#123;</span><br><span class="line">                    &quot;check&quot;: &quot;status_code&quot;,</span><br><span class="line">                    &quot;assert&quot;: &quot;equals&quot;,</span><br><span class="line">                    &quot;expect&quot;: 200,</span><br><span class="line">                    &quot;msg&quot;: &quot;check status code&quot;</span><br><span class="line">                &#125;,</span><br><span class="line">                &#123;</span><br><span class="line">                    &quot;check&quot;: &quot;body.json.foo1&quot;,</span><br><span class="line">                    &quot;assert&quot;: &quot;length_equals&quot;,</span><br><span class="line">                    &quot;expect&quot;: 5,</span><br><span class="line">                    &quot;msg&quot;: &quot;check args foo1&quot;</span><br><span class="line">                &#125;,</span><br><span class="line">                &#123;</span><br><span class="line">                    &quot;check&quot;: &quot;body.json.foo2&quot;,</span><br><span class="line">                    &quot;assert&quot;: &quot;equals&quot;,</span><br><span class="line">                    &quot;expect&quot;: 12.3,</span><br><span class="line">                    &quot;msg&quot;: &quot;check args foo2&quot;</span><br><span class="line">                &#125;</span><br><span class="line">            ]</span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">            &quot;name&quot;: &quot;post form data&quot;,</span><br><span class="line">            &quot;request&quot;: &#123;</span><br><span class="line">                &quot;method&quot;: &quot;POST&quot;,</span><br><span class="line">                &quot;url&quot;: &quot;/post&quot;,</span><br><span class="line">                &quot;headers&quot;: &#123;</span><br><span class="line">                    &quot;Content-Type&quot;: &quot;application/x-www-form-urlencoded; charset=UTF-8&quot;</span><br><span class="line">                &#125;,</span><br><span class="line">                &quot;body&quot;: &#123;</span><br><span class="line">                    &quot;foo1&quot;: &quot;$varFoo1&quot;,</span><br><span class="line">                    &quot;foo2&quot;: &quot;$&#123;max($a, $b)&#125;&quot;,</span><br><span class="line">                    &quot;time&quot;: &quot;$&#123;get_timestamp()&#125;&quot;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;,</span><br><span class="line">            &quot;extract&quot;: &#123;</span><br><span class="line">                &quot;varTime&quot;: &quot;body.form.time&quot;</span><br><span class="line">            &#125;,</span><br><span class="line">            &quot;validate&quot;: [</span><br><span class="line">                &#123;</span><br><span class="line">                    &quot;check&quot;: &quot;status_code&quot;,</span><br><span class="line">                    &quot;assert&quot;: &quot;equals&quot;,</span><br><span class="line">                    &quot;expect&quot;: 200,</span><br><span class="line">                    &quot;msg&quot;: &quot;check status code&quot;</span><br><span class="line">                &#125;,</span><br><span class="line">                &#123;</span><br><span class="line">                    &quot;check&quot;: &quot;body.form.foo1&quot;,</span><br><span class="line">                    &quot;assert&quot;: &quot;length_equals&quot;,</span><br><span class="line">                    &quot;expect&quot;: 5,</span><br><span class="line">                    &quot;msg&quot;: &quot;check args foo1&quot;</span><br><span class="line">                &#125;,</span><br><span class="line">                &#123;</span><br><span class="line">                    &quot;check&quot;: &quot;body.form.foo2&quot;,</span><br><span class="line">                    &quot;assert&quot;: &quot;equals&quot;,</span><br><span class="line">                    &quot;expect&quot;: &quot;12.3&quot;,</span><br><span class="line">                    &quot;msg&quot;: &quot;check args foo2&quot;</span><br><span class="line">                &#125;</span><br><span class="line">            ]</span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">            &quot;name&quot;: &quot;get with timestamp&quot;,</span><br><span class="line">            &quot;request&quot;: &#123;</span><br><span class="line">                &quot;method&quot;: &quot;GET&quot;,</span><br><span class="line">                &quot;url&quot;: &quot;/get&quot;,</span><br><span class="line">                &quot;params&quot;: &#123;</span><br><span class="line">                    &quot;time&quot;: &quot;$varTime&quot;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;,</span><br><span class="line">            &quot;validate&quot;: [</span><br><span class="line">                &#123;</span><br><span class="line">                    &quot;check&quot;: &quot;body.args.time&quot;,</span><br><span class="line">                    &quot;assert&quot;: &quot;length_equals&quot;,</span><br><span class="line">                    &quot;expect&quot;: 13,</span><br><span class="line">                    &quot;msg&quot;: &quot;check extracted var timestamp&quot;</span><br><span class="line">                &#125;</span><br><span class="line">            ]</span><br><span class="line">        &#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>在json里面引用的函数如<code>&#123;sum(10, 2.3)&#125;</code>，需要在<code>debugtalk.py</code>自定义，但是<code>max</code>应该为内置函数，不用自定义编写</li>
-<li>事务代码说明</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">type Transaction struct &#123;</span><br><span class="line">   Name string          `json:&quot;name&quot; yaml:&quot;name&quot;` // 事务名称，可定义为任意字符串</span><br><span class="line">   Type transactionType `json:&quot;type&quot; yaml:&quot;type&quot;` // 事务类型，仅包括 2 种类型，start（事务开始）和 end（结束事务）</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<ul>
-<li>在测试用例中，transaction 应该成对出现，即必须同时定义 start 和 end；如果存在配对缺失的情况，会按照如下逻辑进行处理：<ul>
-<li>仅设置开始事务，则会在测试用例最后一个测试步后添加结束事务</li>
-<li>仅设置结束事务，则会在测试用例第一个测试步前添加开始事务</li>
-</ul>
-</li>
-</ul>
-</blockquote>
-<ul>
-<li>更多的手工编写用例<a target="_blank" rel="noopener" href="https://httprunner.com/docs/user-guide/gen-tests/write-cases/">介绍</a></li>
-</ul>
-<h3 id="其他文件"><a href="#其他文件" class="headerlink" title="其他文件"></a>其他文件</h3><ul>
-<li><code>.env</code> 配置环境变量信息，如登录的信息</li>
-<li><code>debugtalk.py</code> 自定义函数</li>
-<li><code>proj.json</code> 项目的信息</li>
-</ul>
-<h2 id="运行用例"><a href="#运行用例" class="headerlink" title="运行用例"></a>运行用例</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">D:\project\demo&gt;hrp run testcases\demo.json --gen-html-report</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line">==================== response ====================</span><br><span class="line">Connected via TLSv1.2</span><br><span class="line">HTTP/1.1 200 OK</span><br><span class="line">Content-Length: 406</span><br><span class="line">Connection: keep-alive</span><br><span class="line">Content-Type: application/json; charset=utf-8</span><br><span class="line">Date: Mon, 05 Sep 2022 08:08:52 GMT</span><br><span class="line">Etag: W/&quot;196-F4bYgnayuG8mswnHB8kP+Hk/6J4&quot;</span><br><span class="line">Set-Cookie: sails.sid=s%3AF7CgL7_NwzZjvKsH7GKmjPHovUPl7kza.7RUa8O71oEJjVUKcWKAkLw0m0ztEnlmlVzJimZz5H2E; Path=/; HttpOnly</span><br><span class="line">Vary: Accept-Encoding</span><br><span class="line"></span><br><span class="line">&#123;&quot;args&quot;:&#123;&quot;time&quot;:&quot;1662365339120&quot;&#125;,&quot;headers&quot;:&#123;&quot;x-forwarded-proto&quot;:&quot;https&quot;,&quot;x-forwarded-port&quot;:&quot;443&quot;,&quot;host&quot;:&quot;postman-echo.com&quot;,&quot;x-amzn-trace-id&quot;:&quot;Root=1-6315ae94-58d38b1f1c45c8b94273a5a3&quot;,&quot;user-agent&quot;:&quot;Go-http-client/1.1&quot;,&quot;cookie&quot;:&quot;sails.sid=s%3A9zczVs9TODPR3d-xi5F59muThb8LgjjY.bDP%2FcJnt8Ou9QPjs7Y9v15utVqCU%2FrK3EddVu6ThODc&quot;,&quot;accept-encoding&quot;:&quot;gzip&quot;&#125;,&quot;url&quot;:&quot;https://postman-echo.com/get?time=1662365339120&quot;&#125;</span><br><span class="line">--------------------------------------------------</span><br><span class="line">4:08PM INF validate body.args.time assertMethod=length_equals checkExpr=body.args.time checkValue=1662365339120 checkValueType=string expectValue=13 expectValueType=int64 result=true</span><br><span class="line">4:08PM INF run step end exportVars=null step=&quot;get with timestamp&quot; success=true type=request</span><br><span class="line">4:08PM INF run testcase end testcase=&quot;demo with complex mechanisms&quot;</span><br><span class="line">4:08PM INF quit hashicorp plugin process</span><br><span class="line">2022-09-05T16:09:01.733+0800 [WARN]  grpc-py: plugin failed to exit gracefully</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>pytest也支持，测试 case 的文件应该以 _test 结尾</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt;hrp pytest testcases/py_test.py --html=/report/index.html  --junit-xml=/report/report.xml</span><br></pre></td></tr></table></figure>
-</blockquote>
-<ul>
-<li>执行完成后，在reports目录发现了测试报告的html文件</li>
-</ul>
-<p><img src="/aposts/aa9cf483/image-20220905161310265.png" alt="image-20220905161310265"></p>
-<h2 id="关于登录"><a href="#关于登录" class="headerlink" title="关于登录"></a>关于登录</h2><p>很多用例都是需要登录后才能处理，如果比较简单可以类似这样处理，下面取token</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">- config:</span><br><span class="line">    name: logincase</span><br><span class="line">    variables: &#123;&#125;</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">teststeps:</span><br><span class="line">-</span><br><span class="line">    name: login case1</span><br><span class="line">    request:</span><br><span class="line">        url: http://127.0.0.1:8000/api/v1/login/</span><br><span class="line">        method: POST</span><br><span class="line">        headers:</span><br><span class="line">            Content-Type: application/json</span><br><span class="line">            User-Agent: python-requests/2.18.4</span><br><span class="line">        json:</span><br><span class="line">            username: test</span><br><span class="line">            password: 123456</span><br><span class="line">    extract:</span><br><span class="line">        - token: content.token         # 提取token</span><br><span class="line">- </span><br><span class="line">    name: get user info case1</span><br><span class="line">    request:</span><br><span class="line">        url: http://127.0.0.1:8000/api/v1/user/info/</span><br><span class="line">        method: GET</span><br><span class="line">        headers:</span><br><span class="line">            Content-Type: application/json</span><br><span class="line">            User-Agent: python-requests/2.18.4</span><br><span class="line">            Authorization: Token $token          # 引用token</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>cookie</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">- config:</span><br><span class="line">    name: logincase</span><br><span class="line">    variables: &#123;&#125;</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">teststeps:</span><br><span class="line">-</span><br><span class="line">    name: login case1</span><br><span class="line">    request:</span><br><span class="line">        url: http://127.0.0.1:8000/api/v1/login/</span><br><span class="line">        method: POST</span><br><span class="line">        headers:</span><br><span class="line">            Content-Type: application/json</span><br><span class="line">            User-Agent: python-requests/2.18.4</span><br><span class="line">        json:</span><br><span class="line">            username: test</span><br><span class="line">            password: 123456</span><br><span class="line">    extract:</span><br><span class="line">        - cookievalue: headers.Set-Cookie # 提取Cookie</span><br><span class="line">- </span><br><span class="line">    name: get user info case1</span><br><span class="line">    request:</span><br><span class="line">        url: http://127.0.0.1:8000/api/v1/user/info/</span><br><span class="line">        method: GET</span><br><span class="line">        headers:</span><br><span class="line">            Content-Type: application/json</span><br><span class="line">            User-Agent: python-requests/2.18.4</span><br><span class="line">            cookie: $cookievalue # 把提取到的 cookies 附加到本次请求头域  </span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>如果是比较复杂的登录校验，可以采用<code>setup_hooks</code>调用自定义函数（<code>debugtalk.py</code>中编写）完成登录校验</li>
-</ul>
-<h2 id="性能压测"><a href="#性能压测" class="headerlink" title="性能压测"></a>性能压测</h2><ul>
-<li>关于性能测试，可以参考<a target="_blank" rel="noopener" href="https://httprunner.com/docs/user-guide/load-test/">这里</a>，需要用go</li>
-<li>本地的项目需要采用<code>hrp startproject demo --go</code>来新建go插件的项目</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/b1138623/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="一个正经的测试工程师">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="施坤的博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/aposts/b1138623/" class="post-title-link" itemprop="url">重装heox的问题</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-08-26 18:11:46" itemprop="dateCreated datePublished" datetime="2022-08-26T18:11:46+08:00">2022-08-26</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-09-16 15:35:10" itemprop="dateModified" datetime="2022-09-16T15:35:10+08:00">2022-09-16</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/hexo/" itemprop="url" rel="index"><span itemprop="name">hexo</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/aposts/b1138623/" class="post-meta-item leancloud_visitors" data-flag-title="重装heox的问题" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/aposts/b1138623/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/aposts/b1138623/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><ul>
-<li>由于某原因，把node和hexo升级后，造成无法发生文章到服务器了，记录解决方法</li>
-<li><a href="/aposts/830a4d3a/">迁移博客到腾讯云</a></li>
-</ul>
-<h2 id="本地环境"><a href="#本地环境" class="headerlink" title="本地环境"></a>本地环境</h2><ul>
-<li>准备空的文件夹，用hexo进行初始化</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo init XXXXX/</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>安装依赖文件</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-helper-live2d --save</span><br><span class="line">npm install hexo-asset-image --save</span><br><span class="line">npm install hexo-tag-cloud --save </span><br><span class="line">npm install hexo-abbrlink --save</span><br><span class="line">npm install hexo-deployer-git --save</span><br><span class="line">npm install hexo-generator-searchdb --save</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><code>hexo-asset-image</code>和<code>hexo-abbrlink </code>有冲突，造成图片无法展示，修改<code>asset-image</code>的<code>index.js</code>中代码</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># E:\moon-full-blog\node_modules\hexo-asset-image\index.js</span><br><span class="line"></span><br><span class="line">//var endPos = link.lastIndexOf(&#x27;.&#x27;);</span><br><span class="line">var endPos = link.lastIndexOf(&#x27;/&#x27;);</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>创建本地的<code>id_rsa.pub</code>的密码</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen -C &quot;2847XXX@qq.com&quot;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>服务器上新增文件，把本地<code>id_rsa.pub</code>的密码拷贝进去</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">vi ~/.ssh/authorized_keys</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>修改权限</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">chmod 755 ~</span><br><span class="line">chmod 700 ~/.ssh</span><br><span class="line">chmod 600 ~/.ssh/authorized_keys</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>测试本地连接服务器，提示输入密码，注意我的用的root用户名</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ssh -v root@82.XX.xx.xx</span><br><span class="line"></span><br><span class="line">debug1: client_input_global_request: rtype hostkeys-00@openssh.com want_reply 0</span><br><span class="line">Last login: Fri Aug 26 17:59:47 2022 from 116.128.233.192</span><br><span class="line">Last login: Fri Aug 26 17:59:47 2022 from 116.128.233.192</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p>然后把本地之前的博客的<code>config.yml</code>，主题文件夹，<code>source</code> 拷贝带最新的博客目录</p>
-</li>
-<li><p>设置邮箱</p>
-</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git config --global user.email &#x27;28477XXX4@qq.com&#x27;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>提交到服务器</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo cl &amp;&amp;  hexo g &amp;&amp; hexo d</span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/f586e041/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="一个正经的测试工程师">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="施坤的博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/aposts/f586e041/" class="post-title-link" itemprop="url">Sonic云真机测试平台使用指南</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-08-22 10:37:34" itemprop="dateCreated datePublished" datetime="2022-08-22T10:37:34+08:00">2022-08-22</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-08-26 15:20:41" itemprop="dateModified" datetime="2022-08-26T15:20:41+08:00">2022-08-26</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Sonic/" itemprop="url" rel="index"><span itemprop="name">Sonic</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/aposts/f586e041/" class="post-meta-item leancloud_visitors" data-flag-title="Sonic云真机测试平台使用指南" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/aposts/f586e041/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/aposts/f586e041/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h1><p>本次主要记录win10_X64下搭建Sonic的使用步骤</p>
-<h2 id="软件安装"><a href="#软件安装" class="headerlink" title="软件安装"></a>软件安装</h2><h3 id="docker"><a href="#docker" class="headerlink" title="docker"></a>docker</h3><ul>
-<li>安装过程中出现很多问题，因为我的系统为家庭版本，所以需要安装<code>wsl2</code>，<code>Ubuntu 18.04.5 LTS</code>等，重装系统了为专业版本，直接就可以安装</li>
-</ul>
-<p><img src="/aposts/f586e041/image-20220823170502758.png" alt="image-20220823170502758"></p>
-<ul>
-<li><p>打开<a target="_blank" rel="noopener" href="https://docs.docker.com/desktop/install/windows-install/">官网</a>下载并安装，重启电脑，进入到bios，打开虚拟化</p>
-</li>
-<li><p>打开Docker Desktop，正常启动后，打开cmd，输入命令</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">C:\Users\Administrator&gt;docker run -d -p 80:80 docker/getting-started</span><br><span class="line">Unable to find image &#x27;docker/getting-started:latest&#x27; locally</span><br><span class="line">latest: Pulling from docker/getting-started</span><br><span class="line">....</span><br><span class="line">dsha256:b558be874169471bd4e65bd6eac8c303b271a7ee8553ba47481b73b2bf597aae</span><br><span class="line">Status: Downloaded newer image for docker/getting-started:latest</span><br><span class="line">8df47bc4fdb1ec2ac47a70f609e8e73dc6afb62298c570b27b1ae9032fdd036d</span><br></pre></td></tr></table></figure>
-
-<p>进入 docker 里可以看到测试运行的容器。</p>
-<p><img src="/aposts/f586e041/image-20220823170833149.png" alt="image-20220823170833149"></p>
-</li>
-</ul>
-<h3 id="MySQL"><a href="#MySQL" class="headerlink" title="MySQL"></a>MySQL</h3><p>打开<a target="_blank" rel="noopener" href="https://downloads.mysql.com/archives/community/">官网</a>，下载8.0的版本</p>
-<p><img src="/aposts/f586e041/image-20220823171802303.png" alt="image-20220823171802303"></p>
-<ul>
-<li><p>设置环境变量：<code>D:\app\mysql-8.0.13-winx64\bin</code></p>
-</li>
-<li><p>在mysql的安装目录新建my.ini</p>
-</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[client]</span><br><span class="line">port=3306</span><br><span class="line"># 字符集设置</span><br><span class="line">default-character-set=utf8</span><br><span class="line"></span><br><span class="line">[mysqld]</span><br><span class="line">port=3306</span><br><span class="line">character_set_server=utf8</span><br><span class="line"># 设置安装目录</span><br><span class="line">basedir=D:\app\mysql-8.0.13-winx64</span><br><span class="line"># 设置数据存放位置</span><br><span class="line">datadir=D:\app\mysql-8.0.13-winx64\data</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>通过 <code>mysqld --initialize --console</code> 命令来重置密码。</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">C:\Users\Administrator&gt;mysqld --initialize --console</span><br><span class="line">2022-08-23T09:26:32.002602Z 0 [System] [MY-013169] [Server] D:\app\mysql-8.0.13-generated for root@localhost: QCHDW*9OpYQX</span><br><span class="line">2022-08-23T09:26:37.215593Z 0 [System] [MY-013170] [Server] D:\app\mysql-8.0.13-winx64\bin\mysqld.exe (mysqld 8.0.13) initializing of server has completed</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>登录并修改root用户的密码</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">C:\Users\Administrator&gt;mysqld -install</span><br><span class="line">Service successfully installed.</span><br><span class="line"></span><br><span class="line">C:\Users\Administrator&gt;net start mysql</span><br><span class="line">MySQL 服务正在启动 .</span><br><span class="line">MySQL 服务已经启动成功。</span><br><span class="line"></span><br><span class="line">C:\Users\Administrator&gt;mysql -u root -p</span><br><span class="line"></span><br><span class="line">mysql&gt;  alter user &#x27;root&#x27;@&#x27;localhost&#x27; identified by &#x27;123456&#x27;;</span><br><span class="line">Query OK, 0 rows affected (0.05 sec)</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>退出重新登陆验证</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; exit;</span><br><span class="line">Bye</span><br><span class="line"></span><br><span class="line">C:\Users\Administrator&gt;mysql -u root -p</span><br><span class="line">Enter password: ******</span><br><span class="line">Welcome to the MySQL monitor.  Commands end with ; or \g.</span><br><span class="line">Type &#x27;help;&#x27; or &#x27;\h&#x27; for help. Type &#x27;\c&#x27; to</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>修改可以支持远程用IP访问</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">use mysql;</span><br><span class="line">mysql&gt; select host, user from user;</span><br><span class="line">+-----------+------------------+</span><br><span class="line">| host      | user             |</span><br><span class="line">+-----------+------------------+</span><br><span class="line">| localhost | mysql.infoschema |</span><br><span class="line">| localhost | mysql.session    |</span><br><span class="line">| localhost | mysql.sys        |</span><br><span class="line">| localhost | root             |</span><br><span class="line">+-----------+------------------+</span><br><span class="line">4 rows in set (0.01 sec)</span><br><span class="line"># 查看表格中 root 用户的 host，默认应该显示的 localhost，只支持本地访问，不允许远程访问</span><br><span class="line"></span><br><span class="line">mysql&gt; update user set host=&#x27;%&#x27; where user =&#x27;root&#x27;;</span><br><span class="line"># 说明： % 代表任意的客户端,可替换成具体IP地址。</span><br><span class="line"></span><br><span class="line">Query OK, 1 row affected (0.08 sec)</span><br><span class="line">Rows matched: 1  Changed: 1  Warnings: 0</span><br></pre></td></tr></table></figure>
-
-<p><img src="/aposts/f586e041/image-20220823175019789.png" alt="image-20220823175019789"></p>
-<h2 id="本地配置"><a href="#本地配置" class="headerlink" title="本地配置"></a>本地配置</h2><ul>
-<li><p>在<code>d:\sonic</code> 目录中下载<a target="_blank" rel="noopener" href="https://sonic-cloud.gitee.io/#/Deploy">官网</a>的最新的部署包，我下载的为sonic-server-v1.5.0-beta，根据实际情况修改env的内容，主要是 ip，数据库的密码</p>
-</li>
-<li><p>手动建立数据库:<code>sonic</code></p>
-</li>
-<li><p>执行docker-compose</p>
-</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">D:\sonic\sonic-server-v1.5.0-beta&gt;docker-compose up -d</span><br><span class="line">sonic-server-v150-beta_sonic-server-eureka_1 is up-to-date</span><br><span class="line">sonic-server-v150-beta_sonic-server-controller_1 is up-to-date</span><br><span class="line">sonic-server-v150-beta_sonic-server-gateway_1 is up-to-date</span><br><span class="line">sonic-server-v150-beta_sonic-client-web_1 is up-to-date</span><br><span class="line">Creating sonic-server-v150-beta_sonic-server-folder_1 ... done                                                          </span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>打开<code>http://localhost:3000/</code>，注册后，自动登录</li>
-</ul>
-<p><img src="/aposts/f586e041/image-20220824095329636.png" alt="image-20220824095329636"></p>
-<h2 id="Sonic配置"><a href="#Sonic配置" class="headerlink" title="Sonic配置"></a>Sonic配置</h2><h3 id="本机环境-java"><a href="#本机环境-java" class="headerlink" title="本机环境-java"></a>本机环境-java</h3><ul>
-<li>下载并配置Java，我的版本为</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">C:\Users\Administrator&gt;java -version</span><br><span class="line">java version &quot;17.0.2&quot; 2022-01-18 LTS</span><br><span class="line">Java(TM) SE Runtime Environment (build 17.0.2+8-LTS-86)</span><br><span class="line">Java HotSpot(TM) 64-Bit Server VM (build 17.0.2+8-LTS-86, mixed mode, sharing)</span><br></pre></td></tr></table></figure>
-
-<h3 id="appium安装"><a href="#appium安装" class="headerlink" title="appium安装"></a>appium安装</h3><p>下载<a target="_blank" rel="noopener" href="https://www.androiddevtools.cn/">android sdk tools</a>，选择exe文件安装后，并打开</p>
-<p><img src="/aposts/f586e041/image-20220824103828375.png" alt="image-20220824103828375"></p>
-<ul>
-<li>因为用于 <strong>Appium</strong> 自动化，只需要勾选下面的 <strong>4</strong> 个包就行了，需要挂梯子</li>
-</ul>
-<p><img src="/aposts/f586e041/image-20220824104049673.png" alt="image-20220824104049673"></p>
-<p><img src="/aposts/f586e041/image-20220824104117977.png" alt="image-20220824104117977"></p>
-<ul>
-<li>创建<code>ANDROID_HOME</code>的环境变量：<code>D:\app\android-sdk</code></li>
-<li>SDK的platform-tools和tool的路径添加到<code>Path</code> 变量内<code> %ANDROID_HOME%\platform-tools</code>、<code>%ANDROID_HOME%\tools</code>、<code>%ANDROID_HOME%\build-tools\29.0.2</code></li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">C:\Users\Administrator&gt;adb version</span><br><span class="line">Android Debug Bridge version 1.0.41</span><br><span class="line">Version 29.0.6-6198805</span><br><span class="line">Installed as D:\app\android-sdk\platform-tools\adb.exe</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>下载并安装node.js</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Administrator@WIN-5TF67LA12I4 MINGW64 /d/app/node-v14.20.0-win-x64</span><br><span class="line">$ npm -v</span><br><span class="line">6.14.17</span><br><span class="line"></span><br><span class="line">Administrator@WIN-5TF67LA12I4 MINGW64 /d/app/node-v14.20.0-win-x64</span><br><span class="line">$ node -v</span><br><span class="line">v14.20.0</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>安装appium，采用npm，尝试过了用cnpm经常报错，使用git的命令窗口</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">npm cache clear --force # 清空缓存，如果报错的话，可以</span><br><span class="line"># 挂了代理，在git窗口中设置了代理</span><br><span class="line">export https_proxy=http://127.0.0.1:33210 http_proxy=http://127.0.0.1:33210 all_proxy=socks5://127.0.0.1:33211</span><br><span class="line"></span><br><span class="line">npm i -g appium  </span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>装doctor，用来检查appium是否正常</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ npm install appium-doctor -g</span><br><span class="line">npm WARN deprecated authorize-ios@1.2.1: Moved into appium</span><br><span class="line">npm WARN deprecated debug@4.1.1: Debug versions &gt;=3.2.0 &lt;3.2.7 || &gt;=4 &lt;4.3.1 have a low-severity ReDos regression when used in a Node.js environment. It is recommended you upgrade to 3.2.7 or 4.3.1. (https://github.com/visionmedia/debug/issues/797)</span><br><span class="line">D:\app\node-v14.20.0-win-x64\appium-doctor -&gt; D:\app\node-v14.20.0-win-x64\node_modules\appium-doctor\appium-doctor.js</span><br><span class="line">+ appium-doctor@1.16.0</span><br><span class="line">added 240 packages from 297 contributors in 74.211s</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>检查appium，执行<code>./appium-doctor</code></li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">Administrator@WIN-5TF67LA12I4 MINGW64 /d/app/node-v14.20.0-win-x64</span><br><span class="line">$ ./appium-doctor</span><br><span class="line">info AppiumDoctor Appium Doctor v.1.16.0</span><br><span class="line">info AppiumDoctor ### Diagnostic for necessary dependencies starting ###</span><br><span class="line">info AppiumDoctor  ✔ The Node.js binary was found at: D:\app\node-v14.20.0-win-x64\node.EXE</span><br><span class="line">info AppiumDoctor  ✔ Node version is 14.20.0</span><br><span class="line">info AppiumDoctor  ✔ ANDROID_HOME is set to: D:\app\android-sdk</span><br><span class="line">info AppiumDoctor  ✔ JAVA_HOME is set to: D:\app\Java\jdk-17.0.2</span><br><span class="line">info AppiumDoctor    Checking adb, android, emulator</span><br><span class="line">info AppiumDoctor      &#x27;adb&#x27; is in D:\app\android-sdk\platform-tools\adb.exe</span><br><span class="line">info AppiumDoctor      &#x27;android&#x27; is in D:\app\android-sdk\tools\android.bat</span><br><span class="line">info AppiumDoctor      &#x27;emulator&#x27; is in D:\app\android-sdk\tools\emulator.exe</span><br><span class="line">info AppiumDoctor  ✔ adb, android, emulator exist: D:\app\android-sdk</span><br><span class="line">info AppiumDoctor  ✔ &#x27;bin&#x27; subfolder exists under &#x27;D:\app\Java\jdk-17.0.2&#x27;</span><br><span class="line">info AppiumDoctor ### Diagnostic for necessary dependencies completed, no fix needed. ###</span><br><span class="line">info AppiumDoctor</span><br><span class="line">info AppiumDoctor ### Diagnostic for optional dependencies starting ###</span><br><span class="line">WARN AppiumDoctor  ✖ opencv4nodejs cannot be found.</span><br><span class="line">WARN AppiumDoctor  ✖ ffmpeg cannot be found</span><br><span class="line">WARN AppiumDoctor  ✖ mjpeg-consumer cannot be found.</span><br><span class="line">WARN AppiumDoctor  ✖ bundletool.jar cannot be found</span><br><span class="line">WARN AppiumDoctor  ✖ gst-launch-1.0.exe and/or gst-inspect-1.0.exe cannot be found</span><br><span class="line">info AppiumDoctor ### Diagnostic for optional dependencies completed, 5 fixes possible. ...</span><br><span class="line"></span><br><span class="line">info AppiumDoctor Bye! </span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>直接输入<code>appium</code> 启动，没问题后就可以关闭了，不要手动去启动appium</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Administrator@WIN-5TF67LA12I4 MINGW64 /d/app/node-v14.20.0-win-x64</span><br><span class="line">$ appium</span><br><span class="line">[Appium] Welcome to Appium v1.22.3</span><br><span class="line">[Appium] Appium REST http interface listener started on 0.0.0.0:4723</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>安装adbkit，用adb进行调试</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm i -g adbkit</span><br></pre></td></tr></table></figure>
-
-<h3 id="sonic文件配置"><a href="#sonic文件配置" class="headerlink" title="sonic文件配置"></a>sonic文件配置</h3><ul>
-<li>新增angent</li>
-</ul>
-<p><img src="/aposts/f586e041/image-20220824174006767.png" alt="image-20220824174006767"></p>
-<ul>
-<li><p>打开<a target="_blank" rel="noopener" href="https://download.sonic-cloud.wiki/sonic/sonic-agent/v1.5.0-beta">官网</a>下载<code>sonic-agent-v1.5.0-beta-windows_x86_64</code>解压</p>
-</li>
-<li><p>打开配置文件，我的路径为：<code>D:\sonic\sonic-agent-v1.5.0-beta-windows_x86_64\config\application-sonic-agent.yml</code></p>
-</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">sonic:</span><br><span class="line">  agent:</span><br><span class="line">    # 替换为部署Agent机器的ipv4</span><br><span class="line">    host: 172.31.104.166</span><br><span class="line">    # 替换为Agent服务的端口，可以自行更改</span><br><span class="line">    port: 7777</span><br><span class="line">    # 替换为前端新增Agent生成的key</span><br><span class="line">    key: XXXXXX</span><br><span class="line">  server:</span><br><span class="line">    # 改成server的SONIC_SERVER_HOST</span><br><span class="line">    host: 172.31.104.166</span><br><span class="line">    # 改成server的SONIC_SERVER_PORT</span><br><span class="line">    port: 3000</span><br><span class="line"></span><br><span class="line">modules:</span><br><span class="line">  android:</span><br><span class="line">    # 是否开启安卓模块</span><br><span class="line">    enable: true</span><br><span class="line">    # 是否开启远程adb调试功能</span><br><span class="line">    use-adbkit: true</span><br><span class="line">  ios:</span><br><span class="line">    # 如果不需要连接iOS设备，请将true改为false。开启的windows用户请确保本机已安装iTunes</span><br><span class="line">    enable: false</span><br><span class="line">    # 替换为你自己使用的wda的bundleId，如果没有.xctrunner后缀会自动补全，建议使用公司的开发者证书</span><br><span class="line">    wda-bundle-id: com.sonic.WebDriverAgentRunner</span><br><span class="line">  appium:</span><br><span class="line">    # 是否开启Appium功能</span><br><span class="line">    enable: true</span><br><span class="line">  webview:</span><br><span class="line">    # 是否开启在线webView调试功能</span><br><span class="line">    enable: false</span><br><span class="line">    # 谷歌调试端口，一般不需要修改（默认0使用随机端口，如果需要开启防火墙给外部使用，请设置固定端口如7778）</span><br><span class="line">    chrome-driver-debug-port: 0</span><br><span class="line">    # 替换为Agent机器上的chrome浏览器的driver路径，可以去http://npm.taobao.org/mirrors/chromedriver/下载</span><br><span class="line">    chrome-driver-path: &quot;/Applications/Google Chrome.app/Contents/MacOS/chromedriver&quot;</span><br><span class="line">  sgm:</span><br><span class="line">    enable: true</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>启动agent</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">D:\sonic\sonic-agent-v1.5.0-beta-windows_x86_64&gt;java -jar sonic-agent-windows-x86_64.jar</span><br></pre></td></tr></table></figure>
-
-<p><img src="/aposts/f586e041/image-20220824174158573.png" alt="image-20220824174158573"></p>
-<ul>
-<li>手机打开开发者模式后，连接电脑（agent）后，打开web页面的设备</li>
-</ul>
-<p><img src="/aposts/f586e041/image-20220824175641741.png" alt="image-20220824175641741"></p>
-<h2 id="开始使用"><a href="#开始使用" class="headerlink" title="开始使用"></a>开始使用</h2><h3 id="sonic的配置"><a href="#sonic的配置" class="headerlink" title="sonic的配置"></a>sonic的配置</h3><ul>
-<li>新建项目，点击项目</li>
-</ul>
-<p><img src="/aposts/f586e041/image-20220824175944576.png" alt="image-20220824175944576"></p>
-<ul>
-<li>打开设备中心，选择空闲设备，选择使用</li>
-</ul>
-<p><img src="/aposts/f586e041/image-20220824180220297.png" alt="image-20220824180220297"></p>
-<p><img src="/aposts/f586e041/image-20220824180249666.png" alt="image-20220824180249666"></p>
-<ul>
-<li>点击控件元素，获取到元素后，直接添加控件</li>
-</ul>
-<p><img src="/aposts/f586e041/image-20220826085653821.png" alt="image-20220826085653821"></p>
-<p><img src="/aposts/f586e041/image-20220826085812310.png" alt="image-20220826085812310"></p>
-<ul>
-<li><p>用例的步骤关联-上面的控件元素</p>
-</li>
-<li><p>套件关联多个用例</p>
-</li>
-<li><p>查看测试报告</p>
-</li>
-</ul>
-<p><img src="/aposts/f586e041/image-20220826094320795.png" alt="image-20220826094320795"></p>
-<ul>
-<li>支持多个设备同时运行所有用例</li>
-</ul>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
-<li><p>优点：远程的手机管理，统一的用例维护，多机运行用例。</p>
-</li>
-<li><p>不足</p>
-<ul>
-<li>不支持分布式用例</li>
-<li>用例查找不支持显示等待，这个问题需要等后续的版本脱离appium后，可以处理</li>
-</ul>
-</li>
-<li><p>已经支持使用poco的控件的获取，这对游戏应用来说，是个很好的消息。</p>
-</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/15/">15</a><a class="extend next" rel="next" href="/page/5/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/16/">16</a><a class="extend next" rel="next" href="/page/5/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -2334,7 +2249,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">148</span>
+          <span class="site-state-item-count">151</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -2372,7 +2287,7 @@
     <!--<h3 class="widget-title">Tag Cloud</h3> -->
     <div id="myCanvasContainer" class="widget tagcloud">
         <canvas width="250" height="250" id="resCanvas" style="width=100%">
-            <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AWVS/" rel="tag">AWVS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Burp-Site/" rel="tag">Burp Site</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DVWA/" rel="tag">DVWA</a><span class="tag-list-count">15</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dependency-Check/" rel="tag">Dependency-Check</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/H5/" rel="tag">H5</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hadoop/" rel="tag">Hadoop</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hive/" rel="tag">Hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jenkins/" rel="tag">Jenkins</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Metasploit/" rel="tag">Metasploit</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Nessus/" rel="tag">Nessus</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Sonic/" rel="tag">Sonic</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/airtest/" rel="tag">airtest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">android性能测试</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/app%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">app安全测试</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aritest/" rel="tag">aritest</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/centos/" rel="tag">centos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/" rel="tag">chrome</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/datax/" rel="tag">datax</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/django/" rel="tag">django</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/drozer/" rel="tag">drozer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fisco-bcos/" rel="tag">fisco-bcos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flink/" rel="tag">flink</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gin/" rel="tag">gin</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/" rel="tag">go</a><span class="tag-list-count">16</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go-zero/" rel="tag">go-zero</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hive/" rel="tag">hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/httprunner/" rel="tag">httprunner</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jmeter/" rel="tag">jmeter</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka/" rel="tag">kafka</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kail/" rel="tag">kail</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode/" rel="tag">leetcode</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode-%E6%95%B0%E7%BB%84/" rel="tag">leetcode-数组</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mitmproxy/" rel="tag">mitmproxy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongodb/" rel="tag">mongodb</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/monkey/" rel="tag">monkey</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/" rel="tag">mysql</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pandas/" rel="tag">pandas</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pc%E8%87%AA%E5%8A%A8%E5%8C%96/" rel="tag">pc自动化</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/playwright/" rel="tag">playwright</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pytest/" rel="tag">pytest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a><span class="tag-list-count">23</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/" rel="tag">redis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/selenium/" rel="tag">selenium</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlite/" rel="tag">sqlite</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlmap/" rel="tag">sqlmap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tkinter/" rel="tag">tkinter</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/" rel="tag">vue</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue3/" rel="tag">vue3</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">云服务器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8C%BA%E5%9D%97%E9%93%BE/" rel="tag">区块链</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag">大数据</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">安全测试</a><span class="tag-list-count">29</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">性能测试</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%88%AC%E8%99%AB/" rel="tag">爬虫</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" rel="tag">环境搭建</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95/" rel="tag">自动化测试</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%8B%B1%E8%AF%AD%E5%AD%A6%E4%B9%A0/" rel="tag">英语学习</a><span class="tag-list-count">1</span></li></ul>
+            <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AWVS/" rel="tag">AWVS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Burp-Site/" rel="tag">Burp Site</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DVWA/" rel="tag">DVWA</a><span class="tag-list-count">15</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dependency-Check/" rel="tag">Dependency-Check</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/H5/" rel="tag">H5</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hadoop/" rel="tag">Hadoop</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hive/" rel="tag">Hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jenkins/" rel="tag">Jenkins</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Metasploit/" rel="tag">Metasploit</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Nessus/" rel="tag">Nessus</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Sonic/" rel="tag">Sonic</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/airtest/" rel="tag">airtest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">android性能测试</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/app%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">app安全测试</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aritest/" rel="tag">aritest</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/centos/" rel="tag">centos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/" rel="tag">chrome</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/datax/" rel="tag">datax</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/django/" rel="tag">django</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/drozer/" rel="tag">drozer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fisco-bcos/" rel="tag">fisco-bcos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flink/" rel="tag">flink</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gin/" rel="tag">gin</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/" rel="tag">go</a><span class="tag-list-count">16</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go-zero/" rel="tag">go-zero</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hive/" rel="tag">hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/httprunner/" rel="tag">httprunner</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jmeter/" rel="tag">jmeter</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka/" rel="tag">kafka</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kail/" rel="tag">kail</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode/" rel="tag">leetcode</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode-%E6%95%B0%E7%BB%84/" rel="tag">leetcode-数组</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mitmproxy/" rel="tag">mitmproxy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongodb/" rel="tag">mongodb</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/monkey/" rel="tag">monkey</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/" rel="tag">mysql</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pandas/" rel="tag">pandas</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pc%E8%87%AA%E5%8A%A8%E5%8C%96/" rel="tag">pc自动化</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/playwright/" rel="tag">playwright</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pytest/" rel="tag">pytest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a><span class="tag-list-count">23</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/" rel="tag">redis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/selenium/" rel="tag">selenium</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlite/" rel="tag">sqlite</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlmap/" rel="tag">sqlmap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tkinter/" rel="tag">tkinter</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/" rel="tag">vue</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue3/" rel="tag">vue3</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">云服务器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8C%BA%E5%9D%97%E9%93%BE/" rel="tag">区块链</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag">大数据</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">安全测试</a><span class="tag-list-count">29</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">性能测试</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%88%AC%E8%99%AB/" rel="tag">爬虫</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" rel="tag">环境搭建</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95/" rel="tag">自动化测试</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%8B%B1%E8%AF%AD%E5%AD%A6%E4%B9%A0/" rel="tag">英语学习</a><span class="tag-list-count">1</span></li></ul>
         </canvas>
     </div>
 </div>
