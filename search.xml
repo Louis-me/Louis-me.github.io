@@ -300,110 +300,6 @@
       </tags>
   </entry>
   <entry>
-    <title>DVWA通关指南-Brute Force(爆破)</title>
-    <url>/aposts/b7636e10/</url>
-    <content><![CDATA[<h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><ul>
-<li><p><a href="https://moon-full.gitee.io/2022/01/25/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95-%E6%BC%8F%E6%B4%9E%E7%8E%AF%E5%A2%83DVWA%E7%9A%84%E6%90%AD%E5%BB%BA/">上文</a>服务器已经搭建好了DVWA环境，本篇开始介绍对DVWA的使用</p>
-</li>
-<li><p>Bruce Force(爆破)。密码破解是从计算机系统中存储或传输的数据中还原出密码的过程，一种常见的方法是反复尝试猜测密码，直到把正确的密码试出来。用户往往会设置弱密码，不安全选择的例子包括字典中的单字、姓氏、任何太短的密码（通常被认为少于6或7个字符）或可预测的模式（例如，交替的元音和辅音，称为 leetspeak，因此 “password” 变成了 p@55w0rd”)。</p>
-<p><img src="/aposts/b7636e10/image-20220127145156521.png" alt="image-20220127145156521"></p>
-</li>
-</ul>
-<h2 id="安全等级LOW"><a href="#安全等级LOW" class="headerlink" title="安全等级LOW"></a>安全等级LOW</h2><p>把安全等级调整为：LOW。开发人员完全忽视了任何保护方法，允许任何人尝试多次任意访问，可以在没有任何影响的情况下对任意用户进行登录。</p>
-<p><img src="/aposts/b7636e10/image-20220127145338823.png" alt="image-20220127145338823"></p>
-<h3 id="源代码审计"><a href="#源代码审计" class="headerlink" title="源代码审计"></a>源代码审计</h3><ul>
-<li>点击查看源码</li>
-</ul>
-<p><img src="/aposts/b7636e10/image-20220127145613479.png" alt="image-20220127145613479"></p>
-<ul>
-<li>分析。源码如下，代码将获取用户输入的用户名和密码并将其进行 md5 加密，然后使用 SQL SELECT 语句进行查询。由于进行了 md5 加密，因此直接阻止了 SQL 注入，因为经过 md5 这种摘要算法之后 SQL 语句就会被破坏(不过这里用 SQL 注入可以登陆成功)。注意到此时服务器只是使用了 isset() 函数验证了参数 Login 是否被设置，参数 username、password 没有做任何过滤，更重要的是没有任何的防爆破机制。</li>
-</ul>
-<p><img src="/aposts/b7636e10/image-20220127145759588.png" alt="image-20220127145759588"></p>
-<h3 id="攻击方式"><a href="#攻击方式" class="headerlink" title="攻击方式"></a>攻击方式</h3><h4 id="工具准备"><a href="#工具准备" class="headerlink" title="工具准备"></a>工具准备</h4><ul>
-<li><p>Burp Suite Pro 2020.4_v2.5.0.2（有需要，可以联系我）</p>
-<ul>
-<li>依赖java9，可以从这里<a href="https://www.oracle.com/java/technologies/javase/javase9-archive-downloads.html">下载安装</a>，设置好环境变量</li>
-</ul>
-</li>
-<li><p>设置Burp 代理</p>
-</li>
-</ul>
-<p><img src="/aposts/b7636e10/image-20220127151952103.png" alt="image-20220127151952103"></p>
-<ul>
-<li>chrome浏览器设置代理</li>
-</ul>
-<p><img src="/aposts/b7636e10/image-20220127152139068.png" alt="image-20220127152139068"></p>
-<h4 id="开始测试"><a href="#开始测试" class="headerlink" title="开始测试"></a>开始测试</h4><p>在Brute Force中，用户名输入admin，密码输入1123（错误的密码），正确的密码是password，点击登录被Burp 拦截</p>
-<p><img src="/aposts/b7636e10/image-20220127152224491.png" alt="image-20220127152224491"></p>
-<p><img src="/aposts/b7636e10/image-20220127152346413.png" alt="image-20220127152346413"></p>
-<p>把拦截的请求发送到测试器</p>
-<p><img src="/aposts/b7636e10/image-20220127152650009.png" alt="image-20220127152650009"></p>
-<p>在测试器点击清楚</p>
-<p><img src="/aposts/b7636e10/image-20220127153846031.png" alt="image-20220127153846031"></p>
-<p>选择密码，点击添加</p>
-<p><img src="/aposts/b7636e10/image-20220127153928769.png" alt="image-20220127153928769"></p>
-<p>点击Palyloads，载入自定义的密码字典</p>
-<p><img src="/aposts/b7636e10/image-20220127155906579.png" alt="image-20220127155906579"></p>
-<p>设置下线程数，开始攻击</p>
-<p><img src="/aposts/b7636e10/image-20220127163807548.png" alt="image-20220127163807548"></p>
-<p>查看测试结果，有一个长度不一样的，点进去看下</p>
-<p><img src="/aposts/b7636e10/image-20220127163854226.png" alt="image-20220127163854226"></p>
-<p>登录成功了</p>
-<p><img src="/aposts/b7636e10/image-20220127163956037.png" alt="image-20220127163956037"></p>
-<h2 id="安全等级Medium"><a href="#安全等级Medium" class="headerlink" title="安全等级Medium"></a>安全等级Medium</h2><p>此阶段在验证失败的登录屏幕上添加睡眠，这意味着当您登录不正确时，在页面可见之前将有额外的两秒钟等待。这只会减慢一分钟内可处理的请求量，使暴力攻击的时间更长。</p>
-<p><img src="/aposts/b7636e10/image-20220127171112317.png" alt="image-20220127171112317"></p>
-<h3 id="源码审计"><a href="#源码审计" class="headerlink" title="源码审计"></a>源码审计</h3><p>源码如下，Medium 级别的代码主要增加了 mysql_real_escape_string 函数，该函数会对字符串中的特殊符号进行转义，从而对用户输入的参数进行了简单的过滤。相比 low 级别的代码，当登录验证失败时界面将冻结 2 秒，从而影响了爆破操作的效率，不过如果是一个闲来无事并且很有耐心的白帽黑客，爆破出密码仍然是时间问题。</p>
-<p><img src="/aposts/b7636e10/image-20220127170706740.png" alt="image-20220127170706740"></p>
-<h3 id="攻击方式-1"><a href="#攻击方式-1" class="headerlink" title="攻击方式"></a>攻击方式</h3><p>和 low 级别一样，还是用 Brup 抓包后爆破即可，只是因为每次测试都要等上 2 秒，需要等稍长的时间而已。</p>
-<h2 id="安全等级为High"><a href="#安全等级为High" class="headerlink" title="安全等级为High"></a>安全等级为High</h2><p>开发者使用了 “CSRF” 的反伪造请求，有一个旧的说法表示这种保护可以阻止暴力攻击，但事实并非如此。这个级别也扩展了中等级别，在登录失败时等待，但这次是 2 到 4 秒之间的随机时间，这样做的目的是试图混淆任何时间预测。使用验证码表单可能会产生与 CSRF 令牌类似的效果。</p>
-<h3 id="源码审计-1"><a href="#源码审计-1" class="headerlink" title="源码审计"></a>源码审计</h3><p>High 级别的代码使用了stripslashes 函数，进一步过滤输入的内容。同时使用了 Token 抵御 CSRF 攻击，在每次登录时网页会随机生成一个 user_token 参数，在用户提交用户名和密码时要对 token 进行检查再进行 sql 查询</p>
-<p><img src="/aposts/b7636e10/image-20220127171703241.png" alt="image-20220127171703241"></p>
-<h3 id="攻击方式-2"><a href="#攻击方式-2" class="headerlink" title="攻击方式"></a>攻击方式</h3><p>在Brute Force中，用户名输入admin，密码输入1123（错误的密码），正确的密码是password，点击登录被Burp 拦截</p>
-<p><img src="/aposts/b7636e10/image-20220127152224491.png" alt="image-20220127152224491"></p>
-<p>被拦截的请求多个token</p>
-<p><img src="/aposts/b7636e10/image-20220128114155998.png" alt="image-20220128114155998"></p>
-<p>把拦截的请求发送到测试器</p>
-<p><img src="/aposts/b7636e10/image-20220127152650009.png" alt="image-20220127152650009"></p>
-<p>在测试器中，我把密码和token作为被攻击的参数，攻击类型需要改为<strong>Pitchfork</strong></p>
-<p><img src="/aposts/b7636e10/image-20220128160535877.png" alt="image-20220128160535877"></p>
-<h4 id="设置密码的规则"><a href="#设置密码的规则" class="headerlink" title="设置密码的规则"></a>设置密码的规则</h4><h5 id="Playloads设置"><a href="#Playloads设置" class="headerlink" title="Playloads设置"></a>Playloads设置</h5><p>和之前一样，载入密码字典</p>
-<p><img src="/aposts/b7636e10/image-20220128115211854.png" alt="image-20220128115211854"></p>
-<h4 id="token的设置"><a href="#token的设置" class="headerlink" title="token的设置"></a>token的设置</h4><h5 id="Playloads设置-1"><a href="#Playloads设置-1" class="headerlink" title="Playloads设置"></a>Playloads设置</h5><p>有效载荷类型为递归搜索</p>
-<p><img src="/aposts/b7636e10/image-20220128115300062.png" alt="image-20220128115300062"></p>
-<h5 id="Options的设置"><a href="#Options的设置" class="headerlink" title="Options的设置"></a>Options的设置</h5><p>线程数设置为1，这样就能每次只取一个token值</p>
-<p><img src="/aposts/b7636e10/image-20220128115449383.png" alt="image-20220128115449383"></p>
-<p>重定向设置为总是</p>
-<p><img src="/aposts/b7636e10/image-20220128115631963.png" alt="image-20220128115631963"></p>
-<p>Grep-Extract设置，在响应结果中提前token的值，如果响应是302就要重新获取请求或者拦截，点击token的值，分隔符自带填入进去</p>
-<p><img src="/aposts/b7636e10/image-20220128154844054.png" alt="image-20220128154844054"></p>
-<ul>
-<li>点击ok后，发现递归搜索文本框中自带填入了规则值</li>
-</ul>
-<p><img src="/aposts/b7636e10/image-20220128155009012.png" alt="image-20220128155009012"></p>
-<p>并在playloads初始化有效负载中填入token的值</p>
-<p><img src="/aposts/b7636e10/image-20220128155121049.png" alt="image-20220128155121049"></p>
-<p>完成这些，我们就可以开始攻击了，按start attack</p>
-<p><img src="/aposts/b7636e10/image-20220128160644340.png" alt="image-20220128160644340"></p>
-<p>测试完成后，查看结果</p>
-<p><img src="/aposts/b7636e10/image-20220128160432361.png" alt="image-20220128160432361"></p>
-<h2 id="安全等级为Impossible"><a href="#安全等级为Impossible" class="headerlink" title="安全等级为Impossible"></a>安全等级为Impossible</h2><p><img src="/aposts/b7636e10/image-20220128161118392.png" alt="image-20220128161118392"></p>
-<p>暴力（和用户枚举）不应该在该级别的代码上实现，开发人员增加了一个“锁定”功能，如果在过去 15 分钟内有5次错误登录，被锁定的用户将无法登录。</p>
-<h3 id="源码审计-2"><a href="#源码审计-2" class="headerlink" title="源码审计"></a>源码审计</h3><p><img src="/aposts/b7636e10/image-20220128161334594.png" alt="image-20220128161334594"></p>
-<h2 id="总结与防御"><a href="#总结与防御" class="headerlink" title="总结与防御"></a>总结与防御</h2><ul>
-<li>由于服务器没有对用户的输入次数进行限制，导致攻击者可以利用爆破的手段来进行攻击，通过穷举法将用户名、密码等信息爆出来。当攻击者结合社会工程学生成了庞大的字典时，爆破攻击的可能性将会被增大。对于爆破漏洞，开发者可以对用户的登陆次数设置阈值，当某用户名表示的用户的登录次数在一定时间内超过阈值时，就暂时锁定用户。也可以进行 IP 检测，如果某个 IP 的登录次数超过阈值也可以锁定 IP。当然还有一种我们熟悉的方式，就是设置只有人可以通过验证的验证码或者是其他的验证手法，来保证进行登录操作的是人而不是机器。</li>
-<li>Burp的字典爆破可以一站式爆出结果，很方便，但是字典攻击一般很耗时，穷举的爆破一般渗透中不是上选，而且这种爆破手段对字典有要求，理论上时间充足的话足够优秀的字典无敌。但是可惜实战中不会用那么多时间，<strong>如果登录次数错误有限制以及验证码等一些列措施，并不适合此方式</strong></li>
-<li>本文主要来自<a href="https://blog.csdn.net/weixin_45808483/article/details/121385412">DVWA通关详解</a>和<a href="https://www.cnblogs.com/linfangnan/p/13652761.html">DVWA 通关指南：Brute Force (爆破)</a></li>
-</ul>
-]]></content>
-      <categories>
-        <category>安全测试</category>
-      </categories>
-      <tags>
-        <tag>安全测试</tag>
-        <tag>DVWA</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Concurrency Thread Group实例</title>
     <url>/aposts/cb7ef82f/</url>
     <content><![CDATA[<h2 id="Concurrency-Thread-Group的介绍"><a href="#Concurrency-Thread-Group的介绍" class="headerlink" title="Concurrency Thread Group的介绍"></a>Concurrency Thread Group的介绍</h2><ul>
@@ -536,6 +432,110 @@
 <h2 id="安全等级为"><a href="#安全等级为" class="headerlink" title="安全等级为"></a>安全等级为</h2><h3 id="源码分析-2"><a href="#源码分析-2" class="headerlink" title="源码分析"></a>源码分析</h3><p>前端没有回调函数了</p>
 <p><img src="/aposts/62baea94/image-20220215111736306.png" alt="image-20220215111736306"></p>
 <p>本文主要操作步骤来源<a href="https://blog.csdn.net/weixin_42075643/article/details/113928878?spm=1001.2101.3001.6650.5&utm_medium=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~Rate-5.pc_relevant_default&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~Rate-5.pc_relevant_default&utm_relevant_index=8">这里</a></p>
+]]></content>
+      <categories>
+        <category>安全测试</category>
+      </categories>
+      <tags>
+        <tag>安全测试</tag>
+        <tag>DVWA</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>DVWA通关指南-Brute Force(爆破)</title>
+    <url>/aposts/b7636e10/</url>
+    <content><![CDATA[<h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><ul>
+<li><p><a href="https://moon-full.gitee.io/2022/01/25/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95-%E6%BC%8F%E6%B4%9E%E7%8E%AF%E5%A2%83DVWA%E7%9A%84%E6%90%AD%E5%BB%BA/">上文</a>服务器已经搭建好了DVWA环境，本篇开始介绍对DVWA的使用</p>
+</li>
+<li><p>Bruce Force(爆破)。密码破解是从计算机系统中存储或传输的数据中还原出密码的过程，一种常见的方法是反复尝试猜测密码，直到把正确的密码试出来。用户往往会设置弱密码，不安全选择的例子包括字典中的单字、姓氏、任何太短的密码（通常被认为少于6或7个字符）或可预测的模式（例如，交替的元音和辅音，称为 leetspeak，因此 “password” 变成了 p@55w0rd”)。</p>
+<p><img src="/aposts/b7636e10/image-20220127145156521.png" alt="image-20220127145156521"></p>
+</li>
+</ul>
+<h2 id="安全等级LOW"><a href="#安全等级LOW" class="headerlink" title="安全等级LOW"></a>安全等级LOW</h2><p>把安全等级调整为：LOW。开发人员完全忽视了任何保护方法，允许任何人尝试多次任意访问，可以在没有任何影响的情况下对任意用户进行登录。</p>
+<p><img src="/aposts/b7636e10/image-20220127145338823.png" alt="image-20220127145338823"></p>
+<h3 id="源代码审计"><a href="#源代码审计" class="headerlink" title="源代码审计"></a>源代码审计</h3><ul>
+<li>点击查看源码</li>
+</ul>
+<p><img src="/aposts/b7636e10/image-20220127145613479.png" alt="image-20220127145613479"></p>
+<ul>
+<li>分析。源码如下，代码将获取用户输入的用户名和密码并将其进行 md5 加密，然后使用 SQL SELECT 语句进行查询。由于进行了 md5 加密，因此直接阻止了 SQL 注入，因为经过 md5 这种摘要算法之后 SQL 语句就会被破坏(不过这里用 SQL 注入可以登陆成功)。注意到此时服务器只是使用了 isset() 函数验证了参数 Login 是否被设置，参数 username、password 没有做任何过滤，更重要的是没有任何的防爆破机制。</li>
+</ul>
+<p><img src="/aposts/b7636e10/image-20220127145759588.png" alt="image-20220127145759588"></p>
+<h3 id="攻击方式"><a href="#攻击方式" class="headerlink" title="攻击方式"></a>攻击方式</h3><h4 id="工具准备"><a href="#工具准备" class="headerlink" title="工具准备"></a>工具准备</h4><ul>
+<li><p>Burp Suite Pro 2020.4_v2.5.0.2（有需要，可以联系我）</p>
+<ul>
+<li>依赖java9，可以从这里<a href="https://www.oracle.com/java/technologies/javase/javase9-archive-downloads.html">下载安装</a>，设置好环境变量</li>
+</ul>
+</li>
+<li><p>设置Burp 代理</p>
+</li>
+</ul>
+<p><img src="/aposts/b7636e10/image-20220127151952103.png" alt="image-20220127151952103"></p>
+<ul>
+<li>chrome浏览器设置代理</li>
+</ul>
+<p><img src="/aposts/b7636e10/image-20220127152139068.png" alt="image-20220127152139068"></p>
+<h4 id="开始测试"><a href="#开始测试" class="headerlink" title="开始测试"></a>开始测试</h4><p>在Brute Force中，用户名输入admin，密码输入1123（错误的密码），正确的密码是password，点击登录被Burp 拦截</p>
+<p><img src="/aposts/b7636e10/image-20220127152224491.png" alt="image-20220127152224491"></p>
+<p><img src="/aposts/b7636e10/image-20220127152346413.png" alt="image-20220127152346413"></p>
+<p>把拦截的请求发送到测试器</p>
+<p><img src="/aposts/b7636e10/image-20220127152650009.png" alt="image-20220127152650009"></p>
+<p>在测试器点击清楚</p>
+<p><img src="/aposts/b7636e10/image-20220127153846031.png" alt="image-20220127153846031"></p>
+<p>选择密码，点击添加</p>
+<p><img src="/aposts/b7636e10/image-20220127153928769.png" alt="image-20220127153928769"></p>
+<p>点击Palyloads，载入自定义的密码字典</p>
+<p><img src="/aposts/b7636e10/image-20220127155906579.png" alt="image-20220127155906579"></p>
+<p>设置下线程数，开始攻击</p>
+<p><img src="/aposts/b7636e10/image-20220127163807548.png" alt="image-20220127163807548"></p>
+<p>查看测试结果，有一个长度不一样的，点进去看下</p>
+<p><img src="/aposts/b7636e10/image-20220127163854226.png" alt="image-20220127163854226"></p>
+<p>登录成功了</p>
+<p><img src="/aposts/b7636e10/image-20220127163956037.png" alt="image-20220127163956037"></p>
+<h2 id="安全等级Medium"><a href="#安全等级Medium" class="headerlink" title="安全等级Medium"></a>安全等级Medium</h2><p>此阶段在验证失败的登录屏幕上添加睡眠，这意味着当您登录不正确时，在页面可见之前将有额外的两秒钟等待。这只会减慢一分钟内可处理的请求量，使暴力攻击的时间更长。</p>
+<p><img src="/aposts/b7636e10/image-20220127171112317.png" alt="image-20220127171112317"></p>
+<h3 id="源码审计"><a href="#源码审计" class="headerlink" title="源码审计"></a>源码审计</h3><p>源码如下，Medium 级别的代码主要增加了 mysql_real_escape_string 函数，该函数会对字符串中的特殊符号进行转义，从而对用户输入的参数进行了简单的过滤。相比 low 级别的代码，当登录验证失败时界面将冻结 2 秒，从而影响了爆破操作的效率，不过如果是一个闲来无事并且很有耐心的白帽黑客，爆破出密码仍然是时间问题。</p>
+<p><img src="/aposts/b7636e10/image-20220127170706740.png" alt="image-20220127170706740"></p>
+<h3 id="攻击方式-1"><a href="#攻击方式-1" class="headerlink" title="攻击方式"></a>攻击方式</h3><p>和 low 级别一样，还是用 Brup 抓包后爆破即可，只是因为每次测试都要等上 2 秒，需要等稍长的时间而已。</p>
+<h2 id="安全等级为High"><a href="#安全等级为High" class="headerlink" title="安全等级为High"></a>安全等级为High</h2><p>开发者使用了 “CSRF” 的反伪造请求，有一个旧的说法表示这种保护可以阻止暴力攻击，但事实并非如此。这个级别也扩展了中等级别，在登录失败时等待，但这次是 2 到 4 秒之间的随机时间，这样做的目的是试图混淆任何时间预测。使用验证码表单可能会产生与 CSRF 令牌类似的效果。</p>
+<h3 id="源码审计-1"><a href="#源码审计-1" class="headerlink" title="源码审计"></a>源码审计</h3><p>High 级别的代码使用了stripslashes 函数，进一步过滤输入的内容。同时使用了 Token 抵御 CSRF 攻击，在每次登录时网页会随机生成一个 user_token 参数，在用户提交用户名和密码时要对 token 进行检查再进行 sql 查询</p>
+<p><img src="/aposts/b7636e10/image-20220127171703241.png" alt="image-20220127171703241"></p>
+<h3 id="攻击方式-2"><a href="#攻击方式-2" class="headerlink" title="攻击方式"></a>攻击方式</h3><p>在Brute Force中，用户名输入admin，密码输入1123（错误的密码），正确的密码是password，点击登录被Burp 拦截</p>
+<p><img src="/aposts/b7636e10/image-20220127152224491.png" alt="image-20220127152224491"></p>
+<p>被拦截的请求多个token</p>
+<p><img src="/aposts/b7636e10/image-20220128114155998.png" alt="image-20220128114155998"></p>
+<p>把拦截的请求发送到测试器</p>
+<p><img src="/aposts/b7636e10/image-20220127152650009.png" alt="image-20220127152650009"></p>
+<p>在测试器中，我把密码和token作为被攻击的参数，攻击类型需要改为<strong>Pitchfork</strong></p>
+<p><img src="/aposts/b7636e10/image-20220128160535877.png" alt="image-20220128160535877"></p>
+<h4 id="设置密码的规则"><a href="#设置密码的规则" class="headerlink" title="设置密码的规则"></a>设置密码的规则</h4><h5 id="Playloads设置"><a href="#Playloads设置" class="headerlink" title="Playloads设置"></a>Playloads设置</h5><p>和之前一样，载入密码字典</p>
+<p><img src="/aposts/b7636e10/image-20220128115211854.png" alt="image-20220128115211854"></p>
+<h4 id="token的设置"><a href="#token的设置" class="headerlink" title="token的设置"></a>token的设置</h4><h5 id="Playloads设置-1"><a href="#Playloads设置-1" class="headerlink" title="Playloads设置"></a>Playloads设置</h5><p>有效载荷类型为递归搜索</p>
+<p><img src="/aposts/b7636e10/image-20220128115300062.png" alt="image-20220128115300062"></p>
+<h5 id="Options的设置"><a href="#Options的设置" class="headerlink" title="Options的设置"></a>Options的设置</h5><p>线程数设置为1，这样就能每次只取一个token值</p>
+<p><img src="/aposts/b7636e10/image-20220128115449383.png" alt="image-20220128115449383"></p>
+<p>重定向设置为总是</p>
+<p><img src="/aposts/b7636e10/image-20220128115631963.png" alt="image-20220128115631963"></p>
+<p>Grep-Extract设置，在响应结果中提前token的值，如果响应是302就要重新获取请求或者拦截，点击token的值，分隔符自带填入进去</p>
+<p><img src="/aposts/b7636e10/image-20220128154844054.png" alt="image-20220128154844054"></p>
+<ul>
+<li>点击ok后，发现递归搜索文本框中自带填入了规则值</li>
+</ul>
+<p><img src="/aposts/b7636e10/image-20220128155009012.png" alt="image-20220128155009012"></p>
+<p>并在playloads初始化有效负载中填入token的值</p>
+<p><img src="/aposts/b7636e10/image-20220128155121049.png" alt="image-20220128155121049"></p>
+<p>完成这些，我们就可以开始攻击了，按start attack</p>
+<p><img src="/aposts/b7636e10/image-20220128160644340.png" alt="image-20220128160644340"></p>
+<p>测试完成后，查看结果</p>
+<p><img src="/aposts/b7636e10/image-20220128160432361.png" alt="image-20220128160432361"></p>
+<h2 id="安全等级为Impossible"><a href="#安全等级为Impossible" class="headerlink" title="安全等级为Impossible"></a>安全等级为Impossible</h2><p><img src="/aposts/b7636e10/image-20220128161118392.png" alt="image-20220128161118392"></p>
+<p>暴力（和用户枚举）不应该在该级别的代码上实现，开发人员增加了一个“锁定”功能，如果在过去 15 分钟内有5次错误登录，被锁定的用户将无法登录。</p>
+<h3 id="源码审计-2"><a href="#源码审计-2" class="headerlink" title="源码审计"></a>源码审计</h3><p><img src="/aposts/b7636e10/image-20220128161334594.png" alt="image-20220128161334594"></p>
+<h2 id="总结与防御"><a href="#总结与防御" class="headerlink" title="总结与防御"></a>总结与防御</h2><ul>
+<li>由于服务器没有对用户的输入次数进行限制，导致攻击者可以利用爆破的手段来进行攻击，通过穷举法将用户名、密码等信息爆出来。当攻击者结合社会工程学生成了庞大的字典时，爆破攻击的可能性将会被增大。对于爆破漏洞，开发者可以对用户的登陆次数设置阈值，当某用户名表示的用户的登录次数在一定时间内超过阈值时，就暂时锁定用户。也可以进行 IP 检测，如果某个 IP 的登录次数超过阈值也可以锁定 IP。当然还有一种我们熟悉的方式，就是设置只有人可以通过验证的验证码或者是其他的验证手法，来保证进行登录操作的是人而不是机器。</li>
+<li>Burp的字典爆破可以一站式爆出结果，很方便，但是字典攻击一般很耗时，穷举的爆破一般渗透中不是上选，而且这种爆破手段对字典有要求，理论上时间充足的话足够优秀的字典无敌。但是可惜实战中不会用那么多时间，<strong>如果登录次数错误有限制以及验证码等一些列措施，并不适合此方式</strong></li>
+<li>本文主要来自<a href="https://blog.csdn.net/weixin_45808483/article/details/121385412">DVWA通关详解</a>和<a href="https://www.cnblogs.com/linfangnan/p/13652761.html">DVWA 通关指南：Brute Force (爆破)</a></li>
+</ul>
 ]]></content>
       <categories>
         <category>安全测试</category>
@@ -1404,6 +1404,58 @@
       </tags>
   </entry>
   <entry>
+    <title>DVWA通关指南-XSS(Reflect)-反射性xss</title>
+    <url>/aposts/93c2ee93/</url>
+    <content><![CDATA[<h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><ul>
+<li><p>上篇介绍了<a href="https://moon-full.gitee.io/2022/02/14/DVWA%E9%80%9A%E5%85%B3%E6%8C%87%E5%8D%97-DOM-XSS-DOM%E5%9E%8B%E8%B7%A8%E7%AB%99%E8%84%9A%E6%9C%AC%E6%94%BB%E5%87%BB/">DVWA通关指南-DOM-XSS-DOM型跨站脚本攻击</a>，本篇开始介绍(Reflect)-反射性xss</p>
+</li>
+<li><p>反射性xss，<strong>主要需要通过URL构造等手段，才能触发的XSS漏洞</strong>，非持久化；反射型xss实际上是包括了dom - xss了，关键点仍然是在通过url控制了页面的输出（dom-xss也类似，只因为输出地点不同而导致结果不一致）。</p>
+</li>
+<li><p>常见注入代码</p>
+</li>
+</ul>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span>alert(1)<span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">1</span> <span class="attr">onerror</span>=<span class="string">alert(1)</span> <span class="attr">hidden</span>=<span class="string">&quot;true&quot;</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">iframe</span> <span class="attr">onload</span>=<span class="string">alert(1)</span> <span class="attr">height</span>=<span class="string">&quot;0&quot;</span> <span class="attr">width</span>=<span class="string">&quot;0&quot;</span> <span class="attr">hidden</span>=<span class="string">&quot;true&quot;</span>/&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="安全等级Low"><a href="#安全等级Low" class="headerlink" title="安全等级Low"></a>安全等级Low</h2><p><img src="/aposts/93c2ee93/image-20220214153149478.png" alt="image-20220214153149478"></p>
+<h3 id="分析源码"><a href="#分析源码" class="headerlink" title="分析源码"></a>分析源码</h3><ul>
+<li>只是判断了name是否有值，其他没有做过滤</li>
+</ul>
+<p><img src="/aposts/93c2ee93/image-20220214153326675.png" alt="image-20220214153326675"></p>
+<h3 id="开始攻击"><a href="#开始攻击" class="headerlink" title="开始攻击"></a>开始攻击</h3><p>直接修改<code>name=&lt;script&gt;alert(1)&lt;/script&gt;#</code></p>
+<p><img src="/aposts/93c2ee93/image-20220214154450772.png" alt="image-20220214154450772"></p>
+<h2 id="安全等级为Medium"><a href="#安全等级为Medium" class="headerlink" title="安全等级为Medium"></a>安全等级为Medium</h2><p><img src="/aposts/93c2ee93/image-20220214154719159.png" alt="image-20220214154719159"></p>
+<h3 id="源码分析"><a href="#源码分析" class="headerlink" title="源码分析"></a>源码分析</h3><p>过滤了script标签</p>
+<p><img src="/aposts/93c2ee93/image-20220214154548875.png" alt="image-20220214154548875"></p>
+<h3 id="开始攻击-1"><a href="#开始攻击-1" class="headerlink" title="开始攻击"></a>开始攻击</h3><p>直接把script改成大写：<code>name=&lt;Script&gt;alert(1)&lt;/Script&gt;#</code></p>
+<p><img src="/aposts/93c2ee93/image-20220214154936849.png" alt="image-20220214154936849"></p>
+<h2 id="安全等级为High"><a href="#安全等级为High" class="headerlink" title="安全等级为High"></a>安全等级为High</h2><p><img src="/aposts/93c2ee93/image-20220214155355958.png" alt="image-20220214155355958"></p>
+<h3 id="源码分析-1"><a href="#源码分析-1" class="headerlink" title="源码分析"></a>源码分析</h3><p>替换所有与<code>&lt;script&gt;</code>相关的字符，那么就采用a或iframe等无需script标签的方式绕过。</p>
+<p><img src="/aposts/93c2ee93/image-20220214155324591.png" alt="image-20220214155324591"></p>
+<h3 id="开始攻击-2"><a href="#开始攻击-2" class="headerlink" title="开始攻击"></a>开始攻击</h3><ul>
+<li>采用a标签：<code>name=&lt;a href=http://XXX.xxx.xx.xx&gt;登录&lt;/a&gt;</code>，可以直接点击登录</li>
+</ul>
+<p><img src="/aposts/93c2ee93/image-20220214160517561.png" alt="image-20220214160517561"></p>
+<h2 id="安全等级为Impossible"><a href="#安全等级为Impossible" class="headerlink" title="安全等级为Impossible"></a>安全等级为Impossible</h2><p><img src="/aposts/93c2ee93/image-20220214160654149.png" alt="image-20220214160654149"></p>
+<h3 id="源码分析-2"><a href="#源码分析-2" class="headerlink" title="源码分析"></a>源码分析</h3><p>用了<code>htmlspecialchars</code>函数，将特殊字符转换为 HTML 实体</p>
+<p><img src="/aposts/93c2ee93/image-20220214160741582.png" alt="image-20220214160741582"></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
+<li><p>利用：如果没有对特殊字符进行HTML转义，都存在被XSS利用的漏洞</p>
+</li>
+<li><p>防御：数据返回前端页面前，将【&lt;】【&gt;】【”】【’】【&amp;】全转义了，既可！</p>
+</li>
+<li><p>本文主要步骤来自<a href="https://blog.csdn.net/qqchaozai/article/details/102755283">这里</a></p>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>安全测试</category>
+      </categories>
+      <tags>
+        <tag>安全测试</tag>
+        <tag>DVWA</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>DVWA通关指南-Weak Session IDs(弱会话ID)</title>
     <url>/aposts/616944d0/</url>
     <content><![CDATA[<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
@@ -1487,58 +1539,6 @@
 <h2 id="安全等级为impossible"><a href="#安全等级为impossible" class="headerlink" title="安全等级为impossible"></a>安全等级为impossible</h2><h3 id="分析源码"><a href="#分析源码" class="headerlink" title="分析源码"></a>分析源码</h3><p>$cookie_value采用随机数+时间戳+固定字符串”Impossible”，再进行sha1运算，完全不能猜测到dvwaSession的值。</p>
 <p><img src="/aposts/616944d0/image-20220211173247187.png" alt="image-20220211173247187"></p>
 <p>参考<a href="https://blog.csdn.net/weixin_45808483/article/details/121385412">这里</a></p>
-]]></content>
-      <categories>
-        <category>安全测试</category>
-      </categories>
-      <tags>
-        <tag>安全测试</tag>
-        <tag>DVWA</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>DVWA通关指南-XSS(Reflect)-反射性xss</title>
-    <url>/aposts/93c2ee93/</url>
-    <content><![CDATA[<h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><ul>
-<li><p>上篇介绍了<a href="https://moon-full.gitee.io/2022/02/14/DVWA%E9%80%9A%E5%85%B3%E6%8C%87%E5%8D%97-DOM-XSS-DOM%E5%9E%8B%E8%B7%A8%E7%AB%99%E8%84%9A%E6%9C%AC%E6%94%BB%E5%87%BB/">DVWA通关指南-DOM-XSS-DOM型跨站脚本攻击</a>，本篇开始介绍(Reflect)-反射性xss</p>
-</li>
-<li><p>反射性xss，<strong>主要需要通过URL构造等手段，才能触发的XSS漏洞</strong>，非持久化；反射型xss实际上是包括了dom - xss了，关键点仍然是在通过url控制了页面的输出（dom-xss也类似，只因为输出地点不同而导致结果不一致）。</p>
-</li>
-<li><p>常见注入代码</p>
-</li>
-</ul>
-<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span>alert(1)<span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">1</span> <span class="attr">onerror</span>=<span class="string">alert(1)</span> <span class="attr">hidden</span>=<span class="string">&quot;true&quot;</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">iframe</span> <span class="attr">onload</span>=<span class="string">alert(1)</span> <span class="attr">height</span>=<span class="string">&quot;0&quot;</span> <span class="attr">width</span>=<span class="string">&quot;0&quot;</span> <span class="attr">hidden</span>=<span class="string">&quot;true&quot;</span>/&gt;</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="安全等级Low"><a href="#安全等级Low" class="headerlink" title="安全等级Low"></a>安全等级Low</h2><p><img src="/aposts/93c2ee93/image-20220214153149478.png" alt="image-20220214153149478"></p>
-<h3 id="分析源码"><a href="#分析源码" class="headerlink" title="分析源码"></a>分析源码</h3><ul>
-<li>只是判断了name是否有值，其他没有做过滤</li>
-</ul>
-<p><img src="/aposts/93c2ee93/image-20220214153326675.png" alt="image-20220214153326675"></p>
-<h3 id="开始攻击"><a href="#开始攻击" class="headerlink" title="开始攻击"></a>开始攻击</h3><p>直接修改<code>name=&lt;script&gt;alert(1)&lt;/script&gt;#</code></p>
-<p><img src="/aposts/93c2ee93/image-20220214154450772.png" alt="image-20220214154450772"></p>
-<h2 id="安全等级为Medium"><a href="#安全等级为Medium" class="headerlink" title="安全等级为Medium"></a>安全等级为Medium</h2><p><img src="/aposts/93c2ee93/image-20220214154719159.png" alt="image-20220214154719159"></p>
-<h3 id="源码分析"><a href="#源码分析" class="headerlink" title="源码分析"></a>源码分析</h3><p>过滤了script标签</p>
-<p><img src="/aposts/93c2ee93/image-20220214154548875.png" alt="image-20220214154548875"></p>
-<h3 id="开始攻击-1"><a href="#开始攻击-1" class="headerlink" title="开始攻击"></a>开始攻击</h3><p>直接把script改成大写：<code>name=&lt;Script&gt;alert(1)&lt;/Script&gt;#</code></p>
-<p><img src="/aposts/93c2ee93/image-20220214154936849.png" alt="image-20220214154936849"></p>
-<h2 id="安全等级为High"><a href="#安全等级为High" class="headerlink" title="安全等级为High"></a>安全等级为High</h2><p><img src="/aposts/93c2ee93/image-20220214155355958.png" alt="image-20220214155355958"></p>
-<h3 id="源码分析-1"><a href="#源码分析-1" class="headerlink" title="源码分析"></a>源码分析</h3><p>替换所有与<code>&lt;script&gt;</code>相关的字符，那么就采用a或iframe等无需script标签的方式绕过。</p>
-<p><img src="/aposts/93c2ee93/image-20220214155324591.png" alt="image-20220214155324591"></p>
-<h3 id="开始攻击-2"><a href="#开始攻击-2" class="headerlink" title="开始攻击"></a>开始攻击</h3><ul>
-<li>采用a标签：<code>name=&lt;a href=http://XXX.xxx.xx.xx&gt;登录&lt;/a&gt;</code>，可以直接点击登录</li>
-</ul>
-<p><img src="/aposts/93c2ee93/image-20220214160517561.png" alt="image-20220214160517561"></p>
-<h2 id="安全等级为Impossible"><a href="#安全等级为Impossible" class="headerlink" title="安全等级为Impossible"></a>安全等级为Impossible</h2><p><img src="/aposts/93c2ee93/image-20220214160654149.png" alt="image-20220214160654149"></p>
-<h3 id="源码分析-2"><a href="#源码分析-2" class="headerlink" title="源码分析"></a>源码分析</h3><p>用了<code>htmlspecialchars</code>函数，将特殊字符转换为 HTML 实体</p>
-<p><img src="/aposts/93c2ee93/image-20220214160741582.png" alt="image-20220214160741582"></p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
-<li><p>利用：如果没有对特殊字符进行HTML转义，都存在被XSS利用的漏洞</p>
-</li>
-<li><p>防御：数据返回前端页面前，将【&lt;】【&gt;】【”】【’】【&amp;】全转义了，既可！</p>
-</li>
-<li><p>本文主要步骤来自<a href="https://blog.csdn.net/qqchaozai/article/details/102755283">这里</a></p>
-</li>
-</ul>
 ]]></content>
       <categories>
         <category>安全测试</category>
@@ -1980,93 +1980,6 @@
       </tags>
   </entry>
   <entry>
-    <title>JavaWeb开发之Servlet</title>
-    <url>/aposts/547ebd88/</url>
-    <content><![CDATA[<h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><ul>
-<li>本编开始学习JavaWeb开发的内容，环境信息如下：<code>IDEA，Maven，win10，java version &quot;1.8.0_381&quot;</code></li>
-</ul>
-<h2 id="搭建Servlet"><a href="#搭建Servlet" class="headerlink" title="搭建Servlet"></a>搭建Servlet</h2><p>在IDEA中新建<code>webapp</code></p>
-<p><img src="/aposts/547ebd88/image-20231129101815913.png" alt="image-20231129101815913"></p>
-<ul>
-<li>注意maven设置为本地</li>
-</ul>
-<p><img src="/aposts/547ebd88/image-20231129102658617.png" alt="image-20231129102658617"></p>
-<ul>
-<li><p>在根目录新建：<code>src\main\java</code>  和<code>src\main\resources</code>、<code>src\main\webapp</code></p>
-</li>
-<li><p>在pom.xml中加入依赖文件</p>
-</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;dependencies&gt;</span><br><span class="line">    &lt;dependency&gt;</span><br><span class="line">        &lt;groupId&gt;javax.servlet&lt;/groupId&gt;</span><br><span class="line">        &lt;artifactId&gt;javax.servlet-api&lt;/artifactId&gt;</span><br><span class="line">        &lt;version&gt;4.0.1&lt;/version&gt;</span><br><span class="line">        &lt;scope&gt;provided&lt;/scope&gt;</span><br><span class="line">    &lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>手动新建<code>src\main\webapp\WEB-INF\web.xml</code></li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span><br><span class="line">&lt;web-app xmlns=&quot;http://xmlns.jcp.org/xml/ns/javaee&quot;</span><br><span class="line">         xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span><br><span class="line">         xsi:schemaLocation=&quot;http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd&quot;</span><br><span class="line">         version=&quot;4.0&quot;&gt;</span><br><span class="line">&lt;/web-app&gt;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><code>src-mian-java</code> 新建一个包名为<code>xyz.shi.servlet</code> ， 然后在报名下新建<code>MyServlet</code></li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">package xyz.shi.servlet;</span><br><span class="line"></span><br><span class="line">import javax.servlet.ServletException;</span><br><span class="line">import javax.servlet.http.HttpServlet;</span><br><span class="line">import javax.servlet.http.HttpServletRequest;</span><br><span class="line">import javax.servlet.http.HttpServletResponse;</span><br><span class="line">import java.io.IOException;</span><br><span class="line">import javax.servlet.annotation.WebServlet;</span><br><span class="line"></span><br><span class="line">@WebServlet(&quot;/hello&quot;)</span><br><span class="line">public class MyServlet extends HttpServlet &#123;</span><br><span class="line">    @Override</span><br><span class="line">    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException &#123;</span><br><span class="line">        System.out.println(&quot;get请求&quot;);</span><br><span class="line">        resp.getWriter().write(&quot;hello world&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    @Override</span><br><span class="line">    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException &#123;</span><br><span class="line">        System.out.println(&quot;post请求&quot;);</span><br><span class="line">        resp.getWriter().write(&quot;你好&quot;);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<ul>
-<li>@WebServlet()会根据某些GET请求会生效, 然后里面写的 &#x2F;hello,表示当请求的url是 &#x2F;hello 的请求才会生效</li>
-<li>重写了父类中的get和post方法</li>
-</ul>
-</blockquote>
-<ul>
-<li>虽然打war 复制到Tomcat的webapps里面运行是一种方法,但是这种方法比较麻烦.所以我更推荐使用<code>Smart Tomcat</code></li>
-</ul>
-<p><img src="/aposts/547ebd88/image-20231130163237555.png" alt="image-20231130163237555.png"></p>
-<ul>
-<li>打开编辑配置</li>
-</ul>
-<p><img src="/aposts/547ebd88/image-20231130163329491.png" alt="image-20231130163329491"></p>
-<ul>
-<li>并选择本地tomcat的根目录，设置路径等，端口不用改</li>
-</ul>
-<p><img src="/aposts/547ebd88/image-20231201154747879.png" alt="image-20231201154747879"></p>
-<ul>
-<li>点击运行按钮</li>
-</ul>
-<p><img src="/aposts/547ebd88/image-20231130163627514.png" alt="image-20231130163627514"></p>
-<ul>
-<li>出现如下信息说明启动成功</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">30-Nov-2023 16:36:32.793 信息 [main] org.apache.coyote.AbstractProtocol.start 开始协议处理句柄[&quot;http-nio-8080&quot;]</span><br><span class="line">30-Nov-2023 16:36:32.807 信息 [main] org.apache.catalina.startup.Catalina.start [594]毫秒后服务器启动</span><br><span class="line">http://localhost:8080/WebTest</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>浏览器访问<code>http://localhost:8080/WebTest/hello</code></li>
-</ul>
-<p><img src="/aposts/547ebd88/image-20231130163758294.png" alt="image-20231130163758294"></p>
-<ul>
-<li>把<code>MyServlet</code>中的<code>WebServlet(&quot;/hello&quot;)</code> 的注解去掉</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ackage xyz.shi.servlet;</span><br><span class="line"></span><br><span class="line">import javax.servlet.ServletException;</span><br><span class="line">import javax.servlet.http.HttpServlet;</span><br><span class="line">import javax.servlet.http.HttpServletRequest;</span><br><span class="line">import javax.servlet.http.HttpServletResponse;</span><br><span class="line">import java.io.IOException;</span><br><span class="line">import javax.servlet.annotation.WebServlet;</span><br><span class="line"></span><br><span class="line">public class MyServlet extends HttpServlet &#123;</span><br><span class="line">    @Override</span><br><span class="line">    ....</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>在web.xml文件下，配置Servlet</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span><br><span class="line">&lt;web-app xmlns=&quot;http://xmlns.jcp.org/xml/ns/javaee&quot;</span><br><span class="line">         xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span><br><span class="line">         xsi:schemaLocation=&quot;http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd&quot;</span><br><span class="line">         version=&quot;4.0&quot;&gt;</span><br><span class="line">    &lt;servlet&gt;</span><br><span class="line">        &lt;!--servlet命名--&gt;</span><br><span class="line">        &lt;servlet-name&gt;MyServlet&lt;/servlet-name&gt;</span><br><span class="line">        &lt;!--servlet类的全限定名(路径+文件名)--&gt;</span><br><span class="line">        &lt;servlet-class&gt;xyz.shi.servlet.MyServlet&lt;/servlet-class&gt;</span><br><span class="line">    &lt;/servlet&gt;</span><br><span class="line">    &lt;!--定义Servlet的请求映射--&gt;</span><br><span class="line">    &lt;servlet-mapping&gt;</span><br><span class="line">        &lt;!--要映射的servlet名，与上方定义的servlet-name一致--&gt;</span><br><span class="line">        &lt;servlet-name&gt;MyServlet&lt;/servlet-name&gt;</span><br><span class="line">        &lt;!--请求映射url，必须以/开头--&gt;</span><br><span class="line">        &lt;!--之后通过项目上下文路径+该路径，就能访问FirstServlet类--&gt;</span><br><span class="line">        &lt;url-pattern&gt;/hello&lt;/url-pattern&gt;</span><br><span class="line">    &lt;/servlet-mapping&gt;</span><br><span class="line">&lt;/web-app&gt;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>重写运行，在浏览器中访问<code>http://localhost:8080/WebTest/hello</code></li>
-</ul>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>有两种运行Servlet的方式</p>
-<ul>
-<li>第一种是在类中直接加上<code>WebServlet(&quot;/hello&quot;)</code>的标识，然后启动</li>
-<li>第二种是在web.xml中进行配置，推荐第二种方式更加方便管理</li>
-</ul>
-]]></content>
-      <categories>
-        <category>java</category>
-      </categories>
-      <tags>
-        <tag>java</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Flink+zk+python+kafka集群实时日志读取</title>
     <url>/aposts/d4ea272f/</url>
     <content><![CDATA[<h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><ul>
@@ -2302,6 +2215,93 @@
         <tag>大数据</tag>
         <tag>flink</tag>
         <tag>kafka</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>JavaWeb开发之Servlet</title>
+    <url>/aposts/547ebd88/</url>
+    <content><![CDATA[<h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><ul>
+<li>本编开始学习JavaWeb开发的内容，环境信息如下：<code>IDEA，Maven，win10，java version &quot;1.8.0_381&quot;</code></li>
+</ul>
+<h2 id="搭建Servlet"><a href="#搭建Servlet" class="headerlink" title="搭建Servlet"></a>搭建Servlet</h2><p>在IDEA中新建<code>webapp</code></p>
+<p><img src="/aposts/547ebd88/image-20231129101815913.png" alt="image-20231129101815913"></p>
+<ul>
+<li>注意maven设置为本地</li>
+</ul>
+<p><img src="/aposts/547ebd88/image-20231129102658617.png" alt="image-20231129102658617"></p>
+<ul>
+<li><p>在根目录新建：<code>src\main\java</code>  和<code>src\main\resources</code>、<code>src\main\webapp</code></p>
+</li>
+<li><p>在pom.xml中加入依赖文件</p>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;dependencies&gt;</span><br><span class="line">    &lt;dependency&gt;</span><br><span class="line">        &lt;groupId&gt;javax.servlet&lt;/groupId&gt;</span><br><span class="line">        &lt;artifactId&gt;javax.servlet-api&lt;/artifactId&gt;</span><br><span class="line">        &lt;version&gt;4.0.1&lt;/version&gt;</span><br><span class="line">        &lt;scope&gt;provided&lt;/scope&gt;</span><br><span class="line">    &lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>手动新建<code>src\main\webapp\WEB-INF\web.xml</code></li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span><br><span class="line">&lt;web-app xmlns=&quot;http://xmlns.jcp.org/xml/ns/javaee&quot;</span><br><span class="line">         xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span><br><span class="line">         xsi:schemaLocation=&quot;http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd&quot;</span><br><span class="line">         version=&quot;4.0&quot;&gt;</span><br><span class="line">&lt;/web-app&gt;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>src-mian-java</code> 新建一个包名为<code>xyz.shi.servlet</code> ， 然后在报名下新建<code>MyServlet</code></li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">package xyz.shi.servlet;</span><br><span class="line"></span><br><span class="line">import javax.servlet.ServletException;</span><br><span class="line">import javax.servlet.http.HttpServlet;</span><br><span class="line">import javax.servlet.http.HttpServletRequest;</span><br><span class="line">import javax.servlet.http.HttpServletResponse;</span><br><span class="line">import java.io.IOException;</span><br><span class="line">import javax.servlet.annotation.WebServlet;</span><br><span class="line"></span><br><span class="line">@WebServlet(&quot;/hello&quot;)</span><br><span class="line">public class MyServlet extends HttpServlet &#123;</span><br><span class="line">    @Override</span><br><span class="line">    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException &#123;</span><br><span class="line">        System.out.println(&quot;get请求&quot;);</span><br><span class="line">        resp.getWriter().write(&quot;hello world&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    @Override</span><br><span class="line">    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException &#123;</span><br><span class="line">        System.out.println(&quot;post请求&quot;);</span><br><span class="line">        resp.getWriter().write(&quot;你好&quot;);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<ul>
+<li>@WebServlet()会根据某些GET请求会生效, 然后里面写的 &#x2F;hello,表示当请求的url是 &#x2F;hello 的请求才会生效</li>
+<li>重写了父类中的get和post方法</li>
+</ul>
+</blockquote>
+<ul>
+<li>虽然打war 复制到Tomcat的webapps里面运行是一种方法,但是这种方法比较麻烦.所以我更推荐使用<code>Smart Tomcat</code></li>
+</ul>
+<p><img src="/aposts/547ebd88/image-20231130163237555.png" alt="image-20231130163237555.png"></p>
+<ul>
+<li>打开编辑配置</li>
+</ul>
+<p><img src="/aposts/547ebd88/image-20231130163329491.png" alt="image-20231130163329491"></p>
+<ul>
+<li>并选择本地tomcat的根目录，设置路径等，端口不用改</li>
+</ul>
+<p><img src="/aposts/547ebd88/image-20231201154747879.png" alt="image-20231201154747879"></p>
+<ul>
+<li>点击运行按钮</li>
+</ul>
+<p><img src="/aposts/547ebd88/image-20231130163627514.png" alt="image-20231130163627514"></p>
+<ul>
+<li>出现如下信息说明启动成功</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">30-Nov-2023 16:36:32.793 信息 [main] org.apache.coyote.AbstractProtocol.start 开始协议处理句柄[&quot;http-nio-8080&quot;]</span><br><span class="line">30-Nov-2023 16:36:32.807 信息 [main] org.apache.catalina.startup.Catalina.start [594]毫秒后服务器启动</span><br><span class="line">http://localhost:8080/WebTest</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>浏览器访问<code>http://localhost:8080/WebTest/hello</code></li>
+</ul>
+<p><img src="/aposts/547ebd88/image-20231130163758294.png" alt="image-20231130163758294"></p>
+<ul>
+<li>把<code>MyServlet</code>中的<code>WebServlet(&quot;/hello&quot;)</code> 的注解去掉</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ackage xyz.shi.servlet;</span><br><span class="line"></span><br><span class="line">import javax.servlet.ServletException;</span><br><span class="line">import javax.servlet.http.HttpServlet;</span><br><span class="line">import javax.servlet.http.HttpServletRequest;</span><br><span class="line">import javax.servlet.http.HttpServletResponse;</span><br><span class="line">import java.io.IOException;</span><br><span class="line">import javax.servlet.annotation.WebServlet;</span><br><span class="line"></span><br><span class="line">public class MyServlet extends HttpServlet &#123;</span><br><span class="line">    @Override</span><br><span class="line">    ....</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>在web.xml文件下，配置Servlet</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span><br><span class="line">&lt;web-app xmlns=&quot;http://xmlns.jcp.org/xml/ns/javaee&quot;</span><br><span class="line">         xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span><br><span class="line">         xsi:schemaLocation=&quot;http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd&quot;</span><br><span class="line">         version=&quot;4.0&quot;&gt;</span><br><span class="line">    &lt;servlet&gt;</span><br><span class="line">        &lt;!--servlet命名--&gt;</span><br><span class="line">        &lt;servlet-name&gt;MyServlet&lt;/servlet-name&gt;</span><br><span class="line">        &lt;!--servlet类的全限定名(路径+文件名)--&gt;</span><br><span class="line">        &lt;servlet-class&gt;xyz.shi.servlet.MyServlet&lt;/servlet-class&gt;</span><br><span class="line">    &lt;/servlet&gt;</span><br><span class="line">    &lt;!--定义Servlet的请求映射--&gt;</span><br><span class="line">    &lt;servlet-mapping&gt;</span><br><span class="line">        &lt;!--要映射的servlet名，与上方定义的servlet-name一致--&gt;</span><br><span class="line">        &lt;servlet-name&gt;MyServlet&lt;/servlet-name&gt;</span><br><span class="line">        &lt;!--请求映射url，必须以/开头--&gt;</span><br><span class="line">        &lt;!--之后通过项目上下文路径+该路径，就能访问FirstServlet类--&gt;</span><br><span class="line">        &lt;url-pattern&gt;/hello&lt;/url-pattern&gt;</span><br><span class="line">    &lt;/servlet-mapping&gt;</span><br><span class="line">&lt;/web-app&gt;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>重写运行，在浏览器中访问<code>http://localhost:8080/WebTest/hello</code></li>
+</ul>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>有两种运行Servlet的方式</p>
+<ul>
+<li>第一种是在类中直接加上<code>WebServlet(&quot;/hello&quot;)</code>的标识，然后启动</li>
+<li>第二种是在web.xml中进行配置，推荐第二种方式更加方便管理</li>
+</ul>
+]]></content>
+      <categories>
+        <category>java</category>
+      </categories>
+      <tags>
+        <tag>java</tag>
       </tags>
   </entry>
   <entry>
@@ -3321,6 +3321,19 @@
       </tags>
   </entry>
   <entry>
+    <title>Python3-X-md5</title>
+    <url>/aposts/1ac23ba2/</url>
+    <content><![CDATA[<p>python3.x已经把md5 module移除了。要想用md5得用hashlib module,</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">import hashlib  </span><br><span class="line">m = hashlib.md5()  </span><br><span class="line">m.update(b&quot;Nobody inspects the spammish repetition&quot;) #参数必须是byte类型，否则报Unicode-objects must be encoded before hashing错误  </span><br><span class="line">md5value=m.hexdigest()  </span><br><span class="line">print(md5value)  #bb649c83dd1ea5c9d9dec9a18df0ffe9  </span><br></pre></td></tr></table></figure>
+<p>其实可简写，如下面的md5的例子，hashlib.md5(data)，就可以了</p>
+<p>但是对中文字符串md5怎么办？<br>中文字符在Python中是以unicode存在的,同一个字符串在不同的编码体系下有不同的值,所以在hash前要进行编码，个人建议转为gb2312,因为对比发现，我下载的一个工具算出的md5值是与gb2312编码后算出的md5值一样。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">import hashlib  </span><br><span class="line">data=&#x27;我是&#x27;  </span><br><span class="line">m = hashlib.md5(data.encode(encoding=&#x27;gb2312&#x27;))  </span><br><span class="line">print(m.hexdigest())  </span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>python</category>
+      </categories>
+  </entry>
+  <entry>
     <title>Python-Excel-Pandas</title>
     <url>/aposts/2d5f3400/</url>
     <content><![CDATA[<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">import pandas as pd</span><br><span class="line">from ast import literal_eval</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class OperateExcel():</span><br><span class="line">    def __init__(self, file_path):</span><br><span class="line">        self.file_path = file_path</span><br><span class="line">        self.df = pd.read_excel(file_path, sheet_name=&quot;Sheet1&quot;)  # sheet_name不指定时默认返回全表数据</span><br><span class="line">        # self.df = pd.read_excel(file_path, sheet_name=&quot;Sheet1&quot;, usecols=[&#x27;name&#x27;, &#x27;method&#x27;])</span><br><span class="line"></span><br><span class="line">    def get_excel(self):</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">         读取表格数据存为json</span><br><span class="line">        :return: </span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line"></span><br><span class="line">        data = []</span><br><span class="line">        for i in self.df.values:</span><br><span class="line">            params = &quot;&quot;</span><br><span class="line">            if i[3] == &quot;post&quot;:</span><br><span class="line">                params = literal_eval(i[4])</span><br><span class="line">            app = &#123;&quot;id&quot;: i[0], &quot;name&quot;: i[2], &quot;method&quot;: i[3], &quot;params&quot;: params&#125;</span><br><span class="line">            data.append(app)</span><br><span class="line">        print(data)</span><br><span class="line"></span><br><span class="line">    def write_excel(self):</span><br><span class="line">        # 根据条件累加数据</span><br><span class="line">        self.df[&#x27;id&#x27;][self.df[&#x27;name&#x27;] == &#x27;测试2&#x27;] += 100</span><br><span class="line">        print(self.df.head())</span><br><span class="line">        self.df.to_excel(&#x27;data3.xlsx&#x27;, sheet_name=&#x27;Sheet1&#x27;, index=False, header=True)</span><br><span class="line"></span><br><span class="line">        # 新增一行</span><br><span class="line">        self.df.loc[10] = [5, &#x27;Eric&#x27;, &#x27;male&#x27;, 20, &#x27;&#x27;]</span><br><span class="line"></span><br><span class="line">        # 新增一列</span><br><span class="line">        self.df[&#x27;favorite&#x27;] = None</span><br><span class="line"></span><br><span class="line">        self.df.to_excel(&#x27;data3.xlsx&#x27;, sheet_name=&#x27;Sheet1&#x27;, index=False, header=True)</span><br><span class="line">        print(self.df.head())</span><br><span class="line"></span><br><span class="line">    def get_filter_excel(self):</span><br><span class="line">        # 查看所有的值</span><br><span class="line">        print(self.df.values)</span><br><span class="line"></span><br><span class="line">        # 查看第一行的值</span><br><span class="line">        print(self.df.values[0])</span><br><span class="line"></span><br><span class="line">        # 查看某一列所有的值</span><br><span class="line">        print(self.df[&#x27;name&#x27;].values)</span><br><span class="line">        print(&quot;===打印头部数据，仅查看数据示例时常用====&quot;)</span><br><span class="line">        print(self.df.head())</span><br><span class="line">        print(&quot;====打印列标题===&quot;)</span><br><span class="line">        print(self.df.columns)</span><br><span class="line">        print(&quot;====打印行========&quot;)</span><br><span class="line">        print(self.df.index)</span><br><span class="line">        print(&quot;========打印指定列============&quot;)</span><br><span class="line">        print(self.df[&quot;name&quot;])</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">if __name__ == &quot;__main__&quot;:</span><br><span class="line">    file_path = &#x27;data3.xlsx&#x27;</span><br><span class="line">    o_excel = OperateExcel(file_path)</span><br><span class="line">    o_excel.get_excel()</span><br><span class="line">    # o_excel.write_excel()</span><br><span class="line">    # o_excel.get_filter_excel()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
@@ -3331,19 +3344,6 @@
 <ul>
 <li>其他几款操作excel对比，图片来源<a href="https://zhuanlan.zhihu.com/p/363810440">这里</a>：<br><img src="/aposts/2d5f3400/2222.png" alt="image.png"></li>
 </ul>
-]]></content>
-      <categories>
-        <category>python</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>Python3-X-md5</title>
-    <url>/aposts/1ac23ba2/</url>
-    <content><![CDATA[<p>python3.x已经把md5 module移除了。要想用md5得用hashlib module,</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">import hashlib  </span><br><span class="line">m = hashlib.md5()  </span><br><span class="line">m.update(b&quot;Nobody inspects the spammish repetition&quot;) #参数必须是byte类型，否则报Unicode-objects must be encoded before hashing错误  </span><br><span class="line">md5value=m.hexdigest()  </span><br><span class="line">print(md5value)  #bb649c83dd1ea5c9d9dec9a18df0ffe9  </span><br></pre></td></tr></table></figure>
-<p>其实可简写，如下面的md5的例子，hashlib.md5(data)，就可以了</p>
-<p>但是对中文字符串md5怎么办？<br>中文字符在Python中是以unicode存在的,同一个字符串在不同的编码体系下有不同的值,所以在hash前要进行编码，个人建议转为gb2312,因为对比发现，我下载的一个工具算出的md5值是与gb2312编码后算出的md5值一样。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">import hashlib  </span><br><span class="line">data=&#x27;我是&#x27;  </span><br><span class="line">m = hashlib.md5(data.encode(encoding=&#x27;gb2312&#x27;))  </span><br><span class="line">print(m.hexdigest())  </span><br></pre></td></tr></table></figure>
 ]]></content>
       <categories>
         <category>python</category>
@@ -4004,87 +4004,6 @@
       </tags>
   </entry>
   <entry>
-    <title>app安全测试-平台和数据存储不当使用</title>
-    <url>/aposts/fcb52a56/</url>
-    <content><![CDATA[<h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><ul>
-<li>接着上篇文章<a href="/aposts/ed775b3f/">app安全测试-逆向工程</a>继续学习</li>
-<li>可以查看<a href="https://owasp.org/www-project-mobile-top-10/">官网top10</a>的说明</li>
-</ul>
-<h2 id="M1-平台使用不当"><a href="#M1-平台使用不当" class="headerlink" title="M1-平台使用不当"></a>M1-平台使用不当</h2><h3 id="常见类型"><a href="#常见类型" class="headerlink" title="常见类型"></a>常见类型</h3><h4 id="糟糕的Web服务强化"><a href="#糟糕的Web服务强化" class="headerlink" title="糟糕的Web服务强化"></a>糟糕的Web服务强化</h4><ul>
-<li>逻辑缺陷</li>
-<li>弱认证</li>
-<li>弱会话管理或没有会话管理</li>
-<li>会话固定</li>
-<li>使用GET方法传输的敏感数据</li>
-</ul>
-<h4 id="不安全的Web服务器配置"><a href="#不安全的Web服务器配置" class="headerlink" title="不安全的Web服务器配置"></a>不安全的Web服务器配置</h4><ul>
-<li>默认内容</li>
-<li>管理界面</li>
-<li>Web服务和支持移动的网站上的注入（SQL，XSS，Command）</li>
-<li>身份验证缺陷</li>
-<li>会话管理缺陷</li>
-<li>访问控制漏洞</li>
-<li>本地和远程文件包括</li>
-</ul>
-<h4 id="实践"><a href="#实践" class="headerlink" title="实践"></a>实践</h4><ul>
-<li>开发写代码的调试信息中，经常可能会有一些敏感的信息被打印出来，比如用<code>jd-gui</code>查看下如下内容：</li>
-</ul>
-<p><img src="/aposts/fcb52a56/image-20220401111712771.png" alt="image-20220401111712771"></p>
-<ul>
-<li>既然是查看日志，完成可以采用直接如<code>IDE+监控LogCat</code>的方式</li>
-</ul>
-<p><img src="/aposts/fcb52a56/image-20220401112145099.png" alt="image-20220401112145099"></p>
-<ul>
-<li>还有一种方式，其实就是<code>adb logcat</code> 过滤日志的方式，也是可行的</li>
-</ul>
-<h2 id="M2-不安全的数据存储"><a href="#M2-不安全的数据存储" class="headerlink" title="M2-不安全的数据存储"></a>M2-不安全的数据存储</h2><p>敏感数据未加密存储、本地文件未加密、WebView本地明文存储cookie等问题</p>
-<h3 id="常见类型-1"><a href="#常见类型-1" class="headerlink" title="常见类型"></a>常见类型</h3><ul>
-<li>SQL数据库</li>
-<li>日志文件</li>
-<li>XML数据存储或清单文件</li>
-<li>二进制数据存储</li>
-<li>Cookie</li>
-<li>敏感数据存储到SD卡</li>
-<li>SD卡上的数据可以被任意应用读取</li>
-<li>云同步</li>
-</ul>
-<h3 id="避免方式"><a href="#避免方式" class="headerlink" title="避免方式"></a>避免方式</h3><ul>
-<li>URL缓存（请求和响应）</li>
-<li>键盘按键缓存</li>
-<li>复制&#x2F;粘贴缓冲区缓存</li>
-<li>应用背景</li>
-<li>中间数据</li>
-<li>记录</li>
-<li>HTML5数据存储</li>
-<li>浏览器cookie对象</li>
-<li>析数据发送给第三方</li>
-</ul>
-<h3 id="实践-1"><a href="#实践-1" class="headerlink" title="实践"></a>实践</h3><ul>
-<li>下载<a href="http://payatu.com/wp-content/uploads/2016/01/diva-beta.tar.gz">diva apk</a> 解压后把apk文件安装到<strong>雷电模拟器上</strong></li>
-<li>用模拟器打开apk</li>
-</ul>
-<p><img src="/aposts/fcb52a56/image-20220401160746121.png" alt="image-20220401160746121"></p>
-<p><img src="/aposts/fcb52a56/image-20220401155946405.png" alt="image-20220401155946405"></p>
-<ul>
-<li>用<code>jd-gui</code> 打开代码分析，发现使用了<code>sharepreference</code> 存信息到本地</li>
-</ul>
-<p><img src="/aposts/fcb52a56/image-20220401160501447.png" alt="image-20220401160501447"></p>
-<ul>
-<li>用<code>adb</code> 进入到<code>shell</code>，找到<code>shared_prefs</code>，最终使用<code>cat  jakhar.aseem.diva_preferences.xml</code> 查看到敏感的信息内容</li>
-</ul>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">adb shell</span><br><span class="line">cd /data/data/jakhar.aseem.diva</span><br><span class="line"></span><br><span class="line">osp:/data/data/jakhar.aseem.diva # ls</span><br><span class="line">cache  code_cache  databases  lib  shared_prefs</span><br><span class="line">osp:/data/data/jakhar.aseem.diva # cd shared_prefs</span><br><span class="line">aosp:/data/data/jakhar.aseem.diva/shared_prefs # ls</span><br><span class="line">jakhar.aseem.diva_preferences.xml</span><br><span class="line">osp:/data/data/jakhar.aseem.diva # cat  jakhar.aseem.diva_preferences.xml</span><br><span class="line"></span><br><span class="line">&lt;?xml version=&#x27;1.0&#x27; encoding=&#x27;utf-8&#x27; standalone=&#x27;yes&#x27; ?&gt;</span><br><span class="line">&lt;map&gt;</span><br><span class="line">    &lt;string name=&quot;user&quot;&gt;hello&lt;/string&gt;</span><br><span class="line">    &lt;string name=&quot;password&quot;&gt;word&lt;/string&gt;</span><br><span class="line">&lt;/map&gt;</span><br><span class="line">at jakhar.aseem.diva_preferences.xml                                          &lt;</span><br><span class="line">&lt;?xml version=&#x27;1.0&#x27; encoding=&#x27;utf-8&#x27; standalone=&#x27;yes&#x27; ?&gt;</span><br><span class="line">&lt;map&gt;</span><br><span class="line">    &lt;string name=&quot;user&quot;&gt;hello&lt;/string&gt;</span><br><span class="line">    &lt;string name=&quot;password&quot;&gt;word&lt;/string&gt;</span><br><span class="line">&lt;/map&gt;</span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>app安全测试</category>
-      </categories>
-      <tags>
-        <tag>安全测试</tag>
-        <tag>app安全测试</tag>
-        <tag>android</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>app安全测试-逆向工程</title>
     <url>/aposts/ed775b3f/</url>
     <content><![CDATA[<h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><ul>
@@ -4186,6 +4105,87 @@
 <li><p>当然网络上也有一些工具把这些集成在一起了，比如<strong>改之理</strong>、<strong>ApkToolkit</strong></p>
 </li>
 </ul>
+]]></content>
+      <categories>
+        <category>app安全测试</category>
+      </categories>
+      <tags>
+        <tag>安全测试</tag>
+        <tag>app安全测试</tag>
+        <tag>android</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>app安全测试-平台和数据存储不当使用</title>
+    <url>/aposts/fcb52a56/</url>
+    <content><![CDATA[<h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><ul>
+<li>接着上篇文章<a href="/aposts/ed775b3f/">app安全测试-逆向工程</a>继续学习</li>
+<li>可以查看<a href="https://owasp.org/www-project-mobile-top-10/">官网top10</a>的说明</li>
+</ul>
+<h2 id="M1-平台使用不当"><a href="#M1-平台使用不当" class="headerlink" title="M1-平台使用不当"></a>M1-平台使用不当</h2><h3 id="常见类型"><a href="#常见类型" class="headerlink" title="常见类型"></a>常见类型</h3><h4 id="糟糕的Web服务强化"><a href="#糟糕的Web服务强化" class="headerlink" title="糟糕的Web服务强化"></a>糟糕的Web服务强化</h4><ul>
+<li>逻辑缺陷</li>
+<li>弱认证</li>
+<li>弱会话管理或没有会话管理</li>
+<li>会话固定</li>
+<li>使用GET方法传输的敏感数据</li>
+</ul>
+<h4 id="不安全的Web服务器配置"><a href="#不安全的Web服务器配置" class="headerlink" title="不安全的Web服务器配置"></a>不安全的Web服务器配置</h4><ul>
+<li>默认内容</li>
+<li>管理界面</li>
+<li>Web服务和支持移动的网站上的注入（SQL，XSS，Command）</li>
+<li>身份验证缺陷</li>
+<li>会话管理缺陷</li>
+<li>访问控制漏洞</li>
+<li>本地和远程文件包括</li>
+</ul>
+<h4 id="实践"><a href="#实践" class="headerlink" title="实践"></a>实践</h4><ul>
+<li>开发写代码的调试信息中，经常可能会有一些敏感的信息被打印出来，比如用<code>jd-gui</code>查看下如下内容：</li>
+</ul>
+<p><img src="/aposts/fcb52a56/image-20220401111712771.png" alt="image-20220401111712771"></p>
+<ul>
+<li>既然是查看日志，完成可以采用直接如<code>IDE+监控LogCat</code>的方式</li>
+</ul>
+<p><img src="/aposts/fcb52a56/image-20220401112145099.png" alt="image-20220401112145099"></p>
+<ul>
+<li>还有一种方式，其实就是<code>adb logcat</code> 过滤日志的方式，也是可行的</li>
+</ul>
+<h2 id="M2-不安全的数据存储"><a href="#M2-不安全的数据存储" class="headerlink" title="M2-不安全的数据存储"></a>M2-不安全的数据存储</h2><p>敏感数据未加密存储、本地文件未加密、WebView本地明文存储cookie等问题</p>
+<h3 id="常见类型-1"><a href="#常见类型-1" class="headerlink" title="常见类型"></a>常见类型</h3><ul>
+<li>SQL数据库</li>
+<li>日志文件</li>
+<li>XML数据存储或清单文件</li>
+<li>二进制数据存储</li>
+<li>Cookie</li>
+<li>敏感数据存储到SD卡</li>
+<li>SD卡上的数据可以被任意应用读取</li>
+<li>云同步</li>
+</ul>
+<h3 id="避免方式"><a href="#避免方式" class="headerlink" title="避免方式"></a>避免方式</h3><ul>
+<li>URL缓存（请求和响应）</li>
+<li>键盘按键缓存</li>
+<li>复制&#x2F;粘贴缓冲区缓存</li>
+<li>应用背景</li>
+<li>中间数据</li>
+<li>记录</li>
+<li>HTML5数据存储</li>
+<li>浏览器cookie对象</li>
+<li>析数据发送给第三方</li>
+</ul>
+<h3 id="实践-1"><a href="#实践-1" class="headerlink" title="实践"></a>实践</h3><ul>
+<li>下载<a href="http://payatu.com/wp-content/uploads/2016/01/diva-beta.tar.gz">diva apk</a> 解压后把apk文件安装到<strong>雷电模拟器上</strong></li>
+<li>用模拟器打开apk</li>
+</ul>
+<p><img src="/aposts/fcb52a56/image-20220401160746121.png" alt="image-20220401160746121"></p>
+<p><img src="/aposts/fcb52a56/image-20220401155946405.png" alt="image-20220401155946405"></p>
+<ul>
+<li>用<code>jd-gui</code> 打开代码分析，发现使用了<code>sharepreference</code> 存信息到本地</li>
+</ul>
+<p><img src="/aposts/fcb52a56/image-20220401160501447.png" alt="image-20220401160501447"></p>
+<ul>
+<li>用<code>adb</code> 进入到<code>shell</code>，找到<code>shared_prefs</code>，最终使用<code>cat  jakhar.aseem.diva_preferences.xml</code> 查看到敏感的信息内容</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">adb shell</span><br><span class="line">cd /data/data/jakhar.aseem.diva</span><br><span class="line"></span><br><span class="line">osp:/data/data/jakhar.aseem.diva # ls</span><br><span class="line">cache  code_cache  databases  lib  shared_prefs</span><br><span class="line">osp:/data/data/jakhar.aseem.diva # cd shared_prefs</span><br><span class="line">aosp:/data/data/jakhar.aseem.diva/shared_prefs # ls</span><br><span class="line">jakhar.aseem.diva_preferences.xml</span><br><span class="line">osp:/data/data/jakhar.aseem.diva # cat  jakhar.aseem.diva_preferences.xml</span><br><span class="line"></span><br><span class="line">&lt;?xml version=&#x27;1.0&#x27; encoding=&#x27;utf-8&#x27; standalone=&#x27;yes&#x27; ?&gt;</span><br><span class="line">&lt;map&gt;</span><br><span class="line">    &lt;string name=&quot;user&quot;&gt;hello&lt;/string&gt;</span><br><span class="line">    &lt;string name=&quot;password&quot;&gt;word&lt;/string&gt;</span><br><span class="line">&lt;/map&gt;</span><br><span class="line">at jakhar.aseem.diva_preferences.xml                                          &lt;</span><br><span class="line">&lt;?xml version=&#x27;1.0&#x27; encoding=&#x27;utf-8&#x27; standalone=&#x27;yes&#x27; ?&gt;</span><br><span class="line">&lt;map&gt;</span><br><span class="line">    &lt;string name=&quot;user&quot;&gt;hello&lt;/string&gt;</span><br><span class="line">    &lt;string name=&quot;password&quot;&gt;word&lt;/string&gt;</span><br><span class="line">&lt;/map&gt;</span><br></pre></td></tr></table></figure>
+
 ]]></content>
       <categories>
         <category>app安全测试</category>
@@ -4327,35 +4327,6 @@
       </categories>
   </entry>
   <entry>
-    <title>chrome无保存密码提示</title>
-    <url>/aposts/9dc1ed8/</url>
-    <content><![CDATA[<h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><ul>
-<li>chrome导入密码后，无反应</li>
-<li>chrome保存密码，也没有任何提示</li>
-</ul>
-<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><ul>
-<li>浏览器中输入<code>chrome://flags/</code>，找到<code>Password import</code>，把值重新禁止和打开。</li>
-</ul>
-<blockquote>
-<p>此操作也使用无导入密码按钮的问题</p>
-</blockquote>
-<p><img src="/aposts/9dc1ed8/image-20220822094625395.png" alt="image-20220822094625395"></p>
-<ul>
-<li>运行中输入：<code>%LOCALAPPDATA%\Google\Chrome\User Data\Default</code>，打开Chrome保存用户信息的路径，删除已经保存的用户信息（Login开头的文件）</li>
-</ul>
-<p><img src="/aposts/9dc1ed8/image-20220822095203160.png" alt="image-20220822095203160"></p>
-<ul>
-<li>重启chrome浏览器后，无论是导入密码，还是提示密码保存功能，都已经可以了</li>
-</ul>
-]]></content>
-      <categories>
-        <category>软件使用</category>
-      </categories>
-      <tags>
-        <tag>chrome</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>centos7搭建jforum</title>
     <url>/aposts/65807ab6/</url>
     <content><![CDATA[<h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><p>作为性能测试的压测目标网站，本次教程主要是在centos7上搭建iforum论坛的步骤</p>
@@ -4452,6 +4423,35 @@
         <tag>性能测试</tag>
         <tag>环境搭建</tag>
         <tag>linux</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>chrome无保存密码提示</title>
+    <url>/aposts/9dc1ed8/</url>
+    <content><![CDATA[<h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><ul>
+<li>chrome导入密码后，无反应</li>
+<li>chrome保存密码，也没有任何提示</li>
+</ul>
+<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><ul>
+<li>浏览器中输入<code>chrome://flags/</code>，找到<code>Password import</code>，把值重新禁止和打开。</li>
+</ul>
+<blockquote>
+<p>此操作也使用无导入密码按钮的问题</p>
+</blockquote>
+<p><img src="/aposts/9dc1ed8/image-20220822094625395.png" alt="image-20220822094625395"></p>
+<ul>
+<li>运行中输入：<code>%LOCALAPPDATA%\Google\Chrome\User Data\Default</code>，打开Chrome保存用户信息的路径，删除已经保存的用户信息（Login开头的文件）</li>
+</ul>
+<p><img src="/aposts/9dc1ed8/image-20220822095203160.png" alt="image-20220822095203160"></p>
+<ul>
+<li>重启chrome浏览器后，无论是导入密码，还是提示密码保存功能，都已经可以了</li>
+</ul>
+]]></content>
+      <categories>
+        <category>软件使用</category>
+      </categories>
+      <tags>
+        <tag>chrome</tag>
       </tags>
   </entry>
   <entry>
@@ -6537,6 +6537,57 @@
       </tags>
   </entry>
   <entry>
+    <title>go部署实践</title>
+    <url>/aposts/57a9c16f/</url>
+    <content><![CDATA[<h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><ul>
+<li>本次笔记主要记录部署go</li>
+<li>服务信息为centos 7</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@VM-24-13-centos home]# uname -a</span><br><span class="line">Linux VM-24-13-centos 3.10.0-1160.11.1.el7.x86_64 #1 SMP Fri Dec 18 16:34:56 UTC 2020 x86_64 x86_64 x86_64 GNU/Linux</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="直接部署"><a href="#直接部署" class="headerlink" title="直接部署"></a>直接部署</h2><ul>
+<li>分别为下载，解压go</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@VM-24-13-centos /]# cd home</span><br><span class="line">[root@VM-24-13-centos home]# wget https://dl.google.com/go/go1.20.4.linux-amd64.tar.gz</span><br><span class="line">[root@VM-24-13-centos home]# tar -zxvf go1.20.4.linux-amd64.tar.gz</span><br><span class="line">[root@VM-24-13-centos bin]# pwd</span><br><span class="line">/home/go/bin</span><br><span class="line">[root@VM-24-13-centos bin]# ./go version</span><br><span class="line">go version go1.20.4 linux/amd64</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>配置go的环境变量</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@VM-24-13-centos bin]# vi /etc/profile </span><br><span class="line"></span><br><span class="line">export GOPATH=/home/go</span><br><span class="line">export PATH=$PATH:/usr/local/go/bin:$GOPATH/bin</span><br><span class="line"></span><br><span class="line"># 生效环境变量</span><br><span class="line">[root@VM-24-13-centos bin]# source profile</span><br><span class="line"></span><br><span class="line">[root@VM-24-13-centos etc]# go version</span><br><span class="line">go version go1.20.4 linux/amd64</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>服务器需要搭建好mysql环境，以及建好数据库，可以参考<a href="https://www.jianshu.com/p/e51a21388363">这篇文章</a>中的MySQL安装过程</li>
+</ul>
+<p><img src="/aposts/57a9c16f/image-20230731105226623.png" alt="image-20230731105226623"></p>
+<ul>
+<li>使用 Git 克隆你的 Gin 项目到服务器上，并设置go的代理</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@VM-24-13-centos home]# git clone https://github.com/Louis-me/studyGin.git</span><br><span class="line"></span><br><span class="line">[root@VM-24-13-centos home]# cd studyGin/</span><br><span class="line">[root@VM-24-13-centos home]#go env -w GO111MODULE=on</span><br><span class="line">[root@VM-24-13-centos home]# go env -w GOPROXY=https://proxy.golang.com.cn,direct</span><br><span class="line"># 编译下载依赖文件</span><br><span class="line">[root@VM-24-13-centos studyGin]# go build</span><br><span class="line"># 启动项目</span><br><span class="line">[root@VM-24-13-centos studyGin]# ./myGin</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>注意gin的服务端口信息为8080，防火墙需要打开，若时云服务器那么规则端口也要打开</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">firewall-cmd --zone=public --add-port=8080/tcp --permanent</span><br><span class="line">firewall-cmd --reload   # 配置立即生效</span><br><span class="line">firewall-cmd --zone=public --list-port # 查看防火墙所有开放的端口</span><br><span class="line"> firewall-cmd --state # 查看防火墙状态</span><br><span class="line">netstat -lnpt # 查看监听的端口</span><br><span class="line">netstat -lnpt |grep 8080 # 查看监听的具体端口</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>测试</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line">data =&#123;<span class="string">&quot;name&quot;</span>: <span class="string">&quot;admin&quot;</span>, <span class="string">&quot;password&quot;</span>: <span class="string">&quot;123456&quot;</span>&#125;</span><br><span class="line">resp = requests.post(<span class="string">&quot;http://182.XXX.XXX.XXX:8080/login&quot;</span>, data=data)</span><br><span class="line"><span class="built_in">print</span>(resp.text)</span><br><span class="line">dic = json.loads(resp.text)</span><br><span class="line">token = dic[<span class="string">&quot;data&quot;</span>][<span class="string">&quot;Token&quot;</span>]</span><br><span class="line">header = &#123;<span class="string">&quot;token&quot;</span>: token&#125;</span><br><span class="line">resp2 = requests.get(<span class="string">&quot;http://182.XXX.XXX.XXXX:8080/GetUserList&quot;</span>, headers=header)</span><br><span class="line"><span class="built_in">print</span>(resp2.text)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>如果需要在后台运行项目，并且在关闭终端时项目依然保持运行状态，可以使用 <code>nohup</code> 命令：</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@VM-24-13-centos studyGin]# ./myGin</span><br><span class="line"></span><br><span class="line">[root@VM-24-13-centos studyGin]# nohup ./myGin &gt; gin.log &amp;</span><br><span class="line">[2] 16486</span><br><span class="line">[root@VM-24-13-centos studyGin]# nohup: 忽略输入重定向错误到标准输出端</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>go</category>
+      </categories>
+      <tags>
+        <tag>go</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>go网络编程</title>
     <url>/aposts/9cb489d1/</url>
     <content><![CDATA[<h2 id="socket"><a href="#socket" class="headerlink" title="socket"></a>socket</h2><ul>
@@ -6604,57 +6655,6 @@
 <li><p><a href="http://www.topgoer.com/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/">网络编程</a></p>
 </li>
 </ul>
-]]></content>
-      <categories>
-        <category>go</category>
-      </categories>
-      <tags>
-        <tag>go</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>go部署实践</title>
-    <url>/aposts/57a9c16f/</url>
-    <content><![CDATA[<h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><ul>
-<li>本次笔记主要记录部署go</li>
-<li>服务信息为centos 7</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@VM-24-13-centos home]# uname -a</span><br><span class="line">Linux VM-24-13-centos 3.10.0-1160.11.1.el7.x86_64 #1 SMP Fri Dec 18 16:34:56 UTC 2020 x86_64 x86_64 x86_64 GNU/Linux</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h2 id="直接部署"><a href="#直接部署" class="headerlink" title="直接部署"></a>直接部署</h2><ul>
-<li>分别为下载，解压go</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@VM-24-13-centos /]# cd home</span><br><span class="line">[root@VM-24-13-centos home]# wget https://dl.google.com/go/go1.20.4.linux-amd64.tar.gz</span><br><span class="line">[root@VM-24-13-centos home]# tar -zxvf go1.20.4.linux-amd64.tar.gz</span><br><span class="line">[root@VM-24-13-centos bin]# pwd</span><br><span class="line">/home/go/bin</span><br><span class="line">[root@VM-24-13-centos bin]# ./go version</span><br><span class="line">go version go1.20.4 linux/amd64</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>配置go的环境变量</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@VM-24-13-centos bin]# vi /etc/profile </span><br><span class="line"></span><br><span class="line">export GOPATH=/home/go</span><br><span class="line">export PATH=$PATH:/usr/local/go/bin:$GOPATH/bin</span><br><span class="line"></span><br><span class="line"># 生效环境变量</span><br><span class="line">[root@VM-24-13-centos bin]# source profile</span><br><span class="line"></span><br><span class="line">[root@VM-24-13-centos etc]# go version</span><br><span class="line">go version go1.20.4 linux/amd64</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>服务器需要搭建好mysql环境，以及建好数据库，可以参考<a href="https://www.jianshu.com/p/e51a21388363">这篇文章</a>中的MySQL安装过程</li>
-</ul>
-<p><img src="/aposts/57a9c16f/image-20230731105226623.png" alt="image-20230731105226623"></p>
-<ul>
-<li>使用 Git 克隆你的 Gin 项目到服务器上，并设置go的代理</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@VM-24-13-centos home]# git clone https://github.com/Louis-me/studyGin.git</span><br><span class="line"></span><br><span class="line">[root@VM-24-13-centos home]# cd studyGin/</span><br><span class="line">[root@VM-24-13-centos home]#go env -w GO111MODULE=on</span><br><span class="line">[root@VM-24-13-centos home]# go env -w GOPROXY=https://proxy.golang.com.cn,direct</span><br><span class="line"># 编译下载依赖文件</span><br><span class="line">[root@VM-24-13-centos studyGin]# go build</span><br><span class="line"># 启动项目</span><br><span class="line">[root@VM-24-13-centos studyGin]# ./myGin</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>注意gin的服务端口信息为8080，防火墙需要打开，若时云服务器那么规则端口也要打开</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">firewall-cmd --zone=public --add-port=8080/tcp --permanent</span><br><span class="line">firewall-cmd --reload   # 配置立即生效</span><br><span class="line">firewall-cmd --zone=public --list-port # 查看防火墙所有开放的端口</span><br><span class="line"> firewall-cmd --state # 查看防火墙状态</span><br><span class="line">netstat -lnpt # 查看监听的端口</span><br><span class="line">netstat -lnpt |grep 8080 # 查看监听的具体端口</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>测试</li>
-</ul>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line">data =&#123;<span class="string">&quot;name&quot;</span>: <span class="string">&quot;admin&quot;</span>, <span class="string">&quot;password&quot;</span>: <span class="string">&quot;123456&quot;</span>&#125;</span><br><span class="line">resp = requests.post(<span class="string">&quot;http://182.XXX.XXX.XXX:8080/login&quot;</span>, data=data)</span><br><span class="line"><span class="built_in">print</span>(resp.text)</span><br><span class="line">dic = json.loads(resp.text)</span><br><span class="line">token = dic[<span class="string">&quot;data&quot;</span>][<span class="string">&quot;Token&quot;</span>]</span><br><span class="line">header = &#123;<span class="string">&quot;token&quot;</span>: token&#125;</span><br><span class="line">resp2 = requests.get(<span class="string">&quot;http://182.XXX.XXX.XXXX:8080/GetUserList&quot;</span>, headers=header)</span><br><span class="line"><span class="built_in">print</span>(resp2.text)</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>如果需要在后台运行项目，并且在关闭终端时项目依然保持运行状态，可以使用 <code>nohup</code> 命令：</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@VM-24-13-centos studyGin]# ./myGin</span><br><span class="line"></span><br><span class="line">[root@VM-24-13-centos studyGin]# nohup ./myGin &gt; gin.log &amp;</span><br><span class="line">[2] 16486</span><br><span class="line">[root@VM-24-13-centos studyGin]# nohup: 忽略输入重定向错误到标准输出端</span><br></pre></td></tr></table></figure>
-
 ]]></content>
       <categories>
         <category>go</category>
@@ -7907,56 +7907,6 @@
       </tags>
   </entry>
   <entry>
-    <title>kdevtmpfsi--服务器CPU占用高、内存占用高</title>
-    <url>/aposts/177838dd/</url>
-    <content><![CDATA[<h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><p>这篇<a href="aposts/d4ea272f/">文章</a>，后续的结论说是服务器配置不够观点是错误的，经过排查发现是服务器中毒了，经过<code>top</code>排查到了是有个叫<code>kdevtmpfsi</code>的后台进程太大造成，搜了下相关资料刚好有人和我相同的问题，把解决方案就<a href="https://blog.csdn.net/m0_37282062/article/details/108645671">转载</a>了过来</p>
-<h2 id="中毒具体描述"><a href="#中毒具体描述" class="headerlink" title="中毒具体描述"></a>中毒具体描述</h2><ul>
-<li>某一天，我写完本地程序，准备部署到云服务器，然而我的<code>xshell</code>始终是连接不上服务器，或者是连接上反应非常慢，我怀疑阿里云对我的服务器动了什么了（实在是对不住，毕竟我也不知道还有这种事情），然后通过阿里云控制台，发现出现了CPU占用非常高，基本上就100%了，并且内存的占用也是非常高。通过登录服务器，具体查看，然后使用命令查看，确实正如控制台的监控系统所展示的那样。</li>
-</ul>
-<h2 id="命令以及过程"><a href="#命令以及过程" class="headerlink" title="命令以及过程"></a>命令以及过程</h2><ul>
-<li><p>查看cpu占用</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">top</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>查看异常进程 <code>kdevtmpfsi</code></p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ps -ef | grep kdevtmpfsi</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>处理异常定时任务</p>
-</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 查看定时任务，找出异常任务</span><br><span class="line">crontab -l</span><br><span class="line"></span><br><span class="line"># 删除一次任务</span><br><span class="line">crontab -e</span><br></pre></td></tr></table></figure>
-
-
-
-<ul>
-<li><p>查看和其相关联的进程</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">systemctl status pid</span><br><span class="line"># pid 为kdevtmpfsi的进程号</span><br></pre></td></tr></table></figure>
-
-
-</li>
-<li><p>杀掉进程(包括其守护进程，由上一步可以看出)，先杀守护进程，后杀挖矿进程</p>
-</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">kill -9 pid</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>删除守护进程文件</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 查找守护进程相关文件</span><br><span class="line">find / -name kins*</span><br><span class="line"></span><br><span class="line"># 删除文件</span><br><span class="line">rm -rf path</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>删除挖矿程序文件</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 查找文件</span><br><span class="line">find / -name kdevtmpfsi*</span><br><span class="line"># 删除</span><br><span class="line">rm -rf path</span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>环境搭建</category>
-      </categories>
-      <tags>
-        <tag>centos</tag>
-        <tag>云服务器</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>kail的搭建</title>
     <url>/aposts/403e45c/</url>
     <content><![CDATA[<h2 id="什么是kail"><a href="#什么是kail" class="headerlink" title="什么是kail"></a>什么是kail</h2><ul>
@@ -8825,6 +8775,56 @@
         <tag>安全测试</tag>
         <tag>环境搭建</tag>
         <tag>kail</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>kdevtmpfsi--服务器CPU占用高、内存占用高</title>
+    <url>/aposts/177838dd/</url>
+    <content><![CDATA[<h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><p>这篇<a href="aposts/d4ea272f/">文章</a>，后续的结论说是服务器配置不够观点是错误的，经过排查发现是服务器中毒了，经过<code>top</code>排查到了是有个叫<code>kdevtmpfsi</code>的后台进程太大造成，搜了下相关资料刚好有人和我相同的问题，把解决方案就<a href="https://blog.csdn.net/m0_37282062/article/details/108645671">转载</a>了过来</p>
+<h2 id="中毒具体描述"><a href="#中毒具体描述" class="headerlink" title="中毒具体描述"></a>中毒具体描述</h2><ul>
+<li>某一天，我写完本地程序，准备部署到云服务器，然而我的<code>xshell</code>始终是连接不上服务器，或者是连接上反应非常慢，我怀疑阿里云对我的服务器动了什么了（实在是对不住，毕竟我也不知道还有这种事情），然后通过阿里云控制台，发现出现了CPU占用非常高，基本上就100%了，并且内存的占用也是非常高。通过登录服务器，具体查看，然后使用命令查看，确实正如控制台的监控系统所展示的那样。</li>
+</ul>
+<h2 id="命令以及过程"><a href="#命令以及过程" class="headerlink" title="命令以及过程"></a>命令以及过程</h2><ul>
+<li><p>查看cpu占用</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">top</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>查看异常进程 <code>kdevtmpfsi</code></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ps -ef | grep kdevtmpfsi</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>处理异常定时任务</p>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 查看定时任务，找出异常任务</span><br><span class="line">crontab -l</span><br><span class="line"></span><br><span class="line"># 删除一次任务</span><br><span class="line">crontab -e</span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li><p>查看和其相关联的进程</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">systemctl status pid</span><br><span class="line"># pid 为kdevtmpfsi的进程号</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>杀掉进程(包括其守护进程，由上一步可以看出)，先杀守护进程，后杀挖矿进程</p>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">kill -9 pid</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>删除守护进程文件</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 查找守护进程相关文件</span><br><span class="line">find / -name kins*</span><br><span class="line"></span><br><span class="line"># 删除文件</span><br><span class="line">rm -rf path</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>删除挖矿程序文件</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 查找文件</span><br><span class="line">find / -name kdevtmpfsi*</span><br><span class="line"># 删除</span><br><span class="line">rm -rf path</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>环境搭建</category>
+      </categories>
+      <tags>
+        <tag>centos</tag>
+        <tag>云服务器</tag>
       </tags>
   </entry>
   <entry>
@@ -9980,19 +9980,6 @@
       </tags>
   </entry>
   <entry>
-    <title>python-list排序,set的使用</title>
-    <url>/aposts/7bdbe3d6/</url>
-    <content><![CDATA[<h1 id="list排序，和打印"><a href="#list排序，和打印" class="headerlink" title="list排序，和打印"></a>list排序，和打印</h1><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">l = [2, 4, 3, 5]</span><br><span class="line">str = &quot;bcdea&quot;</span><br><span class="line">def badIterable():</span><br><span class="line">    i = 0</span><br><span class="line">    iterable = [&quot;a&quot;, &quot;b&quot;, &quot;c&quot;]</span><br><span class="line">    for item in iterable:</span><br><span class="line">        print(i, item)</span><br><span class="line">        i += 1</span><br><span class="line">def goodIterable():</span><br><span class="line">    iterable = [&quot;a&quot;, &quot;b&quot;, &quot;c&quot;]</span><br><span class="line">    for i, item in enumerate(iterable):</span><br><span class="line">        print(i, item)</span><br><span class="line"></span><br><span class="line">#结果：[(0, &#x27;a&#x27;), (1, &#x27;b&#x27;), (2, &#x27;c&#x27;)]</span><br><span class="line">def listIterable():</span><br><span class="line">    le = list(enumerate(&#x27;abc&#x27;))</span><br><span class="line">    return le</span><br><span class="line">#结果：[(1, &#x27;a&#x27;), (2, &#x27;b&#x27;), (3, &#x27;c&#x27;)]</span><br><span class="line">def listIterable1():</span><br><span class="line">    le = list(enumerate(&#x27;abc&#x27;, 1))</span><br><span class="line"># 正序</span><br><span class="line">def sortList(li):</span><br><span class="line">    li.sort()</span><br><span class="line">    return li</span><br><span class="line"># 倒序</span><br><span class="line">def reverseList(li):</span><br><span class="line">    # li.reverse()</span><br><span class="line">    temp = li[::-1]</span><br><span class="line">    print(temp)</span><br><span class="line">    return temp</span><br></pre></td></tr></table></figure>
-
-<h1 id="set的使用"><a href="#set的使用" class="headerlink" title="set的使用"></a>set的使用</h1><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 打印</span><br><span class="line">def testSet():</span><br><span class="line">    my_set = &#123;i * 15 for i in range(100)&#125;</span><br><span class="line">    print(my_set)</span><br><span class="line"># 交集</span><br><span class="line">def intersection():</span><br><span class="line">    x = set(&quot;span&quot;)</span><br><span class="line">    y = set(&quot;pta&quot;)</span><br><span class="line">    print(x&amp;y)</span><br><span class="line"># 合集</span><br><span class="line">def collection():</span><br><span class="line">    x = set(&quot;span&quot;)</span><br><span class="line">    y = set(&quot;pta&quot;)</span><br><span class="line">    print(x|y)</span><br><span class="line"># 差集</span><br><span class="line">def subtract():</span><br><span class="line">    x = set(&quot;span&quot;)</span><br><span class="line">    y = set(&quot;pta&quot;)</span><br><span class="line">    print(x-y)</span><br><span class="line"></span><br><span class="line">#去掉重复数据</span><br><span class="line">def removeRepeat():</span><br><span class="line">    a = [11,22,33,44,11,22]</span><br><span class="line">    b = set(a)</span><br><span class="line">    print(b)</span><br><span class="line">    c = [i for i in b]</span><br><span class="line">    print(c)</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">foo = &quot;t1m3a3pp4mt&quot;    </span><br><span class="line">print(&quot;&quot;.join(list(set(foo)))[::-1])   # 去掉重复字符串，倒序排列</span><br><span class="line">print(&quot;&quot;.join(list(set(foo)))[::1]) # 去掉重复自父亲，正序排列</span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>python</category>
-      </categories>
-  </entry>
-  <entry>
     <title>python django实践二</title>
     <url>/aposts/8d0d1e49/</url>
     <content><![CDATA[<h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><p>紧接<a href="/aposts/dbc9f282">python django实践</a></p>
@@ -10153,6 +10140,19 @@
       </tags>
   </entry>
   <entry>
+    <title>python-list排序,set的使用</title>
+    <url>/aposts/7bdbe3d6/</url>
+    <content><![CDATA[<h1 id="list排序，和打印"><a href="#list排序，和打印" class="headerlink" title="list排序，和打印"></a>list排序，和打印</h1><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">l = [2, 4, 3, 5]</span><br><span class="line">str = &quot;bcdea&quot;</span><br><span class="line">def badIterable():</span><br><span class="line">    i = 0</span><br><span class="line">    iterable = [&quot;a&quot;, &quot;b&quot;, &quot;c&quot;]</span><br><span class="line">    for item in iterable:</span><br><span class="line">        print(i, item)</span><br><span class="line">        i += 1</span><br><span class="line">def goodIterable():</span><br><span class="line">    iterable = [&quot;a&quot;, &quot;b&quot;, &quot;c&quot;]</span><br><span class="line">    for i, item in enumerate(iterable):</span><br><span class="line">        print(i, item)</span><br><span class="line"></span><br><span class="line">#结果：[(0, &#x27;a&#x27;), (1, &#x27;b&#x27;), (2, &#x27;c&#x27;)]</span><br><span class="line">def listIterable():</span><br><span class="line">    le = list(enumerate(&#x27;abc&#x27;))</span><br><span class="line">    return le</span><br><span class="line">#结果：[(1, &#x27;a&#x27;), (2, &#x27;b&#x27;), (3, &#x27;c&#x27;)]</span><br><span class="line">def listIterable1():</span><br><span class="line">    le = list(enumerate(&#x27;abc&#x27;, 1))</span><br><span class="line"># 正序</span><br><span class="line">def sortList(li):</span><br><span class="line">    li.sort()</span><br><span class="line">    return li</span><br><span class="line"># 倒序</span><br><span class="line">def reverseList(li):</span><br><span class="line">    # li.reverse()</span><br><span class="line">    temp = li[::-1]</span><br><span class="line">    print(temp)</span><br><span class="line">    return temp</span><br></pre></td></tr></table></figure>
+
+<h1 id="set的使用"><a href="#set的使用" class="headerlink" title="set的使用"></a>set的使用</h1><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 打印</span><br><span class="line">def testSet():</span><br><span class="line">    my_set = &#123;i * 15 for i in range(100)&#125;</span><br><span class="line">    print(my_set)</span><br><span class="line"># 交集</span><br><span class="line">def intersection():</span><br><span class="line">    x = set(&quot;span&quot;)</span><br><span class="line">    y = set(&quot;pta&quot;)</span><br><span class="line">    print(x&amp;y)</span><br><span class="line"># 合集</span><br><span class="line">def collection():</span><br><span class="line">    x = set(&quot;span&quot;)</span><br><span class="line">    y = set(&quot;pta&quot;)</span><br><span class="line">    print(x|y)</span><br><span class="line"># 差集</span><br><span class="line">def subtract():</span><br><span class="line">    x = set(&quot;span&quot;)</span><br><span class="line">    y = set(&quot;pta&quot;)</span><br><span class="line">    print(x-y)</span><br><span class="line"></span><br><span class="line">#去掉重复数据</span><br><span class="line">def removeRepeat():</span><br><span class="line">    a = [11,22,33,44,11,22]</span><br><span class="line">    b = set(a)</span><br><span class="line">    print(b)</span><br><span class="line">    c = [i for i in b]</span><br><span class="line">    print(c)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">foo = &quot;t1m3a3pp4mt&quot;    </span><br><span class="line">print(&quot;&quot;.join(list(set(foo)))[::-1])   # 去掉重复字符串，倒序排列</span><br><span class="line">print(&quot;&quot;.join(list(set(foo)))[::1]) # 去掉重复自父亲，正序排列</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>python</category>
+      </categories>
+  </entry>
+  <entry>
     <title>python-matplotlib多曲线</title>
     <url>/aposts/1adb1bf3/</url>
     <content><![CDATA[<ul>
@@ -10208,6 +10208,36 @@
         <tag>android性能测试</tag>
         <tag>monkey</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>python-schematics的使用</title>
+    <url>/aposts/b6a0a5a1/</url>
+    <content><![CDATA[<ul>
+<li>schematics代替model层的功能 </li>
+<li>schematics自动的字段有验证功能</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">from schematics.models import Model</span><br><span class="line">from schematics.types import StringType, URLType</span><br><span class="line">import json</span><br><span class="line">class Person(Model):</span><br><span class="line">     name = StringType(required=True) #不能为空</span><br><span class="line">     website = URLType()</span><br><span class="line">person = Person(&#123;&#x27;name&#x27;:&#x27;sss&#x27;,</span><br><span class="line">                &#x27;website&#x27;: &#x27;http://soundcloud.com/joestrummer&#x27;&#125;)</span><br><span class="line">person.name=u&quot;哈哈&quot;</span><br><span class="line">js = json.dumps(person.to_primitive())</span><br><span class="line">print(js)</span><br><span class="line">f = person.validate() ##验证字段是否正确，如果不正确会报错，如果正确返回的就是none</span><br><span class="line">print(f)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>列表嵌套字典<ul>
+<li>你也可以嵌套其他的model层</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">from schematics.models import Model</span><br><span class="line">from schematics.types import StringType, IntType</span><br><span class="line">from schematics.types.compound import ListType,MultiType</span><br><span class="line">class Person(Model):</span><br><span class="line">    mls = ListType(MultiType())</span><br><span class="line">    shi = StringType()</span><br><span class="line">    code = IntType()</span><br><span class="line">mls_test = Person(&#123;&#x27;mls&#x27;: [&#123;</span><br><span class="line">     &#x27;en_US&#x27;: &#x27;Hello, world!&#x27;,</span><br><span class="line">    &#x27;fr_FR&#x27;: &#x27;Bonjour tout le monde!&#x27;,</span><br><span class="line">    &#x27;es_MX&#x27;: &#x27;¡Hola, mundo!&#x27;,</span><br><span class="line">     &#125;],&#x27;shi&#x27;:&#x27;kun&#x27;,&#x27;code&#x27;:0&#125;)</span><br><span class="line">print(mls_test.mls[0][&quot;en_US&quot;])</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>字典</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">from schematics.models import Model</span><br><span class="line">from schematics.types import StringType, IntType,MultilingualStringType</span><br><span class="line">class Person(Model):</span><br><span class="line">    mls = MultilingualStringType()</span><br><span class="line">    shi = StringType()</span><br><span class="line">    code = IntType()</span><br><span class="line">mls_test = Person(&#123;&#x27;mls&#x27;: &#123;</span><br><span class="line">     &#x27;en_US&#x27;: &#x27;Hello, world!&#x27;,</span><br><span class="line">    &#x27;fr_FR&#x27;: &#x27;Bonjour tout le monde!&#x27;,</span><br><span class="line">    &#x27;es_MX&#x27;: &#x27;¡Hola, mundo!&#x27;,</span><br><span class="line">     &#125;,&#x27;shi&#x27;:&#x27;kun&#x27;,&#x27;code&#x27;:0&#125;)</span><br><span class="line">print(mls_test.mls[&quot;en_US&quot;])</span><br></pre></td></tr></table></figure>
+
+<h1 id="更多schematics高级的用法"><a href="#更多schematics高级的用法" class="headerlink" title="更多schematics高级的用法"></a><a href="http://schematics.readthedocs.io/en/latest/usage/exporting.html?highlight=MultilingualStringType">更多schematics高级的用法</a></h1><ul>
+<li>jsonschema 是验证json的正确性</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">from jsonschema import validate</span><br><span class="line"></span><br><span class="line">schema = &#123;</span><br><span class="line">    &quot;type&quot; : &quot;object&quot;,</span><br><span class="line">    &quot;properties&quot; : &#123;</span><br><span class="line">        &quot;price&quot; : &#123;&quot;type&quot; : &quot;number&quot;&#125;,</span><br><span class="line">        &quot;name&quot; : &#123;&quot;type&quot; : &quot;string&quot;&#125;,</span><br><span class="line">        &quot;list&quot;:&#123;&quot;maxItems&quot;:2&#125;,</span><br><span class="line">        &quot;address&quot;:&#123;&#x27;regex&#x27;:&#x27;bj&#x27;&#125;,</span><br><span class="line">    &#125;,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">validate(&#123;&quot;name&quot; : &quot;Eggs&quot;, &quot;price&quot; : &quot;dfda&quot;,&#x27;list&#x27;:[1,5],&#x27;address&#x27;:&#x27;bj-jiuxianqiao&#x27;&#125;, schema)</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>python</category>
+      </categories>
   </entry>
   <entry>
     <title>python-pytest全面解析</title>
@@ -10344,36 +10374,6 @@
       <tags>
         <tag>python</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>python-schematics的使用</title>
-    <url>/aposts/b6a0a5a1/</url>
-    <content><![CDATA[<ul>
-<li>schematics代替model层的功能 </li>
-<li>schematics自动的字段有验证功能</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">from schematics.models import Model</span><br><span class="line">from schematics.types import StringType, URLType</span><br><span class="line">import json</span><br><span class="line">class Person(Model):</span><br><span class="line">     name = StringType(required=True) #不能为空</span><br><span class="line">     website = URLType()</span><br><span class="line">person = Person(&#123;&#x27;name&#x27;:&#x27;sss&#x27;,</span><br><span class="line">                &#x27;website&#x27;: &#x27;http://soundcloud.com/joestrummer&#x27;&#125;)</span><br><span class="line">person.name=u&quot;哈哈&quot;</span><br><span class="line">js = json.dumps(person.to_primitive())</span><br><span class="line">print(js)</span><br><span class="line">f = person.validate() ##验证字段是否正确，如果不正确会报错，如果正确返回的就是none</span><br><span class="line">print(f)</span><br></pre></td></tr></table></figure>
-<ul>
-<li>列表嵌套字典<ul>
-<li>你也可以嵌套其他的model层</li>
-</ul>
-</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">from schematics.models import Model</span><br><span class="line">from schematics.types import StringType, IntType</span><br><span class="line">from schematics.types.compound import ListType,MultiType</span><br><span class="line">class Person(Model):</span><br><span class="line">    mls = ListType(MultiType())</span><br><span class="line">    shi = StringType()</span><br><span class="line">    code = IntType()</span><br><span class="line">mls_test = Person(&#123;&#x27;mls&#x27;: [&#123;</span><br><span class="line">     &#x27;en_US&#x27;: &#x27;Hello, world!&#x27;,</span><br><span class="line">    &#x27;fr_FR&#x27;: &#x27;Bonjour tout le monde!&#x27;,</span><br><span class="line">    &#x27;es_MX&#x27;: &#x27;¡Hola, mundo!&#x27;,</span><br><span class="line">     &#125;],&#x27;shi&#x27;:&#x27;kun&#x27;,&#x27;code&#x27;:0&#125;)</span><br><span class="line">print(mls_test.mls[0][&quot;en_US&quot;])</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>字典</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">from schematics.models import Model</span><br><span class="line">from schematics.types import StringType, IntType,MultilingualStringType</span><br><span class="line">class Person(Model):</span><br><span class="line">    mls = MultilingualStringType()</span><br><span class="line">    shi = StringType()</span><br><span class="line">    code = IntType()</span><br><span class="line">mls_test = Person(&#123;&#x27;mls&#x27;: &#123;</span><br><span class="line">     &#x27;en_US&#x27;: &#x27;Hello, world!&#x27;,</span><br><span class="line">    &#x27;fr_FR&#x27;: &#x27;Bonjour tout le monde!&#x27;,</span><br><span class="line">    &#x27;es_MX&#x27;: &#x27;¡Hola, mundo!&#x27;,</span><br><span class="line">     &#125;,&#x27;shi&#x27;:&#x27;kun&#x27;,&#x27;code&#x27;:0&#125;)</span><br><span class="line">print(mls_test.mls[&quot;en_US&quot;])</span><br></pre></td></tr></table></figure>
-
-<h1 id="更多schematics高级的用法"><a href="#更多schematics高级的用法" class="headerlink" title="更多schematics高级的用法"></a><a href="http://schematics.readthedocs.io/en/latest/usage/exporting.html?highlight=MultilingualStringType">更多schematics高级的用法</a></h1><ul>
-<li>jsonschema 是验证json的正确性</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">from jsonschema import validate</span><br><span class="line"></span><br><span class="line">schema = &#123;</span><br><span class="line">    &quot;type&quot; : &quot;object&quot;,</span><br><span class="line">    &quot;properties&quot; : &#123;</span><br><span class="line">        &quot;price&quot; : &#123;&quot;type&quot; : &quot;number&quot;&#125;,</span><br><span class="line">        &quot;name&quot; : &#123;&quot;type&quot; : &quot;string&quot;&#125;,</span><br><span class="line">        &quot;list&quot;:&#123;&quot;maxItems&quot;:2&#125;,</span><br><span class="line">        &quot;address&quot;:&#123;&#x27;regex&#x27;:&#x27;bj&#x27;&#125;,</span><br><span class="line">    &#125;,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">validate(&#123;&quot;name&quot; : &quot;Eggs&quot;, &quot;price&quot; : &quot;dfda&quot;,&#x27;list&#x27;:[1,5],&#x27;address&#x27;:&#x27;bj-jiuxianqiao&#x27;&#125;, schema)</span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>python</category>
-      </categories>
   </entry>
   <entry>
     <title>python+selenium grid配置与运行</title>
@@ -10688,19 +10688,6 @@
       </tags>
   </entry>
   <entry>
-    <title>python3封装mysql操作类</title>
-    <url>/aposts/7acca47a/</url>
-    <content><![CDATA[<p>类视图如下</p>
-<p><img src="/aposts/7acca47a/2231755-216e7506eb885f7d.png"></p>
-<p>本文来自：<a href="http://www.wmhfly.com/php/python3-mysql-class.html">http://www.wmhfly.com/php/python3-mysql-class.html</a></p>
-<p>我自己改造了一次，加入到自己的自动化接口测试框架里面：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">  FIND_BY_SQL = &quot;findBySql&quot; # 根据sql查找</span><br><span class="line">  COUNT_BY_SQL = &quot;countBySql&quot; # 自定义sql 统计影响行数</span><br><span class="line">  INSERT = &quot;insert&quot; # 插入</span><br><span class="line">  UPDATE_BY_ATTR = &quot;updateByAttr&quot; # 更新数据</span><br><span class="line">  DELETE_BY_ATTR = &quot;deleteByAttr&quot; # 删除数据</span><br><span class="line">  FIND_BY_ATTR = &quot;findByAttr&quot; # 根据条件查询一条记录</span><br><span class="line">  FIND_ALL_BY_ATTR = &quot;findAllByAttr&quot;  #根据条件查询多条记录</span><br><span class="line">  COUNT = &quot;count&quot; # 统计行</span><br><span class="line">  EXIST = &quot;exist&quot; # 是否存在该记录</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">import mysql.connector</span><br><span class="line">import mysql.connector.errors</span><br><span class="line">from common.customConst import Const</span><br><span class="line">class MySQLet:</span><br><span class="line">    &quot;&quot;&quot;Connection to a MySQL&quot;&quot;&quot;</span><br><span class="line">    # def __init__(self,user=&#x27;&#x27;,password=&#x27;&#x27;,database=&#x27;&#x27;,charset=None,port=3306):</span><br><span class="line">    def __init__(self,**kwargs):</span><br><span class="line">        try:</span><br><span class="line">            self._conn = mysql.connector.connect(host=kwargs[&quot;host&quot;], user=kwargs[&quot;user&quot;], password=kwargs[&quot;password&quot;],</span><br><span class="line">                                                 charset=kwargs[&quot;charset&quot;], database=kwargs[&quot;database&quot;], port=kwargs[&quot;port&quot;])</span><br><span class="line">            self.__cursor = None</span><br><span class="line">            print(&quot;连接数据库&quot;)</span><br><span class="line">            #set charset charset = (&#x27;latin1&#x27;,&#x27;latin1_general_ci&#x27;)</span><br><span class="line">        except mysql.connector.errors.ProgrammingError as err:</span><br><span class="line">            print(&#x27;mysql连接错误：&#x27; + err.msg)</span><br><span class="line"></span><br><span class="line">    # def findBySql(self, sql, params=&#123;&#125;, limit=0, join=&#x27;AND&#x27;):</span><br><span class="line">    def findBySql(self, **kwargs):</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        自定义sql语句查找</span><br><span class="line">        limit = 是否需要返回多少行</span><br><span class="line">        params = dict(field=value)</span><br><span class="line">        join = &#x27;AND | OR&#x27;</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        cursor = self.__getCursor()</span><br><span class="line">        # sql = self.__joinWhere(kwargs[&quot;sql&quot;], kwargs[&quot;params&quot;], kwargs[&quot;join&quot;])</span><br><span class="line">        if kwargs.get(&quot;join&quot;, 0) == 0: kwargs[&quot;join&quot;] = &quot;AND&quot;</span><br><span class="line">        sql = self.__joinWhere(**kwargs)</span><br><span class="line">        cursor.execute(sql, tuple(kwargs[&quot;params&quot;].values()))</span><br><span class="line">        rows = cursor.fetchmany(size=kwargs[&quot;limit&quot;]) if kwargs[&quot;limit&quot;] &gt; 0 else cursor.fetchall()</span><br><span class="line">        result = [dict(zip(cursor.column_names,row)) for row in rows] if rows else None</span><br><span class="line">        return len(result)</span><br><span class="line"></span><br><span class="line">    # def countBySql(self,sql,params = &#123;&#125;,join = &#x27;AND&#x27;):</span><br><span class="line">    def countBySql(self, **kwargs):</span><br><span class="line">        &quot;&quot;&quot;自定义sql 统计影响行数&quot;&quot;&quot;</span><br><span class="line">        if kwargs.get(&quot;join&quot;, 0) == 0: kwargs[&quot;join&quot;] = &quot;AND&quot;</span><br><span class="line">        cursor = self.__getCursor()</span><br><span class="line">        # sql = self.__joinWhere(kwargs[&quot;sql&quot;], kwargs[&quot;params&quot;], kwargs[&quot;join&quot;])</span><br><span class="line">        sql = self.__joinWhere(**kwargs)</span><br><span class="line">        cursor.execute(sql, tuple(kwargs[&quot;params&quot;].values()))</span><br><span class="line">        result = cursor.fetchall() # fetchone是一条记录， fetchall 所有记录</span><br><span class="line">        return len(result) if result else 0</span><br><span class="line"></span><br><span class="line">    # def insert(self,table,data):</span><br><span class="line">    def insert(self, **kwargs):</span><br><span class="line">        &quot;&quot;&quot;新增一条记录</span><br><span class="line">          table: 表名</span><br><span class="line">          data: dict 插入的数据</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        fields = &#x27;,&#x27;.join(&#x27;`&#x27;+k+&#x27;`&#x27; for k in kwargs[&quot;data&quot;].keys())</span><br><span class="line">        values = &#x27;,&#x27;.join((&quot;%s&quot;, ) * len(kwargs[&quot;data&quot;]))</span><br><span class="line">        sql = &#x27;INSERT INTO `%s` (%s) VALUES (%s)&#x27; % (kwargs[&quot;table&quot;], fields, values)</span><br><span class="line">        cursor = self.__getCursor()</span><br><span class="line">        cursor.execute(sql, tuple(kwargs[&quot;data&quot;].values()))</span><br><span class="line">        insert_id = cursor.lastrowid</span><br><span class="line">        self._conn.commit()</span><br><span class="line">        return insert_id</span><br><span class="line"></span><br><span class="line">    # def updateByAttr(self,table,data,params=&#123;&#125;,join=&#x27;AND&#x27;):</span><br><span class="line">    def updateByAttr(self, **kwargs):</span><br><span class="line">    #     &quot;&quot;&quot;更新数据&quot;&quot;&quot;</span><br><span class="line">        if kwargs.get(&quot;params&quot;, 0) == 0:</span><br><span class="line">            kwargs[&quot;params&quot;] = &#123;&#125;</span><br><span class="line">        if kwargs.get(&quot;join&quot;, 0) == 0:</span><br><span class="line">            kwargs[&quot;join&quot;] = &quot;AND&quot;</span><br><span class="line">        fields = &#x27;,&#x27;.join(&#x27;`&#x27; + k + &#x27;`=%s&#x27; for k in kwargs[&quot;data&quot;].keys())</span><br><span class="line">        values = list(kwargs[&quot;data&quot;].values())</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        values.extend(list(kwargs[&quot;params&quot;].values()))</span><br><span class="line">        sql = &quot;UPDATE `%s` SET %s &quot; % (kwargs[&quot;table&quot;], fields)</span><br><span class="line">        kwargs[&quot;sql&quot;] = sql</span><br><span class="line">        sql = self.__joinWhere(**kwargs)</span><br><span class="line">        cursor = self.__getCursor()</span><br><span class="line">        cursor.execute(sql, tuple(values))</span><br><span class="line">        self._conn.commit()</span><br><span class="line">        return cursor.rowcount</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    # def updateByPk(self,table,data,id,pk=&#x27;id&#x27;):</span><br><span class="line">    def updateByPk(self, **kwargs):</span><br><span class="line">        &quot;&quot;&quot;根据主键更新，默认是id为主键&quot;&quot;&quot;</span><br><span class="line">        return self.updateByAttr(**kwargs)</span><br><span class="line"></span><br><span class="line">    # def deleteByAttr(self,table,params=&#123;&#125;,join=&#x27;AND&#x27;):</span><br><span class="line">    def deleteByAttr(self, **kwargs):</span><br><span class="line">        &quot;&quot;&quot;删除数据&quot;&quot;&quot;</span><br><span class="line">        if kwargs.get(&quot;params&quot;, 0) == 0:</span><br><span class="line">            kwargs[&quot;params&quot;] = &#123;&#125;</span><br><span class="line">        if kwargs.get(&quot;join&quot;, 0) == 0:</span><br><span class="line">            kwargs[&quot;join&quot;] = &quot;AND&quot;</span><br><span class="line">        # fields = &#x27;,&#x27;.join(&#x27;`&#x27;+k+&#x27;`=%s&#x27; for k in kwargs[&quot;params&quot;].keys())</span><br><span class="line">        sql = &quot;DELETE FROM `%s` &quot; % kwargs[&quot;table&quot;]</span><br><span class="line">        kwargs[&quot;sql&quot;] = sql</span><br><span class="line">        # sql = self.__joinWhere(sql, kwargs[&quot;params&quot;], kwargs[&quot;join&quot;])</span><br><span class="line">        sql = self.__joinWhere(**kwargs)</span><br><span class="line">        cursor = self.__getCursor()</span><br><span class="line">        cursor.execute(sql, tuple(kwargs[&quot;params&quot;].values()))</span><br><span class="line">        self._conn.commit()</span><br><span class="line">        return cursor.rowcount</span><br><span class="line"></span><br><span class="line">    # def deleteByPk(self,table,id,pk=&#x27;id&#x27;):</span><br><span class="line">    def deleteByPk(self, **kwargs):</span><br><span class="line">        &quot;&quot;&quot;根据主键删除，默认是id为主键&quot;&quot;&quot;</span><br><span class="line">        return self.deleteByAttr(**kwargs)</span><br><span class="line"></span><br><span class="line">    # def findByAttr(self,table,criteria = &#123;&#125;):</span><br><span class="line">    def findByAttr(self, **kwargs):</span><br><span class="line">        &quot;&quot;&quot;根據條件查找一條記錄&quot;&quot;&quot;</span><br><span class="line">        return self.__query(**kwargs)</span><br><span class="line"></span><br><span class="line">    # def findByPk(self,table,id,pk=&#x27;id&#x27;):</span><br><span class="line">    def findByPk(self, **kwargs):</span><br><span class="line">        return self.findByAttr(**kwargs)</span><br><span class="line"></span><br><span class="line">    # def findAllByAttr(self,table,criteria=&#123;&#125;, whole=true):</span><br><span class="line">    def findAllByAttr(self, **kwargs):</span><br><span class="line">        &quot;&quot;&quot;根據條件查找記錄&quot;&quot;&quot;</span><br><span class="line">        return self.__query(**kwargs)</span><br><span class="line"></span><br><span class="line">    # def count(self,table,params=&#123;&#125;,join=&#x27;AND&#x27;):</span><br><span class="line">    def count(self, **kwargs):</span><br><span class="line">        &quot;&quot;&quot;根据条件统计行数&quot;&quot;&quot;</span><br><span class="line">        if kwargs.get(&quot;join&quot;, 0) == 0: kwargs[&quot;join&quot;] = &quot;AND&quot;</span><br><span class="line">        sql = &#x27;SELECT COUNT(*) FROM `%s`&#x27; % kwargs[&quot;table&quot;]</span><br><span class="line">        # sql = self.__joinWhere(sql, kwargs[&quot;params&quot;], kwargs[&quot;join&quot;])</span><br><span class="line">        kwargs[&quot;sql&quot;] = sql</span><br><span class="line">        sql = self.__joinWhere(**kwargs)</span><br><span class="line">        cursor = self.__getCursor()</span><br><span class="line">        cursor.execute(sql, tuple(kwargs[&quot;params&quot;].values()))</span><br><span class="line">        result = cursor.fetchone()</span><br><span class="line">        return result[0] if result else 0</span><br><span class="line"></span><br><span class="line">    # def exist(self,table,params=&#123;&#125;,join=&#x27;AND&#x27;):</span><br><span class="line">    def exist(self, **kwargs):</span><br><span class="line">        &quot;&quot;&quot;判断是否存在&quot;&quot;&quot;</span><br><span class="line">        return self.count(**kwargs) &gt; 0</span><br><span class="line"></span><br><span class="line">    def close(self):</span><br><span class="line">        &quot;&quot;&quot;关闭游标和数据库连接&quot;&quot;&quot;</span><br><span class="line">        if self.__cursor is not None:</span><br><span class="line">            self.__cursor.close()</span><br><span class="line">        self._conn.close()</span><br><span class="line"></span><br><span class="line">    def __getCursor(self):</span><br><span class="line">        &quot;&quot;&quot;获取游标&quot;&quot;&quot;</span><br><span class="line">        if self.__cursor is None:</span><br><span class="line">            self.__cursor = self._conn.cursor()</span><br><span class="line">        return self.__cursor</span><br><span class="line"></span><br><span class="line">    # def __joinWhere(self,sql,params,join):</span><br><span class="line">    def __joinWhere(self, **kwargs):</span><br><span class="line">        &quot;&quot;&quot;转换params为where连接语句&quot;&quot;&quot;</span><br><span class="line">        if kwargs[&quot;params&quot;]:</span><br><span class="line">            keys,_keys = self.__tParams(**kwargs)</span><br><span class="line">            where = &#x27; AND &#x27;.join(k+&#x27;=&#x27;+_k for k,_k in zip(keys,_keys)) if kwargs[&quot;join&quot;] == &#x27;AND&#x27; else &#x27; OR &#x27;.join(k+&#x27;=&#x27;+_k for k,_k in zip(keys,_keys))</span><br><span class="line">            kwargs[&quot;sql&quot;]+=&#x27; WHERE &#x27; + where</span><br><span class="line">        return kwargs[&quot;sql&quot;]</span><br><span class="line"></span><br><span class="line">    # def __tParams(self,params):</span><br><span class="line">    def __tParams(self, **kwargs):</span><br><span class="line">        keys = [&#x27;`&#x27;+k+&#x27;`&#x27; for k in kwargs[&quot;params&quot;].keys()]</span><br><span class="line">        _keys = [&#x27;%s&#x27; for k in kwargs[&quot;params&quot;].keys()]</span><br><span class="line">        return keys,_keys</span><br><span class="line"></span><br><span class="line">    # def __query(self,table,criteria,whole=False):</span><br><span class="line">    def __query(self, **kwargs):</span><br><span class="line">        if kwargs.get(&quot;whole&quot;, False) == False or kwargs[&quot;whole&quot;] is not True:</span><br><span class="line">            kwargs[&quot;whole&quot;] = False</span><br><span class="line">            kwargs[&quot;criteria&quot;][&#x27;limit&#x27;] = 1</span><br><span class="line">        # sql = self.__contact_sql(kwargs[&quot;table&quot;], kwargs[&quot;criteria&quot;])</span><br><span class="line">        sql = self.__contact_sql(**kwargs)</span><br><span class="line">        cursor = self.__getCursor()</span><br><span class="line">        cursor.execute(sql)</span><br><span class="line">        rows = cursor.fetchall() if kwargs[&quot;whole&quot;] else cursor.fetchone()</span><br><span class="line">        result = [dict(zip(cursor.column_names, row)) for row in rows] if kwargs[&quot;whole&quot;] else dict(zip(cursor.column_names, rows)) if rows else None</span><br><span class="line">        return result</span><br><span class="line"></span><br><span class="line">    # def __contact_sql(self,table,criteria):</span><br><span class="line">    def __contact_sql(self, **kwargs):</span><br><span class="line">        sql = &#x27;SELECT &#x27;</span><br><span class="line">        if kwargs[&quot;criteria&quot;] and type(kwargs[&quot;criteria&quot;]) is dict:</span><br><span class="line">            #select fields</span><br><span class="line">            if &#x27;select&#x27; in kwargs[&quot;criteria&quot;]:</span><br><span class="line">                fields = kwargs[&quot;criteria&quot;][&#x27;select&#x27;].split(&#x27;,&#x27;)</span><br><span class="line">                sql+= &#x27;,&#x27;.join(&#x27;`&#x27;+field+&#x27;`&#x27; for field in fields)</span><br><span class="line">            else:</span><br><span class="line">                sql+=&#x27; * &#x27;</span><br><span class="line">            #table</span><br><span class="line">            sql+=&#x27; FROM `%s`&#x27;% kwargs[&quot;table&quot;]</span><br><span class="line">            #where</span><br><span class="line">            if &#x27;where&#x27; in kwargs[&quot;criteria&quot;]:</span><br><span class="line">                sql+=&#x27; WHERE &#x27;+ kwargs[&quot;criteria&quot;][&#x27;where&#x27;]</span><br><span class="line">            #group by</span><br><span class="line">            if &#x27;group&#x27; in kwargs[&quot;criteria&quot;]:</span><br><span class="line">                sql+=&#x27; GROUP BY &#x27;+ kwargs[&quot;criteria&quot;][&#x27;group&#x27;]</span><br><span class="line">            #having</span><br><span class="line">            if &#x27;having&#x27; in kwargs[&quot;criteria&quot;]:</span><br><span class="line">                sql+=&#x27; HAVING &#x27;+ kwargs[&quot;criteria&quot;][&#x27;having&#x27;]</span><br><span class="line">            #order by</span><br><span class="line">            if &#x27;order&#x27; in kwargs[&quot;criteria&quot;]:</span><br><span class="line">                sql+=&#x27; ORDER BY &#x27;+ kwargs[&quot;criteria&quot;][&#x27;order&#x27;]</span><br><span class="line">            #limit</span><br><span class="line">            if &#x27;limit&#x27; in kwargs[&quot;criteria&quot;]:</span><br><span class="line">                sql+=&#x27; LIMIT &#x27;+ str(kwargs[&quot;criteria&quot;][&#x27;limit&#x27;])</span><br><span class="line">            #offset</span><br><span class="line">            if &#x27;offset&#x27; in kwargs[&quot;criteria&quot;]:</span><br><span class="line">                sql+=&#x27; OFFSET &#x27;+ str(kwargs[&quot;criteria&quot;][&#x27;offset&#x27;])</span><br><span class="line">        else:</span><br><span class="line">            sql+=&#x27; * FROM `%s`&#x27;% kwargs[&quot;table&quot;]</span><br><span class="line">        return sql</span><br><span class="line">    def findKeySql(self, key ,**kwargs):</span><br><span class="line">        sqlOperate = &#123;</span><br><span class="line">        Const.COUNT: lambda: self.count(**kwargs),</span><br><span class="line">        Const.COUNT_BY_SQL: lambda: self.countBySql(**kwargs),</span><br><span class="line">        Const.DELETE_BY_ATTR: lambda: self.deleteByAttr(**kwargs),</span><br><span class="line">        Const.EXIST: lambda: self.exist(**kwargs),</span><br><span class="line">        Const.FIND_ALL_BY_ATTR: lambda: self.findAllByAttr(**kwargs),</span><br><span class="line">        Const.INSERT: lambda: self.insert(**kwargs),</span><br><span class="line">        Const.FIND_BY_ATTR: lambda: self.findByAttr(**kwargs),</span><br><span class="line">        Const.UPDATE_BY_ATTR: lambda: self.updateByAttr(**kwargs),</span><br><span class="line">        Const.FIND_BY_SQL: lambda: self.findBySql(**kwargs)</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">        return sqlOperate[key]()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">if __name__ == &quot;__main__&quot;:</span><br><span class="line">    mysqlet = MySQLet(host=&quot;127.0.0.1&quot;, user=&quot;root&quot;, password=&quot;&quot;, charset=&quot;utf8&quot;, database=&quot;userinfo&quot;, port=3306)</span><br><span class="line">    # 根据字段统计count, join&gt;&gt;AND,OR,可以不传，默认为AND</span><br><span class="line">    print(mysqlet.findKeySql(Const.COUNT, table=&quot;info&quot;, params=&#123;&quot;id&quot;: &quot;11&quot;, &quot;name&quot;: &quot;666&quot;&#125;, join=&quot;OR&quot;))</span><br><span class="line">    # 自定义sql语句统计count</span><br><span class="line">    print(mysqlet.findKeySql(Const.COUNT_BY_SQL, sql=&quot;select * from info&quot;, params=&#123;&quot;name&quot;: &quot;666&quot;&#125;, join=&quot;AND&quot;))</span><br><span class="line">    #插入数据</span><br><span class="line">    print(mysqlet.findKeySql(Const.INSERT, table=&quot;info&quot;, data=&#123;&quot;name&quot;:&quot;333&quot;, &quot;pwd&quot;: &quot;111&quot;&#125;))</span><br><span class="line">    #根据字段删除,不传params参数，就是删除全部</span><br><span class="line">    print(mysqlet.findKeySql(Const.DELETE_BY_ATTR, table=&quot;info&quot;, params=&#123;&quot;id&quot;: 20&#125;))</span><br><span class="line">    # 查找是否存在该记录,不传params参数，就是查找全部.join同上</span><br><span class="line">    print(mysqlet.findKeySql(Const.EXIST, table=&quot;info&quot;, params=&#123;&quot;id&quot;: 180&#125;,join=&#x27;AND&#x27;))</span><br><span class="line">    #根据字段查找多条记录，whole不传就查一条记录，criteria里面可以传where,group by,having,order by,limt,offset</span><br><span class="line">    print(mysqlet.findKeySql(Const.FIND_ALL_BY_ATTR, table=&quot;info&quot;, criteria= &#123;&quot;where&quot;: &quot;name=333&quot;&#125;, whole=True))</span><br><span class="line">    # 根据字段查一条记录，和上面的查多条记录参数基本一样，少了个whole参数</span><br><span class="line">    print(mysqlet.findKeySql(Const.FIND_BY_ATTR, table=&quot;info&quot;, criteria= &#123;&quot;where&quot;: &quot;name=333&quot;&#125;))</span><br><span class="line">    # 根据字段更新数据库中的记录，join可以传AND,OR,不传默认取AND</span><br><span class="line">    print(mysqlet.findKeySql(Const.UPDATE_BY_ATTR, table=&quot;info&quot;,data=&#123;&quot;name&quot;: &quot;-09&quot;&#125;, params=&#123;&quot;id&quot;: 18, &quot;name&quot;: &quot;333&quot;&#125;, join=&#x27;AND&#x27;))</span><br><span class="line">    # 根据自定义sql语句查询记录，limit:0表示所有记录，join：AND|OR.不传取AND</span><br><span class="line">    print(mysqlet.findKeySql(Const.FIND_BY_SQL, sql=&quot;select * from info&quot;, params=&#123;&quot;name&quot;: &quot;333&quot;, &quot;id&quot;: 18&#125;, limit=0))</span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>python</category>
-      </categories>
-  </entry>
-  <entry>
     <title>python上传视频</title>
     <url>/aposts/b031d180/</url>
     <content><![CDATA[<ul>
@@ -10747,60 +10734,6 @@
       <tags>
         <tag>python</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>python中常用的mock介绍</title>
-    <url>/aposts/43e69bf0/</url>
-    <content><![CDATA[ <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">class Count():</span><br><span class="line">    def add(self):</span><br><span class="line">        pass</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>用mock测试</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">from unittest import mock</span><br><span class="line">import unittest</span><br><span class="line">from modular import Count</span><br><span class="line">class TestCount(unittest.TestCase):</span><br><span class="line"></span><br><span class="line">    def test_add(self):</span><br><span class="line">        count = Count()</span><br><span class="line">        count.add = mock.Mock(return_value=13)</span><br><span class="line">        result = count.add(8,5)</span><br><span class="line">        self.assertEqual(result,13)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    if __name__ == &#x27;__main__&#x27;:</span><br><span class="line">        unittest.main() </span><br></pre></td></tr></table></figure>
-
-
-<h1 id="HTTPretty"><a href="#HTTPretty" class="headerlink" title="HTTPretty"></a>HTTPretty</h1><p>Python 的 HTTP 请求 mock 工具,不支持py3</p>
-<ul>
-<li>安装</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">pip install HTTPretty</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>使用</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">import requests</span><br><span class="line">import httpretty</span><br><span class="line"></span><br><span class="line">def test_one():</span><br><span class="line">    httpretty.enable()  # enable HTTPretty so that it will monkey patch the socket module</span><br><span class="line">    httpretty.register_uri(httpretty.GET, &quot;http://yipit.com/&quot;,</span><br><span class="line">                           body=&quot;Find the best daily deals&quot;)</span><br><span class="line"></span><br><span class="line">    response = requests.get(&#x27;http://yipit.com&#x27;)</span><br><span class="line"></span><br><span class="line">    assert response.text == &quot;Find the best daily deals&quot;</span><br><span class="line"></span><br><span class="line">    httpretty.disable()  # disable afterwards, so that you will have no problems in code that uses that socket module</span><br><span class="line">    httpretty.reset()    # reset H</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>post</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">import requests</span><br><span class="line">from sure import expect</span><br><span class="line">import httpretty</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">@httpretty.activate</span><br><span class="line">def test_yipit_api_integration():</span><br><span class="line">    httpretty.register_uri(httpretty.POST, &quot;http://api.yipit.com/foo/&quot;,</span><br><span class="line">                           body=&#x27;&#123;&quot;repositories&quot;: [&quot;HTTPretty&quot;, &quot;lettuce&quot;]&#125;&#x27;)</span><br><span class="line"></span><br><span class="line">    response = requests.post(&#x27;http://api.yipit.com/foo&#x27;,</span><br><span class="line">                            &#x27;&#123;&quot;username&quot;: &quot;gabrielfalcao&quot;&#125;&#x27;,</span><br><span class="line">                            headers=&#123;</span><br><span class="line">                                &#x27;content-type&#x27;: &#x27;text/json&#x27;,</span><br><span class="line">                            &#125;)</span><br><span class="line"></span><br><span class="line">    expect(response.text).to.equal(&#x27;&#123;&quot;repositories&quot;: [&quot;HTTPretty&quot;, &quot;lettuce&quot;]&#125;&#x27;)</span><br><span class="line">    expect(httpretty.last_request().method).to.equal(&quot;POST&quot;)</span><br><span class="line">    expect(httpretty.last_request().headers[&#x27;content-type&#x27;]).to.equal(&#x27;text/json&#x27;)</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>也可以使用正则<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">@httpretty.activate</span><br><span class="line">def test_httpretty_should_allow_registering_regexes():</span><br><span class="line">    u&quot;HTTPretty should allow registering regexes&quot;</span><br><span class="line"></span><br><span class="line">    httpretty.register_uri(</span><br><span class="line">        httpretty.GET,</span><br><span class="line">        re.compile(&quot;api.yipit.com/v2/deal;brand=(\w+)&quot;),</span><br><span class="line">        body=&quot;Found brand&quot;,</span><br><span class="line">    )</span><br><span class="line"></span><br><span class="line">    response = requests.get(&#x27;https://api.yipit.com/v2/deal;brand=GAP&#x27;)</span><br><span class="line">    expect(response.text).to.equal(&#x27;Found brand&#x27;)</span><br><span class="line">    expect(httpretty.last_request().method).to.equal(&#x27;GET&#x27;)</span><br><span class="line">    expect(httpretty.last_request().path).to.equal(&#x27;/v1/deal;brand=GAP&#x27;)</span><br></pre></td></tr></table></figure></li>
-</ul>
-<p><a href="https://github.com/gabrielfalcao/HTTPretty">查看HTTPretty源码</a></p>
-<h1 id="httmock"><a href="#httmock" class="headerlink" title="httmock"></a>httmock</h1><p>针对 Python 2.6+ 和 3.2+ 生成 伪造请求的库。</p>
-<ul>
-<li><p>安装</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">pip install httmock</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>使用</p>
-</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">from httmock import urlmatch, HTTMock</span><br><span class="line">import requests</span><br><span class="line"></span><br><span class="line">@urlmatch(netloc=r&#x27;(.*\.)?google\.com$&#x27;)</span><br><span class="line">def google_mock(url, request):</span><br><span class="line">    return &#x27;Feeling lucky, punk?&#x27;</span><br><span class="line"></span><br><span class="line">with HTTMock(google_mock):</span><br><span class="line">    r = requests.get(&#x27;http://google.com/&#x27;)</span><br><span class="line">print r.content  # &#x27;Feeling lucky, punk?&#x27;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">from httmock import all_requests, HTTMock</span><br><span class="line">import requests</span><br><span class="line"></span><br><span class="line">@all_requests</span><br><span class="line">def response_content(url, request):</span><br><span class="line">    return &#123;&#x27;status_code&#x27;: 200,</span><br><span class="line">            &#x27;content&#x27;: &#x27;Oh hai&#x27;&#125;</span><br><span class="line"></span><br><span class="line">with HTTMock(response_content):</span><br><span class="line">    r = requests.get(&#x27;https://foo_bar&#x27;)</span><br><span class="line"></span><br><span class="line">print r.status_code</span><br><span class="line">print r.content</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>cookie</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">from httmock import all_requests, response, HTTMock</span><br><span class="line">import requests</span><br><span class="line"></span><br><span class="line">@all_requests</span><br><span class="line">def response_content(url, request):</span><br><span class="line">    headers = &#123;&#x27;content-type&#x27;: &#x27;application/json&#x27;,</span><br><span class="line">               &#x27;Set-Cookie&#x27;: &#x27;foo=bar;&#x27;&#125;</span><br><span class="line">    content = &#123;&#x27;message&#x27;: &#x27;API rate limit exceeded&#x27;&#125;</span><br><span class="line">    return response(403, content, headers, None, 5, request)</span><br><span class="line"></span><br><span class="line">with HTTMock(response_content):</span><br><span class="line">    r = requests.get(&#x27;https://api.github.com/users/whatever&#x27;)</span><br><span class="line"></span><br><span class="line">print r.json().get(&#x27;message&#x27;)</span><br><span class="line">print r.cookies[&#x27;foo&#x27;]</span><br></pre></td></tr></table></figure>
-
-<p><a href="https://github.com/patrys/httmock">查看httmock源码</a></p>
-]]></content>
-      <categories>
-        <category>python</category>
-      </categories>
   </entry>
   <entry>
     <title>python中的map、filter、reduce函数</title>
@@ -10867,6 +10800,73 @@
       </categories>
   </entry>
   <entry>
+    <title>python中常用的mock介绍</title>
+    <url>/aposts/43e69bf0/</url>
+    <content><![CDATA[ <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">class Count():</span><br><span class="line">    def add(self):</span><br><span class="line">        pass</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>用mock测试</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">from unittest import mock</span><br><span class="line">import unittest</span><br><span class="line">from modular import Count</span><br><span class="line">class TestCount(unittest.TestCase):</span><br><span class="line"></span><br><span class="line">    def test_add(self):</span><br><span class="line">        count = Count()</span><br><span class="line">        count.add = mock.Mock(return_value=13)</span><br><span class="line">        result = count.add(8,5)</span><br><span class="line">        self.assertEqual(result,13)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    if __name__ == &#x27;__main__&#x27;:</span><br><span class="line">        unittest.main() </span><br></pre></td></tr></table></figure>
+
+
+<h1 id="HTTPretty"><a href="#HTTPretty" class="headerlink" title="HTTPretty"></a>HTTPretty</h1><p>Python 的 HTTP 请求 mock 工具,不支持py3</p>
+<ul>
+<li>安装</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">pip install HTTPretty</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>使用</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">import requests</span><br><span class="line">import httpretty</span><br><span class="line"></span><br><span class="line">def test_one():</span><br><span class="line">    httpretty.enable()  # enable HTTPretty so that it will monkey patch the socket module</span><br><span class="line">    httpretty.register_uri(httpretty.GET, &quot;http://yipit.com/&quot;,</span><br><span class="line">                           body=&quot;Find the best daily deals&quot;)</span><br><span class="line"></span><br><span class="line">    response = requests.get(&#x27;http://yipit.com&#x27;)</span><br><span class="line"></span><br><span class="line">    assert response.text == &quot;Find the best daily deals&quot;</span><br><span class="line"></span><br><span class="line">    httpretty.disable()  # disable afterwards, so that you will have no problems in code that uses that socket module</span><br><span class="line">    httpretty.reset()    # reset H</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>post</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">import requests</span><br><span class="line">from sure import expect</span><br><span class="line">import httpretty</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">@httpretty.activate</span><br><span class="line">def test_yipit_api_integration():</span><br><span class="line">    httpretty.register_uri(httpretty.POST, &quot;http://api.yipit.com/foo/&quot;,</span><br><span class="line">                           body=&#x27;&#123;&quot;repositories&quot;: [&quot;HTTPretty&quot;, &quot;lettuce&quot;]&#125;&#x27;)</span><br><span class="line"></span><br><span class="line">    response = requests.post(&#x27;http://api.yipit.com/foo&#x27;,</span><br><span class="line">                            &#x27;&#123;&quot;username&quot;: &quot;gabrielfalcao&quot;&#125;&#x27;,</span><br><span class="line">                            headers=&#123;</span><br><span class="line">                                &#x27;content-type&#x27;: &#x27;text/json&#x27;,</span><br><span class="line">                            &#125;)</span><br><span class="line"></span><br><span class="line">    expect(response.text).to.equal(&#x27;&#123;&quot;repositories&quot;: [&quot;HTTPretty&quot;, &quot;lettuce&quot;]&#125;&#x27;)</span><br><span class="line">    expect(httpretty.last_request().method).to.equal(&quot;POST&quot;)</span><br><span class="line">    expect(httpretty.last_request().headers[&#x27;content-type&#x27;]).to.equal(&#x27;text/json&#x27;)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>也可以使用正则<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">@httpretty.activate</span><br><span class="line">def test_httpretty_should_allow_registering_regexes():</span><br><span class="line">    u&quot;HTTPretty should allow registering regexes&quot;</span><br><span class="line"></span><br><span class="line">    httpretty.register_uri(</span><br><span class="line">        httpretty.GET,</span><br><span class="line">        re.compile(&quot;api.yipit.com/v2/deal;brand=(\w+)&quot;),</span><br><span class="line">        body=&quot;Found brand&quot;,</span><br><span class="line">    )</span><br><span class="line"></span><br><span class="line">    response = requests.get(&#x27;https://api.yipit.com/v2/deal;brand=GAP&#x27;)</span><br><span class="line">    expect(response.text).to.equal(&#x27;Found brand&#x27;)</span><br><span class="line">    expect(httpretty.last_request().method).to.equal(&#x27;GET&#x27;)</span><br><span class="line">    expect(httpretty.last_request().path).to.equal(&#x27;/v1/deal;brand=GAP&#x27;)</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p><a href="https://github.com/gabrielfalcao/HTTPretty">查看HTTPretty源码</a></p>
+<h1 id="httmock"><a href="#httmock" class="headerlink" title="httmock"></a>httmock</h1><p>针对 Python 2.6+ 和 3.2+ 生成 伪造请求的库。</p>
+<ul>
+<li><p>安装</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">pip install httmock</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>使用</p>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">from httmock import urlmatch, HTTMock</span><br><span class="line">import requests</span><br><span class="line"></span><br><span class="line">@urlmatch(netloc=r&#x27;(.*\.)?google\.com$&#x27;)</span><br><span class="line">def google_mock(url, request):</span><br><span class="line">    return &#x27;Feeling lucky, punk?&#x27;</span><br><span class="line"></span><br><span class="line">with HTTMock(google_mock):</span><br><span class="line">    r = requests.get(&#x27;http://google.com/&#x27;)</span><br><span class="line">print r.content  # &#x27;Feeling lucky, punk?&#x27;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">from httmock import all_requests, HTTMock</span><br><span class="line">import requests</span><br><span class="line"></span><br><span class="line">@all_requests</span><br><span class="line">def response_content(url, request):</span><br><span class="line">    return &#123;&#x27;status_code&#x27;: 200,</span><br><span class="line">            &#x27;content&#x27;: &#x27;Oh hai&#x27;&#125;</span><br><span class="line"></span><br><span class="line">with HTTMock(response_content):</span><br><span class="line">    r = requests.get(&#x27;https://foo_bar&#x27;)</span><br><span class="line"></span><br><span class="line">print r.status_code</span><br><span class="line">print r.content</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>cookie</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">from httmock import all_requests, response, HTTMock</span><br><span class="line">import requests</span><br><span class="line"></span><br><span class="line">@all_requests</span><br><span class="line">def response_content(url, request):</span><br><span class="line">    headers = &#123;&#x27;content-type&#x27;: &#x27;application/json&#x27;,</span><br><span class="line">               &#x27;Set-Cookie&#x27;: &#x27;foo=bar;&#x27;&#125;</span><br><span class="line">    content = &#123;&#x27;message&#x27;: &#x27;API rate limit exceeded&#x27;&#125;</span><br><span class="line">    return response(403, content, headers, None, 5, request)</span><br><span class="line"></span><br><span class="line">with HTTMock(response_content):</span><br><span class="line">    r = requests.get(&#x27;https://api.github.com/users/whatever&#x27;)</span><br><span class="line"></span><br><span class="line">print r.json().get(&#x27;message&#x27;)</span><br><span class="line">print r.cookies[&#x27;foo&#x27;]</span><br></pre></td></tr></table></figure>
+
+<p><a href="https://github.com/patrys/httmock">查看httmock源码</a></p>
+]]></content>
+      <categories>
+        <category>python</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>python3封装mysql操作类</title>
+    <url>/aposts/7acca47a/</url>
+    <content><![CDATA[<p>类视图如下</p>
+<p><img src="/aposts/7acca47a/2231755-216e7506eb885f7d.png"></p>
+<p>本文来自：<a href="http://www.wmhfly.com/php/python3-mysql-class.html">http://www.wmhfly.com/php/python3-mysql-class.html</a></p>
+<p>我自己改造了一次，加入到自己的自动化接口测试框架里面：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">  FIND_BY_SQL = &quot;findBySql&quot; # 根据sql查找</span><br><span class="line">  COUNT_BY_SQL = &quot;countBySql&quot; # 自定义sql 统计影响行数</span><br><span class="line">  INSERT = &quot;insert&quot; # 插入</span><br><span class="line">  UPDATE_BY_ATTR = &quot;updateByAttr&quot; # 更新数据</span><br><span class="line">  DELETE_BY_ATTR = &quot;deleteByAttr&quot; # 删除数据</span><br><span class="line">  FIND_BY_ATTR = &quot;findByAttr&quot; # 根据条件查询一条记录</span><br><span class="line">  FIND_ALL_BY_ATTR = &quot;findAllByAttr&quot;  #根据条件查询多条记录</span><br><span class="line">  COUNT = &quot;count&quot; # 统计行</span><br><span class="line">  EXIST = &quot;exist&quot; # 是否存在该记录</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">import mysql.connector</span><br><span class="line">import mysql.connector.errors</span><br><span class="line">from common.customConst import Const</span><br><span class="line">class MySQLet:</span><br><span class="line">    &quot;&quot;&quot;Connection to a MySQL&quot;&quot;&quot;</span><br><span class="line">    # def __init__(self,user=&#x27;&#x27;,password=&#x27;&#x27;,database=&#x27;&#x27;,charset=None,port=3306):</span><br><span class="line">    def __init__(self,**kwargs):</span><br><span class="line">        try:</span><br><span class="line">            self._conn = mysql.connector.connect(host=kwargs[&quot;host&quot;], user=kwargs[&quot;user&quot;], password=kwargs[&quot;password&quot;],</span><br><span class="line">                                                 charset=kwargs[&quot;charset&quot;], database=kwargs[&quot;database&quot;], port=kwargs[&quot;port&quot;])</span><br><span class="line">            self.__cursor = None</span><br><span class="line">            print(&quot;连接数据库&quot;)</span><br><span class="line">            #set charset charset = (&#x27;latin1&#x27;,&#x27;latin1_general_ci&#x27;)</span><br><span class="line">        except mysql.connector.errors.ProgrammingError as err:</span><br><span class="line">            print(&#x27;mysql连接错误：&#x27; + err.msg)</span><br><span class="line"></span><br><span class="line">    # def findBySql(self, sql, params=&#123;&#125;, limit=0, join=&#x27;AND&#x27;):</span><br><span class="line">    def findBySql(self, **kwargs):</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        自定义sql语句查找</span><br><span class="line">        limit = 是否需要返回多少行</span><br><span class="line">        params = dict(field=value)</span><br><span class="line">        join = &#x27;AND | OR&#x27;</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        cursor = self.__getCursor()</span><br><span class="line">        # sql = self.__joinWhere(kwargs[&quot;sql&quot;], kwargs[&quot;params&quot;], kwargs[&quot;join&quot;])</span><br><span class="line">        if kwargs.get(&quot;join&quot;, 0) == 0: kwargs[&quot;join&quot;] = &quot;AND&quot;</span><br><span class="line">        sql = self.__joinWhere(**kwargs)</span><br><span class="line">        cursor.execute(sql, tuple(kwargs[&quot;params&quot;].values()))</span><br><span class="line">        rows = cursor.fetchmany(size=kwargs[&quot;limit&quot;]) if kwargs[&quot;limit&quot;] &gt; 0 else cursor.fetchall()</span><br><span class="line">        result = [dict(zip(cursor.column_names,row)) for row in rows] if rows else None</span><br><span class="line">        return len(result)</span><br><span class="line"></span><br><span class="line">    # def countBySql(self,sql,params = &#123;&#125;,join = &#x27;AND&#x27;):</span><br><span class="line">    def countBySql(self, **kwargs):</span><br><span class="line">        &quot;&quot;&quot;自定义sql 统计影响行数&quot;&quot;&quot;</span><br><span class="line">        if kwargs.get(&quot;join&quot;, 0) == 0: kwargs[&quot;join&quot;] = &quot;AND&quot;</span><br><span class="line">        cursor = self.__getCursor()</span><br><span class="line">        # sql = self.__joinWhere(kwargs[&quot;sql&quot;], kwargs[&quot;params&quot;], kwargs[&quot;join&quot;])</span><br><span class="line">        sql = self.__joinWhere(**kwargs)</span><br><span class="line">        cursor.execute(sql, tuple(kwargs[&quot;params&quot;].values()))</span><br><span class="line">        result = cursor.fetchall() # fetchone是一条记录， fetchall 所有记录</span><br><span class="line">        return len(result) if result else 0</span><br><span class="line"></span><br><span class="line">    # def insert(self,table,data):</span><br><span class="line">    def insert(self, **kwargs):</span><br><span class="line">        &quot;&quot;&quot;新增一条记录</span><br><span class="line">          table: 表名</span><br><span class="line">          data: dict 插入的数据</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        fields = &#x27;,&#x27;.join(&#x27;`&#x27;+k+&#x27;`&#x27; for k in kwargs[&quot;data&quot;].keys())</span><br><span class="line">        values = &#x27;,&#x27;.join((&quot;%s&quot;, ) * len(kwargs[&quot;data&quot;]))</span><br><span class="line">        sql = &#x27;INSERT INTO `%s` (%s) VALUES (%s)&#x27; % (kwargs[&quot;table&quot;], fields, values)</span><br><span class="line">        cursor = self.__getCursor()</span><br><span class="line">        cursor.execute(sql, tuple(kwargs[&quot;data&quot;].values()))</span><br><span class="line">        insert_id = cursor.lastrowid</span><br><span class="line">        self._conn.commit()</span><br><span class="line">        return insert_id</span><br><span class="line"></span><br><span class="line">    # def updateByAttr(self,table,data,params=&#123;&#125;,join=&#x27;AND&#x27;):</span><br><span class="line">    def updateByAttr(self, **kwargs):</span><br><span class="line">    #     &quot;&quot;&quot;更新数据&quot;&quot;&quot;</span><br><span class="line">        if kwargs.get(&quot;params&quot;, 0) == 0:</span><br><span class="line">            kwargs[&quot;params&quot;] = &#123;&#125;</span><br><span class="line">        if kwargs.get(&quot;join&quot;, 0) == 0:</span><br><span class="line">            kwargs[&quot;join&quot;] = &quot;AND&quot;</span><br><span class="line">        fields = &#x27;,&#x27;.join(&#x27;`&#x27; + k + &#x27;`=%s&#x27; for k in kwargs[&quot;data&quot;].keys())</span><br><span class="line">        values = list(kwargs[&quot;data&quot;].values())</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        values.extend(list(kwargs[&quot;params&quot;].values()))</span><br><span class="line">        sql = &quot;UPDATE `%s` SET %s &quot; % (kwargs[&quot;table&quot;], fields)</span><br><span class="line">        kwargs[&quot;sql&quot;] = sql</span><br><span class="line">        sql = self.__joinWhere(**kwargs)</span><br><span class="line">        cursor = self.__getCursor()</span><br><span class="line">        cursor.execute(sql, tuple(values))</span><br><span class="line">        self._conn.commit()</span><br><span class="line">        return cursor.rowcount</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    # def updateByPk(self,table,data,id,pk=&#x27;id&#x27;):</span><br><span class="line">    def updateByPk(self, **kwargs):</span><br><span class="line">        &quot;&quot;&quot;根据主键更新，默认是id为主键&quot;&quot;&quot;</span><br><span class="line">        return self.updateByAttr(**kwargs)</span><br><span class="line"></span><br><span class="line">    # def deleteByAttr(self,table,params=&#123;&#125;,join=&#x27;AND&#x27;):</span><br><span class="line">    def deleteByAttr(self, **kwargs):</span><br><span class="line">        &quot;&quot;&quot;删除数据&quot;&quot;&quot;</span><br><span class="line">        if kwargs.get(&quot;params&quot;, 0) == 0:</span><br><span class="line">            kwargs[&quot;params&quot;] = &#123;&#125;</span><br><span class="line">        if kwargs.get(&quot;join&quot;, 0) == 0:</span><br><span class="line">            kwargs[&quot;join&quot;] = &quot;AND&quot;</span><br><span class="line">        # fields = &#x27;,&#x27;.join(&#x27;`&#x27;+k+&#x27;`=%s&#x27; for k in kwargs[&quot;params&quot;].keys())</span><br><span class="line">        sql = &quot;DELETE FROM `%s` &quot; % kwargs[&quot;table&quot;]</span><br><span class="line">        kwargs[&quot;sql&quot;] = sql</span><br><span class="line">        # sql = self.__joinWhere(sql, kwargs[&quot;params&quot;], kwargs[&quot;join&quot;])</span><br><span class="line">        sql = self.__joinWhere(**kwargs)</span><br><span class="line">        cursor = self.__getCursor()</span><br><span class="line">        cursor.execute(sql, tuple(kwargs[&quot;params&quot;].values()))</span><br><span class="line">        self._conn.commit()</span><br><span class="line">        return cursor.rowcount</span><br><span class="line"></span><br><span class="line">    # def deleteByPk(self,table,id,pk=&#x27;id&#x27;):</span><br><span class="line">    def deleteByPk(self, **kwargs):</span><br><span class="line">        &quot;&quot;&quot;根据主键删除，默认是id为主键&quot;&quot;&quot;</span><br><span class="line">        return self.deleteByAttr(**kwargs)</span><br><span class="line"></span><br><span class="line">    # def findByAttr(self,table,criteria = &#123;&#125;):</span><br><span class="line">    def findByAttr(self, **kwargs):</span><br><span class="line">        &quot;&quot;&quot;根據條件查找一條記錄&quot;&quot;&quot;</span><br><span class="line">        return self.__query(**kwargs)</span><br><span class="line"></span><br><span class="line">    # def findByPk(self,table,id,pk=&#x27;id&#x27;):</span><br><span class="line">    def findByPk(self, **kwargs):</span><br><span class="line">        return self.findByAttr(**kwargs)</span><br><span class="line"></span><br><span class="line">    # def findAllByAttr(self,table,criteria=&#123;&#125;, whole=true):</span><br><span class="line">    def findAllByAttr(self, **kwargs):</span><br><span class="line">        &quot;&quot;&quot;根據條件查找記錄&quot;&quot;&quot;</span><br><span class="line">        return self.__query(**kwargs)</span><br><span class="line"></span><br><span class="line">    # def count(self,table,params=&#123;&#125;,join=&#x27;AND&#x27;):</span><br><span class="line">    def count(self, **kwargs):</span><br><span class="line">        &quot;&quot;&quot;根据条件统计行数&quot;&quot;&quot;</span><br><span class="line">        if kwargs.get(&quot;join&quot;, 0) == 0: kwargs[&quot;join&quot;] = &quot;AND&quot;</span><br><span class="line">        sql = &#x27;SELECT COUNT(*) FROM `%s`&#x27; % kwargs[&quot;table&quot;]</span><br><span class="line">        # sql = self.__joinWhere(sql, kwargs[&quot;params&quot;], kwargs[&quot;join&quot;])</span><br><span class="line">        kwargs[&quot;sql&quot;] = sql</span><br><span class="line">        sql = self.__joinWhere(**kwargs)</span><br><span class="line">        cursor = self.__getCursor()</span><br><span class="line">        cursor.execute(sql, tuple(kwargs[&quot;params&quot;].values()))</span><br><span class="line">        result = cursor.fetchone()</span><br><span class="line">        return result[0] if result else 0</span><br><span class="line"></span><br><span class="line">    # def exist(self,table,params=&#123;&#125;,join=&#x27;AND&#x27;):</span><br><span class="line">    def exist(self, **kwargs):</span><br><span class="line">        &quot;&quot;&quot;判断是否存在&quot;&quot;&quot;</span><br><span class="line">        return self.count(**kwargs) &gt; 0</span><br><span class="line"></span><br><span class="line">    def close(self):</span><br><span class="line">        &quot;&quot;&quot;关闭游标和数据库连接&quot;&quot;&quot;</span><br><span class="line">        if self.__cursor is not None:</span><br><span class="line">            self.__cursor.close()</span><br><span class="line">        self._conn.close()</span><br><span class="line"></span><br><span class="line">    def __getCursor(self):</span><br><span class="line">        &quot;&quot;&quot;获取游标&quot;&quot;&quot;</span><br><span class="line">        if self.__cursor is None:</span><br><span class="line">            self.__cursor = self._conn.cursor()</span><br><span class="line">        return self.__cursor</span><br><span class="line"></span><br><span class="line">    # def __joinWhere(self,sql,params,join):</span><br><span class="line">    def __joinWhere(self, **kwargs):</span><br><span class="line">        &quot;&quot;&quot;转换params为where连接语句&quot;&quot;&quot;</span><br><span class="line">        if kwargs[&quot;params&quot;]:</span><br><span class="line">            keys,_keys = self.__tParams(**kwargs)</span><br><span class="line">            where = &#x27; AND &#x27;.join(k+&#x27;=&#x27;+_k for k,_k in zip(keys,_keys)) if kwargs[&quot;join&quot;] == &#x27;AND&#x27; else &#x27; OR &#x27;.join(k+&#x27;=&#x27;+_k for k,_k in zip(keys,_keys))</span><br><span class="line">            kwargs[&quot;sql&quot;]+=&#x27; WHERE &#x27; + where</span><br><span class="line">        return kwargs[&quot;sql&quot;]</span><br><span class="line"></span><br><span class="line">    # def __tParams(self,params):</span><br><span class="line">    def __tParams(self, **kwargs):</span><br><span class="line">        keys = [&#x27;`&#x27;+k+&#x27;`&#x27; for k in kwargs[&quot;params&quot;].keys()]</span><br><span class="line">        _keys = [&#x27;%s&#x27; for k in kwargs[&quot;params&quot;].keys()]</span><br><span class="line">        return keys,_keys</span><br><span class="line"></span><br><span class="line">    # def __query(self,table,criteria,whole=False):</span><br><span class="line">    def __query(self, **kwargs):</span><br><span class="line">        if kwargs.get(&quot;whole&quot;, False) == False or kwargs[&quot;whole&quot;] is not True:</span><br><span class="line">            kwargs[&quot;whole&quot;] = False</span><br><span class="line">            kwargs[&quot;criteria&quot;][&#x27;limit&#x27;] = 1</span><br><span class="line">        # sql = self.__contact_sql(kwargs[&quot;table&quot;], kwargs[&quot;criteria&quot;])</span><br><span class="line">        sql = self.__contact_sql(**kwargs)</span><br><span class="line">        cursor = self.__getCursor()</span><br><span class="line">        cursor.execute(sql)</span><br><span class="line">        rows = cursor.fetchall() if kwargs[&quot;whole&quot;] else cursor.fetchone()</span><br><span class="line">        result = [dict(zip(cursor.column_names, row)) for row in rows] if kwargs[&quot;whole&quot;] else dict(zip(cursor.column_names, rows)) if rows else None</span><br><span class="line">        return result</span><br><span class="line"></span><br><span class="line">    # def __contact_sql(self,table,criteria):</span><br><span class="line">    def __contact_sql(self, **kwargs):</span><br><span class="line">        sql = &#x27;SELECT &#x27;</span><br><span class="line">        if kwargs[&quot;criteria&quot;] and type(kwargs[&quot;criteria&quot;]) is dict:</span><br><span class="line">            #select fields</span><br><span class="line">            if &#x27;select&#x27; in kwargs[&quot;criteria&quot;]:</span><br><span class="line">                fields = kwargs[&quot;criteria&quot;][&#x27;select&#x27;].split(&#x27;,&#x27;)</span><br><span class="line">                sql+= &#x27;,&#x27;.join(&#x27;`&#x27;+field+&#x27;`&#x27; for field in fields)</span><br><span class="line">            else:</span><br><span class="line">                sql+=&#x27; * &#x27;</span><br><span class="line">            #table</span><br><span class="line">            sql+=&#x27; FROM `%s`&#x27;% kwargs[&quot;table&quot;]</span><br><span class="line">            #where</span><br><span class="line">            if &#x27;where&#x27; in kwargs[&quot;criteria&quot;]:</span><br><span class="line">                sql+=&#x27; WHERE &#x27;+ kwargs[&quot;criteria&quot;][&#x27;where&#x27;]</span><br><span class="line">            #group by</span><br><span class="line">            if &#x27;group&#x27; in kwargs[&quot;criteria&quot;]:</span><br><span class="line">                sql+=&#x27; GROUP BY &#x27;+ kwargs[&quot;criteria&quot;][&#x27;group&#x27;]</span><br><span class="line">            #having</span><br><span class="line">            if &#x27;having&#x27; in kwargs[&quot;criteria&quot;]:</span><br><span class="line">                sql+=&#x27; HAVING &#x27;+ kwargs[&quot;criteria&quot;][&#x27;having&#x27;]</span><br><span class="line">            #order by</span><br><span class="line">            if &#x27;order&#x27; in kwargs[&quot;criteria&quot;]:</span><br><span class="line">                sql+=&#x27; ORDER BY &#x27;+ kwargs[&quot;criteria&quot;][&#x27;order&#x27;]</span><br><span class="line">            #limit</span><br><span class="line">            if &#x27;limit&#x27; in kwargs[&quot;criteria&quot;]:</span><br><span class="line">                sql+=&#x27; LIMIT &#x27;+ str(kwargs[&quot;criteria&quot;][&#x27;limit&#x27;])</span><br><span class="line">            #offset</span><br><span class="line">            if &#x27;offset&#x27; in kwargs[&quot;criteria&quot;]:</span><br><span class="line">                sql+=&#x27; OFFSET &#x27;+ str(kwargs[&quot;criteria&quot;][&#x27;offset&#x27;])</span><br><span class="line">        else:</span><br><span class="line">            sql+=&#x27; * FROM `%s`&#x27;% kwargs[&quot;table&quot;]</span><br><span class="line">        return sql</span><br><span class="line">    def findKeySql(self, key ,**kwargs):</span><br><span class="line">        sqlOperate = &#123;</span><br><span class="line">        Const.COUNT: lambda: self.count(**kwargs),</span><br><span class="line">        Const.COUNT_BY_SQL: lambda: self.countBySql(**kwargs),</span><br><span class="line">        Const.DELETE_BY_ATTR: lambda: self.deleteByAttr(**kwargs),</span><br><span class="line">        Const.EXIST: lambda: self.exist(**kwargs),</span><br><span class="line">        Const.FIND_ALL_BY_ATTR: lambda: self.findAllByAttr(**kwargs),</span><br><span class="line">        Const.INSERT: lambda: self.insert(**kwargs),</span><br><span class="line">        Const.FIND_BY_ATTR: lambda: self.findByAttr(**kwargs),</span><br><span class="line">        Const.UPDATE_BY_ATTR: lambda: self.updateByAttr(**kwargs),</span><br><span class="line">        Const.FIND_BY_SQL: lambda: self.findBySql(**kwargs)</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">        return sqlOperate[key]()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">if __name__ == &quot;__main__&quot;:</span><br><span class="line">    mysqlet = MySQLet(host=&quot;127.0.0.1&quot;, user=&quot;root&quot;, password=&quot;&quot;, charset=&quot;utf8&quot;, database=&quot;userinfo&quot;, port=3306)</span><br><span class="line">    # 根据字段统计count, join&gt;&gt;AND,OR,可以不传，默认为AND</span><br><span class="line">    print(mysqlet.findKeySql(Const.COUNT, table=&quot;info&quot;, params=&#123;&quot;id&quot;: &quot;11&quot;, &quot;name&quot;: &quot;666&quot;&#125;, join=&quot;OR&quot;))</span><br><span class="line">    # 自定义sql语句统计count</span><br><span class="line">    print(mysqlet.findKeySql(Const.COUNT_BY_SQL, sql=&quot;select * from info&quot;, params=&#123;&quot;name&quot;: &quot;666&quot;&#125;, join=&quot;AND&quot;))</span><br><span class="line">    #插入数据</span><br><span class="line">    print(mysqlet.findKeySql(Const.INSERT, table=&quot;info&quot;, data=&#123;&quot;name&quot;:&quot;333&quot;, &quot;pwd&quot;: &quot;111&quot;&#125;))</span><br><span class="line">    #根据字段删除,不传params参数，就是删除全部</span><br><span class="line">    print(mysqlet.findKeySql(Const.DELETE_BY_ATTR, table=&quot;info&quot;, params=&#123;&quot;id&quot;: 20&#125;))</span><br><span class="line">    # 查找是否存在该记录,不传params参数，就是查找全部.join同上</span><br><span class="line">    print(mysqlet.findKeySql(Const.EXIST, table=&quot;info&quot;, params=&#123;&quot;id&quot;: 180&#125;,join=&#x27;AND&#x27;))</span><br><span class="line">    #根据字段查找多条记录，whole不传就查一条记录，criteria里面可以传where,group by,having,order by,limt,offset</span><br><span class="line">    print(mysqlet.findKeySql(Const.FIND_ALL_BY_ATTR, table=&quot;info&quot;, criteria= &#123;&quot;where&quot;: &quot;name=333&quot;&#125;, whole=True))</span><br><span class="line">    # 根据字段查一条记录，和上面的查多条记录参数基本一样，少了个whole参数</span><br><span class="line">    print(mysqlet.findKeySql(Const.FIND_BY_ATTR, table=&quot;info&quot;, criteria= &#123;&quot;where&quot;: &quot;name=333&quot;&#125;))</span><br><span class="line">    # 根据字段更新数据库中的记录，join可以传AND,OR,不传默认取AND</span><br><span class="line">    print(mysqlet.findKeySql(Const.UPDATE_BY_ATTR, table=&quot;info&quot;,data=&#123;&quot;name&quot;: &quot;-09&quot;&#125;, params=&#123;&quot;id&quot;: 18, &quot;name&quot;: &quot;333&quot;&#125;, join=&#x27;AND&#x27;))</span><br><span class="line">    # 根据自定义sql语句查询记录，limit:0表示所有记录，join：AND|OR.不传取AND</span><br><span class="line">    print(mysqlet.findKeySql(Const.FIND_BY_SQL, sql=&quot;select * from info&quot;, params=&#123;&quot;name&quot;: &quot;333&quot;, &quot;id&quot;: 18&#125;, limit=0))</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>python</category>
+      </categories>
+  </entry>
+  <entry>
     <title>python之logging</title>
     <url>/aposts/3fc2b160/</url>
     <content><![CDATA[<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#!/usr/bin/env python</span><br><span class="line"># -*- coding:utf-8 -*-</span><br><span class="line"></span><br><span class="line">&quot;&quot;&quot;</span><br><span class="line">------------------------------------</span><br><span class="line"># @FileName    :handle_log.py</span><br><span class="line"># @Time        :2020/8/31 19:59</span><br><span class="line"># @Author      :xieyuanzuo</span><br><span class="line"># @description :</span><br><span class="line">------------------------------------</span><br><span class="line">&quot;&quot;&quot;</span><br><span class="line"></span><br><span class="line">import logging</span><br><span class="line">import os</span><br><span class="line">import colorlog</span><br><span class="line">from logging.handlers import RotatingFileHandler</span><br><span class="line">from datetime import datetime</span><br><span class="line"></span><br><span class="line">cur_path = os.path.dirname(os.path.realpath(__file__))  # 当前项目路径</span><br><span class="line">log_path = os.path.join(os.path.dirname(cur_path), &#x27;leetcode&#x27;, &#x27;logs&#x27;)  # log_path为存放日志的路径</span><br><span class="line">if not os.path.exists(log_path): os.mkdir(log_path)  # 若不存在logs文件夹，则自动创建</span><br><span class="line"></span><br><span class="line">log_colors_config = &#123;</span><br><span class="line">    # 终端输出日志颜色配置</span><br><span class="line">    &#x27;DEBUG&#x27;: &#x27;white&#x27;,</span><br><span class="line">    &#x27;INFO&#x27;: &#x27;cyan&#x27;,</span><br><span class="line">    &#x27;WARNING&#x27;: &#x27;yellow&#x27;,</span><br><span class="line">    &#x27;ERROR&#x27;: &#x27;red&#x27;,</span><br><span class="line">    &#x27;CRITICAL&#x27;: &#x27;bold_red&#x27;,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">default_formats = &#123;</span><br><span class="line">    # 终端输出格式</span><br><span class="line">    &#x27;color_format&#x27;: &#x27;%(log_color)s%(asctime)s-%(name)s-%(filename)s-[line:%(lineno)d]-%(levelname)s: %(message)s&#x27;,</span><br><span class="line">    # 日志输出格式</span><br><span class="line">    &#x27;log_format&#x27;: &#x27;%(asctime)s-%(name)s-%(filename)s-[line:%(lineno)d]-%(levelname)s: %(message)s&#x27;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class HandleLog:</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    先创建日志记录器（logging.getLogger），然后再设置日志级别（logger.setLevel），</span><br><span class="line">    接着再创建日志文件，也就是日志保存的地方（logging.FileHandler），然后再设置日志格式（logging.Formatter），</span><br><span class="line">    最后再将日志处理程序记录到记录器（addHandler）</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line"></span><br><span class="line">    def __init__(self):</span><br><span class="line">        self.__now_time = datetime.now().strftime(&#x27;%Y-%m-%d&#x27;)  # 当前日期格式化</span><br><span class="line">        self.__all_log_path = os.path.join(log_path, self.__now_time + &quot;-all&quot; + &quot;.log&quot;)  # 收集所有日志信息文件</span><br><span class="line">        self.__error_log_path = os.path.join(log_path, self.__now_time + &quot;-error&quot; + &quot;.log&quot;)  # 收集错误日志信息文件</span><br><span class="line">        self.__logger = logging.getLogger()  # 创建日志记录器</span><br><span class="line">        self.__logger.setLevel(logging.DEBUG)  # 设置默认日志记录器记录级别</span><br><span class="line"></span><br><span class="line">    @staticmethod</span><br><span class="line">    def __init_logger_handler(log_path):</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        创建日志记录器handler，用于收集日志</span><br><span class="line">        :param log_path: 日志文件路径</span><br><span class="line">        :return: 日志记录器</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        # 写入文件，如果文件超过1M大小时，切割日志文件，仅保留3个文件</span><br><span class="line">        logger_handler = RotatingFileHandler(filename=log_path, maxBytes=1 * 1024 * 1024, backupCount=3, encoding=&#x27;utf-8&#x27;)</span><br><span class="line">        return logger_handler</span><br><span class="line"></span><br><span class="line">    @staticmethod</span><br><span class="line">    def __init_console_handle():</span><br><span class="line">        &quot;&quot;&quot;创建终端日志记录器handler，用于输出到控制台&quot;&quot;&quot;</span><br><span class="line">        console_handle = colorlog.StreamHandler()</span><br><span class="line">        return console_handle</span><br><span class="line"></span><br><span class="line">    def __set_log_handler(self, logger_handler, level=logging.DEBUG):</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        设置handler级别并添加到logger收集器</span><br><span class="line">        :param logger_handler: 日志记录器</span><br><span class="line">        :param level: 日志记录器级别</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        logger_handler.setLevel(level=level)</span><br><span class="line">        self.__logger.addHandler(logger_handler)</span><br><span class="line"></span><br><span class="line">    def __set_color_handle(self, console_handle):</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        设置handler级别并添加到终端logger收集器</span><br><span class="line">        :param console_handle: 终端日志记录器</span><br><span class="line">        :param level: 日志记录器级别</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        console_handle.setLevel(logging.DEBUG)</span><br><span class="line">        self.__logger.addHandler(console_handle)</span><br><span class="line"></span><br><span class="line">    @staticmethod</span><br><span class="line">    def __set_color_formatter(console_handle, color_config):</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        设置输出格式-控制台</span><br><span class="line">        :param console_handle: 终端日志记录器</span><br><span class="line">        :param color_config: 控制台打印颜色配置信息</span><br><span class="line">        :return:</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        formatter = colorlog.ColoredFormatter(default_formats[&quot;color_format&quot;], log_colors=color_config)</span><br><span class="line">        console_handle.setFormatter(formatter)</span><br><span class="line"></span><br><span class="line">    @staticmethod</span><br><span class="line">    def __set_log_formatter(file_handler):</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        设置日志输出格式-日志文件</span><br><span class="line">        :param file_handler: 日志记录器</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        formatter = logging.Formatter(default_formats[&quot;log_format&quot;], datefmt=&#x27;%Y-%m-%d %H:%M:%S&#x27;)</span><br><span class="line">        file_handler.setFormatter(formatter)</span><br><span class="line"></span><br><span class="line">    @staticmethod</span><br><span class="line">    def __close_handler(file_handler):</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        关闭handler</span><br><span class="line">        :param file_handler: 日志记录器</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        file_handler.close()</span><br><span class="line"></span><br><span class="line">    def __console(self, level, message):</span><br><span class="line">        &quot;&quot;&quot;构造日志收集器&quot;&quot;&quot;</span><br><span class="line">        all_logger_handler = self.__init_logger_handler(self.__all_log_path)  # 创建日志文件</span><br><span class="line">        error_logger_handler = self.__init_logger_handler(self.__error_log_path)</span><br><span class="line">        console_handle = self.__init_console_handle()</span><br><span class="line"></span><br><span class="line">        self.__set_log_formatter(all_logger_handler)  # 设置日志格式</span><br><span class="line">        self.__set_log_formatter(error_logger_handler)</span><br><span class="line">        self.__set_color_formatter(console_handle, log_colors_config)</span><br><span class="line"></span><br><span class="line">        self.__set_log_handler(all_logger_handler)  # 设置handler级别并添加到logger收集器</span><br><span class="line">        self.__set_log_handler(error_logger_handler, level=logging.ERROR)</span><br><span class="line">        self.__set_color_handle(console_handle)</span><br><span class="line"></span><br><span class="line">        if level == &#x27;info&#x27;:</span><br><span class="line">            self.__logger.info(message)</span><br><span class="line">        elif level == &#x27;debug&#x27;:</span><br><span class="line">            self.__logger.debug(message)</span><br><span class="line">        elif level == &#x27;warning&#x27;:</span><br><span class="line">            self.__logger.warning(message)</span><br><span class="line">        elif level == &#x27;error&#x27;:</span><br><span class="line">            self.__logger.error(message)</span><br><span class="line">        elif level == &#x27;critical&#x27;:</span><br><span class="line">            self.__logger.critical(message)</span><br><span class="line"></span><br><span class="line">        self.__logger.removeHandler(all_logger_handler)  # 避免日志输出重复问题</span><br><span class="line">        self.__logger.removeHandler(error_logger_handler)</span><br><span class="line">        self.__logger.removeHandler(console_handle)</span><br><span class="line"></span><br><span class="line">        self.__close_handler(all_logger_handler)  # 关闭handler</span><br><span class="line">        self.__close_handler(error_logger_handler)</span><br><span class="line"></span><br><span class="line">    def debug(self, message):</span><br><span class="line">        self.__console(&#x27;debug&#x27;, message)</span><br><span class="line"></span><br><span class="line">    def info(self, message):</span><br><span class="line">        self.__console(&#x27;info&#x27;, message)</span><br><span class="line"></span><br><span class="line">    def warning(self, message):</span><br><span class="line">        self.__console(&#x27;warning&#x27;, message)</span><br><span class="line"></span><br><span class="line">    def error(self, message):</span><br><span class="line">        self.__console(&#x27;error&#x27;, message)</span><br><span class="line"></span><br><span class="line">    def critical(self, message):</span><br><span class="line">        self.__console(&#x27;critical&#x27;, message)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">log = HandleLog()</span><br><span class="line"></span><br><span class="line">if __name__ == &#x27;__main__&#x27;:</span><br><span class="line">    for i in range(5):</span><br><span class="line">        log.info(&quot;这是日志信息&quot;)</span><br><span class="line">        log.debug(&quot;这是debug信息&quot;)</span><br><span class="line">        log.warning(&quot;这是警告信息&quot;)</span><br><span class="line">        log.error(&quot;这是错误日志信息&quot;)</span><br><span class="line">        log.critical(&quot;这是严重级别信息&quot;)</span><br></pre></td></tr></table></figure>
@@ -10895,6 +10895,19 @@
       <tags>
         <tag>python</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>python利用xlutils在已存在xls文件继续修改</title>
+    <url>/aposts/5dd780c6/</url>
+    <content><![CDATA[<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">import xlrd  # 导入模块</span><br><span class="line">from xlutils.copy import copy  # 导入copy模块</span><br><span class="line"></span><br><span class="line">class EditExcel():</span><br><span class="line"></span><br><span class="line">    def __init__(self, path, sheet_name):</span><br><span class="line">        self.path = path</span><br><span class="line">        self.sheet_name = sheet_name</span><br><span class="line"></span><br><span class="line">    def get_excel_sheet(self):</span><br><span class="line">        # 打开excel</span><br><span class="line">        read_open_xls = xlrd.open_workbook(self.path)</span><br><span class="line">        # 得到excel中的sheet_name</span><br><span class="line">        read_xlsx_sheet = read_open_xls.sheet_by_name(self.sheet_name)</span><br><span class="line">        # 拷贝excel</span><br><span class="line">        copy_book = copy(read_open_xls)</span><br><span class="line">        return copy_book, read_xlsx_sheet,</span><br><span class="line"></span><br><span class="line">    def write_value(self):</span><br><span class="line">        copy_book, read_xlsx_sheet = self.get_excel_sheet()</span><br><span class="line">        # 获取行数</span><br><span class="line">        row_max = read_xlsx_sheet.nrows</span><br><span class="line">        # 获取第一行的值</span><br><span class="line">        rows = read_xlsx_sheet.row_values(0)</span><br><span class="line">        # 获取列数</span><br><span class="line">        col_max = read_xlsx_sheet.ncols</span><br><span class="line">        for row in range(row_max):</span><br><span class="line">            row_value = read_xlsx_sheet.row_values(row)</span><br><span class="line">            for col in range(col_max):</span><br><span class="line">                current_value = read_xlsx_sheet.cell(row, col).value</span><br><span class="line">                # 按照条件过滤</span><br><span class="line">                if current_value == &#x27;Pass&#x27;:</span><br><span class="line">                    copy_sheet = copy_book.get_sheet(0)</span><br><span class="line">                    copy_sheet.write(row, col, &#x27;11111&#x27;)</span><br><span class="line">                    copy_book.save(self.path)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">EditExcel(&quot;test.xls&quot;, &quot;Sheet1&quot;).write_value()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h2><ul>
+<li>不支持xlsx文件的修改，只支持xls</li>
+</ul>
+]]></content>
+      <categories>
+        <category>python</category>
+      </categories>
   </entry>
   <entry>
     <title>python优秀项目总结</title>
@@ -11158,19 +11171,6 @@
 <li><a href="https://github.com/Ceasar/twosheds/">twosheds</a>：Python 实现的库，用来构造命令或是 shell 解释器。Twosheds 让你用 Python 来定制自个儿的 shell 环境。</li>
 </ul>
 <p>来自：<a href="http://www.cnblogs.com/hongfei/p/3874419.html">http://www.cnblogs.com/hongfei/p/3874419.html</a></p>
-]]></content>
-      <categories>
-        <category>python</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>python利用xlutils在已存在xls文件继续修改</title>
-    <url>/aposts/5dd780c6/</url>
-    <content><![CDATA[<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">import xlrd  # 导入模块</span><br><span class="line">from xlutils.copy import copy  # 导入copy模块</span><br><span class="line"></span><br><span class="line">class EditExcel():</span><br><span class="line"></span><br><span class="line">    def __init__(self, path, sheet_name):</span><br><span class="line">        self.path = path</span><br><span class="line">        self.sheet_name = sheet_name</span><br><span class="line"></span><br><span class="line">    def get_excel_sheet(self):</span><br><span class="line">        # 打开excel</span><br><span class="line">        read_open_xls = xlrd.open_workbook(self.path)</span><br><span class="line">        # 得到excel中的sheet_name</span><br><span class="line">        read_xlsx_sheet = read_open_xls.sheet_by_name(self.sheet_name)</span><br><span class="line">        # 拷贝excel</span><br><span class="line">        copy_book = copy(read_open_xls)</span><br><span class="line">        return copy_book, read_xlsx_sheet,</span><br><span class="line"></span><br><span class="line">    def write_value(self):</span><br><span class="line">        copy_book, read_xlsx_sheet = self.get_excel_sheet()</span><br><span class="line">        # 获取行数</span><br><span class="line">        row_max = read_xlsx_sheet.nrows</span><br><span class="line">        # 获取第一行的值</span><br><span class="line">        rows = read_xlsx_sheet.row_values(0)</span><br><span class="line">        # 获取列数</span><br><span class="line">        col_max = read_xlsx_sheet.ncols</span><br><span class="line">        for row in range(row_max):</span><br><span class="line">            row_value = read_xlsx_sheet.row_values(row)</span><br><span class="line">            for col in range(col_max):</span><br><span class="line">                current_value = read_xlsx_sheet.cell(row, col).value</span><br><span class="line">                # 按照条件过滤</span><br><span class="line">                if current_value == &#x27;Pass&#x27;:</span><br><span class="line">                    copy_sheet = copy_book.get_sheet(0)</span><br><span class="line">                    copy_sheet.write(row, col, &#x27;11111&#x27;)</span><br><span class="line">                    copy_book.save(self.path)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">EditExcel(&quot;test.xls&quot;, &quot;Sheet1&quot;).write_value()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h2 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h2><ul>
-<li>不支持xlsx文件的修改，只支持xls</li>
-</ul>
 ]]></content>
       <categories>
         <category>python</category>
@@ -13615,181 +13615,6 @@
       </tags>
   </entry>
   <entry>
-    <title>第六章 大数据项目开发流程</title>
-    <url>/aposts/f5236b59/</url>
-    <content><![CDATA[<h2 id="大数据项目开发概览"><a href="#大数据项目开发概览" class="headerlink" title="大数据项目开发概览"></a>大数据项目开发概览</h2><p>一个完整的大数据项目架构可以分为数据采集层、数据存储层、数据计算层、数据接入层、数据应用层和基础服务层，如下图所示：</p>
-<p><img src="/aposts/f5236b59/image-20211229113510858.png" alt="image-20211229113510858"></p>
-<h2 id="数据的采集和存储"><a href="#数据的采集和存储" class="headerlink" title="数据的采集和存储"></a>数据的采集和存储</h2><p>数据采集方式主要有：</p>
-<ul>
-<li><p>网络数据采集</p>
-</li>
-<li><p>服务端日志采集</p>
-</li>
-<li><p>客户端日志采集</p>
-</li>
-</ul>
-<h2 id="服务端日志采集"><a href="#服务端日志采集" class="headerlink" title="服务端日志采集"></a>服务端日志采集</h2><ul>
-<li>服务端日志是重要的数据来源,它可以支持业务问题排查、业务数据分析等。下图是常见的服务端日志架构。客户端通过API( Application Programming Interface,应用程序编程接口)向服务端发送请求,服务端会在服务器本地记录日志文件。日志文件可能包括访问日志、Lnux系统日志和业务日志等。这些日志会被服务端日志采集服务收集、同步发给日志服务器,以便后续使用。</li>
-</ul>
-<p><img src="/aposts/f5236b59/image-20211229150453592.png" alt="image-20211229150453592"></p>
-<p>一个完整的服务端日志采集流程如图4-3所示。</p>
-<ul>
-<li><p>在客户端向服务端发送请求后，服务端会在服务器本地记录请求日志或业务日志。此外，服务端会通过服务直接向Kafka推送日志。</p>
-</li>
-<li><p>服务器的本地日志在写入的同时，还会通过Flume等工具进行持续收集，并推送到 Kafka集群中指定的主题。在收集、推送的过程中，会进行一些日志数据处理工作，如请求头信息解析、接口参数提取和日志信息格式化等。</p>
-</li>
-<li><p>我们可以使用SparkStreaming实时消费处理Kafka消息，并将处理好的数据写入指定的数据库中，如MySQL、Redis等。此种方式可以提供实时的服务端日志应用，如错误日志监控报警等。对于Spark Streaming处理完的数据，将继续推送到Kafka，供其他业务</p>
-</li>
-<li><p>我们也可以使用flume消费kafka的消息，并将处理号的数据写入HDFS，为后续的离线使用提供基础数据</p>
-<p><img src="/aposts/f5236b59/image-20211229151331689.png" alt="image-20211229151331689"></p>
-</li>
-</ul>
-<h3 id="客户端日志采集"><a href="#客户端日志采集" class="headerlink" title="客户端日志采集"></a>客户端日志采集</h3><h4 id="移动端分类"><a href="#移动端分类" class="headerlink" title="移动端分类"></a>移动端分类</h4><p>移动端分为两种：</p>
-<ul>
-<li>Native App：原生应用程序。也就是基于智能手机系统的原生程式编写运行的应用程序，比如Android，IOS等</li>
-<li>Hybrid App：混合应用程序。原生应用程序嵌入h5的方式</li>
-</ul>
-<h4 id="采集方式"><a href="#采集方式" class="headerlink" title="采集方式"></a>采集方式</h4><ul>
-<li>浏览器页面的日志采集。如采集Hybrid App中h5浏览器<ul>
-<li>浏览量PV</li>
-<li>访问量UV</li>
-</ul>
-</li>
-<li>移动端客户端日志的采集。如采集Native App<ul>
-<li>埋点SDK</li>
-</ul>
-</li>
-</ul>
-<h2 id="数据同步"><a href="#数据同步" class="headerlink" title="数据同步"></a>数据同步</h2><ul>
-<li>数据仓库的特性之一是集成，即首先把未经过加工处理的、不同来源的、不同形式的数据同步到ODS层，一般情况下，这些ODS层数据包括日志数据和业务DB数据。对于业务DB数据而言(比如存储在MySQL中)，将数据采集并导入到数仓中(通常是Hive或者MaxCompute)是非常重要的一个环节。</li>
-<li>针对不同数据类型和业务场景，我们可以选择不同的数据同步方式：<ul>
-<li>直连同步</li>
-<li>数据文件同步</li>
-<li>数据库日志解析同步</li>
-</ul>
-</li>
-</ul>
-<h3 id="直连同步"><a href="#直连同步" class="headerlink" title="直连同步"></a>直连同步</h3><ul>
-<li>直连同步是指通过定义好的规范接口API和基于动态链接库的方式直接连接业务库</li>
-<li>直连同步的方式配置十分简单，很容易上手操作，比较适合操作型业务系统的数据同步，但是会存在随着业务规模的增长，<strong>数据同步花费的时间会越来越长、连数据库查询数据，对数据库影响非常大，容易造成慢查询，可能会影响业务线上的正常服务</strong></li>
-</ul>
-<p><img src="/aposts/f5236b59/image-20211229155528410.png" alt="image-20211229155528410"></p>
-<ul>
-<li><a href="https://moon-full.gitee.io/2021/12/14/%E7%AC%AC%E4%BA%94%E7%AB%A0%20%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93%E5%AE%9E%E4%BE%8B/">第五章 数据仓库实例</a>，就是采用这种方式</li>
-</ul>
-<h3 id="数据文件同步"><a href="#数据文件同步" class="headerlink" title="数据文件同步"></a>数据文件同步</h3><ul>
-<li>对文件进行格式约定，直接从源系统生成数据（mysql，oracle，DB2等）的文件，通过FTP服务器传输到目标系统，最终加载到目标系统中。</li>
-</ul>
-<p><img src="/aposts/f5236b59/image-20211229155932718.png" alt="image-20211229155932718"></p>
-<ul>
-<li>通过文件服务进行上传、下载，可能出现丢包或出现错误。可以加一些校验机制</li>
-</ul>
-<h3 id="数据库日志解析同步"><a href="#数据库日志解析同步" class="headerlink" title="数据库日志解析同步"></a>数据库日志解析同步</h3><ul>
-<li>数据库日志解析的同步方式可以实现实时与准实时的同步，延迟可以控制在毫秒级别的，其最大的优势就是性能好、效率高，不会对源数据库造成影响，目前，从业务系统到数据仓库中的实时增量同步，<strong>广泛采取这种方式</strong>。当然，这种方式也会存在一些问题，比如批量补数时造成大量数据更新，<strong>日志解析会处理较慢</strong>，造成数据延迟。除此之外，<strong>这种方式比较复杂</strong>，<strong>投入也较大</strong>，因为需要一个实时的抽取系统去抽取并解析日志</li>
-</ul>
-<p><img src="/aposts/f5236b59/image-20211229160911594.png" alt="image-20211229160911594"></p>
-<h2 id="大数据存储"><a href="#大数据存储" class="headerlink" title="大数据存储"></a>大数据存储</h2><p>对于大数据存储选项，需要从存储成本、数据规模、数据访问特性和查询性能等方面进行考虑，下图列举了不同场景大数据存储选型。</p>
-<p><img src="/aposts/f5236b59/image-20211229161451827.png" alt="image-20211229161451827"></p>
-<h2 id="大数据计算"><a href="#大数据计算" class="headerlink" title="大数据计算"></a>大数据计算</h2><ul>
-<li>一般分为离线计算、批量计算、实时计算和流式计算，业界一般都使用<strong>离线计算和实时计算</strong>，下图是各个计算方式的区别</li>
-</ul>
-<h3 id="离线计算"><a href="#离线计算" class="headerlink" title="离线计算"></a>离线计算</h3><p><img src="/aposts/f5236b59/image-20211229164031999.png" alt="image-20211229164031999"></p>
-<ul>
-<li>离线计算使用的多数场景是周期（小时、天，月）性执行一个job任务，离线计算应用中常用的是离线ETL的处理。如MapReduce就是一个离线的计算框架，下图举例说明了离线计算工作流</li>
-</ul>
-<p><img src="/aposts/f5236b59/image-20211229165345162.png" alt="image-20211229165345162"></p>
-<ul>
-<li>离线计算需要上下游各组件合作，一般会由多个任务单元构成（HiveQL，shell，Shell和MapReduce等），多个单元由很强的依赖关系</li>
-</ul>
-<h3 id="实时计算"><a href="#实时计算" class="headerlink" title="实时计算"></a>实时计算</h3><ul>
-<li>对数据计算要求较高，如实时的ETL，实时监控等，延时一般为毫秒级别，目前笔比较流行的实时框架有<code>Spark Streaming</code>和<code>Flink</code></li>
-<li>下图展示了一个大数据计算平台架构，其中包含离线计算和实时计算</li>
-</ul>
-<p><img src="/aposts/f5236b59/image-20211229170148516.png" alt="image-20211229170148516"></p>
-<h2 id="大数据监控"><a href="#大数据监控" class="headerlink" title="大数据监控"></a>大数据监控</h2><p>在大数据进行采集、存储和处理后，下面就是项目的上线和日常运行。在运行过程中监控和报警就非常重要</p>
-<h3 id="数据监控"><a href="#数据监控" class="headerlink" title="数据监控"></a>数据监控</h3><p>一些常见的监控内容：</p>
-<ul>
-<li>以时间维度对数据记录进行监控。比如某个时间段出现明显波动</li>
-<li>对数据的NULL和0值进行监控</li>
-<li>对数据的值域进行监控。如对数据中某字段出现合理域值以外的值</li>
-<li>对数据的重复度进行监控。如电商业务的交易记录出现重复等</li>
-</ul>
-<h3 id="运维监控"><a href="#运维监控" class="headerlink" title="运维监控"></a>运维监控</h3><ul>
-<li>在当前大数据项目中，使用服务器集群方式支撑业务已经成为常态，开发自动化运维监控系统非常重要。</li>
-<li>监控常见的cpu，men，io，tps，对大数据生态系统进行监控，如zookeeper节点可用性，yarn资源空闲情况、kafka消息堆积情况，以及spark job完成进度等</li>
-<li>其他的一些监控，如端口,nginx的延迟</li>
-</ul>
-<h2 id="大数据项目开发案例"><a href="#大数据项目开发案例" class="headerlink" title="大数据项目开发案例"></a>大数据项目开发案例</h2><ul>
-<li>数据分析平台是一类重要的大数据应用,广泛应用于互联网金融、银行、电子商务和在线教育等领域。</li>
-<li>数据分析平台通常需要实时计算、查询并借助可视化平台展示数据。通过数据分析平台,用户可以更加直观、高效和全面地了解数据分布情况,观察数据变化趋势,最终达到数据驱动业务决策的目标。</li>
-<li>与单纯的数据可视化类平台或BI报表相比,数据分析平台的链路更长,除最终的可视化数据展示以外,还包括源头的数据采集;<strong>而BI报表通常只是对数据的汇总和查询展示,不涉及数据采集、数据存储等环节</strong>。如图4-15所示,根据不同的数据分析类型,数据分析平台可分为如下几类:**用户行为类(应用比较多)**、App分析类、应用市场监控类、流量分析类和广告效果监控类等。</li>
-</ul>
-<p><img src="/aposts/f5236b59/image-20211230104909426.png" alt="image-20211230104909426"></p>
-<h3 id="项目背景介绍"><a href="#项目背景介绍" class="headerlink" title="项目背景介绍"></a>项目背景介绍</h3><ul>
-<li>分析手机App用户数量和交易的某些行为习惯，实现精准营销。类似于购物推荐这种</li>
-</ul>
-<h3 id="项目需求分析"><a href="#项目需求分析" class="headerlink" title="项目需求分析"></a>项目需求分析</h3><ul>
-<li>与传统应用开发相同,在迸行大数据项目开发前,首先要明确项目的需求。用户行为分析平台需要提供多种数据釆集方式,通过对埋点数据的采集、处理、建模和存储,进行深度分析和应用,帮助企业高效获取海量数据,并进行多维、实时和准确的数据分析,还原真实业务场。用户行为分析平台的业务流程包括数据釆集、数据处理、数据建模、数据存储、数据簑理、智能分析和基础看板。图4-16是用户行为分析平台的业务流程。</li>
-</ul>
-<p><img src="/aposts/f5236b59/image-20211230110240930.png" alt="image-20211230110240930"></p>
-<ul>
-<li>用户行为分析主要包括：<strong>基础看板和智能分析</strong></li>
-<li>基础看板：如实时统计在线人数、启动次数</li>
-<li>智能分析：如从商品浏览率到提交订单，支付订单，各个节点用户转化率</li>
-</ul>
-<h3 id="项目开发流程"><a href="#项目开发流程" class="headerlink" title="项目开发流程"></a>项目开发流程</h3><ul>
-<li>大数据项目的完整流程如图4-18所示，在进行大数据项目开发时,首先,大数据开发工程师需要根据产品需求文档进行架构设<br>计、模型设计和调度设计,产出架构设计文档、ETL设计文档和调度设计文档;然后,项目<br>相关人员(包括测试人员)需要对这些设计进行评审等。</li>
-</ul>
-<p><img src="/aposts/f5236b59/image-20211230111333106.png" alt="image-20211230111333106"></p>
-<ul>
-<li>图4-19为大数据项目开发流程。</li>
-</ul>
-<p><img src="/aposts/f5236b59/image-20211230111422715.png" alt="image-20211230111422715"></p>
-<h4 id="结构设计"><a href="#结构设计" class="headerlink" title="结构设计"></a>结构设计</h4><p>根据平台需求的特点,在架构设计时,将用户行为分析平台拆分为4个服务：</p>
-<ul>
-<li>数据采集与预处理服务( og service)</li>
-<li>数据处理服务(实时数据处理服务(real-task)使用Flink,离线数据处理服务采用 Azkaban进行任务调度),</li>
-<li>数据查询服务(DAS),</li>
-<li>数据管理服务(DMS)</li>
-</ul>
-<p>如图4-20所示。数据从源数据到可视化展示需要从下至上经过这些服务的处理。</p>
-<p><img src="/aposts/f5236b59/image-20211230112924605.png" alt="image-20211230112924605"></p>
-<p>用户行为分析平台的核心是数据处理,即从数据采集到数据应用的数据流转,如图4-21</p>
-<p><img src="/aposts/f5236b59/image-20211230113054864.png" alt="image-20211230113054864"></p>
-<h4 id="模型设计"><a href="#模型设计" class="headerlink" title="模型设计"></a>模型设计</h4><p>根据用户行为分析平台的功能和特点,我们需要设计能够满足其应用需求的数据仓库架构。图4-24是一个数据仓库架构方案：</p>
-<p><img src="/aposts/f5236b59/image-20211230114656565.png" alt="image-20211230114656565"></p>
-<ul>
-<li>RB层(实时层)KRB的全称是 Kudu ReaBase,该层的表全部为未统计汇总的实时明细数如 krb. trs_app_event_log表是埋点日志事件表</li>
-<li>KRS层(实时汇总层)KRS的全称是Kucu Real Sum,该层的表全部为统计汇总的实时明细数据,如ks. rs app_user_open_dh表是App用活跃统计表(以小时为单位进行分区)表名的结尾后缀用于表明该表分区间单位，如本例中的<strong>dh表示小时进行分区</strong>。</li>
-<li>HDB层(贴源层):HDB的全称是 Hive Data Base,该层的表全部为未统计汇总的离线明细数据。该层数据是通过mpaa从KRB层同步过来的,如 hdb db app_equ_install_info表是App安装设备信息表。</li>
-<li>HDS层(汇总层):HDS的全称是 Hive Data stat,该层的表全部为统计汇总的离线数据明细</li>
-<li>HTP层(中间层):HTP的全称是 Hive Temporary,该层的表全部为数据处理过程中生成的中间临时数据,如 htp. tmp skynet user_retention d表是日用户留存分析中间表（以天为单位进行分区）</li>
-<li>IVW层(视图层):IVW的全称是 mpala View,该层的表全部为mpaa操作的视图表,如ⅳ w.trs <em>app_event log表是KRB层(实时层)中提到的 krs. trs app</em> event_log表的视图。</li>
-</ul>
-<p>在后续测试案例中,我们会使用实时层中的埋点日志事件表 krb. trs_ app_event_loc<br>这里只举例说明该表的结构设计。表4-7汇总了(贴出部分)</p>
-<ul>
-<li>以log_i作为主键。</li>
-<li>以log_id作为hash分区,以log_dt作为rang分区</li>
-<li>历史数据分区和最新数据分区一直保留</li>
-<li><strong>只新增数据,增量分区,使用 Flink SQL写数据</strong></li>
-</ul>
-<p><img src="/aposts/f5236b59/image-20211230115834627.png" alt="image-20211230115834627"></p>
-<h4 id="调度设计"><a href="#调度设计" class="headerlink" title="调度设计"></a>调度设计</h4><ul>
-<li>上面列出的HDS层数据表位于用户行为分析平台的离线数据存储层。对于离线数据理,具有周期性、重复性的特点,因此,我们使用调度工具 <strong>Azkaban</strong>提供的可靠计划来处理数据。根据各数据表中数据的前后依赖关系,用户行为分析平台的调度设计如图4-25际示。由图4-25可知,为了提高项目的可读性,子任务节点的命名与表名保持形式上的统一(子任务节点生成与之名称对应的数据表中的数据)。</li>
-</ul>
-<p><img src="/aposts/f5236b59/image-20211230151251867.png" alt="image-20211230151251867"></p>
-<ul>
-<li>在完成用户行为分析平台的架构设计、模型设计和调度设计后，开发人员便可以根据它们进行相应的代码开发。通过对用户行为分析平台项目的介绍，我们不难发现，项目中需要开发的功能多、业务流程复杂，需要测试人员的参与来保证平台质量。、</li>
-</ul>
-]]></content>
-      <categories>
-        <category>大数据</category>
-      </categories>
-      <tags>
-        <tag>大数据</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>第五章 数据仓库实例</title>
     <url>/aposts/bcb72660/</url>
     <content><![CDATA[<h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><p>阅读本章，请把hadoop和hive环境搭建好，可以参考如下文章：</p>
@@ -14063,6 +13888,181 @@
         <tag>Hadoop</tag>
         <tag>hive</tag>
         <tag>datax</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>第六章 大数据项目开发流程</title>
+    <url>/aposts/f5236b59/</url>
+    <content><![CDATA[<h2 id="大数据项目开发概览"><a href="#大数据项目开发概览" class="headerlink" title="大数据项目开发概览"></a>大数据项目开发概览</h2><p>一个完整的大数据项目架构可以分为数据采集层、数据存储层、数据计算层、数据接入层、数据应用层和基础服务层，如下图所示：</p>
+<p><img src="/aposts/f5236b59/image-20211229113510858.png" alt="image-20211229113510858"></p>
+<h2 id="数据的采集和存储"><a href="#数据的采集和存储" class="headerlink" title="数据的采集和存储"></a>数据的采集和存储</h2><p>数据采集方式主要有：</p>
+<ul>
+<li><p>网络数据采集</p>
+</li>
+<li><p>服务端日志采集</p>
+</li>
+<li><p>客户端日志采集</p>
+</li>
+</ul>
+<h2 id="服务端日志采集"><a href="#服务端日志采集" class="headerlink" title="服务端日志采集"></a>服务端日志采集</h2><ul>
+<li>服务端日志是重要的数据来源,它可以支持业务问题排查、业务数据分析等。下图是常见的服务端日志架构。客户端通过API( Application Programming Interface,应用程序编程接口)向服务端发送请求,服务端会在服务器本地记录日志文件。日志文件可能包括访问日志、Lnux系统日志和业务日志等。这些日志会被服务端日志采集服务收集、同步发给日志服务器,以便后续使用。</li>
+</ul>
+<p><img src="/aposts/f5236b59/image-20211229150453592.png" alt="image-20211229150453592"></p>
+<p>一个完整的服务端日志采集流程如图4-3所示。</p>
+<ul>
+<li><p>在客户端向服务端发送请求后，服务端会在服务器本地记录请求日志或业务日志。此外，服务端会通过服务直接向Kafka推送日志。</p>
+</li>
+<li><p>服务器的本地日志在写入的同时，还会通过Flume等工具进行持续收集，并推送到 Kafka集群中指定的主题。在收集、推送的过程中，会进行一些日志数据处理工作，如请求头信息解析、接口参数提取和日志信息格式化等。</p>
+</li>
+<li><p>我们可以使用SparkStreaming实时消费处理Kafka消息，并将处理好的数据写入指定的数据库中，如MySQL、Redis等。此种方式可以提供实时的服务端日志应用，如错误日志监控报警等。对于Spark Streaming处理完的数据，将继续推送到Kafka，供其他业务</p>
+</li>
+<li><p>我们也可以使用flume消费kafka的消息，并将处理号的数据写入HDFS，为后续的离线使用提供基础数据</p>
+<p><img src="/aposts/f5236b59/image-20211229151331689.png" alt="image-20211229151331689"></p>
+</li>
+</ul>
+<h3 id="客户端日志采集"><a href="#客户端日志采集" class="headerlink" title="客户端日志采集"></a>客户端日志采集</h3><h4 id="移动端分类"><a href="#移动端分类" class="headerlink" title="移动端分类"></a>移动端分类</h4><p>移动端分为两种：</p>
+<ul>
+<li>Native App：原生应用程序。也就是基于智能手机系统的原生程式编写运行的应用程序，比如Android，IOS等</li>
+<li>Hybrid App：混合应用程序。原生应用程序嵌入h5的方式</li>
+</ul>
+<h4 id="采集方式"><a href="#采集方式" class="headerlink" title="采集方式"></a>采集方式</h4><ul>
+<li>浏览器页面的日志采集。如采集Hybrid App中h5浏览器<ul>
+<li>浏览量PV</li>
+<li>访问量UV</li>
+</ul>
+</li>
+<li>移动端客户端日志的采集。如采集Native App<ul>
+<li>埋点SDK</li>
+</ul>
+</li>
+</ul>
+<h2 id="数据同步"><a href="#数据同步" class="headerlink" title="数据同步"></a>数据同步</h2><ul>
+<li>数据仓库的特性之一是集成，即首先把未经过加工处理的、不同来源的、不同形式的数据同步到ODS层，一般情况下，这些ODS层数据包括日志数据和业务DB数据。对于业务DB数据而言(比如存储在MySQL中)，将数据采集并导入到数仓中(通常是Hive或者MaxCompute)是非常重要的一个环节。</li>
+<li>针对不同数据类型和业务场景，我们可以选择不同的数据同步方式：<ul>
+<li>直连同步</li>
+<li>数据文件同步</li>
+<li>数据库日志解析同步</li>
+</ul>
+</li>
+</ul>
+<h3 id="直连同步"><a href="#直连同步" class="headerlink" title="直连同步"></a>直连同步</h3><ul>
+<li>直连同步是指通过定义好的规范接口API和基于动态链接库的方式直接连接业务库</li>
+<li>直连同步的方式配置十分简单，很容易上手操作，比较适合操作型业务系统的数据同步，但是会存在随着业务规模的增长，<strong>数据同步花费的时间会越来越长、连数据库查询数据，对数据库影响非常大，容易造成慢查询，可能会影响业务线上的正常服务</strong></li>
+</ul>
+<p><img src="/aposts/f5236b59/image-20211229155528410.png" alt="image-20211229155528410"></p>
+<ul>
+<li><a href="https://moon-full.gitee.io/2021/12/14/%E7%AC%AC%E4%BA%94%E7%AB%A0%20%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93%E5%AE%9E%E4%BE%8B/">第五章 数据仓库实例</a>，就是采用这种方式</li>
+</ul>
+<h3 id="数据文件同步"><a href="#数据文件同步" class="headerlink" title="数据文件同步"></a>数据文件同步</h3><ul>
+<li>对文件进行格式约定，直接从源系统生成数据（mysql，oracle，DB2等）的文件，通过FTP服务器传输到目标系统，最终加载到目标系统中。</li>
+</ul>
+<p><img src="/aposts/f5236b59/image-20211229155932718.png" alt="image-20211229155932718"></p>
+<ul>
+<li>通过文件服务进行上传、下载，可能出现丢包或出现错误。可以加一些校验机制</li>
+</ul>
+<h3 id="数据库日志解析同步"><a href="#数据库日志解析同步" class="headerlink" title="数据库日志解析同步"></a>数据库日志解析同步</h3><ul>
+<li>数据库日志解析的同步方式可以实现实时与准实时的同步，延迟可以控制在毫秒级别的，其最大的优势就是性能好、效率高，不会对源数据库造成影响，目前，从业务系统到数据仓库中的实时增量同步，<strong>广泛采取这种方式</strong>。当然，这种方式也会存在一些问题，比如批量补数时造成大量数据更新，<strong>日志解析会处理较慢</strong>，造成数据延迟。除此之外，<strong>这种方式比较复杂</strong>，<strong>投入也较大</strong>，因为需要一个实时的抽取系统去抽取并解析日志</li>
+</ul>
+<p><img src="/aposts/f5236b59/image-20211229160911594.png" alt="image-20211229160911594"></p>
+<h2 id="大数据存储"><a href="#大数据存储" class="headerlink" title="大数据存储"></a>大数据存储</h2><p>对于大数据存储选项，需要从存储成本、数据规模、数据访问特性和查询性能等方面进行考虑，下图列举了不同场景大数据存储选型。</p>
+<p><img src="/aposts/f5236b59/image-20211229161451827.png" alt="image-20211229161451827"></p>
+<h2 id="大数据计算"><a href="#大数据计算" class="headerlink" title="大数据计算"></a>大数据计算</h2><ul>
+<li>一般分为离线计算、批量计算、实时计算和流式计算，业界一般都使用<strong>离线计算和实时计算</strong>，下图是各个计算方式的区别</li>
+</ul>
+<h3 id="离线计算"><a href="#离线计算" class="headerlink" title="离线计算"></a>离线计算</h3><p><img src="/aposts/f5236b59/image-20211229164031999.png" alt="image-20211229164031999"></p>
+<ul>
+<li>离线计算使用的多数场景是周期（小时、天，月）性执行一个job任务，离线计算应用中常用的是离线ETL的处理。如MapReduce就是一个离线的计算框架，下图举例说明了离线计算工作流</li>
+</ul>
+<p><img src="/aposts/f5236b59/image-20211229165345162.png" alt="image-20211229165345162"></p>
+<ul>
+<li>离线计算需要上下游各组件合作，一般会由多个任务单元构成（HiveQL，shell，Shell和MapReduce等），多个单元由很强的依赖关系</li>
+</ul>
+<h3 id="实时计算"><a href="#实时计算" class="headerlink" title="实时计算"></a>实时计算</h3><ul>
+<li>对数据计算要求较高，如实时的ETL，实时监控等，延时一般为毫秒级别，目前笔比较流行的实时框架有<code>Spark Streaming</code>和<code>Flink</code></li>
+<li>下图展示了一个大数据计算平台架构，其中包含离线计算和实时计算</li>
+</ul>
+<p><img src="/aposts/f5236b59/image-20211229170148516.png" alt="image-20211229170148516"></p>
+<h2 id="大数据监控"><a href="#大数据监控" class="headerlink" title="大数据监控"></a>大数据监控</h2><p>在大数据进行采集、存储和处理后，下面就是项目的上线和日常运行。在运行过程中监控和报警就非常重要</p>
+<h3 id="数据监控"><a href="#数据监控" class="headerlink" title="数据监控"></a>数据监控</h3><p>一些常见的监控内容：</p>
+<ul>
+<li>以时间维度对数据记录进行监控。比如某个时间段出现明显波动</li>
+<li>对数据的NULL和0值进行监控</li>
+<li>对数据的值域进行监控。如对数据中某字段出现合理域值以外的值</li>
+<li>对数据的重复度进行监控。如电商业务的交易记录出现重复等</li>
+</ul>
+<h3 id="运维监控"><a href="#运维监控" class="headerlink" title="运维监控"></a>运维监控</h3><ul>
+<li>在当前大数据项目中，使用服务器集群方式支撑业务已经成为常态，开发自动化运维监控系统非常重要。</li>
+<li>监控常见的cpu，men，io，tps，对大数据生态系统进行监控，如zookeeper节点可用性，yarn资源空闲情况、kafka消息堆积情况，以及spark job完成进度等</li>
+<li>其他的一些监控，如端口,nginx的延迟</li>
+</ul>
+<h2 id="大数据项目开发案例"><a href="#大数据项目开发案例" class="headerlink" title="大数据项目开发案例"></a>大数据项目开发案例</h2><ul>
+<li>数据分析平台是一类重要的大数据应用,广泛应用于互联网金融、银行、电子商务和在线教育等领域。</li>
+<li>数据分析平台通常需要实时计算、查询并借助可视化平台展示数据。通过数据分析平台,用户可以更加直观、高效和全面地了解数据分布情况,观察数据变化趋势,最终达到数据驱动业务决策的目标。</li>
+<li>与单纯的数据可视化类平台或BI报表相比,数据分析平台的链路更长,除最终的可视化数据展示以外,还包括源头的数据采集;<strong>而BI报表通常只是对数据的汇总和查询展示,不涉及数据采集、数据存储等环节</strong>。如图4-15所示,根据不同的数据分析类型,数据分析平台可分为如下几类:**用户行为类(应用比较多)**、App分析类、应用市场监控类、流量分析类和广告效果监控类等。</li>
+</ul>
+<p><img src="/aposts/f5236b59/image-20211230104909426.png" alt="image-20211230104909426"></p>
+<h3 id="项目背景介绍"><a href="#项目背景介绍" class="headerlink" title="项目背景介绍"></a>项目背景介绍</h3><ul>
+<li>分析手机App用户数量和交易的某些行为习惯，实现精准营销。类似于购物推荐这种</li>
+</ul>
+<h3 id="项目需求分析"><a href="#项目需求分析" class="headerlink" title="项目需求分析"></a>项目需求分析</h3><ul>
+<li>与传统应用开发相同,在迸行大数据项目开发前,首先要明确项目的需求。用户行为分析平台需要提供多种数据釆集方式,通过对埋点数据的采集、处理、建模和存储,进行深度分析和应用,帮助企业高效获取海量数据,并进行多维、实时和准确的数据分析,还原真实业务场。用户行为分析平台的业务流程包括数据釆集、数据处理、数据建模、数据存储、数据簑理、智能分析和基础看板。图4-16是用户行为分析平台的业务流程。</li>
+</ul>
+<p><img src="/aposts/f5236b59/image-20211230110240930.png" alt="image-20211230110240930"></p>
+<ul>
+<li>用户行为分析主要包括：<strong>基础看板和智能分析</strong></li>
+<li>基础看板：如实时统计在线人数、启动次数</li>
+<li>智能分析：如从商品浏览率到提交订单，支付订单，各个节点用户转化率</li>
+</ul>
+<h3 id="项目开发流程"><a href="#项目开发流程" class="headerlink" title="项目开发流程"></a>项目开发流程</h3><ul>
+<li>大数据项目的完整流程如图4-18所示，在进行大数据项目开发时,首先,大数据开发工程师需要根据产品需求文档进行架构设<br>计、模型设计和调度设计,产出架构设计文档、ETL设计文档和调度设计文档;然后,项目<br>相关人员(包括测试人员)需要对这些设计进行评审等。</li>
+</ul>
+<p><img src="/aposts/f5236b59/image-20211230111333106.png" alt="image-20211230111333106"></p>
+<ul>
+<li>图4-19为大数据项目开发流程。</li>
+</ul>
+<p><img src="/aposts/f5236b59/image-20211230111422715.png" alt="image-20211230111422715"></p>
+<h4 id="结构设计"><a href="#结构设计" class="headerlink" title="结构设计"></a>结构设计</h4><p>根据平台需求的特点,在架构设计时,将用户行为分析平台拆分为4个服务：</p>
+<ul>
+<li>数据采集与预处理服务( og service)</li>
+<li>数据处理服务(实时数据处理服务(real-task)使用Flink,离线数据处理服务采用 Azkaban进行任务调度),</li>
+<li>数据查询服务(DAS),</li>
+<li>数据管理服务(DMS)</li>
+</ul>
+<p>如图4-20所示。数据从源数据到可视化展示需要从下至上经过这些服务的处理。</p>
+<p><img src="/aposts/f5236b59/image-20211230112924605.png" alt="image-20211230112924605"></p>
+<p>用户行为分析平台的核心是数据处理,即从数据采集到数据应用的数据流转,如图4-21</p>
+<p><img src="/aposts/f5236b59/image-20211230113054864.png" alt="image-20211230113054864"></p>
+<h4 id="模型设计"><a href="#模型设计" class="headerlink" title="模型设计"></a>模型设计</h4><p>根据用户行为分析平台的功能和特点,我们需要设计能够满足其应用需求的数据仓库架构。图4-24是一个数据仓库架构方案：</p>
+<p><img src="/aposts/f5236b59/image-20211230114656565.png" alt="image-20211230114656565"></p>
+<ul>
+<li>RB层(实时层)KRB的全称是 Kudu ReaBase,该层的表全部为未统计汇总的实时明细数如 krb. trs_app_event_log表是埋点日志事件表</li>
+<li>KRS层(实时汇总层)KRS的全称是Kucu Real Sum,该层的表全部为统计汇总的实时明细数据,如ks. rs app_user_open_dh表是App用活跃统计表(以小时为单位进行分区)表名的结尾后缀用于表明该表分区间单位，如本例中的<strong>dh表示小时进行分区</strong>。</li>
+<li>HDB层(贴源层):HDB的全称是 Hive Data Base,该层的表全部为未统计汇总的离线明细数据。该层数据是通过mpaa从KRB层同步过来的,如 hdb db app_equ_install_info表是App安装设备信息表。</li>
+<li>HDS层(汇总层):HDS的全称是 Hive Data stat,该层的表全部为统计汇总的离线数据明细</li>
+<li>HTP层(中间层):HTP的全称是 Hive Temporary,该层的表全部为数据处理过程中生成的中间临时数据,如 htp. tmp skynet user_retention d表是日用户留存分析中间表（以天为单位进行分区）</li>
+<li>IVW层(视图层):IVW的全称是 mpala View,该层的表全部为mpaa操作的视图表,如ⅳ w.trs <em>app_event log表是KRB层(实时层)中提到的 krs. trs app</em> event_log表的视图。</li>
+</ul>
+<p>在后续测试案例中,我们会使用实时层中的埋点日志事件表 krb. trs_ app_event_loc<br>这里只举例说明该表的结构设计。表4-7汇总了(贴出部分)</p>
+<ul>
+<li>以log_i作为主键。</li>
+<li>以log_id作为hash分区,以log_dt作为rang分区</li>
+<li>历史数据分区和最新数据分区一直保留</li>
+<li><strong>只新增数据,增量分区,使用 Flink SQL写数据</strong></li>
+</ul>
+<p><img src="/aposts/f5236b59/image-20211230115834627.png" alt="image-20211230115834627"></p>
+<h4 id="调度设计"><a href="#调度设计" class="headerlink" title="调度设计"></a>调度设计</h4><ul>
+<li>上面列出的HDS层数据表位于用户行为分析平台的离线数据存储层。对于离线数据理,具有周期性、重复性的特点,因此,我们使用调度工具 <strong>Azkaban</strong>提供的可靠计划来处理数据。根据各数据表中数据的前后依赖关系,用户行为分析平台的调度设计如图4-25际示。由图4-25可知,为了提高项目的可读性,子任务节点的命名与表名保持形式上的统一(子任务节点生成与之名称对应的数据表中的数据)。</li>
+</ul>
+<p><img src="/aposts/f5236b59/image-20211230151251867.png" alt="image-20211230151251867"></p>
+<ul>
+<li>在完成用户行为分析平台的架构设计、模型设计和调度设计后，开发人员便可以根据它们进行相应的代码开发。通过对用户行为分析平台项目的介绍，我们不难发现，项目中需要开发的功能多、业务流程复杂，需要测试人员的参与来保证平台质量。、</li>
+</ul>
+]]></content>
+      <categories>
+        <category>大数据</category>
+      </categories>
+      <tags>
+        <tag>大数据</tag>
       </tags>
   </entry>
   <entry>
