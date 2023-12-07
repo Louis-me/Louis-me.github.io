@@ -191,6 +191,387 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/92a4a15a/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="一个正经的测试工程师">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="施坤的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/aposts/92a4a15a/" class="post-title-link" itemprop="url">java之jsp</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-12-01 16:26:10" itemprop="dateCreated datePublished" datetime="2023-12-01T16:26:10+08:00">2023-12-01</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-12-07 15:19:02" itemprop="dateModified" datetime="2023-12-07T15:19:02+08:00">2023-12-07</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/aposts/92a4a15a/" class="post-meta-item leancloud_visitors" data-flag-title="java之jsp" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/aposts/92a4a15a/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/aposts/92a4a15a/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><ul>
+<li><a href="/aposts/547ebd88/">上篇</a>主要搭建了servlet，本次主要加入jsp的应用，功能包括增删改查</li>
+<li>本次java 版本</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">C:\Users\Administrator&gt;java -version</span><br><span class="line">java version &quot;1.8.0_381&quot;</span><br><span class="line">Java(TM) SE Runtime Environment (build 1.8.0_381-b09)</span><br><span class="line">Java HotSpot(TM) 64-Bit Server VM (build 25.381-b09, mixed mode)</span><br></pre></td></tr></table></figure>
+
+<h2 id="简单实例"><a href="#简单实例" class="headerlink" title="简单实例"></a>简单实例</h2><ul>
+<li>webapp下新增index.jsp</li>
+</ul>
+<figure class="highlight jsp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">&lt;%@ page language=<span class="string">&quot;java&quot;</span> contentType=<span class="string">&quot;text/html; charset=UTF-8&quot;</span> pageEncoding=<span class="string">&quot;UTF-8&quot;</span>%&gt;</span><br><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">    &lt;meta charset=<span class="string">&quot;UTF-8&quot;</span>&gt;</span><br><span class="line">    &lt;title&gt;主页&lt;/title&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">    &lt;%</span><br><span class="line">	    String user=(String)session.getAttribute(<span class="string">&quot;user&quot;</span>);</span><br><span class="line">        <span class="keyword">if</span> (user != <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="comment">// 用户已登录</span></span><br><span class="line">             out.println(<span class="string">&quot;&lt;a href=\&quot;homePage.jsp\&quot;&gt;&quot;</span>);</span><br><span class="line">             out.println(<span class="string">&quot;登录成功主页&quot;</span>);</span><br><span class="line">             out.println(<span class="string">&quot;&lt;/a&gt;&quot;</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// 用户未登录</span></span><br><span class="line">            out.println(<span class="string">&quot;&lt;a href=\&quot;login.jsp\&quot;&gt;&quot;</span>);</span><br><span class="line">            out.println(<span class="string">&quot;登录界面&quot;</span>);</span><br><span class="line">            out.println(<span class="string">&quot;&lt;/a&gt;&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    %&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>当sesssion数据不存在，可点击进入登录界面</li>
+</ul>
+<p><img src="/aposts/92a4a15a/image-20231201173302810.png" alt="image-20231201173302810"></p>
+<ul>
+<li>webapp&#x2F;login.jsp</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">&lt;%@ page language=&quot;java&quot; contentType=&quot;text/html; charset=UTF-8&quot; pageEncoding=&quot;UTF-8&quot;%&gt;</span><br><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">    &lt;meta charset=&quot;UTF-8&quot;&gt;</span><br><span class="line">    &lt;title&gt;登录&lt;/title&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">    &lt;h1&gt;登录&lt;/h1&gt;</span><br><span class="line">    &lt;form action=&quot;login&quot; method=&quot;post&quot;&gt;</span><br><span class="line">        &lt;label for=&quot;username&quot;&gt;用户名：&lt;/label&gt;</span><br><span class="line">        &lt;input type=&quot;text&quot; id=&quot;username&quot; name=&quot;username&quot; required&gt;&lt;br&gt;&lt;br&gt;</span><br><span class="line">        &lt;label for=&quot;password&quot;&gt;密码：&lt;/label&gt;</span><br><span class="line">        &lt;input type=&quot;password&quot; id=&quot;password&quot; name=&quot;password&quot; required&gt;&lt;br&gt;&lt;br&gt;</span><br><span class="line">        &lt;input type=&quot;submit&quot; value=&quot;登录&quot;&gt;</span><br><span class="line">    &lt;/form&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>登录的servlet</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> xyz.shi.servlet;</span><br><span class="line">...</span><br><span class="line"><span class="keyword">import</span> javax.servlet.annotation.WebServlet;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.http.HttpSession;</span><br><span class="line"></span><br><span class="line"><span class="meta">@WebServlet(&quot;/login&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">LoginServlet</span> <span class="keyword">extends</span> <span class="title class_">HttpServlet</span>&#123;</span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">doPost</span><span class="params">(HttpServletRequest request, HttpServletResponse response)</span> <span class="keyword">throws</span> ServletException, IOException &#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">username</span> <span class="operator">=</span> request.getParameter(<span class="string">&quot;username&quot;</span>);</span><br><span class="line">        <span class="type">String</span> <span class="variable">password</span> <span class="operator">=</span> request.getParameter(<span class="string">&quot;password&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 验证用户名和密码</span></span><br><span class="line">        <span class="keyword">if</span> (username.equals(<span class="string">&quot;admin&quot;</span>) &amp;&amp; password.equals(<span class="string">&quot;123456&quot;</span>)) &#123;</span><br><span class="line">            <span class="comment">// 登录成功，创建会话</span></span><br><span class="line">            <span class="type">HttpSession</span> <span class="variable">session</span> <span class="operator">=</span> request.getSession();</span><br><span class="line">            session.setAttribute(<span class="string">&quot;username&quot;</span>, username);</span><br><span class="line">            response.sendRedirect(<span class="string">&quot;homePage.jsp&quot;</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// 登录失败，返回登录页面</span></span><br><span class="line">            request.setAttribute(<span class="string">&quot;error&quot;</span>, <span class="string">&quot;用户名或密码错误&quot;</span>);</span><br><span class="line">            request.getRequestDispatcher(<span class="string">&quot;login.jsp&quot;</span>).forward(request, response);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>webapp&#x2F;homePage.jsp</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&lt;%@ page language=&quot;java&quot; contentType=&quot;text/html; charset=UTF-8&quot; pageEncoding=&quot;UTF-8&quot;%&gt;</span><br><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">    &lt;meta charset=&quot;UTF-8&quot;&gt;</span><br><span class="line">    &lt;title&gt;主页&lt;/title&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">    &lt;h1&gt;欢迎登录，$&#123;username&#125;！&lt;/h1&gt;</span><br><span class="line">    &lt;a href=&quot;logout&quot;&gt;注销&lt;/a&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>注销的Servlet</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">package xyz.shi.servlet;</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line">@WebServlet(&quot;/logout&quot;)</span><br><span class="line">public class LogoutServlet extends HttpServlet &#123;</span><br><span class="line">    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException &#123;</span><br><span class="line">        HttpSession session = request.getSession();</span><br><span class="line">        session.invalidate();</span><br><span class="line">        response.sendRedirect(&quot;login.jsp&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/aposts/92a4a15a/image-20231201173645669.png" alt="image-20231201173645669"></p>
+<h2 id="结合jdbc"><a href="#结合jdbc" class="headerlink" title="结合jdbc"></a>结合jdbc</h2><ul>
+<li><p>基础知识参考<a href="/aposts/d2d01856">这篇</a>文章</p>
+</li>
+<li><p>首先pom.xml中加入本次需要的依赖文件</p>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;mysql&lt;/groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;mysql-connector-java&lt;/artifactId&gt;</span><br><span class="line">            &lt;version&gt;8.0.13&lt;/version&gt;</span><br><span class="line">        &lt;/dependency&gt;</span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;commons-dbutils&lt;/groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;commons-dbutils&lt;/artifactId&gt;</span><br><span class="line">            &lt;version&gt;1.5&lt;/version&gt;</span><br><span class="line">        &lt;/dependency&gt;</span><br><span class="line">        &lt;!-- https://mvnrepository.com/artifact/javax.servlet/jstl --&gt;</span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;javax.servlet&lt;/groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;jstl&lt;/artifactId&gt;</span><br><span class="line">            &lt;version&gt;1.2&lt;/version&gt;</span><br><span class="line">        &lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>jstl主要是在jsp中使用的标签语法</p>
+</blockquote>
+<h2 id="三层架构"><a href="#三层架构" class="headerlink" title="三层架构"></a>三层架构</h2><ul>
+<li><p><strong>表示层：</strong>主要是指与用户交互的界面。用于接收用户输入的数据和显示处理后用户需要的数  据。</p>
+</li>
+<li><p><strong>业务逻辑层：</strong>UI层（表示）和DAL层（数据访问）之间的桥梁。实现业务逻辑。业务逻辑具体包含：验证、计算、业务规则等等。</p>
+</li>
+<li><p><strong>数据访问层：</strong>与数据库打交道。主要实现对数据的增、删、改、查。将存储在数据库中的数据提交给业务层，同时将业务层处理的数据保存到数据库。</p>
+</li>
+<li><p><strong>实体层：</strong>它不属于三层中的任何一层，贯穿于三层，在三层之间传递数据;</p>
+</li>
+</ul>
+<h3 id="实体层"><a href="#实体层" class="headerlink" title="实体层"></a>实体层</h3><ul>
+<li><code>xyz.shi.entity.User</code></li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">package xyz.shi.entity;</span><br><span class="line">public class User &#123;</span><br><span class="line">    private int id;</span><br><span class="line">    private String name;</span><br><span class="line">    private String password;</span><br><span class="line">    public int getId() &#123;</span><br><span class="line">        return id;</span><br><span class="line">    &#125;</span><br><span class="line">    // 因为QueryRunner创建Bean对象的过程使用的是newInstance()方法，该方法只能调用无参构</span><br><span class="line">    public  User () &#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    public User(int id,String name, String password) &#123;</span><br><span class="line">        this.name = name;</span><br><span class="line">        this.id = id;</span><br><span class="line">        this.password = password;</span><br><span class="line">    &#125;</span><br><span class="line">    public void setId(int id) &#123; this.id = id;&#125;</span><br><span class="line">    public String getName() &#123; return name;&#125;</span><br><span class="line">    public void setName(String name) &#123; this.name = name;&#125;</span><br><span class="line">    public void setPassword(String password) &#123;this.password = password;&#125;</span><br><span class="line">    public String getPassword() &#123;return password;&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="数据访问层"><a href="#数据访问层" class="headerlink" title="数据访问层"></a>数据访问层</h3><ul>
+<li><p>分为接口和实现接口，代码放在<code>xyz.shi.dao</code> 包下</p>
+</li>
+<li><p>接口层<code>xyz.shi.dao.UserDao</code></p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> xyz.shi.dao;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> xyz.shi.entity.User;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.sql.SQLException;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">UserDao</span> &#123;</span><br><span class="line">    <span class="comment">//返回所有对象</span></span><br><span class="line">    List&lt;User&gt; <span class="title function_">queryAllList</span><span class="params">(String sql)</span>;</span><br><span class="line">    <span class="comment">// 查找多条记录</span></span><br><span class="line">    List&lt;User&gt; <span class="title function_">queryList</span><span class="params">(String sql,Object ...params)</span>;</span><br><span class="line">    <span class="comment">// 查找一条记录</span></span><br><span class="line">    User <span class="title function_">queryOne</span><span class="params">(String sql, Object... parameters)</span>;</span><br><span class="line">    <span class="comment">// 修改(删除)一条记录</span></span><br><span class="line">    <span class="type">int</span> <span class="title function_">update</span><span class="params">(String sql, Object... parameters)</span> ;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>实现接口层<code>xyz.shi.dao.impl.UserDaoImpl</code></li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> xyz.shi.dao.impl;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.commons.dbutils.QueryRunner;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.dbutils.handlers.BeanHandler;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.dbutils.handlers.BeanListHandler;</span><br><span class="line"><span class="keyword">import</span> xyz.shi.dao.UserDao;</span><br><span class="line"><span class="keyword">import</span> xyz.shi.entity.User;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.sql.Connection;</span><br><span class="line"><span class="keyword">import</span> java.sql.SQLException;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"><span class="keyword">import</span> xyz.shi.util.jdbcUtil;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">UserDaoImpl</span> <span class="keyword">implements</span> <span class="title class_">UserDao</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">QueryRunner</span> <span class="variable">qr</span> <span class="operator">=</span>  <span class="keyword">new</span> <span class="title class_">QueryRunner</span>();</span><br><span class="line">    <span class="comment">// 返回所有对象</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> List&lt;User&gt; <span class="title function_">queryAllList</span><span class="params">(String sql)</span> &#123;</span><br><span class="line">        <span class="type">Connection</span> <span class="variable">connection</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            connection =jdbcUtil.getConnection();</span><br><span class="line">            <span class="keyword">return</span> qr.query(connection, sql, <span class="keyword">new</span> <span class="title class_">BeanListHandler</span>&lt;User&gt;(User.class));</span><br><span class="line">        &#125; <span class="keyword">catch</span> (SQLException e) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(e);</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            jdbcUtil.closeResource(<span class="literal">null</span>,<span class="literal">null</span>, connection);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 返回多个对象(即查询的结果是多行)</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> List&lt;User&gt; <span class="title function_">queryList</span><span class="params">(String sql, Object... params)</span> &#123;</span><br><span class="line">        <span class="type">Connection</span> <span class="variable">connection</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            connection =jdbcUtil.getConnection();</span><br><span class="line">            <span class="keyword">return</span> qr.query(connection, sql, <span class="keyword">new</span> <span class="title class_">BeanListHandler</span>&lt;User&gt;(User.class), params);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (SQLException e) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(e);</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            jdbcUtil.closeResource(<span class="literal">null</span>,<span class="literal">null</span>, connection);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 查询单行结果</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> User <span class="title function_">queryOne</span><span class="params">(String sql, Object... parameters)</span> &#123;</span><br><span class="line">        <span class="type">Connection</span> <span class="variable">connection</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">             connection =jdbcUtil.getConnection();</span><br><span class="line">            <span class="keyword">return</span> qr.query(connection, sql, <span class="keyword">new</span> <span class="title class_">BeanHandler</span>&lt;User&gt;(User.class), parameters);</span><br><span class="line"></span><br><span class="line">        &#125; <span class="keyword">catch</span> (SQLException e) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(e);</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            jdbcUtil.closeResource(<span class="literal">null</span>,<span class="literal">null</span>, connection);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 修改(增删改通用)</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">update</span><span class="params">(String sql, Object... parameters)</span> &#123;</span><br><span class="line">        <span class="type">Connection</span> <span class="variable">connection</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            connection =jdbcUtil.getConnection();</span><br><span class="line">            <span class="keyword">return</span>  qr.update(connection,sql,parameters);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (SQLException e) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(e);</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">        jdbcUtil.closeResource(<span class="literal">null</span>,<span class="literal">null</span>, connection);</span><br><span class="line">    &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="业务逻辑层"><a href="#业务逻辑层" class="headerlink" title="业务逻辑层"></a>业务逻辑层</h3><ul>
+<li><p>分为接口和实现接口，代码放在<code>xyz.shi.service</code> 包下</p>
+</li>
+<li><p>接口层<code>xyz.shi.service.UserService</code></p>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">package xyz.shi.service;</span><br><span class="line">import xyz.shi.entity.User;</span><br><span class="line">import java.util.List;</span><br><span class="line">public interface UserService &#123;</span><br><span class="line">    //根据userId查询一个user</span><br><span class="line">    User getUser(String id);</span><br><span class="line">    //根据name和password查询一个user</span><br><span class="line">    Boolean ableLogin (String name , String password);</span><br><span class="line">    //查找多条user对象</span><br><span class="line">    List&lt;User&gt; getUserList(Object... parameters);</span><br><span class="line">    //查找所有user对象</span><br><span class="line">    List&lt;User&gt; getAllUser();</span><br><span class="line">    //增加一个user</span><br><span class="line">    int addUser(Object... parameters);</span><br><span class="line">    //删除一个user</span><br><span class="line">    int deleteUser(int userId);</span><br><span class="line">    //修改一个user的信息</span><br><span class="line">    int updateUser(Object... parameters);</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>xyz.shi.service.impl.UserServiceImpl</code> 实现接口，这里就是编写具体的逻辑</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br></pre></td><td class="code"><pre><span class="line">package xyz.shi.service.impl;</span><br><span class="line"></span><br><span class="line">import xyz.shi.dao.UserDao;</span><br><span class="line">import xyz.shi.dao.impl.UserDaoImpl;</span><br><span class="line">import xyz.shi.entity.User;</span><br><span class="line">import xyz.shi.service.UserService;</span><br><span class="line"></span><br><span class="line">import java.sql.SQLException;</span><br><span class="line">import java.util.List;</span><br><span class="line"></span><br><span class="line">public class UserServiceImpl implements UserService &#123;</span><br><span class="line">    //创建UserDaoImpl对象</span><br><span class="line">    private UserDao userDao = new UserDaoImpl();</span><br><span class="line">    //查询所有</span><br><span class="line">    @Override</span><br><span class="line">    public List&lt;User&gt; getAllUser() &#123;</span><br><span class="line">        String sql =&quot;select * from `users`&quot;;</span><br><span class="line">        try &#123;</span><br><span class="line">            return  userDao.queryAllList(sql);</span><br><span class="line">        &#125; catch (Exception e) &#123;</span><br><span class="line">            System.out.println(e);</span><br><span class="line">            return null;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    //根据userId查询一个user</span><br><span class="line">    @Override</span><br><span class="line">    public User getUser(String userId) &#123;</span><br><span class="line">        String sql = &quot;select * from `users` where id = ? &quot;;</span><br><span class="line">        try &#123;</span><br><span class="line">            return  userDao.queryOne(sql,userId);</span><br><span class="line">        &#125; catch (Exception e) &#123;</span><br><span class="line">            System.out.println(e);</span><br><span class="line">            return null;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    //根据userId和password查询一个user</span><br><span class="line">    @Override</span><br><span class="line">    public Boolean ableLogin (String name , String password) &#123;</span><br><span class="line">        String sql =&quot;select * from `users` where name = ? and password = ? &quot;;</span><br><span class="line">        User user = userDao.queryOne(sql, name, password);</span><br><span class="line"></span><br><span class="line">        return user != null ? true : false;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    //根据条件查询多个user</span><br><span class="line">    @Override</span><br><span class="line">    public List&lt;User&gt; getUserList(Object... parameters) &#123;</span><br><span class="line">        String sql =&quot;select * from `users` where ? = ? &quot;;</span><br><span class="line">        try &#123;</span><br><span class="line">            return  userDao.queryList(sql,parameters);</span><br><span class="line">        &#125; catch (Exception e) &#123;</span><br><span class="line">            System.out.println(e);</span><br><span class="line">            return null;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    //增加一个user</span><br><span class="line">    @Override</span><br><span class="line">    public int addUser(Object... parameters) &#123;</span><br><span class="line">        String sql =&quot;insert into `users` (name, password) values (?, ?)&quot;;</span><br><span class="line">        return  userDao.update(sql, parameters);</span><br><span class="line">    &#125;</span><br><span class="line">    //删除一个user</span><br><span class="line">    @Override</span><br><span class="line">    public int deleteUser(int userId) &#123;</span><br><span class="line">        String sql =&quot;delete from `users` where id = ? &quot;;</span><br><span class="line">        return  userDao.update(sql,userId);</span><br><span class="line">    &#125;</span><br><span class="line">    //修改一个user的信息</span><br><span class="line">    @Override</span><br><span class="line">    public int updateUser(Object... parameters) &#123;</span><br><span class="line">        String sql =&quot;update `users` set name = ?,password = ? where id = ? &quot;;</span><br><span class="line">        return  userDao.update(sql,parameters);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="表示层"><a href="#表示层" class="headerlink" title="表示层"></a>表示层</h3><ul>
+<li><p>也就是用户界面层</p>
+</li>
+<li><p><code>xyz.shi.servlet</code> 层，主要放jsp文件传过来的数据，然后把服务器数据传给jsp页面</p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> xyz.shi.servlet;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> xyz.shi.entity.User;</span><br><span class="line"><span class="keyword">import</span> xyz.shi.service.UserService;</span><br><span class="line"><span class="keyword">import</span> xyz.shi.service.impl.UserServiceImpl;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.ServletException;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.http.HttpServlet;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.http.HttpServletRequest;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.http.HttpServletResponse;</span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.annotation.WebServlet;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.http.HttpSession;</span><br><span class="line"></span><br><span class="line"><span class="meta">@WebServlet(&quot;/login&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">LoginServlet</span> <span class="keyword">extends</span> <span class="title class_">HttpServlet</span>&#123;</span><br><span class="line">    <span class="comment">// 注意这里get的写法，当其他页面新增或者修改成功后，跳转到/login页面，然后自动读取用户列表数据</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">doGet</span><span class="params">(HttpServletRequest req, HttpServletResponse resp)</span> <span class="keyword">throws</span> ServletException, IOException &#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">session</span> <span class="operator">=</span> (String) req.getSession().getAttribute(<span class="string">&quot;username&quot;</span>);</span><br><span class="line">        <span class="keyword">if</span> (session != <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="type">UserService</span> <span class="variable">userService</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">UserServiceImpl</span>();</span><br><span class="line">            List&lt;User&gt; users = userService.getAllUser();</span><br><span class="line">            req.setAttribute(<span class="string">&quot;userList&quot;</span>, users);</span><br><span class="line">            req.getRequestDispatcher(<span class="string">&quot;homePage.jsp&quot;</span>).forward(req, resp);;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">doPost</span><span class="params">(HttpServletRequest request, HttpServletResponse response)</span> <span class="keyword">throws</span> ServletException, IOException &#123;</span><br><span class="line">        <span class="type">UserService</span> <span class="variable">userService</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">UserServiceImpl</span>();</span><br><span class="line">        <span class="type">String</span> <span class="variable">username</span> <span class="operator">=</span> request.getParameter(<span class="string">&quot;username&quot;</span>);</span><br><span class="line">        <span class="type">String</span> <span class="variable">password</span> <span class="operator">=</span> request.getParameter(<span class="string">&quot;password&quot;</span>);</span><br><span class="line">         <span class="type">boolean</span> <span class="variable">login</span> <span class="operator">=</span> userService.ableLogin(username, password);</span><br><span class="line">        <span class="comment">// 验证用户名和密码</span></span><br><span class="line">        <span class="keyword">if</span> (login) &#123;</span><br><span class="line">            <span class="comment">// 登录成功，创建会话</span></span><br><span class="line">            <span class="type">HttpSession</span> <span class="variable">session</span> <span class="operator">=</span> request.getSession();</span><br><span class="line">            List&lt;User&gt; users = userService.getAllUser();</span><br><span class="line">            request.setAttribute(<span class="string">&quot;userList&quot;</span>, users);</span><br><span class="line"></span><br><span class="line">            session.setAttribute(<span class="string">&quot;username&quot;</span>, username);</span><br><span class="line">            System.out.println(<span class="string">&quot;登录成功&quot;</span>);</span><br><span class="line">            request.getRequestDispatcher(<span class="string">&quot;homePage.jsp&quot;</span>).forward(request, response);;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// 登录失败，返回登录页面</span></span><br><span class="line">            System.out.println(<span class="string">&quot;登录失败&quot;</span>);</span><br><span class="line">            request.setAttribute(<span class="string">&quot;error&quot;</span>, <span class="string">&quot;用户名或密码错误&quot;</span>);</span><br><span class="line">            request.getRequestDispatcher(<span class="string">&quot;login.jsp&quot;</span>).forward(request, response);</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>默认打开的是index.jsp界面</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">&lt;%@ page language=&quot;java&quot; contentType=&quot;text/html; charset=UTF-8&quot; pageEncoding=&quot;UTF-8&quot;%&gt;</span><br><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">    &lt;meta charset=&quot;UTF-8&quot;&gt;</span><br><span class="line">    &lt;title&gt;主页&lt;/title&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">    &lt;%</span><br><span class="line">	    String user=(String)session.getAttribute(&quot;username&quot;);</span><br><span class="line">        if (user != null) &#123;</span><br><span class="line">            // 用户已登录</span><br><span class="line">             out.println(&quot;&lt;a href=\&quot;homePage.jsp\&quot;&gt;&quot;);</span><br><span class="line">             out.println(&quot;登录成功主页&quot;);</span><br><span class="line">             out.println(&quot;&lt;/a&gt;&quot;);</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            // 用户未登录</span><br><span class="line">            out.println(&quot;&lt;a href=\&quot;login.jsp\&quot;&gt;&quot;);</span><br><span class="line">            out.println(&quot;登录界面&quot;);</span><br><span class="line">            out.println(&quot;&lt;/a&gt;&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">    %&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>登录界面login.jsp</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">&lt;%@ page language=&quot;java&quot; contentType=&quot;text/html; charset=UTF-8&quot; pageEncoding=&quot;UTF-8&quot;%&gt;</span><br><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">    &lt;meta charset=&quot;UTF-8&quot;&gt;</span><br><span class="line">    &lt;title&gt;登录&lt;/title&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">    &lt;h1&gt;登录&lt;/h1&gt;</span><br><span class="line">    &lt;form action=&quot;login&quot; method=&quot;post&quot;&gt;</span><br><span class="line">        &lt;label for=&quot;username&quot;&gt;用户名：&lt;/label&gt;</span><br><span class="line">        &lt;input type=&quot;text&quot; id=&quot;username&quot; name=&quot;username&quot; required&gt;&lt;br&gt;&lt;br&gt;</span><br><span class="line">        &lt;label for=&quot;password&quot;&gt;密码：&lt;/label&gt;</span><br><span class="line">        &lt;input type=&quot;password&quot; id=&quot;password&quot; name=&quot;password&quot; required&gt;&lt;br&gt;&lt;br&gt;</span><br><span class="line">        &lt;input type=&quot;submit&quot; value=&quot;登录&quot;&gt;</span><br><span class="line">    &lt;/form&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>登录后的界面homepage.jsp</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD XHTML 1.0 Transitional//EN&quot; &quot;http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd&quot;&gt;&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;%@ page contentType=&quot;text/html; charset=UTF-8&quot; pageEncoding=&quot;UTF-8&quot;%&gt;</span><br><span class="line">&lt;%@ taglib uri=&quot;http://java.sun.com/jsp/jstl/core&quot; prefix=&quot;c&quot;%&gt;</span><br><span class="line"></span><br><span class="line">&lt;html&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">    &lt;meta charset=&quot;UTF-8&quot;&gt;</span><br><span class="line">    &lt;title&gt;主页&lt;/title&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">    &lt;h1&gt;欢迎登录，$&#123;username&#125;！&lt;/h1&gt;</span><br><span class="line">    &lt;a href=&quot;add.jsp&quot;&gt;添加&lt;/a&gt;</span><br><span class="line">    &lt;table&gt;</span><br><span class="line">        &lt;tr&gt;</span><br><span class="line">            &lt;td&gt;id&lt;/td&gt;</span><br><span class="line">            &lt;td&gt;用户名&lt;/td&gt;</span><br><span class="line">            &lt;td&gt;状态&lt;/td&gt;</span><br><span class="line">            &lt;td&gt;操作&lt;/td&gt;</span><br><span class="line">        &lt;/tr&gt;</span><br><span class="line">        &lt;c:forEach var=&quot;item&quot; items=&quot;$&#123;requestScope.userList&#125;&quot;&gt;</span><br><span class="line">                &lt;tr&gt;</span><br><span class="line">                    &lt;td&gt;$&#123;item.id&#125;&lt;/td&gt;</span><br><span class="line">                    &lt;td&gt;$&#123;item.name&#125;&lt;/td&gt;</span><br><span class="line">                    &lt;td&gt;&lt;a href=&quot;userFind?id=$&#123;item.id&#125;&quot;&gt;修改&lt;/a&gt;</span><br><span class="line">            &lt;td&gt;&lt;a href=&quot;&lt;%=request.getContextPath()%&gt;/userDel?id=$&#123;item.id&#125;&quot;&gt;删 除&lt;/a&gt;&lt;/td&gt;</span><br><span class="line">                &lt;/tr&gt;</span><br><span class="line">            &lt;/c:forEach&gt;</span><br><span class="line"></span><br><span class="line">    &lt;/table&gt;</span><br><span class="line">    &lt;a href=&quot;logout&quot;&gt;注销&lt;/a&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>登录成功后LoginServlet把用户列表传给了homePage.jsp，后续的修改，删除逻辑也是一样</p>
+</blockquote>
+<ul>
+<li>最终代码在<a target="_blank" rel="noopener" href="https://github.com/Louis-me/studyJsp">这里</a></li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/547ebd88/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="一个正经的测试工程师">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="施坤的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/aposts/547ebd88/" class="post-title-link" itemprop="url">JavaWeb开发之Servlet</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-11-28 11:01:22" itemprop="dateCreated datePublished" datetime="2023-11-28T11:01:22+08:00">2023-11-28</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-12-01 16:25:06" itemprop="dateModified" datetime="2023-12-01T16:25:06+08:00">2023-12-01</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/aposts/547ebd88/" class="post-meta-item leancloud_visitors" data-flag-title="JavaWeb开发之Servlet" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/aposts/547ebd88/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/aposts/547ebd88/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><ul>
+<li>本编开始学习JavaWeb开发的内容，环境信息如下：<code>IDEA，Maven，win10，java version &quot;1.8.0_381&quot;</code></li>
+</ul>
+<h2 id="搭建Servlet"><a href="#搭建Servlet" class="headerlink" title="搭建Servlet"></a>搭建Servlet</h2><p>在IDEA中新建<code>webapp</code></p>
+<p><img src="/aposts/547ebd88/image-20231129101815913.png" alt="image-20231129101815913"></p>
+<ul>
+<li>注意maven设置为本地</li>
+</ul>
+<p><img src="/aposts/547ebd88/image-20231129102658617.png" alt="image-20231129102658617"></p>
+<ul>
+<li><p>在根目录新建：<code>src\main\java</code>  和<code>src\main\resources</code>、<code>src\main\webapp</code></p>
+</li>
+<li><p>在pom.xml中加入依赖文件</p>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependencies&gt;</span><br><span class="line">    &lt;dependency&gt;</span><br><span class="line">        &lt;groupId&gt;javax.servlet&lt;/groupId&gt;</span><br><span class="line">        &lt;artifactId&gt;javax.servlet-api&lt;/artifactId&gt;</span><br><span class="line">        &lt;version&gt;4.0.1&lt;/version&gt;</span><br><span class="line">        &lt;scope&gt;provided&lt;/scope&gt;</span><br><span class="line">    &lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>手动新建<code>src\main\webapp\WEB-INF\web.xml</code></li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span><br><span class="line">&lt;web-app xmlns=&quot;http://xmlns.jcp.org/xml/ns/javaee&quot;</span><br><span class="line">         xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span><br><span class="line">         xsi:schemaLocation=&quot;http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd&quot;</span><br><span class="line">         version=&quot;4.0&quot;&gt;</span><br><span class="line">&lt;/web-app&gt;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>src-mian-java</code> 新建一个包名为<code>xyz.shi.servlet</code> ， 然后在报名下新建<code>MyServlet</code></li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">package xyz.shi.servlet;</span><br><span class="line"></span><br><span class="line">import javax.servlet.ServletException;</span><br><span class="line">import javax.servlet.http.HttpServlet;</span><br><span class="line">import javax.servlet.http.HttpServletRequest;</span><br><span class="line">import javax.servlet.http.HttpServletResponse;</span><br><span class="line">import java.io.IOException;</span><br><span class="line">import javax.servlet.annotation.WebServlet;</span><br><span class="line"></span><br><span class="line">@WebServlet(&quot;/hello&quot;)</span><br><span class="line">public class MyServlet extends HttpServlet &#123;</span><br><span class="line">    @Override</span><br><span class="line">    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException &#123;</span><br><span class="line">        System.out.println(&quot;get请求&quot;);</span><br><span class="line">        resp.getWriter().write(&quot;hello world&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    @Override</span><br><span class="line">    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException &#123;</span><br><span class="line">        System.out.println(&quot;post请求&quot;);</span><br><span class="line">        resp.getWriter().write(&quot;你好&quot;);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<ul>
+<li>@WebServlet()会根据某些GET请求会生效, 然后里面写的 &#x2F;hello,表示当请求的url是 &#x2F;hello 的请求才会生效</li>
+<li>重写了父类中的get和post方法</li>
+</ul>
+</blockquote>
+<ul>
+<li>虽然打war 复制到Tomcat的webapps里面运行是一种方法,但是这种方法比较麻烦.所以我更推荐使用<code>Smart Tomcat</code></li>
+</ul>
+<p><img src="/aposts/547ebd88/image-20231130163237555.png" alt="image-20231130163237555.png"></p>
+<ul>
+<li>打开编辑配置</li>
+</ul>
+<p><img src="/aposts/547ebd88/image-20231130163329491.png" alt="image-20231130163329491"></p>
+<ul>
+<li>并选择本地tomcat的根目录，设置路径等，端口不用改</li>
+</ul>
+<p><img src="/aposts/547ebd88/image-20231201154747879.png" alt="image-20231201154747879"></p>
+<ul>
+<li>点击运行按钮</li>
+</ul>
+<p><img src="/aposts/547ebd88/image-20231130163627514.png" alt="image-20231130163627514"></p>
+<ul>
+<li>出现如下信息说明启动成功</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">30-Nov-2023 16:36:32.793 信息 [main] org.apache.coyote.AbstractProtocol.start 开始协议处理句柄[&quot;http-nio-8080&quot;]</span><br><span class="line">30-Nov-2023 16:36:32.807 信息 [main] org.apache.catalina.startup.Catalina.start [594]毫秒后服务器启动</span><br><span class="line">http://localhost:8080/WebTest</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>浏览器访问<code>http://localhost:8080/WebTest/hello</code></li>
+</ul>
+<p><img src="/aposts/547ebd88/image-20231130163758294.png" alt="image-20231130163758294"></p>
+<ul>
+<li>把<code>MyServlet</code>中的<code>WebServlet(&quot;/hello&quot;)</code> 的注解去掉</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">ackage xyz.shi.servlet;</span><br><span class="line"></span><br><span class="line">import javax.servlet.ServletException;</span><br><span class="line">import javax.servlet.http.HttpServlet;</span><br><span class="line">import javax.servlet.http.HttpServletRequest;</span><br><span class="line">import javax.servlet.http.HttpServletResponse;</span><br><span class="line">import java.io.IOException;</span><br><span class="line">import javax.servlet.annotation.WebServlet;</span><br><span class="line"></span><br><span class="line">public class MyServlet extends HttpServlet &#123;</span><br><span class="line">    @Override</span><br><span class="line">    ....</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>在web.xml文件下，配置Servlet</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span><br><span class="line">&lt;web-app xmlns=&quot;http://xmlns.jcp.org/xml/ns/javaee&quot;</span><br><span class="line">         xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span><br><span class="line">         xsi:schemaLocation=&quot;http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd&quot;</span><br><span class="line">         version=&quot;4.0&quot;&gt;</span><br><span class="line">    &lt;servlet&gt;</span><br><span class="line">        &lt;!--servlet命名--&gt;</span><br><span class="line">        &lt;servlet-name&gt;MyServlet&lt;/servlet-name&gt;</span><br><span class="line">        &lt;!--servlet类的全限定名(路径+文件名)--&gt;</span><br><span class="line">        &lt;servlet-class&gt;xyz.shi.servlet.MyServlet&lt;/servlet-class&gt;</span><br><span class="line">    &lt;/servlet&gt;</span><br><span class="line">    &lt;!--定义Servlet的请求映射--&gt;</span><br><span class="line">    &lt;servlet-mapping&gt;</span><br><span class="line">        &lt;!--要映射的servlet名，与上方定义的servlet-name一致--&gt;</span><br><span class="line">        &lt;servlet-name&gt;MyServlet&lt;/servlet-name&gt;</span><br><span class="line">        &lt;!--请求映射url，必须以/开头--&gt;</span><br><span class="line">        &lt;!--之后通过项目上下文路径+该路径，就能访问FirstServlet类--&gt;</span><br><span class="line">        &lt;url-pattern&gt;/hello&lt;/url-pattern&gt;</span><br><span class="line">    &lt;/servlet-mapping&gt;</span><br><span class="line">&lt;/web-app&gt;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>重写运行，在浏览器中访问<code>http://localhost:8080/WebTest/hello</code></li>
+</ul>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>有两种运行Servlet的方式</p>
+<ul>
+<li>第一种是在类中直接加上<code>WebServlet(&quot;/hello&quot;)</code>的标识，然后启动</li>
+<li>第二种是在web.xml中进行配置，推荐第二种方式更加方便管理</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/4ff332ff/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1563,452 +1944,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/b435d821/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="一个正经的测试工程师">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="施坤的博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/aposts/b435d821/" class="post-title-link" itemprop="url">vue3实践笔记</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-08-04 11:08:32" itemprop="dateCreated datePublished" datetime="2023-08-04T11:08:32+08:00">2023-08-04</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-08-30 09:20:22" itemprop="dateModified" datetime="2023-08-30T09:20:22+08:00">2023-08-30</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/vue3/" itemprop="url" rel="index"><span itemprop="name">vue3</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/aposts/b435d821/" class="post-meta-item leancloud_visitors" data-flag-title="vue3实践笔记" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/aposts/b435d821/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/aposts/b435d821/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h2><ul>
-<li><a target="_blank" rel="noopener" href="https://nodejs.org/en">node.js</a> 安装16.0以上的版本</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">C:\Users\Administrator&gt;node -v</span><br><span class="line">v18.17.0</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>你的当前工作目录正是打算创建项目的目录。在命令行中运行以下命令</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">E:\proj\StudyVue&gt;npm init vue@latest</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>这一指令将会安装并执行 <a target="_blank" rel="noopener" href="https://github.com/vuejs/create-vue">create-vue</a>，它是 Vue 官方的项目脚手架工具</p>
-<p>如果不确定是否要开启某个功能，你可以直接按下回车键选择 <code>No</code>。在项目被创建后，通过以下步骤安装依赖并启动开发服务器1：</p>
-</blockquote>
-<ul>
-<li>在项目被创建后，通过以下步骤安装依赖并启动开发服务器：</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt; cd vue-project</span><br><span class="line">&gt; npm install</span><br><span class="line">&gt; npm run dev</span><br></pre></td></tr></table></figure>
-
-<p><img src="/aposts/b435d821/image-20230804152932990.png" alt="image-20230804152932990"></p>
-<h2 id="vue配置"><a href="#vue配置" class="headerlink" title="vue配置"></a>vue配置</h2><ul>
-<li>安装依赖文件</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">// elementUI 3.0 版本</span><br><span class="line">npm install element-plus --save</span><br><span class="line">// http请求</span><br><span class="line">npm install axios  --save</span><br><span class="line">// 路由</span><br><span class="line">npm install vue-router@4 --save</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-<ul>
-<li><code>src\router\routers.js </code>  手动新建自定义路由</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line">const routes = [</span><br><span class="line">    &#123;</span><br><span class="line">        name: &quot;login&quot;,</span><br><span class="line">        path: &quot;/login&quot;,</span><br><span class="line">        component: () =&gt; import(&quot;../components/Login.vue&quot;)</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">        name: &quot;home&quot;,</span><br><span class="line">        path: &quot;/home&quot;,</span><br><span class="line">        component: () =&gt; import(&quot;../components/Home.vue&quot;)</span><br><span class="line">    &#125;</span><br><span class="line">]</span><br><span class="line">export default routes;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><code>src\router\index.js</code>  对外暴露路由</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">import &#123; createRouter, createWebHistory &#125; from &quot;vue-router&quot;</span><br><span class="line">import routes from &quot;./routes&quot;</span><br><span class="line">var router=createRouter(&#123;</span><br><span class="line">    history:createWebHistory(),</span><br><span class="line">    routes</span><br><span class="line">&#125;)</span><br><span class="line">export default router</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><code>src/index.js</code>  为全局配置文件</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">import &#x27;./assets/main.css&#x27;</span><br><span class="line">import &#123; createApp &#125; from &#x27;vue&#x27;</span><br><span class="line">import App from &#x27;./App.vue&#x27;</span><br><span class="line">// 导入我的路由</span><br><span class="line">import router from &quot;./router/index&quot;</span><br><span class="line">// 导入ElementPlus</span><br><span class="line">import ElementPlus from &#x27;element-plus&#x27;</span><br><span class="line">// 引用element的css</span><br><span class="line">import &#x27;element-plus/dist/index.css&#x27;</span><br><span class="line">const app = createApp(App)</span><br><span class="line">app.use(ElementPlus)</span><br><span class="line">app.use(router)</span><br><span class="line">app.mount(&#x27;#app&#x27;)</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><code>App.vue</code> 代码修改如下</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&lt;script setup&gt;</span><br><span class="line"> </span><br><span class="line">&lt;/script&gt;</span><br><span class="line"> </span><br><span class="line">&lt;template&gt;</span><br><span class="line"> &lt;router-view&gt;&lt;/router-view&gt;</span><br><span class="line">&lt;/template&gt;</span><br><span class="line"> </span><br><span class="line">&lt;style scoped&gt;</span><br><span class="line"> </span><br><span class="line">&lt;/style&gt;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>按需导入elementUI，在2.0版本中可以需要手动管理elementUI中各个组件，3.0中现在可以自动导入，安装如下插件：</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">npm install -D unplugin-vue-components unplugin-auto-import</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>然后把下列代码插入到你的 <code>Vite</code> 或 <code>Webpack</code> 的配置文件中</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">//vite.config.js</span><br><span class="line"></span><br><span class="line">import &#123; fileURLToPath, URL &#125; from &#x27;node:url&#x27;</span><br><span class="line"></span><br><span class="line">import &#123; defineConfig &#125; from &#x27;vite&#x27;</span><br><span class="line">import vue from &#x27;@vitejs/plugin-vue&#x27;</span><br><span class="line">// 新增</span><br><span class="line">import AutoImport from &#x27;unplugin-auto-import/vite&#x27;</span><br><span class="line">import Components from &#x27;unplugin-vue-components/vite&#x27;</span><br><span class="line">import &#123; ElementPlusResolver &#125; from &#x27;unplugin-vue-components/resolvers&#x27;</span><br><span class="line"></span><br><span class="line">// https://vitejs.dev/config/</span><br><span class="line">export default defineConfig(&#123;</span><br><span class="line">  plugins: [</span><br><span class="line">    vue(),</span><br><span class="line">    // 新增下面两个</span><br><span class="line">    AutoImport(&#123;</span><br><span class="line">      resolvers: [ElementPlusResolver()],</span><br><span class="line">    &#125;),</span><br><span class="line">    Components(&#123;</span><br><span class="line">      resolvers: [ElementPlusResolver()],</span><br><span class="line">    &#125;),</span><br><span class="line">  ],</span><br><span class="line">  resolve: &#123;</span><br><span class="line">    alias: &#123;</span><br><span class="line">      &#x27;@&#x27;: fileURLToPath(new URL(&#x27;./src&#x27;, import.meta.url))</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><code>src\utils\ajax.js</code> 拦截<code>axios</code>  设置请求url</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">import axios from &#x27;axios&#x27;</span><br><span class="line"></span><br><span class="line">const ajax = axios.create(&#123;</span><br><span class="line">    baseURL: &#x27;http://127.0.0.1:8100/testModel&#x27;,</span><br><span class="line">    timeout: 10000,</span><br><span class="line">    withCredentials: true</span><br><span class="line">  &#125;)</span><br><span class="line"></span><br><span class="line">ajax.interceptors.response.use(</span><br><span class="line">    response =&gt; &#123;</span><br><span class="line">      //拦截响应，如果发现接口返回400做统一处理跳转到登陆</span><br><span class="line">      if (response.data.code) &#123;</span><br><span class="line">        switch (response.data.code) &#123;</span><br><span class="line">          case 400:</span><br><span class="line">            window.location.href=&#x27;/login/&#x27;</span><br><span class="line">            </span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">      &#125;</span><br><span class="line">      const headers = response.headers</span><br><span class="line"></span><br><span class="line">      return response</span><br><span class="line">    &#125;,</span><br><span class="line">    //接口错误状态处理，也就是说无响应时的处理</span><br><span class="line">    error =&gt; &#123;</span><br><span class="line">        console.log(&quot;Please check your internet connection.&quot;);</span><br><span class="line">        console.log(error)</span><br><span class="line">        return Promise.reject(error) // 返回接口返回的错误信息</span><br><span class="line">    &#125;)</span><br><span class="line"> </span><br><span class="line"></span><br><span class="line">//导出我们建立的axios实例模块，ES6 export用法</span><br><span class="line">export default ajax;</span><br><span class="line"> </span><br><span class="line"></span><br><span class="line">//导出我们建立的axios实例模块，ES6 export用法</span><br><span class="line">export default ajax;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><code>src\utils\html.js</code> 所有请求都编写到这里</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">import ajax from &quot;./ajax&quot;;</span><br><span class="line">// export const GetPosts = () =&gt; ajax.get(&#x27;posts/1&#x27;)</span><br><span class="line">// export const GetsearchData = (params) =&gt; ajax.get(&#x27;/list&#x27;,&#123;params&#125;)</span><br><span class="line">// export const PostPosts = (params) =&gt; ajax.post(&#x27;posts&#x27;,params)</span><br><span class="line"></span><br><span class="line">export const LoginPost = (params) =&gt; ajax.post(&#x27;/login/&#x27;,params)</span><br><span class="line">export const CsrfGet = () =&gt; ajax.get(&#x27;/get_csrf_token/&#x27;)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>修改<code>package.json</code></li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">&quot;scripts&quot;: &#123;</span><br><span class="line">  &quot;dev&quot;: &quot;vite --host 0.0.0.0&quot;, // 修改为这样，不然无法用ip访问</span><br><span class="line">  &quot;build&quot;: &quot;vite build&quot;,</span><br><span class="line">  &quot;preview&quot;: &quot;vite preview&quot;</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="登录界面"><a href="#登录界面" class="headerlink" title="登录界面"></a>登录界面</h2><ul>
-<li>编写登录界面<code>src\componets\Login</code></li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;div class=&quot;login-wrap&quot;&gt;</span><br><span class="line">    &lt;!--</span><br><span class="line">        :rules=&quot;rules&quot;为表单自定义规则</span><br><span class="line">        :model=&quot;loginForm&quot; 绑定js中的return 参数</span><br><span class="line">      --&gt;</span><br><span class="line">    &lt;el-form ref=&quot;loginFormRef&quot; :rules=&quot;rules&quot; :model=&quot;loginForm&quot; class=&quot;login_form&quot;&gt;</span><br><span class="line">      &lt;h1 class=&quot;title&quot;&gt;用户登录&lt;/h1&gt;</span><br><span class="line">      &lt;el-form-item label=&quot;用户名&quot; prop=&quot;username&quot;&gt;</span><br><span class="line">        &lt;el-input type=&quot;text&quot; placeholder=&quot;用户账号&quot; v-model=&quot;loginForm.username&quot; auto-complete=&quot;off&quot;&gt;&lt;/el-input&gt;</span><br><span class="line">      &lt;/el-form-item&gt;</span><br><span class="line">      &lt;el-form-item label=&quot;密码&quot; prop=&quot;password&quot; style=&quot;margin-left:10px;&quot;&gt;</span><br><span class="line">        &lt;el-input type=&quot;password&quot; placeholder=&quot;密码&quot; v-model=&quot;loginForm.password&quot; auto-complete=&quot;off&quot;&gt;&lt;/el-input&gt;</span><br><span class="line">      &lt;/el-form-item&gt;</span><br><span class="line">      &lt;el-form-item&gt;</span><br><span class="line">        &lt;el-button type=&quot;primary&quot; @click=&quot;submitForm(loginFormRef)&quot; style=&quot;width: 100%;&quot;&gt;登录&lt;/el-button&gt;</span><br><span class="line">      &lt;/el-form-item&gt;</span><br><span class="line">      &lt;el-form-item&gt;</span><br><span class="line">        &lt;el-button type=&quot;primary&quot; @click=&quot;resetForm(loginFormRef)&quot; style=&quot;width: 100%;&quot;&gt;重置&lt;/el-button&gt;</span><br><span class="line">      &lt;/el-form-item&gt;</span><br><span class="line">    &lt;/el-form&gt;</span><br><span class="line">  &lt;/div&gt;</span><br><span class="line">&lt;/template&gt;</span><br><span class="line">   </span><br><span class="line">&lt;script lang=&quot;ts&quot; setup&gt;</span><br><span class="line">import &#123; reactive, ref &#125; from &#x27;vue&#x27;</span><br><span class="line">import type &#123; FormInstance, FormRules &#125; from &#x27;element-plus&#x27;</span><br><span class="line">import &#123; ElMessage &#125; from &#x27;element-plus&#x27;</span><br><span class="line"></span><br><span class="line">// 引用登录请求</span><br><span class="line">import &#123; LoginPost &#125; from &quot;../utils/html.js&quot;</span><br><span class="line"></span><br><span class="line">//引入路由函数</span><br><span class="line">import &#123; useRouter &#125; from &quot;vue-router&quot;;</span><br><span class="line">const router = useRouter()</span><br><span class="line"></span><br><span class="line">interface LoginForm &#123;</span><br><span class="line">  username: string</span><br><span class="line">  password: string</span><br><span class="line">&#125;</span><br><span class="line">const loginFormRef = ref&lt;FormInstance&gt;()</span><br><span class="line">// 定义表单绑定的model</span><br><span class="line">const loginForm = reactive(&#123;</span><br><span class="line">  username: &quot;test&quot;,</span><br><span class="line">  password: &quot;&quot;,</span><br><span class="line">&#125;)</span><br><span class="line">// 定义规则</span><br><span class="line">const rules = reactive&lt;FormRules&lt;LoginForm&gt;&gt;(&#123;</span><br><span class="line">  username: [</span><br><span class="line">    &#123; required: true, message: &#x27;请输入用户名&#x27;, trigger: &#x27;blur&#x27; &#125;,</span><br><span class="line">    // &#123; min: 3, max: 5, message: &#x27;Length should be 3 to 5&#x27;, trigger: &#x27;blur&#x27; &#125;,</span><br><span class="line">  ],</span><br><span class="line"></span><br><span class="line">  password: [</span><br><span class="line">    &#123;</span><br><span class="line">      required: true,</span><br><span class="line">      message: &#x27;请输入密码&#x27;,</span><br><span class="line">    &#125;,</span><br><span class="line">  ],</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">const submitForm = (formEl: FormInstance | undefined) =&gt; &#123;</span><br><span class="line">  if (!formEl) return</span><br><span class="line">  formEl.validate(async (valid, fields) =&gt; &#123;</span><br><span class="line">    if (valid) &#123;</span><br><span class="line">      console.log(&#x27;submit!&#x27;)</span><br><span class="line">      LoginPost(JSON.stringify(loginForm)).then(res =&gt; &#123;</span><br><span class="line">        console.log(res)</span><br><span class="line">        if (res[&quot;data&quot;][&quot;code&quot;] == 1) &#123;</span><br><span class="line">          // console.log(&quot;登录成功&quot;)</span><br><span class="line">          ElMessage(&#123;</span><br><span class="line">            message: &#x27;登录成功.&#x27;,</span><br><span class="line">            type: &#x27;success&#x27;,</span><br><span class="line">          &#125;)</span><br><span class="line">          localStorage.setItem(&#x27;username&#x27;, loginForm.username);</span><br><span class="line">          router.push(&quot;/home&quot;)</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">          ElMessage(&#123;</span><br><span class="line">            message: res.data.msg,</span><br><span class="line">            type: &#x27;error&#x27;,</span><br><span class="line">          &#125;)</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;)</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">      console.log(&#x27;error submit!&#x27;, fields)</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br><span class="line">const resetForm = (formEl: FormInstance | undefined) =&gt; &#123;</span><br><span class="line">  if (!formEl) return</span><br><span class="line">  formEl.resetFields()</span><br><span class="line">&#125;</span><br><span class="line">&lt;/script&gt;</span><br><span class="line">   </span><br><span class="line">&lt;style scoped&gt;</span><br><span class="line">.login-wrap &#123;</span><br><span class="line">  box-sizing: border-box;</span><br><span class="line">  width: 100%;</span><br><span class="line">  height: 100%;</span><br><span class="line">  padding-top: 10%;</span><br><span class="line">  background-image: url(zdmc+);</span><br><span class="line">  /* background-color: #112346; */</span><br><span class="line">  background-repeat: no-repeat;</span><br><span class="line">  background-position: center right;</span><br><span class="line">  background-size: 100%;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">.login-container &#123;</span><br><span class="line">  border-radius: 10px;</span><br><span class="line">  margin: 0px auto;</span><br><span class="line">  width: 350px;</span><br><span class="line">  padding: 30px 35px 15px 35px;</span><br><span class="line">  background: #fff;</span><br><span class="line">  border: 1px solid #eaeaea;</span><br><span class="line">  text-align: left;</span><br><span class="line">  box-shadow: 0 0 20px 2px rgba(0, 0, 0, 0.1);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">.title &#123;</span><br><span class="line">  margin: 0px auto 40px auto;</span><br><span class="line">  text-align: center;</span><br><span class="line">  color: #505458;</span><br><span class="line">&#125;</span><br><span class="line">&lt;/style&gt;</span><br></pre></td></tr></table></figure>
-
-<h2 id="django后台"><a href="#django后台" class="headerlink" title="django后台"></a>django后台</h2><ul>
-<li>代码来自<a href="aposts/8d0d1e49/">这里</a></li>
-</ul>
-<h3 id="跨域配置"><a href="#跨域配置" class="headerlink" title="跨域配置"></a>跨域配置</h3><ul>
-<li><code>StudyDjango/StudyDjango/settings.py</code></li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">INSTALLED_APPS = [</span><br><span class="line">   	....</span><br><span class="line">    &#x27;TestModel&#x27;,  # 添加此项</span><br><span class="line">    &#x27;corsheaders&#x27;,  # 跨域</span><br><span class="line"></span><br><span class="line">]</span><br><span class="line"></span><br><span class="line">MIDDLEWARE = [</span><br><span class="line">    &#x27;django.middleware.security.SecurityMiddleware&#x27;,</span><br><span class="line">    &#x27;django.contrib.sessions.middleware.SessionMiddleware&#x27;,</span><br><span class="line">    # &#x27;django.middleware.csrf.CsrfViewMiddleware&#x27;,</span><br><span class="line">    # 加入这个</span><br><span class="line">    &#x27;corsheaders.middleware.CorsMiddleware&#x27;,</span><br><span class="line">]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#跨域增加忽略</span><br><span class="line">CORS_ALLOW_CREDENTIALS = True</span><br><span class="line">CORS_ORIGIN_ALLOW_ALL = True</span><br><span class="line">CORS_ORIGIN_WHITELIST = (</span><br><span class="line"> &#x27;http://localhost:5173&#x27;,</span><br><span class="line"> &#x27;http://127.0.0.1:5173&#x27;,</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">CORS_ALLOW_METHODS = (</span><br><span class="line"> &#x27;DELETE&#x27;,</span><br><span class="line"> &#x27;GET&#x27;,</span><br><span class="line"> &#x27;OPTIONS&#x27;,</span><br><span class="line"> &#x27;PATCH&#x27;,</span><br><span class="line"> &#x27;POST&#x27;,</span><br><span class="line"> &#x27;PUT&#x27;,</span><br><span class="line"> &#x27;VIEW&#x27;,</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">CORS_ALLOW_HEADERS = (</span><br><span class="line"> &#x27;XMLHttpRequest&#x27;,</span><br><span class="line"> &#x27;X_FILENAME&#x27;,</span><br><span class="line"> &#x27;accept-encoding&#x27;,</span><br><span class="line"> &#x27;authorization&#x27;,</span><br><span class="line"> &#x27;content-type&#x27;,</span><br><span class="line"> &#x27;dnt&#x27;,</span><br><span class="line"> &#x27;origin&#x27;,</span><br><span class="line"> &#x27;user-agent&#x27;,</span><br><span class="line"> &#x27;x-csrftoken&#x27;,</span><br><span class="line"> &#x27;x-requested-with&#x27;,</span><br><span class="line"> &#x27;Pragma&#x27;,</span><br><span class="line">&#x27;json&#x27;</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>登录代码</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">def user_login(request):</span><br><span class="line">    if request.method != &quot;POST&quot;:</span><br><span class="line">        return JsonResponse(&#123;&#x27;code&#x27;: -1, &#x27;msg&#x27;: &#x27;method must is POST&#x27;&#125;)</span><br><span class="line"></span><br><span class="line">    data = json.loads(request.body)</span><br><span class="line">    user_name = data.get(&#x27;username&#x27;)</span><br><span class="line">    pwd = data.get(&quot;password&quot;)</span><br><span class="line">    print(data)</span><br><span class="line">    try:</span><br><span class="line">        user_entry = Users.objects.get(name=user_name, pwd=pwd)</span><br><span class="line">        if user_entry:</span><br><span class="line">            # 设置登录的session</span><br><span class="line">            request.session[&quot;user&quot;] = user_name</span><br><span class="line">            return JsonResponse(&#123;&#x27;code&#x27;: 1, &#x27;msg&#x27;: &#x27;login is success&#x27;&#125;)</span><br><span class="line">        else:</span><br><span class="line">            return JsonResponse(&#123;&#x27;code&#x27;: -1, &#x27;msg&#x27;: &#x27;login is fail221&#x27;&#125;)</span><br><span class="line">    except ObjectDoesNotExist:</span><br><span class="line">        return JsonResponse(&#123;&#x27;code&#x27;: -1, &#x27;msg&#x27;: &#x27;login is fail111&#x27;&#125;)</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>运行代码</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">npm run dev</span><br><span class="line"></span><br><span class="line">&gt; vue-project@0.0.0 dev</span><br><span class="line">&gt; vite</span><br></pre></td></tr></table></figure>
-
-<p><img src="/aposts/b435d821/image-20230808190806334.png" alt="image-20230808190806334"></p>
-<ul>
-<li>输入用户名和密码登录成功后，跳转到了home页面</li>
-</ul>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
-<li><p>本次用的setup，和vue2.0 区别比较大，比如调用方法不在放到method中</p>
-</li>
-<li><p>解决了vue和django 交互的跨域问题</p>
-</li>
-<li><p>自定义路由</p>
-</li>
-<li><p>封装<code>axios</code></p>
-</li>
-<li><p>客户端一定要用127.0.0.1 访问，需要和django中设置的白名单ip保持一致</p>
-</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/8d0d1e49/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="一个正经的测试工程师">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="施坤的博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/aposts/8d0d1e49/" class="post-title-link" itemprop="url">python django实践二</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-08-02 16:35:27" itemprop="dateCreated datePublished" datetime="2023-08-02T16:35:27+08:00">2023-08-02</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-08-03 18:09:09" itemprop="dateModified" datetime="2023-08-03T18:09:09+08:00">2023-08-03</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/" itemprop="url" rel="index"><span itemprop="name">python</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/aposts/8d0d1e49/" class="post-meta-item leancloud_visitors" data-flag-title="python django实践二" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/aposts/8d0d1e49/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/aposts/8d0d1e49/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><p>紧接<a href="/aposts/dbc9f282">python django实践</a></p>
-<h2 id="聚合和分组查询"><a href="#聚合和分组查询" class="headerlink" title="聚合和分组查询"></a>聚合和分组查询</h2><h3 id="聚合查询（aggregate）"><a href="#聚合查询（aggregate）" class="headerlink" title="聚合查询（aggregate）"></a>聚合查询（aggregate）</h3><ul>
-<li><p>聚合查询函数是对一组值执行计算，<strong>并返回单个值</strong>。</p>
-</li>
-<li><p><code>Django</code> 使用聚合查询前要先从 <code>django.db.models</code> 引入<code> Avg、Max、Min、Count、Sum</code>（首字母大写）。</p>
-</li>
-<li><p>计算所有图书的平均价格:</p>
-</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">from django.db.models import Avg,Max,Min,Count,Sum  #   引入函数</span><br><span class="line">...</span><br><span class="line">res = models.Book.objects.aggregate(Avg(&quot;price&quot;))</span><br><span class="line">print(res, type(res))</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>计算所有图书的数量、最贵价格和最便宜价格:</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">res=models.Book.objects.aggregate(c=Count(&quot;id&quot;),max=Max(&quot;price&quot;),min=Min(&quot;price&quot;))</span><br><span class="line">print(res,type(res)</span><br></pre></td></tr></table></figure>
-
-<h3 id="分组查询（annotate）"><a href="#分组查询（annotate）" class="headerlink" title="分组查询（annotate）"></a>分组查询（annotate）</h3><ul>
-<li>分组查询一般会用到聚合函数，所以使用前要先从<code> django.db.models</code> 引入 Avg,Max,Min,Count,Sum（首字母大写）</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">from django.db.models import Avg,Max,Min,Count,Sum  #   引入函数</span><br></pre></td></tr></table></figure>
-
-<p><strong>返回值：</strong></p>
-<ul>
-<li>分组后，用 values 取值，则返回值是 QuerySet 数据类型里面为一个个字典；</li>
-<li>分组后，用 values_list 取值，则返回值是 QuerySet 数据类型里面为一个个元组。</li>
-</ul>
-<p>MySQL 中的 limit 相当于 ORM 中的 QuerySet 数据类型的切片。</p>
-<blockquote>
-<p>annotate 里面放聚合函数。</p>
-<ul>
-<li><strong>values 或者 values_list 放在 annotate 前面：</strong>values 或者 values_list 是声明以什么字段分组，annotate 执行分组。</li>
-<li><strong>values 或者 values_list 放在annotate后面：</strong> annotate 表示直接以当前表的pk执行分组，values 或者 values_list 表示查询哪些字段， 并且要将 annotate 里的聚合函数起别名，在 values 或者 values_list 里写其别名。</li>
-</ul>
-</blockquote>
-<h4 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h4><ul>
-<li>统计每一个出版社的最便宜的书的价格：</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">res = models.Publish.objects.values(&quot;name&quot;).annotate(in_price = Min(&quot;book__price&quot;))</span><br><span class="line">print(res)</span><br><span class="line"></span><br><span class="line">&lt;QuerySet [&#123;&#x27;name&#x27;: &#x27;菜鸟出版社&#x27;, &#x27;in_price&#x27;: Decimal(&#x27;100.00&#x27;)&#125;, &#123;&#x27;name&#x27;: &#x27;明教出版社&#x27;, &#x27;in_price&#x27;: Decimal(&#x27;300.00&#x27;)&#125;]&gt;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>统计每一本书的作者个数：</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">res = models.Book.objects.annotate(c = Count(&quot;authors__name&quot;)).values(&quot;title&quot;,&quot;c&quot;)</span><br><span class="line">print(res)</span><br><span class="line"></span><br><span class="line">&lt;QuerySet [&#123;&#x27;title&#x27;: &#x27;菜鸟教程&#x27;, &#x27;c&#x27;: 1&#125;, &#123;&#x27;title&#x27;: &#x27;吸星大法&#x27;, &#x27;c&#x27;: 1&#125;, &#123;&#x27;title&#x27;: &#x27;冲灵剑法&#x27;, &#x27;c&#x27;: 1&#125;]&gt;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>统计每一本以”菜”开头的书籍的作者个数：</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">res = models.Book.objects.filter(title__startswith=&quot;菜&quot;).annotate(c = Count(&quot;authors__name&quot;)).values(&quot;title&quot;,&quot;c&quot;)</span><br><span class="line">print(res)</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>统计不止一个作者的图书名称：</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">res = models.Book.objects.annotate(c = Count(&quot;authors__name&quot;)).filter(c__gt=0).values(&quot;title&quot;,&quot;c&quot;)</span><br><span class="line">print(res)</span><br><span class="line"></span><br><span class="line">&lt;QuerySet [&#123;&#x27;title&#x27;: &#x27;菜鸟教程&#x27;, &#x27;c&#x27;: 1&#125;, &#123;&#x27;title&#x27;: &#x27;吸星大法&#x27;, &#x27;c&#x27;: 1&#125;, &#123;&#x27;title&#x27;: &#x27;冲灵剑法&#x27;, &#x27;c&#x27;: 1&#125;]&gt;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>根据一本图书作者数量的多少对查询集 QuerySet 进行降序排序:</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">res = models.Book.objects.annotate(c = Count(&quot;authors__name&quot;)).order_by(&quot;-c&quot;).values(&quot;title&quot;,&quot;c&quot;)</span><br><span class="line">print(res)</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>查询各个作者出的书的总价格:</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">res = models.Author.objects.annotate(all = Sum(&quot;book__price&quot;)).values(&quot;name&quot;,&quot;all&quot;)</span><br><span class="line">print(res)</span><br></pre></td></tr></table></figure>
-
-<h3 id="F-查询"><a href="#F-查询" class="headerlink" title="F() 查询"></a>F() 查询</h3><ul>
-<li><p>F() 的实例可以在查询中引用字段，来比较同一个 model 实例中两个不同字段的值</p>
-</li>
-<li><p>F 动态获取对象字段的值，可以进行运算。</p>
-</li>
-<li><p>Django 支持 F() 对象之间以及 F() 对象和常数之间的加减乘除和取余的操作。</p>
-</li>
-<li><p>修改操作（update）也可以使用 F() 函数。</p>
-</li>
-</ul>
-<h4 id="实例-1"><a href="#实例-1" class="headerlink" title="实例"></a>实例</h4><ul>
-<li>查询工资大于年龄的人：</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">from django.db.models import F</span><br><span class="line">...</span><br><span class="line">book=models.Emp.objects.filter(salary__gt=F(&quot;age&quot;)).values(&quot;name&quot;,&quot;age&quot;)</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>将每一本书的价格提高100元:</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">res = models.Book.objects.update(price=F(&quot;price&quot;)+100)</span><br><span class="line">print(res)</span><br></pre></td></tr></table></figure>
-
-<h3 id="Q-查询"><a href="#Q-查询" class="headerlink" title="Q() 查询"></a>Q() 查询</h3><ul>
-<li><p>之前构造的过滤器里的多个条件的关系都是 and，如果需要执行更复杂的查询（例如 or 语句），就可以使用 Q 。</p>
-</li>
-<li><p>Q 对象可以使用 &amp; | ~ （与 或 非）操作符进行组合。优先级从高到低：~ &amp; |。</p>
-</li>
-</ul>
-<h4 id="实例-2"><a href="#实例-2" class="headerlink" title="实例"></a>实例</h4><ul>
-<li>查询价格大于 350 或者名称以菜开头的书籍的名称和价格。</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">from django.db.models import Q</span><br><span class="line"></span><br><span class="line">res=models.Book.objects.filter(Q(price__gt=350)|Q(title__startswith=&quot;菜&quot;)).values(&quot;title&quot;,&quot;price&quot;)</span><br><span class="line">print(res)</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>查询以”菜”结尾或者不是 2010 年 10 月份的书籍:</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">res = models.Book.objects.filter(Q(title__endswith=&quot;菜&quot;) | ~Q(Q(pub_date__year=2010) &amp; Q(pub_date__month=10)))</span><br><span class="line">print(res) </span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>查询出版日期是 2004 或者 1999 年，并且书名中包含有”菜”的书籍。</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">res = models.Book.objects.filter(Q(pub_date__year=2004) | Q(pub_date__year=1999), title__contains=&quot;菜&quot;)</span><br><span class="line">print(res) </span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>Q 对象和关键字混合使用，Q 对象要在所有关键字的前面:</p>
-</blockquote>
-<h2 id="中间件-验证登录"><a href="#中间件-验证登录" class="headerlink" title="中间件-验证登录"></a>中间件-验证登录</h2><ul>
-<li><code>StudyDjanog/TestModel/model.py</code> 加入user</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">class Users(models.Model):</span><br><span class="line">    name = models.CharField(max_length=32)</span><br><span class="line">    pwd = models.CharField(max_length=32)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>生成表结构</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">python manage.py makemigrations TestModel  </span><br><span class="line">python manage.py migrate TestModel </span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>登录代码 <code>TestModel\views.py</code></li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">def user_login(request):</span><br><span class="line">    if request.method != &quot;POST&quot;:</span><br><span class="line">        return JsonResponse(&#123;&#x27;code&#x27;: -1, &#x27;msg&#x27;: &#x27;method must is POST&#x27;&#125;)</span><br><span class="line"></span><br><span class="line">    data = json.loads(request.body)</span><br><span class="line">    user_name = data.get(&#x27;username&#x27;)</span><br><span class="line">    pwd = data.get(&quot;pwd&quot;)</span><br><span class="line">    print(data)</span><br><span class="line">    try:</span><br><span class="line">        user_entry = Users.objects.get(name=user_name, pwd=pwd)</span><br><span class="line">        if user_entry:</span><br><span class="line">            # 设置登录的session</span><br><span class="line">            request.session[&quot;user&quot;] = user_name</span><br><span class="line">            return JsonResponse(&#123;&#x27;code&#x27;: 1, &#x27;msg&#x27;: &#x27;login is success&#x27;&#125;)</span><br><span class="line">    except ObjectDoesNotExist:</span><br><span class="line">        return JsonResponse(&#123;&#x27;code&#x27;: -1, &#x27;msg&#x27;: &#x27;login is fail111&#x27;&#125;)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>编写中间件<code> TestModel\middleware\authen.py</code></li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">from django.http import JsonResponse</span><br><span class="line">from django.shortcuts import redirect,render</span><br><span class="line">from django.utils.deprecation import MiddlewareMixin</span><br><span class="line">import re</span><br><span class="line"></span><br><span class="line">#白名单</span><br><span class="line">#将登陆、登出、验证登陆请求设为白名单，不进行用户验证。</span><br><span class="line">#这里设置了/static/静态文件，因为我这个项目静态文件没走nginx，如果静态文件通过nginx访问，可以不需要设置</span><br><span class="line">exclued_path = [&quot;/login/&quot;,&quot;/testModel/login/&quot;,&quot;/logout/&quot;,&quot;/login_ajax_check&quot;,&quot;/static/&quot;]</span><br><span class="line"></span><br><span class="line">#用来验证用户是否有权限登陆的中间件</span><br><span class="line">class AuthenticationMiddle(MiddlewareMixin):</span><br><span class="line">    def process_request(self, request):</span><br><span class="line">        url_path = request.path</span><br><span class="line">        #如果不在请求在白名单里</span><br><span class="line">        if url_path not in exclued_path:</span><br><span class="line">            #如果未登陆，则调转到登陆页面，将请求的url作为next参数</span><br><span class="line">            # if  not request.user.is_authenticated:</span><br><span class="line">            if not request.session.get(&quot;user&quot;):</span><br><span class="line">                # return redirect(&quot;/login/?next=&#123;url_path&#125;&quot;.format(url_path=url_path))</span><br><span class="line">                return JsonResponse(&#123;&#x27;code&#x27;: -1, &#x27;msg&#x27;: &#x27;login is failed2222&#x27;&#125;)</span><br><span class="line">        #如果已经登陆，则通过</span><br><span class="line">        else:</span><br><span class="line">            pass</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>引用中间件  <code>StudyDjanog\StudyDjanog\settings.py</code></li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">MIDDLEWARE = [</span><br><span class="line">    &#x27;django.middleware.security.SecurityMiddleware&#x27;,</span><br><span class="line">    &#x27;django.contrib.sessions.middleware.SessionMiddleware&#x27;,</span><br><span class="line">    &#x27;django.middleware.common.CommonMiddleware&#x27;,</span><br><span class="line">    # &#x27;django.middleware.csrf.CsrfViewMiddleware&#x27;,</span><br><span class="line">    &#x27;django.contrib.auth.middleware.AuthenticationMiddleware&#x27;,</span><br><span class="line">    &#x27;django.contrib.messages.middleware.MessageMiddleware&#x27;,</span><br><span class="line">    &#x27;django.middleware.clickjacking.XFrameOptionsMiddleware&#x27;,</span><br><span class="line">    &#x27;TestModel.middleware.authen.AuthenticationMiddle&#x27;, # 引用自定义中间件</span><br><span class="line"></span><br><span class="line">]</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>测试</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">import requests</span><br><span class="line"></span><br><span class="line">data =&#123;&quot;username&quot;: &quot;admin&quot;, &quot;pwd&quot;: &quot;123456&quot;&#125;</span><br><span class="line">rs = requests.session()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">resp = rs.post(&quot;http://127.0.0.1:8000/testModel/login/&quot;, json=data)</span><br><span class="line">print(resp.text)</span><br><span class="line"></span><br><span class="line">resp1 = rs.get(&quot;http://127.0.0.1:8000/testModel/userQuery&quot;)</span><br><span class="line">print(resp1.text)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#123;&quot;code&quot;: 1, &quot;msg&quot;: &quot;login is success&quot;&#125;</span><br><span class="line">&lt;p&gt;runoob runoob &lt;/p&gt;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>最终的session内容在django_session表中自动存储了</li>
-</ul>
-<p><img src="/aposts/8d0d1e49/image-20230803172250422.png" alt="image-20230803172250422"></p>
-<ul>
-<li>与<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_38206656/article/details/105389058">vue结合实例</a></li>
-</ul>
-<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><ul>
-<li><a target="_blank" rel="noopener" href="https://docs.djangoproject.com/zh-hans/4.2/topics/">更多内容</a></li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -2084,7 +2019,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">151</span>
+          <span class="site-state-item-count">153</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -2122,7 +2057,7 @@
     <!--<h3 class="widget-title">Tag Cloud</h3> -->
     <div id="myCanvasContainer" class="widget tagcloud">
         <canvas width="250" height="250" id="resCanvas" style="width=100%">
-            <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AWVS/" rel="tag">AWVS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Burp-Site/" rel="tag">Burp Site</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DVWA/" rel="tag">DVWA</a><span class="tag-list-count">15</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dependency-Check/" rel="tag">Dependency-Check</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/H5/" rel="tag">H5</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hadoop/" rel="tag">Hadoop</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hive/" rel="tag">Hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jenkins/" rel="tag">Jenkins</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Metasploit/" rel="tag">Metasploit</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Nessus/" rel="tag">Nessus</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Sonic/" rel="tag">Sonic</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/airtest/" rel="tag">airtest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">android性能测试</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/app%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">app安全测试</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aritest/" rel="tag">aritest</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/centos/" rel="tag">centos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/" rel="tag">chrome</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/datax/" rel="tag">datax</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/django/" rel="tag">django</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/drozer/" rel="tag">drozer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fisco-bcos/" rel="tag">fisco-bcos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flink/" rel="tag">flink</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gin/" rel="tag">gin</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/" rel="tag">go</a><span class="tag-list-count">16</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go-zero/" rel="tag">go-zero</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hive/" rel="tag">hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/httprunner/" rel="tag">httprunner</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jmeter/" rel="tag">jmeter</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka/" rel="tag">kafka</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kail/" rel="tag">kail</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode/" rel="tag">leetcode</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode-%E6%95%B0%E7%BB%84/" rel="tag">leetcode-数组</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mitmproxy/" rel="tag">mitmproxy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongodb/" rel="tag">mongodb</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/monkey/" rel="tag">monkey</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/" rel="tag">mysql</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pandas/" rel="tag">pandas</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pc%E8%87%AA%E5%8A%A8%E5%8C%96/" rel="tag">pc自动化</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/playwright/" rel="tag">playwright</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pytest/" rel="tag">pytest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a><span class="tag-list-count">23</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/" rel="tag">redis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/selenium/" rel="tag">selenium</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlite/" rel="tag">sqlite</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlmap/" rel="tag">sqlmap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tkinter/" rel="tag">tkinter</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/" rel="tag">vue</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue3/" rel="tag">vue3</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">云服务器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8C%BA%E5%9D%97%E9%93%BE/" rel="tag">区块链</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag">大数据</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">安全测试</a><span class="tag-list-count">29</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">性能测试</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%88%AC%E8%99%AB/" rel="tag">爬虫</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" rel="tag">环境搭建</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95/" rel="tag">自动化测试</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%8B%B1%E8%AF%AD%E5%AD%A6%E4%B9%A0/" rel="tag">英语学习</a><span class="tag-list-count">1</span></li></ul>
+            <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AWVS/" rel="tag">AWVS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Burp-Site/" rel="tag">Burp Site</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DVWA/" rel="tag">DVWA</a><span class="tag-list-count">15</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dependency-Check/" rel="tag">Dependency-Check</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/H5/" rel="tag">H5</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hadoop/" rel="tag">Hadoop</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hive/" rel="tag">Hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jenkins/" rel="tag">Jenkins</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Metasploit/" rel="tag">Metasploit</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Nessus/" rel="tag">Nessus</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Sonic/" rel="tag">Sonic</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/airtest/" rel="tag">airtest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">android性能测试</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/app%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">app安全测试</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aritest/" rel="tag">aritest</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/centos/" rel="tag">centos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/" rel="tag">chrome</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/datax/" rel="tag">datax</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/django/" rel="tag">django</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/drozer/" rel="tag">drozer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fisco-bcos/" rel="tag">fisco-bcos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flink/" rel="tag">flink</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gin/" rel="tag">gin</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/" rel="tag">go</a><span class="tag-list-count">16</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go-zero/" rel="tag">go-zero</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hive/" rel="tag">hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/httprunner/" rel="tag">httprunner</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jmeter/" rel="tag">jmeter</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka/" rel="tag">kafka</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kail/" rel="tag">kail</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode/" rel="tag">leetcode</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode-%E6%95%B0%E7%BB%84/" rel="tag">leetcode-数组</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mitmproxy/" rel="tag">mitmproxy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongodb/" rel="tag">mongodb</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/monkey/" rel="tag">monkey</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/" rel="tag">mysql</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pandas/" rel="tag">pandas</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pc%E8%87%AA%E5%8A%A8%E5%8C%96/" rel="tag">pc自动化</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/playwright/" rel="tag">playwright</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pytest/" rel="tag">pytest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a><span class="tag-list-count">23</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/" rel="tag">redis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/selenium/" rel="tag">selenium</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlite/" rel="tag">sqlite</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlmap/" rel="tag">sqlmap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tkinter/" rel="tag">tkinter</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/" rel="tag">vue</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue3/" rel="tag">vue3</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">云服务器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8C%BA%E5%9D%97%E9%93%BE/" rel="tag">区块链</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag">大数据</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">安全测试</a><span class="tag-list-count">29</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">性能测试</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%88%AC%E8%99%AB/" rel="tag">爬虫</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" rel="tag">环境搭建</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95/" rel="tag">自动化测试</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%8B%B1%E8%AF%AD%E5%AD%A6%E4%B9%A0/" rel="tag">英语学习</a><span class="tag-list-count">1</span></li></ul>
         </canvas>
     </div>
 </div>
