@@ -1443,14 +1443,14 @@
   </url>
   
   <url>
-    <loc>https://louis-me.github.io/tags/DVWA/</loc>
+    <loc>https://louis-me.github.io/tags/Burp-Site/</loc>
     <lastmod>2023-12-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://louis-me.github.io/tags/Burp-Site/</loc>
+    <loc>https://louis-me.github.io/tags/DVWA/</loc>
     <lastmod>2023-12-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -1576,14 +1576,14 @@
   </url>
   
   <url>
-    <loc>https://louis-me.github.io/tags/linux/</loc>
+    <loc>https://louis-me.github.io/tags/chrome/</loc>
     <lastmod>2023-12-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://louis-me.github.io/tags/chrome/</loc>
+    <loc>https://louis-me.github.io/tags/linux/</loc>
     <lastmod>2023-12-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -1709,6 +1709,13 @@
   </url>
   
   <url>
+    <loc>https://louis-me.github.io/tags/pc%E8%87%AA%E5%8A%A8%E5%8C%96/</loc>
+    <lastmod>2023-12-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
     <loc>https://louis-me.github.io/tags/airtest/</loc>
     <lastmod>2023-12-07</lastmod>
     <changefreq>weekly</changefreq>
@@ -1717,13 +1724,6 @@
   
   <url>
     <loc>https://louis-me.github.io/tags/pytest/</loc>
-    <lastmod>2023-12-07</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://louis-me.github.io/tags/pc%E8%87%AA%E5%8A%A8%E5%8C%96/</loc>
     <lastmod>2023-12-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
