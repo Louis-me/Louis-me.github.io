@@ -191,6 +191,219 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/816c9569/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="一个正经的测试工程师">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="施坤的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/aposts/816c9569/" class="post-title-link" itemprop="url">android性能测试报告</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-06-23 10:11:47 / 修改时间：16:55:20" itemprop="dateCreated datePublished" datetime="2022-06-23T10:11:47+08:00">2022-06-23</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" itemprop="url" rel="index"><span itemprop="name">性能测试</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/aposts/816c9569/" class="post-meta-item leancloud_visitors" data-flag-title="android性能测试报告" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/aposts/816c9569/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/aposts/816c9569/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="Android专项测试"><a href="#Android专项测试" class="headerlink" title="Android专项测试"></a>Android专项测试</h1><ul>
+<li>项目名：</li>
+<li>测试人：</li>
+<li>测试机型：华为 P6 ,全网通, 64+4 ,4核cpu</li>
+<li>总分：23</li>
+</ul>
+<h2 id="详细报告"><a href="#详细报告" class="headerlink" title="详细报告"></a>详细报告</h2><h3 id="首次启动（冷启动）"><a href="#首次启动（冷启动）" class="headerlink" title="首次启动（冷启动）"></a>首次启动（冷启动）</h3><ul>
+<li>优先级：P0</li>
+<li>预期结果：3秒内启动</li>
+<li>测试手段(任选一种测试方法)<ul>
+<li>logcat监控ActivityManange</li>
+<li>adb shell am start -v</li>
+<li>人工秒表计数</li>
+</ul>
+</li>
+<li>实际结果：4秒启动</li>
+<li>实际得分：2分</li>
+</ul>
+<blockquote>
+<p>优先级：一般从大到小分为P0,P1,P2</p>
+<p>得分：满分3分，满足预期结果90%的2分，满足预期结果85%得1分，低于预期结果85%得0分</p>
+</blockquote>
+<h3 id="非第一次启动（热启动）"><a href="#非第一次启动（热启动）" class="headerlink" title="非第一次启动（热启动）"></a>非第一次启动（热启动）</h3><ul>
+<li>优先级：P0</li>
+<li>预期结果：2秒内启动</li>
+<li>测试手段：应用运行到后台，采用冷启动的侧测试方法</li>
+</ul>
+<h3 id="内存测试"><a href="#内存测试" class="headerlink" title="内存测试"></a>内存测试</h3><ul>
+<li>优先级：P0</li>
+<li>预期结果：无明细内存泄漏</li>
+<li>测试手段（任选其中之一）：<ul>
+<li>在核心页面或图片较多页面用android sdk中的Monitor观察</li>
+<li>monkey随机事件,adb shell dumpsys meninfo监控内存每秒情况</li>
+</ul>
+</li>
+<li>实际结果：轮播图发现占用内存逐渐增大，偶先闪退</li>
+<li>实际得分：0</li>
+</ul>
+<h3 id="CPU测试"><a href="#CPU测试" class="headerlink" title="CPU测试"></a>CPU测试</h3><ul>
+<li><p>优先级：P1</p>
+</li>
+<li><p>预期结果：cpu占用不出现长期过高，或者极大波动</p>
+</li>
+<li><p>测试手段（任选其中之一）：</p>
+<ul>
+<li>在核心界面，adb shell 后，用top监控 </li>
+<li>monkey命令后，用adb shell dumpsys cpuinfo</li>
+</ul>
+</li>
+<li><p>实际结果：cpu正常工作</p>
+</li>
+<li><p>实际得分：3</p>
+</li>
+</ul>
+<h3 id="耗电量测试"><a href="#耗电量测试" class="headerlink" title="耗电量测试"></a>耗电量测试</h3><ul>
+<li>优先级：P2</li>
+<li>预期结果：<ul>
+<li>装目标APP,待机功耗无明细差别 </li>
+<li>进入待机，电流在正常范围 </li>
+<li>长时间使用应用耗电量正常（和竞品对比）</li>
+</ul>
+</li>
+<li>测试手段（任选其一）：<ul>
+<li>采用市场上第三方工具，如金山电池、 <strong>Battery Historian</strong></li>
+<li>基于<code>PowerManager.wakeLock</code>进行自研 </li>
+<li>更准确的测试：功耗计算&#x3D;CPU消耗+WakeLock消耗+数据传输消耗+GPS消耗+WiFi连接消耗</li>
+<li><code>db shell dumpsys battery reset</code>和<code>adb shell dumpsys batterystats --enable full-wake-history </code>清空耗电结合自带手机管家（可以看耗电详情），也可以使用<code>db shell dumpsys batterystats com.wawj.app.t | more &gt; C:\Users\del\Desktop\a.txt</code>收集目标应用耗电量</li>
+</ul>
+</li>
+</ul>
+<h3 id="流量使用情况"><a href="#流量使用情况" class="headerlink" title="流量使用情况"></a>流量使用情况</h3><ul>
+<li><p>优先级：P2</p>
+</li>
+<li><p>预期结果：流量上传下载不出现消耗过大</p>
+</li>
+<li><p>测试手段(任选一种测试方法)</p>
+<ul>
+<li>第三方工具，如流量宝</li>
+<li>抓包工具：tcpdmp</li>
+<li>adb获取</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">adb shell cat /proc/&quot; + pid + &quot;/net/dev</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="UI性能测试"><a href="#UI性能测试" class="headerlink" title="UI性能测试"></a>UI性能测试</h3><ul>
+<li>优先级：P1</li>
+</ul>
+<h4 id="显示GPU过渡绘制"><a href="#显示GPU过渡绘制" class="headerlink" title="显示GPU过渡绘制"></a>显示GPU过渡绘制</h4><ul>
+<li>预期结果：绘制颜色不能出现大量的红色</li>
+<li>测试手段：<ul>
+<li>打卡开发者GPU渲染，绘制的颜色标识从好到差为蓝色、浅绿色、淡红色、红色</li>
+</ul>
+</li>
+</ul>
+<h4 id="fps测试"><a href="#fps测试" class="headerlink" title="fps测试"></a>fps测试</h4><ul>
+<li><p>预期结果：一秒60帧，计算下来大概16.7ms一帧</p>
+</li>
+<li><p>测试手段：</p>
+<ul>
+<li>在开发者模式下，点击“GPU更显模式分析”→勾选上“dab shell dumpsys gfxinfo” ，然后执行<code>adb shell dumpsys gfxinfo 包名&gt;fps.txt</code> 用excel统计</li>
+</ul>
+</li>
+</ul>
+<h3 id="图片压缩"><a href="#图片压缩" class="headerlink" title="图片压缩"></a>图片压缩</h3><ul>
+<li>优先级：P2</li>
+<li>预期结果：不能太大，需要压缩</li>
+<li>测试手段：抓包</li>
+</ul>
+<h3 id="缓存测试"><a href="#缓存测试" class="headerlink" title="缓存测试"></a>缓存测试</h3><ul>
+<li>优先级：P2</li>
+<li>预期结果：图片和公用分类的缓存机制</li>
+<li>测试手段：<ul>
+<li>第一次和第二次查看列表图片的抓包对比</li>
+<li>第一次和第二次城市列表的分类抓包对比</li>
+</ul>
+</li>
+<li>实际结果</li>
+<li>实际得分</li>
+</ul>
+<h1 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h1><ul>
+<li>excel图片展示报告</li>
+</ul>
+<p><img src="/aposts/816c9569/2231755-e771ee8ffc125994.png"></p>
+<ul>
+<li><a href="/aposts/af1b4933">python+monkey压力测试</a></li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/98c8b172/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1699,168 +1912,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/fcb52a56/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="一个正经的测试工程师">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="施坤的博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/aposts/fcb52a56/" class="post-title-link" itemprop="url">app安全测试-平台和数据存储不当使用</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-04-01 11:09:59" itemprop="dateCreated datePublished" datetime="2022-04-01T11:09:59+08:00">2022-04-01</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-04-02 11:11:28" itemprop="dateModified" datetime="2022-04-02T11:11:28+08:00">2022-04-02</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/app%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" itemprop="url" rel="index"><span itemprop="name">app安全测试</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/aposts/fcb52a56/" class="post-meta-item leancloud_visitors" data-flag-title="app安全测试-平台和数据存储不当使用" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/aposts/fcb52a56/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/aposts/fcb52a56/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><ul>
-<li>接着上篇文章<a href="/aposts/ed775b3f/">app安全测试-逆向工程</a>继续学习</li>
-<li>可以查看<a target="_blank" rel="noopener" href="https://owasp.org/www-project-mobile-top-10/">官网top10</a>的说明</li>
-</ul>
-<h2 id="M1-平台使用不当"><a href="#M1-平台使用不当" class="headerlink" title="M1-平台使用不当"></a>M1-平台使用不当</h2><h3 id="常见类型"><a href="#常见类型" class="headerlink" title="常见类型"></a>常见类型</h3><h4 id="糟糕的Web服务强化"><a href="#糟糕的Web服务强化" class="headerlink" title="糟糕的Web服务强化"></a>糟糕的Web服务强化</h4><ul>
-<li>逻辑缺陷</li>
-<li>弱认证</li>
-<li>弱会话管理或没有会话管理</li>
-<li>会话固定</li>
-<li>使用GET方法传输的敏感数据</li>
-</ul>
-<h4 id="不安全的Web服务器配置"><a href="#不安全的Web服务器配置" class="headerlink" title="不安全的Web服务器配置"></a>不安全的Web服务器配置</h4><ul>
-<li>默认内容</li>
-<li>管理界面</li>
-<li>Web服务和支持移动的网站上的注入（SQL，XSS，Command）</li>
-<li>身份验证缺陷</li>
-<li>会话管理缺陷</li>
-<li>访问控制漏洞</li>
-<li>本地和远程文件包括</li>
-</ul>
-<h4 id="实践"><a href="#实践" class="headerlink" title="实践"></a>实践</h4><ul>
-<li>开发写代码的调试信息中，经常可能会有一些敏感的信息被打印出来，比如用<code>jd-gui</code>查看下如下内容：</li>
-</ul>
-<p><img src="/aposts/fcb52a56/image-20220401111712771.png" alt="image-20220401111712771"></p>
-<ul>
-<li>既然是查看日志，完成可以采用直接如<code>IDE+监控LogCat</code>的方式</li>
-</ul>
-<p><img src="/aposts/fcb52a56/image-20220401112145099.png" alt="image-20220401112145099"></p>
-<ul>
-<li>还有一种方式，其实就是<code>adb logcat</code> 过滤日志的方式，也是可行的</li>
-</ul>
-<h2 id="M2-不安全的数据存储"><a href="#M2-不安全的数据存储" class="headerlink" title="M2-不安全的数据存储"></a>M2-不安全的数据存储</h2><p>敏感数据未加密存储、本地文件未加密、WebView本地明文存储cookie等问题</p>
-<h3 id="常见类型-1"><a href="#常见类型-1" class="headerlink" title="常见类型"></a>常见类型</h3><ul>
-<li>SQL数据库</li>
-<li>日志文件</li>
-<li>XML数据存储或清单文件</li>
-<li>二进制数据存储</li>
-<li>Cookie</li>
-<li>敏感数据存储到SD卡</li>
-<li>SD卡上的数据可以被任意应用读取</li>
-<li>云同步</li>
-</ul>
-<h3 id="避免方式"><a href="#避免方式" class="headerlink" title="避免方式"></a>避免方式</h3><ul>
-<li>URL缓存（请求和响应）</li>
-<li>键盘按键缓存</li>
-<li>复制&#x2F;粘贴缓冲区缓存</li>
-<li>应用背景</li>
-<li>中间数据</li>
-<li>记录</li>
-<li>HTML5数据存储</li>
-<li>浏览器cookie对象</li>
-<li>析数据发送给第三方</li>
-</ul>
-<h3 id="实践-1"><a href="#实践-1" class="headerlink" title="实践"></a>实践</h3><ul>
-<li>下载<a target="_blank" rel="noopener" href="http://payatu.com/wp-content/uploads/2016/01/diva-beta.tar.gz">diva apk</a> 解压后把apk文件安装到<strong>雷电模拟器上</strong></li>
-<li>用模拟器打开apk</li>
-</ul>
-<p><img src="/aposts/fcb52a56/image-20220401160746121.png" alt="image-20220401160746121"></p>
-<p><img src="/aposts/fcb52a56/image-20220401155946405.png" alt="image-20220401155946405"></p>
-<ul>
-<li>用<code>jd-gui</code> 打开代码分析，发现使用了<code>sharepreference</code> 存信息到本地</li>
-</ul>
-<p><img src="/aposts/fcb52a56/image-20220401160501447.png" alt="image-20220401160501447"></p>
-<ul>
-<li>用<code>adb</code> 进入到<code>shell</code>，找到<code>shared_prefs</code>，最终使用<code>cat  jakhar.aseem.diva_preferences.xml</code> 查看到敏感的信息内容</li>
-</ul>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">adb shell</span><br><span class="line">cd /data/data/jakhar.aseem.diva</span><br><span class="line"></span><br><span class="line">osp:/data/data/jakhar.aseem.diva # ls</span><br><span class="line">cache  code_cache  databases  lib  shared_prefs</span><br><span class="line">osp:/data/data/jakhar.aseem.diva # cd shared_prefs</span><br><span class="line">aosp:/data/data/jakhar.aseem.diva/shared_prefs # ls</span><br><span class="line">jakhar.aseem.diva_preferences.xml</span><br><span class="line">osp:/data/data/jakhar.aseem.diva # cat  jakhar.aseem.diva_preferences.xml</span><br><span class="line"></span><br><span class="line">&lt;?xml version=&#x27;1.0&#x27; encoding=&#x27;utf-8&#x27; standalone=&#x27;yes&#x27; ?&gt;</span><br><span class="line">&lt;map&gt;</span><br><span class="line">    &lt;string name=&quot;user&quot;&gt;hello&lt;/string&gt;</span><br><span class="line">    &lt;string name=&quot;password&quot;&gt;word&lt;/string&gt;</span><br><span class="line">&lt;/map&gt;</span><br><span class="line">at jakhar.aseem.diva_preferences.xml                                          &lt;</span><br><span class="line">&lt;?xml version=&#x27;1.0&#x27; encoding=&#x27;utf-8&#x27; standalone=&#x27;yes&#x27; ?&gt;</span><br><span class="line">&lt;map&gt;</span><br><span class="line">    &lt;string name=&quot;user&quot;&gt;hello&lt;/string&gt;</span><br><span class="line">    &lt;string name=&quot;password&quot;&gt;word&lt;/string&gt;</span><br><span class="line">&lt;/map&gt;</span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1936,7 +1987,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">153</span>
+          <span class="site-state-item-count">154</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1974,7 +2025,7 @@
     <!--<h3 class="widget-title">Tag Cloud</h3> -->
     <div id="myCanvasContainer" class="widget tagcloud">
         <canvas width="250" height="250" id="resCanvas" style="width=100%">
-            <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AWVS/" rel="tag">AWVS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Burp-Site/" rel="tag">Burp Site</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DVWA/" rel="tag">DVWA</a><span class="tag-list-count">15</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dependency-Check/" rel="tag">Dependency-Check</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/H5/" rel="tag">H5</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hadoop/" rel="tag">Hadoop</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hive/" rel="tag">Hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jenkins/" rel="tag">Jenkins</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Metasploit/" rel="tag">Metasploit</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Nessus/" rel="tag">Nessus</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Sonic/" rel="tag">Sonic</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/airtest/" rel="tag">airtest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">android性能测试</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/app%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">app安全测试</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aritest/" rel="tag">aritest</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/centos/" rel="tag">centos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/" rel="tag">chrome</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/datax/" rel="tag">datax</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/django/" rel="tag">django</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/drozer/" rel="tag">drozer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fisco-bcos/" rel="tag">fisco-bcos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flink/" rel="tag">flink</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gin/" rel="tag">gin</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/" rel="tag">go</a><span class="tag-list-count">16</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go-zero/" rel="tag">go-zero</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hive/" rel="tag">hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/httprunner/" rel="tag">httprunner</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jmeter/" rel="tag">jmeter</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka/" rel="tag">kafka</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kail/" rel="tag">kail</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode/" rel="tag">leetcode</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode-%E6%95%B0%E7%BB%84/" rel="tag">leetcode-数组</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mitmproxy/" rel="tag">mitmproxy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongodb/" rel="tag">mongodb</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/monkey/" rel="tag">monkey</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/" rel="tag">mysql</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pandas/" rel="tag">pandas</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pc%E8%87%AA%E5%8A%A8%E5%8C%96/" rel="tag">pc自动化</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/playwright/" rel="tag">playwright</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pytest/" rel="tag">pytest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a><span class="tag-list-count">23</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/" rel="tag">redis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/selenium/" rel="tag">selenium</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlite/" rel="tag">sqlite</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlmap/" rel="tag">sqlmap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tkinter/" rel="tag">tkinter</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/" rel="tag">vue</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue3/" rel="tag">vue3</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">云服务器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8C%BA%E5%9D%97%E9%93%BE/" rel="tag">区块链</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag">大数据</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">安全测试</a><span class="tag-list-count">29</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">性能测试</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%88%AC%E8%99%AB/" rel="tag">爬虫</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" rel="tag">环境搭建</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95/" rel="tag">自动化测试</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%8B%B1%E8%AF%AD%E5%AD%A6%E4%B9%A0/" rel="tag">英语学习</a><span class="tag-list-count">1</span></li></ul>
+            <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AWVS/" rel="tag">AWVS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Burp-Site/" rel="tag">Burp Site</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DVWA/" rel="tag">DVWA</a><span class="tag-list-count">15</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dependency-Check/" rel="tag">Dependency-Check</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/H5/" rel="tag">H5</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hadoop/" rel="tag">Hadoop</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hive/" rel="tag">Hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jenkins/" rel="tag">Jenkins</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Metasploit/" rel="tag">Metasploit</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Nessus/" rel="tag">Nessus</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Sonic/" rel="tag">Sonic</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/airtest/" rel="tag">airtest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">android性能测试</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/app%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">app安全测试</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aritest/" rel="tag">aritest</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/centos/" rel="tag">centos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/" rel="tag">chrome</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/datax/" rel="tag">datax</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/django/" rel="tag">django</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/drozer/" rel="tag">drozer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fisco-bcos/" rel="tag">fisco-bcos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flink/" rel="tag">flink</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gin/" rel="tag">gin</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/" rel="tag">go</a><span class="tag-list-count">16</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go-zero/" rel="tag">go-zero</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hive/" rel="tag">hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/httprunner/" rel="tag">httprunner</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a><span class="tag-list-count">11</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jmeter/" rel="tag">jmeter</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka/" rel="tag">kafka</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kail/" rel="tag">kail</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode/" rel="tag">leetcode</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode-%E6%95%B0%E7%BB%84/" rel="tag">leetcode-数组</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mitmproxy/" rel="tag">mitmproxy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongodb/" rel="tag">mongodb</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/monkey/" rel="tag">monkey</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/" rel="tag">mysql</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pandas/" rel="tag">pandas</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pc%E8%87%AA%E5%8A%A8%E5%8C%96/" rel="tag">pc自动化</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/playwright/" rel="tag">playwright</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pytest/" rel="tag">pytest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a><span class="tag-list-count">23</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/" rel="tag">redis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/selenium/" rel="tag">selenium</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlite/" rel="tag">sqlite</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlmap/" rel="tag">sqlmap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tkinter/" rel="tag">tkinter</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/" rel="tag">vue</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue3/" rel="tag">vue3</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">云服务器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8C%BA%E5%9D%97%E9%93%BE/" rel="tag">区块链</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag">大数据</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">安全测试</a><span class="tag-list-count">29</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">性能测试</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%88%AC%E8%99%AB/" rel="tag">爬虫</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" rel="tag">环境搭建</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95/" rel="tag">自动化测试</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%8B%B1%E8%AF%AD%E5%AD%A6%E4%B9%A0/" rel="tag">英语学习</a><span class="tag-list-count">1</span></li></ul>
         </canvas>
     </div>
 </div>
