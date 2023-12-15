@@ -191,6 +191,217 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/d7b393af/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="一个正经的测试工程师">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="施坤的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/aposts/d7b393af/" class="post-title-link" itemprop="url">腾讯云部署vue+django</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-03-14 10:16:52 / 修改时间：11:05:37" itemprop="dateCreated datePublished" datetime="2022-03-14T10:16:52+08:00">2022-03-14</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/vue/" itemprop="url" rel="index"><span itemprop="name">vue</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/aposts/d7b393af/" class="post-meta-item leancloud_visitors" data-flag-title="腾讯云部署vue+django" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/aposts/d7b393af/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/aposts/d7b393af/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><p>本次主要针对在腾讯云服务器上对vue+django进行部署</p>
+<h2 id="vue本地配置"><a href="#vue本地配置" class="headerlink" title="vue本地配置"></a>vue本地配置</h2><ul>
+<li>vue的请求接口修改为服务器上的ip或者域名</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// 设置接口访问的根目录</span><br><span class="line">axios.defaults.baseURL = &quot;http://host:8081/myapi/&quot;</span><br><span class="line">// 设置原型属性后,其他地方如果要调用，只要用this.$http.get就可以了</span><br><span class="line">Vue.prototype.$http = axios</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>打包后</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm run build</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>压缩打包后的文件传到服务器路径：&#x2F;home&#x2F;dist，压缩软件推荐使用：<code>7-zip</code></li>
+<li>先压缩为tar</li>
+</ul>
+<p><img src="/aposts/d7b393af/image-20220314102924031.png" alt="image-20220314102924031"></p>
+<ul>
+<li>再次压缩为格式为gzip</li>
+</ul>
+<p><img src="/aposts/d7b393af/image-20220314103056936.png" alt="image-20220314103056936"></p>
+<p><img src="/aposts/d7b393af/image-20220314103209261.png" alt="image-20220314103209261"></p>
+<ul>
+<li>把dist.tar.gz上传的服务器，路径为：home</li>
+</ul>
+<h3 id="django本地"><a href="#django本地" class="headerlink" title="django本地"></a>django本地</h3><ul>
+<li>主要是导出依赖文件，执行下面的命令后，项目本地会生成一个<code>requirements.txt</code>依赖文件</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">pip install pipreqs</span><br><span class="line">pipreqs --use-local --encoding=utf8 --force .</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="服务器配置"><a href="#服务器配置" class="headerlink" title="服务器配置"></a>服务器配置</h2><ul>
+<li>腾讯云的centos7系统内置了python3环境</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@VM-24-13-centos mysite]# python  --version</span><br><span class="line">Python 3.6.8</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="端口设置"><a href="#端口设置" class="headerlink" title="端口设置"></a>端口设置</h3><ul>
+<li>端口规则，因为腾讯云的端口除了防护墙打开外，还需要单独新建端口规则</li>
+</ul>
+<p><img src="/aposts/d7b393af/image-20220314102334057.png" alt="image-20220314102334057"></p>
+<ul>
+<li>服务器开放端口的一些配置：</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">firewall-cmd --zone=public --add-port=8100/tcp --permanent</span><br><span class="line">firewall-cmd --zone=public --add-port=8081/tcp --permanent</span><br><span class="line"></span><br><span class="line">firewall-cmd --reload   # 配置立即生效</span><br><span class="line">firewall-cmd --zone=public --list-port # 查看防火墙所有开放的端口</span><br><span class="line"> firewall-cmd --state # 查看防火墙状态</span><br><span class="line">netstat -lnpt # 查看监听的端口</span><br><span class="line">netstat -lnpt |grep 8081# 查看监听的具体端口</span><br></pre></td></tr></table></figure>
+
+<h3 id="nginx配置"><a href="#nginx配置" class="headerlink" title="nginx配置"></a>nginx配置</h3><ul>
+<li>查看 Nginx 的默认配置的安装位置</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">root@VM-24-13-centos git]# nginx -t</span><br><span class="line">nginx: the configuration file /etc/nginx/nginx.conf syntax is ok</span><br><span class="line">nginx: configuration file /etc/nginx/nginx.conf test is successful</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>配置路径</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/nginx/nginx.conf</span><br><span class="line"></span><br><span class="line">   server &#123;</span><br><span class="line">        listen       8001;</span><br><span class="line">        listen       [::]:8001;</span><br><span class="line">        server_name  www.XXX.123;</span><br><span class="line">        root         /home/dist; # vue的路径</span><br><span class="line">        # Load configuration files for the default server block.</span><br><span class="line">        include /etc/nginx/default.d/*.conf;</span><br><span class="line">        error_page 404 /404.html;</span><br><span class="line">        location = /404.html &#123;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        error_page 500 502 503 504 /50x.html;</span><br><span class="line">        location = /50x.html &#123;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>解压打包的dist压缩包</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">[root@VM-24-13-centos home]# tar -zxvf dist.tar.gz</span><br><span class="line">dist/</span><br><span class="line">dist/css/</span><br><span class="line">dist/css/app.54a7ebec.css</span><br><span class="line">dist/css/chunk-vendors.84bb20f7.css</span><br><span class="line">dist/favicon.ico</span><br><span class="line">dist/fonts/</span><br><span class="line">dist/fonts/element-icons.535877f5.woff</span><br><span class="line">dist/fonts/element-icons.732389de.ttf</span><br><span class="line">dist/img/</span><br><span class="line">dist/img/logo.82b9c7a5.png</span><br><span class="line">dist/index.html</span><br><span class="line">dist/js/</span><br><span class="line">dist/js/app.942844bf.js</span><br><span class="line">dist/js/app.942844bf.js.map</span><br><span class="line">dist/js/chunk-vendors.0b404296.js</span><br><span class="line">dist/js/chunk-vendors.0b404296.js.map</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>重启nginx</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl restart nginx</span><br></pre></td></tr></table></figure>
+
+<h3 id="django"><a href="#django" class="headerlink" title="django"></a>django</h3><ul>
+<li>把django的源代码上传到服务器</li>
+<li>安装依赖文件</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd /usr/local/mysite</span><br><span class="line">pip install -r requirements.txt</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>测试django是否能运行</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 manage.py runserver 0.0.0.0:8081</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>出现报错文件，类似于</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">corsheaders 文件不存在</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>这个是django装的一个跨域访问的中间件，需要手动安装</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip3 install django-cors-headers</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>再次测试django是否正常，发现报错如下，看字面意思就知道是使用的sqlite版本python必须大于3.8.3</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ile &quot;/usr/local/lib/python3.6/site-packages/django/db/backends/sqlite3/base.py&quot;, line 67, in check_sqlite_version</span><br><span class="line">    raise ImproperlyConfigured(&#x27;SQLite 3.8.3 or later is required (found %s).&#x27; % Database.sqlite_version)</span><br><span class="line">django.core.exceptions.ImproperlyConfigured: SQLite 3.8.3 or later is required (found 3.7.17).</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>修改如下，把版本修改下就即可</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">vi /usr/local/lib/python3.6/site-packages/django/db/backends/sqlite3/base.py</span><br><span class="line"></span><br><span class="line">def check_sqlite_version():</span><br><span class="line">    if Database.sqlite_version_info &lt; (3, 7, 17):</span><br><span class="line">        raise ImproperlyConfigured(&#x27;SQLite 3.7.17 or later is required (found %s).&#x27; % Database.sqlite_version)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>再次执行就不会报错：<code>python3 manage.py runserver 0.0.0.0:8081</code></p>
+</li>
+<li><p>直接新建一个sh文件，内容主要是日志记录文件和后台启动，注意日志这里文件要手动提前新建好：</p>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">root@VM-24-13-centos mysite]# pwd</span><br><span class="line">/usr/local/mysite</span><br><span class="line">[root@VM-24-13-centos mysite]# vi start_api.sh</span><br><span class="line"></span><br><span class="line">MYDATE=`date +%Y%m%d`</span><br><span class="line">ALL_LOGFILE=/home/api_log/log/log_$MYDATE</span><br><span class="line"></span><br><span class="line">nohup python3 manage.py runserver 0.0.0.0:8081 &gt; $&#123;ALL_LOGFILE&#125; 2&gt;&amp;1 &amp;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>提前查看端口是否没有被占用，如果被占用就直接kill</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">netstat -lnpt |grep 8081</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>执行start.sh文件</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sh start.sh</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>最好重启下nginx</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl restart nginx</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>访问下域名正常</li>
+</ul>
+<p><img src="/aposts/d7b393af/image-20220314105945414.png" alt="image-20220314105945414"></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/63cd4e03/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2247,958 +2458,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/403e45c/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="一个正经的测试工程师">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="施坤的博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/aposts/403e45c/" class="post-title-link" itemprop="url">kail的搭建</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-02-18 16:28:36" itemprop="dateCreated datePublished" datetime="2022-02-18T16:28:36+08:00">2022-02-18</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-02-25 11:20:56" itemprop="dateModified" datetime="2022-02-25T11:20:56+08:00">2022-02-25</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" itemprop="url" rel="index"><span itemprop="name">环境搭建</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/aposts/403e45c/" class="post-meta-item leancloud_visitors" data-flag-title="kail的搭建" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/aposts/403e45c/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/aposts/403e45c/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="什么是kail"><a href="#什么是kail" class="headerlink" title="什么是kail"></a>什么是kail</h2><ul>
-<li><p>Kali是基于Debian的Linux发行版操作系统，一开始是由Offensive Security的Mati Aharoni和Devon Kearns通过重写BackTrack来完成，用来进行数字取证。</p>
-</li>
-<li><p>而且它拥有超过300个渗透测试工具，拥有开源Git树等，甚至还集成了600多种黑客工具，完全可以想象到它的强大性。此外大家还可以永久免费使用Kali操作系统！</p>
-</li>
-</ul>
-<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><ul>
-<li><p>打开官网，选择需要的<a target="_blank" rel="noopener" href="https://www.kali.org/get-kali/#kali-virtual-machines">镜像文件</a></p>
-</li>
-<li><p>我下载的是VirtualBox的版本</p>
-</li>
-</ul>
-<p><img src="/aposts/403e45c/image-20220218163325420.png" alt="image-20220218163325420"></p>
-<p>打开VirtualBox，点击导入</p>
-<p><img src="/aposts/403e45c/image-20220218163747664.png" alt="image-20220218163747664"></p>
-<p>选择下载的文件</p>
-<p><img src="/aposts/403e45c/image-20220218163824124.png" alt="image-20220218163824124"></p>
-<p>点击导入</p>
-<p><img src="/aposts/403e45c/image-20220218163910423.png" alt="image-20220218163910423"></p>
-<p>有个弹框，点击同意，然后等待中</p>
-<p><img src="/aposts/403e45c/image-20220218163946035.png" alt="image-20220218163946035"></p>
-<p>然后点击启动</p>
-<p><img src="/aposts/403e45c/image-20220218164250304.png" alt="image-20220218164250304"></p>
-<ul>
-<li><p>打开后要输入默认<strong>用户名和密码：kali</strong></p>
-</li>
-<li><p>ping下，网络已经通了</p>
-</li>
-</ul>
-<p><img src="/aposts/403e45c/image-20220218164752238.png" alt="image-20220218164752238"></p>
-<h2 id="常用工具"><a href="#常用工具" class="headerlink" title="常用工具"></a>常用工具</h2><h3 id="Nmap"><a href="#Nmap" class="headerlink" title="Nmap"></a>Nmap</h3><ul>
-<li><p>Nmap（网络映射器）是一款用于网络发现和安全审计的网络安全工具.</p>
-</li>
-<li><p>核心功能: 主机发现,端口扫描,版本侦测,操作系统侦测,防火墙&#x2F;IDS规避和哄骗</p>
-</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">ping扫描: nmap -sT -v target_ip</span><br><span class="line"></span><br><span class="line">快速端口扫描:nmap -F -v target_ip</span><br><span class="line"></span><br><span class="line">版本扫描: nmap -sV -v target_ip</span><br><span class="line"></span><br><span class="line">操作系统扫描:nmap -O -v target_ip</span><br><span class="line">TCP扫描：</span><br><span class="line">nmap -sT target_ip</span><br><span class="line">nmap -sS target_ip</span><br></pre></td></tr></table></figure>
-
-<h3 id="NETCAT-NC-瑞士军刀"><a href="#NETCAT-NC-瑞士军刀" class="headerlink" title="NETCAT-NC(瑞士军刀)"></a>NETCAT-NC(瑞士军刀)</h3><p>在网络工具中有“瑞士军刀”美誉，其有Windows和Linux的版本。因为它短小精悍（1.84版本也不过25k，旧版本或缩减版甚至更小）、功能实用，被设计为一个简单、可靠的网络工具，可通过TCP或UDP协议传输读写数据。同时，它还是一个网络应用Debug分析器，因为它可以根据需要创建各种不同类型的网络连接。</p>
-<h4 id="获取banner模式"><a href="#获取banner模式" class="headerlink" title="获取banner模式"></a>获取banner模式</h4><ul>
-<li><p>Banner信息：欢迎语，在Banner信息中可以的到软件开发商、软件名称、版本、服务类型等信息，通过这些信息可以使用某些工具，直接去使用相对应的EXP去攻击</p>
-</li>
-<li><p>前提条件：需要和目标建立连接，只有建立了链接，才能获取对应的Banner信息</p>
-</li>
-<li><p>注：目标服务器上可能对Banner信息进行了隐藏或禁止读取</p>
-</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"># 一开始可以用nmap扫描到端口</span><br><span class="line">nmap -sT target_ip</span><br><span class="line"># 然后用nc获取到这些端口信息</span><br><span class="line">nc -vn ip 110(POP3服务器的110端口)</span><br><span class="line"></span><br><span class="line">nc -nv ip 25(SMTP服务器的25端口)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h4 id="传输文本信息"><a href="#传输文本信息" class="headerlink" title="传输文本信息"></a>传输文本信息</h4><p>服务器：nc -l -p 端口号</p>
-<p>客户端：nc -nv 服务器的ip 端口号</p>
-<p>有兴趣可以参考<a target="_blank" rel="noopener" href="https://blog.csdn.net/u014596135/article/details/83830590?spm=1001.2101.3001.6650.9&utm_medium=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~Rate-9.pc_relevant_default&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~Rate-9.pc_relevant_default&utm_relevant_index=13">这里更多实例</a></p>
-<h3 id="Metasploit"><a href="#Metasploit" class="headerlink" title="Metasploit"></a>Metasploit</h3><p>当然最重要的工具之一就是自带Metasploit，后续文章有单据介绍</p>
-<h2 id="更多工具库"><a href="#更多工具库" class="headerlink" title="更多工具库"></a>更多工具库</h2><ul>
-<li>注意有些工具官网已经更新，可能名字改了，请查看<a target="_blank" rel="noopener" href="https://www.kali.org/tools/">官网的详细说明</a></li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>名称</th>
-<th>类型</th>
-<th>使用模式</th>
-<th>功能</th>
-<th>功能评价</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>dmitry</td>
-<td>信息收集</td>
-<td></td>
-<td>whois查询&#x2F;子域名收集&#x2F;端口扫描</td>
-<td>whois并不简单明了；子域名和邮箱依赖google；端口扫描速度一般</td>
-</tr>
-<tr>
-<td>dnmap</td>
-<td>信息收集</td>
-<td></td>
-<td>用于组建分布式nmap，dnmap_server为服务端；dnmap_client为客户端</td>
-<td>用起来并不是那么方便，不是实在不行不是很必要</td>
-</tr>
-<tr>
-<td>ike-scan</td>
-<td>信息收集</td>
-<td></td>
-<td>收集ipsec vpn server指纹信息</td>
-<td>好像用于攻击vpn，不太懂</td>
-</tr>
-<tr>
-<td>maltegoce</td>
-<td>信息收集</td>
-<td>gui</td>
-<td>域名&#x2F;账号等关联性收集展示</td>
-<td>关联性展示功能确实很好，但效果可能没有那么理想，特别是对国内而言</td>
-</tr>
-<tr>
-<td>netdiscover</td>
-<td>信息收集</td>
-<td></td>
-<td>主动发出arp包和截获arp包</td>
-<td>就arp探测功能就此功能本身而言做得算很好了</td>
-</tr>
-<tr>
-<td>nmap</td>
-<td>信息收集</td>
-<td>cmd-line</td>
-<td>端口服务探测和端口漏洞扫描</td>
-<td>端口扫描集大成者</td>
-</tr>
-<tr>
-<td>p0f</td>
-<td>信息收集</td>
-<td>cmd-line</td>
-<td>监听网卡收发的数据包，从数据包中读取远端机器操作系统服务版本等信息</td>
-<td>毕竟只是截取数据 包中的版本信息，效果期望不要很大</td>
-</tr>
-<tr>
-<td>regon-ng</td>
-<td>信息收集</td>
-<td>shell</td>
-<td>模仿msf的信息侦查框架</td>
-<td>类似将站长工具等东西命令行化，想法挺好但是用起来感觉不是那么直观</td>
-</tr>
-<tr>
-<td>sparta</td>
-<td>暴力破解</td>
-<td>gui</td>
-<td>图形版的hydra，加了端口服务扫描功能</td>
-<td>还行图形界面聊胜于无</td>
-</tr>
-<tr>
-<td>zenmap</td>
-<td>信息收集</td>
-<td>gui</td>
-<td>图形界面版的nmap</td>
-<td>还行图形界面聊胜于无</td>
-</tr>
-<tr>
-<td>golismero</td>
-<td>web扫描</td>
-<td>cmd-line</td>
-<td>就是一个文本版的类似awvs的web扫描器</td>
-<td>感觉可以提升对扫描器原理的认识</td>
-</tr>
-<tr>
-<td>lynis</td>
-<td>系统审计</td>
-<td></td>
-<td>感觉有点像360首页的“立即体验”，不过只是扫描告警不能一键修复</td>
-<td>shell脚本写成颇为有趣</td>
-</tr>
-<tr>
-<td>nikto</td>
-<td>web扫描</td>
-<td></td>
-<td>中间件扫描器，扫描tomcat等中间件的错误配置、存在漏洞等</td>
-<td>就喜欢这种直接告漏洞的扫描器（不过事实上很少能有可用的漏洞）</td>
-</tr>
-<tr>
-<td>unix-privesc-check</td>
-<td>系统审计</td>
-<td></td>
-<td>审计系统中的关键文件权限是否有异常</td>
-<td>还是没有总结性展示和修复功能</td>
-</tr>
-<tr>
-<td>bed</td>
-<td>系统扫描</td>
-<td></td>
-<td>通过发送各种模糊数据测试多种服务的缓冲区溢出漏洞的工具</td>
-<td>可能还不错</td>
-</tr>
-<tr>
-<td>burpsuite</td>
-<td>web代理</td>
-<td></td>
-<td>常用web代理截包工具</td>
-<td>功能强大不能要求更多</td>
-</tr>
-<tr>
-<td>commix</td>
-<td>注入检测</td>
-<td></td>
-<td>sqlmap检测sql注入此工具检测系统命令注入</td>
-<td>两相搭配那注入基本覆盖了</td>
-</tr>
-<tr>
-<td>httrack</td>
-<td>网站克隆</td>
-<td></td>
-<td>将网站克隆到本地</td>
-<td>钓鱼乌云等可能有用</td>
-</tr>
-<tr>
-<td>owasp-zap</td>
-<td>web代理</td>
-<td>gui</td>
-<td>owasp组织开发的工具</td>
-<td>和burpsuite相比弱化了截包功能，强化了web漏洞扫描功能，不过感觉也没扫出什么东西</td>
-</tr>
-<tr>
-<td>paros</td>
-<td>web扫描</td>
-<td>gui</td>
-<td>一个web爬行和漏扫工具</td>
-<td>和owasp-zap差不多</td>
-</tr>
-<tr>
-<td>skipfish</td>
-<td>web扫描</td>
-<td>cmd-line</td>
-<td>一个全自动化的web漏洞扫描工具</td>
-<td>其工作一是爬行网站页面，然后分析页面漏洞，最后生html报告</td>
-</tr>
-<tr>
-<td>sqlmap</td>
-<td>sql注入扫描</td>
-<td>cmd-line</td>
-<td>一个强大的sql注入扫描工具</td>
-<td></td>
-</tr>
-<tr>
-<td>w3af</td>
-<td>web扫描</td>
-<td>shell&#x2F;gui</td>
-<td>一个web漏洞扫描框架</td>
-<td>所谓框架就是有一堆扫描模块，然后你选定其中一些模块去扫描网站；感觉一般没说的那么好</td>
-</tr>
-<tr>
-<td>webscarab</td>
-<td>http代理</td>
-<td>gui</td>
-<td>更专业的网站树型结构分析工具</td>
-<td></td>
-</tr>
-<tr>
-<td>wpscan</td>
-<td>web扫描</td>
-<td></td>
-<td>针对wordpress的漏洞扫描工具</td>
-<td></td>
-</tr>
-<tr>
-<td>bbqsql</td>
-<td>盲注扫描</td>
-<td>shell</td>
-<td>一个高度可配置的交互式的sql盲注工具</td>
-<td></td>
-</tr>
-<tr>
-<td>hexorbase</td>
-<td>数据库管理</td>
-<td>gui</td>
-<td>一个支持多种数据库的客户端有多个数据库的口令破解功能</td>
-<td>作为客户端只能将就着用。暴破口令需要自己准备字典</td>
-</tr>
-<tr>
-<td>jsql</td>
-<td>数据库探测</td>
-<td>gui</td>
-<td>根据url探测数据库类型&#x2F;参数注入测试&#x2F;探测后台页而&#x2F;探测重要文件</td>
-<td></td>
-</tr>
-<tr>
-<td>mdb-sql</td>
-<td>数据库管理</td>
-<td>cmd-line</td>
-<td>可用来连接access数据库文件（mdb）然后通过sql语句查询数据</td>
-<td></td>
-</tr>
-<tr>
-<td>oscaner</td>
-<td>数据库猜解</td>
-<td>cmd-line</td>
-<td>用字典探查oracle数据库是否监听及猜解服务名</td>
-<td>参数很少。测试sid和默认用户是可以的，默认的字典基本没法看还是得自己写字典</td>
-</tr>
-<tr>
-<td>sidguesser</td>
-<td>数据库猜解</td>
-<td>cmd-line</td>
-<td>用字典探测oracle数据库存在的sid</td>
-<td>参数很少。测试验证如果字典里有sid，可以探测出sid。基于字典的工具还是得自己准备字典</td>
-</tr>
-<tr>
-<td>sqllite database</td>
-<td>数据库管理</td>
-<td>gui</td>
-<td>sqlite数据库客户端</td>
-<td></td>
-</tr>
-<tr>
-<td>sqlinja</td>
-<td>数据库猜解</td>
-<td>cmd-line</td>
-<td>用于猜解ms sql</td>
-<td></td>
-</tr>
-<tr>
-<td>sqlsus</td>
-<td>sql注入检测</td>
-<td>cmd-line</td>
-<td>用于mysql的盲注检测</td>
-<td></td>
-</tr>
-<tr>
-<td>tnscmd10g</td>
-<td>数据库探测</td>
-<td>cmd-line</td>
-<td>用于探测oracle是否监听及其他一些信息</td>
-<td></td>
-</tr>
-<tr>
-<td>cewl</td>
-<td>口令文件制作</td>
-<td>cmd-line</td>
-<td>爬取给定的URL并依据限制条件截取网页中的单词生成口令集合</td>
-<td>这种想法是可取的。但有点遗憾只是截取网页中的单词，没有a转@等等智能变换</td>
-</tr>
-<tr>
-<td>crunch</td>
-<td>口令文件制作</td>
-<td>cmd-line</td>
-<td>依据限定的条件生成口令集合</td>
-<td></td>
-</tr>
-<tr>
-<td>hashcat</td>
-<td>hash爆破</td>
-<td>cmd-line</td>
-<td>多种hash的爆力猜解工具，速度快所耗CPU小（相对）</td>
-<td></td>
-</tr>
-<tr>
-<td>john</td>
-<td>系统口令破解</td>
-<td>cmd-line</td>
-<td>用于对系统口令文件的破解（如&#x2F;etc&#x2F;passwd）还原出密码明文</td>
-<td></td>
-</tr>
-<tr>
-<td>johnny</td>
-<td>系统口令破解</td>
-<td>gui</td>
-<td>john的gui版本</td>
-<td></td>
-</tr>
-<tr>
-<td>medusa</td>
-<td>口令猜解</td>
-<td>cmd-line</td>
-<td>可对IMAP, rlogin, SSH等进行口令猜解，类似hydra</td>
-<td></td>
-</tr>
-<tr>
-<td>ncrack</td>
-<td>口令猜解</td>
-<td>cmd-line</td>
-<td>可对IMAP, rlogin, SSH等进行口令猜解，类似hydra</td>
-<td></td>
-</tr>
-<tr>
-<td>ophcrack</td>
-<td>系统口令破解</td>
-<td>gui</td>
-<td>基于彩虹表的windows口令破解工具</td>
-<td></td>
-</tr>
-<tr>
-<td>pyrit</td>
-<td>wifi破解</td>
-<td>cmd-line</td>
-<td>WPA&#x2F;WPA2加密的wifi的密码破解工具</td>
-<td></td>
-</tr>
-<tr>
-<td>rainbowcrack</td>
-<td>hash破解</td>
-<td>cmd-line</td>
-<td>具有彩虹表的生成、排序和使用排序好换彩虹表进行破解的功能</td>
-<td></td>
-</tr>
-<tr>
-<td>rcracki_mt</td>
-<td>hash破解</td>
-<td>cmd-line</td>
-<td>基于彩虹表的hash破解工具，可能蚲rainbowcrack一部份</td>
-<td></td>
-</tr>
-<tr>
-<td>wordlist</td>
-<td>口令文件</td>
-<td>cmd-line</td>
-<td>打印kali自带的一些口令文件存放的位置</td>
-<td></td>
-</tr>
-<tr>
-<td>aircrack-ng</td>
-<td>wifi破解</td>
-<td>cmd-line</td>
-<td>针对WEP、 WPA加密方式的wifi密码破解套件</td>
-<td></td>
-</tr>
-<tr>
-<td>chirp</td>
-<td>无线电拦截</td>
-<td>gui</td>
-<td>各种无线电数据包的拦截工具（？）</td>
-<td></td>
-</tr>
-<tr>
-<td>cowpatty</td>
-<td>wifi破解</td>
-<td>cmd-line</td>
-<td>基于已捕获握手包和密码字典的WPA-PSK加密的wifi密码的猜解</td>
-<td>不能自己拦截数据包也只能破解WPA-PSK类加密方式功能有点弱</td>
-</tr>
-<tr>
-<td>Fern WIFI Cracker</td>
-<td>wifi破解</td>
-<td>gui</td>
-<td>基于字典的WEP和WPA加密的wifi破解工具</td>
-<td>能自动发现wifi能拦截数据包，图形界面操作，简单易用</td>
-</tr>
-<tr>
-<td>Ghost Phiser</td>
-<td>AP假冒</td>
-<td>gui</td>
-<td>能发现AP并使与AP连接的设备断开连接然后假冒AP让设备重新连接</td>
-<td>图形界面除了AP外还有假冒DNS、http服务器等，较为好用</td>
-</tr>
-<tr>
-<td>giskismet</td>
-<td>可视化</td>
-<td>gui</td>
-<td>Kismet输出结果的可视化工具，即较成text、html等各种格式</td>
-<td></td>
-</tr>
-<tr>
-<td>kismet</td>
-<td>AP发现</td>
-<td>shell</td>
-<td>交互式的AP发现工具，列出周围AP的各种信息</td>
-<td></td>
-</tr>
-<tr>
-<td>MDK3</td>
-<td>AP扰乱</td>
-<td>cmd-line</td>
-<td>可向AP发送大量连接、断开请求，可向周围设备告知存在根本不存在的大量AP</td>
-<td>这工具的攻击方法简直是发了疯</td>
-</tr>
-<tr>
-<td>mfor</td>
-<td>IC卡破解</td>
-<td>cmd-line</td>
-<td>IC卡密钥破解程序</td>
-<td>各种免费吃饭充钱教程里用的工具你想不想学</td>
-</tr>
-<tr>
-<td>mfterm</td>
-<td>IC卡破解</td>
-<td>shell</td>
-<td>交互式IC卡文件写入工具</td>
-<td>要修改卡内数据才是最终的IC卡破解</td>
-</tr>
-<tr>
-<td>pixiewps</td>
-<td>wifi破解</td>
-<td>cmd-line</td>
-<td>针对开启WPS的wifi利用WPS随机数生成中的bug来破解</td>
-<td>有说很快有说成功率比较低</td>
-</tr>
-<tr>
-<td>reaver</td>
-<td>wifi破解</td>
-<td>cmd-line</td>
-<td>针对开启WPS的wifi进行暴力破解的工具</td>
-<td>aircrack-ng后排名第二的wifi破解工具</td>
-</tr>
-<tr>
-<td>wifite</td>
-<td>wifi破解</td>
-<td>cmd-line</td>
-<td>较为自动化的wifi破解工具</td>
-<td></td>
-</tr>
-<tr>
-<td>apktool</td>
-<td>安卓逆向</td>
-<td>cmd-line</td>
-<td>从apk文件中还原出xml和图版等资源文件</td>
-<td></td>
-</tr>
-<tr>
-<td>clang</td>
-<td>编译器</td>
-<td>cmd-line</td>
-<td>类似gcc的编译器，更轻量，可编译c、c++、Objective-C</td>
-<td></td>
-</tr>
-<tr>
-<td>clang++</td>
-<td>编译器</td>
-<td>cmd-line</td>
-<td>C++编译器，与clang的关系类似gcc和g++的类系</td>
-<td></td>
-</tr>
-<tr>
-<td>dex2jar</td>
-<td>安卓逆向</td>
-<td>cmd-line</td>
-<td>apktool把apk还原成了资源文件和dex，dex2jar把dex还原成jar文件（.class）</td>
-<td></td>
-</tr>
-<tr>
-<td>edb-debug</td>
-<td>动态调试</td>
-<td>gui</td>
-<td>软件逆向动态调试工具</td>
-<td>Linux版Ollydbg</td>
-</tr>
-<tr>
-<td>flashm</td>
-<td>反汇编</td>
-<td>cmd-line</td>
-<td>.swf文件的反汇编工具可反汇编出.swf中的脚本代码</td>
-<td></td>
-</tr>
-<tr>
-<td>jad</td>
-<td>反编译</td>
-<td>cmd-line</td>
-<td>dex2jar把文件还原成了.class，jad进一步把文件还原成.java文件</td>
-<td></td>
-</tr>
-<tr>
-<td>javasnoop</td>
-<td>fuzz</td>
-<td>gui</td>
-<td>java程序漏洞评估工具</td>
-<td></td>
-</tr>
-<tr>
-<td>nasm shell</td>
-<td>汇编</td>
-<td>shell</td>
-<td>nasm是32位汇编编译器，这是一个nasm的shell</td>
-<td></td>
-</tr>
-<tr>
-<td>ollydbg</td>
-<td>动态调试</td>
-<td>gui</td>
-<td>windows平台大名鼎鼎的动态调试工具，Linux上是通过wine运行有点水土不服</td>
-<td></td>
-</tr>
-<tr>
-<td>radare2</td>
-<td>静态分析</td>
-<td>cmd-line</td>
-<td>类似ida的静态反汇编分析工具，功能强大，开源</td>
-<td>但是命令行操作这难度有点大</td>
-</tr>
-<tr>
-<td>armitage</td>
-<td>漏洞利用</td>
-<td>gui</td>
-<td>measploit的gui界面</td>
-<td>嗯好像是比原来的msf-gui好点，不过叫人自己去启动msf还要登录，还是不用算了</td>
-</tr>
-<tr>
-<td>beef</td>
-<td>漏洞利用</td>
-<td>cmd-line</td>
-<td>利用msf的exp结合xss构造有攻击性的html页面，当浏览器访问即会受到攻击并获取shell</td>
-<td>这可以啊，不过不懂对现在浏览器效果怎么样</td>
-</tr>
-<tr>
-<td>metasploit</td>
-<td>漏洞利用</td>
-<td>shell</td>
-<td>就是启动msfconsole咯</td>
-<td></td>
-</tr>
-<tr>
-<td>msf payload center</td>
-<td>漏洞利用</td>
-<td>cmd-line</td>
-<td>生成包含exp的windows&#x2F;android等各平台的可执行文件，木马制作利器</td>
-<td>那这东西和msfvenom的区别是什么</td>
-</tr>
-<tr>
-<td>searchsploit</td>
-<td>漏洞利用</td>
-<td>cmd-line</td>
-<td>用于搜索已从exploitdb下载到本地的漏洞利用脚本</td>
-<td>可以理解msf都是ruby写的可执行代码，exploit不一定用ruby写，也可能只是扫描述而非代码</td>
-</tr>
-<tr>
-<td>Social-Engineering</td>
-<td>漏洞利用</td>
-<td>shell</td>
-<td>一般用于生成各种插入了exp的文件，诱使目标打开而中招</td>
-<td>社会工程学总说得很厉害，不过我总觉得社会工程学和DDOS就是最名不副实的</td>
-</tr>
-<tr>
-<td>termineter</td>
-<td>漏洞利用</td>
-<td>shell</td>
-<td>智能电表攻击框架</td>
-<td>这需要硬件搭配吧，没玩过</td>
-</tr>
-<tr>
-<td>bdfproxy</td>
-<td>中间人攻击</td>
-<td></td>
-<td>处于中间人身份时可对经过的流量插入payload</td>
-<td></td>
-</tr>
-<tr>
-<td>driftnet</td>
-<td>图版嗅探</td>
-<td>cmd-line</td>
-<td>用于嗅探流量中的图版并展示到x-window上</td>
-<td>配上arp欺骗作为中间人才能发挥威力，自己拦自己的就好玩而已</td>
-</tr>
-<tr>
-<td>ettercap</td>
-<td>流量拦截</td>
-<td>gui</td>
-<td>听说可以截持同子网的流量，强无敌，原理是什么</td>
-<td></td>
-</tr>
-<tr>
-<td>hampster</td>
-<td>代理</td>
-<td>cmd-line</td>
-<td>好像也是代理转发流量的</td>
-<td></td>
-</tr>
-<tr>
-<td>macchanger</td>
-<td>mac欺骗</td>
-<td>cmd-line</td>
-<td>修改本机上网时的mac地址，一用作身份隐藏，二可用来绕过wifi mac黑名单</td>
-<td>应该只是软修改mac地址不可能可写吧</td>
-</tr>
-<tr>
-<td>mitmproxy</td>
-<td>代理</td>
-<td>cmd-line</td>
-<td>好像也是代理转发流量的</td>
-<td>感觉没什么特色啊</td>
-</tr>
-<tr>
-<td>netsniff-ng</td>
-<td>流量捕获</td>
-<td>cmd-line</td>
-<td>高性能的流量捕获套件，可能大流量时的捕获效果比较稳定</td>
-<td></td>
-</tr>
-<tr>
-<td>responder</td>
-<td>主机嗅探</td>
-<td>cmd-line</td>
-<td>被动嗅探与所在主机交互的主机的操作系统版本等信息</td>
-<td></td>
-</tr>
-<tr>
-<td>wireshark</td>
-<td>流量捕获</td>
-<td>gui</td>
-<td>拦截经过指定网卡的所有流量</td>
-<td>sectools常年排行第一的工具，这就不用多说了吧</td>
-</tr>
-<tr>
-<td>backdoor</td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>exe2hex</td>
-<td>编码转换</td>
-<td>cmd</td>
-<td>顾名思义就是把exe文件转成十六进制文件</td>
-<td>不过这样的意义是什么，不是以十六进制就能打开了吗</td>
-</tr>
-<tr>
-<td>Intersect</td>
-<td>脚本生成</td>
-<td>shell</td>
-<td>感觉是SQL 有攻击性Intersect语句的生成工具</td>
-<td></td>
-</tr>
-<tr>
-<td>mimikatz</td>
-<td>密码提取</td>
-<td>cmd-line</td>
-<td>用于从windows内存中提取密码</td>
-<td></td>
-</tr>
-<tr>
-<td>nishang</td>
-<td>后渗透</td>
-<td>cmd-line</td>
-<td>基于powershell的后渗透攻击工具</td>
-<td></td>
-</tr>
-<tr>
-<td>PowerSploit</td>
-<td>后渗透</td>
-<td>cmd-line</td>
-<td>也是一个基于powershell的后渗透攻击工具</td>
-<td></td>
-</tr>
-<tr>
-<td>proxychains</td>
-<td>多重代理</td>
-<td>cmd-line</td>
-<td>好像用来配置多种代理的</td>
-<td></td>
-</tr>
-<tr>
-<td>weevely</td>
-<td>webshell</td>
-<td>shell</td>
-<td>webshell连接工具不过好像要用自己生成的小马</td>
-<td></td>
-</tr>
-<tr>
-<td>autopsy</td>
-<td>网页分析</td>
-<td>web</td>
-<td>启动一个服务通过浏览器访问使用，感觉是分析网页各种元素的不是很懂</td>
-<td></td>
-</tr>
-<tr>
-<td>binwalk</td>
-<td>文件识别</td>
-<td>cmd-line</td>
-<td>用于分析一个文件中是否其实有多个文件</td>
-<td>ctf的key文件提取就常用到的</td>
-</tr>
-<tr>
-<td>bulk_extractor</td>
-<td>要素提取</td>
-<td>cmd-line</td>
-<td>扫描给定的目录或文件，如果发现一些如电话号码网址等关键的信息则输出到文件</td>
-<td></td>
-</tr>
-<tr>
-<td>chkrootkit</td>
-<td>系统检查</td>
-<td>cmd-line</td>
-<td>扫描本机，查看本机是否存在受rootkit影响的地方</td>
-<td>理解成360的木马查杀也差不多</td>
-</tr>
-<tr>
-<td>foremost</td>
-<td>文件恢复</td>
-<td>cmd-line</td>
-<td>文件恢复工具，用于被删除的文件的恢复，就是360等的那个文件恢复功能</td>
-<td></td>
-</tr>
-<tr>
-<td>galleta</td>
-<td>cookie文件</td>
-<td>cmd-line</td>
-<td>用于分析IE的cookie文件输出其中的有用信息</td>
-<td></td>
-</tr>
-<tr>
-<td>hashdeep</td>
-<td>hash计算</td>
-<td>cmd-line</td>
-<td>用于计算文件hash值，支持多种散列算法</td>
-<td></td>
-</tr>
-<tr>
-<td>volafox</td>
-<td>内存分析</td>
-<td>cmd-line</td>
-<td>针对Mac OS X的内存分析工具，可从其内存镜像中读取进程列表等各种主机信息</td>
-<td>先用工具把当前内存抓取下来，然后再用来分析；内存数据容易被破坏所以这确实很有意义</td>
-</tr>
-<tr>
-<td><a target="_blank" rel="noopener" href="http://www.jianshu.com/p/5f13ee20f5b0">volatility</a></td>
-<td>内存分析</td>
-<td>cmd-line</td>
-<td>volafox的扩展，支持Mac OS X&#x2F;Linux&#x2F;Windows</td>
-<td></td>
-</tr>
-<tr>
-<td>casefile</td>
-<td>报告编写</td>
-<td>gui</td>
-<td>一个画图工具，packet tracer用来画网络拓扑，这用来画场景拓扑</td>
-<td>这写出高大上的报告啊</td>
-</tr>
-<tr>
-<td>cutycapt</td>
-<td>网页截屏</td>
-<td>cmd-line</td>
-<td>一个基于WebKit内核的网页截图工具，就是指定一个url它就能用解析url并把url界面截下来</td>
-<td>各种扫描器中的截图就是使用类似的工具完成的，并不会真用个浏览器访问再截图下来</td>
-</tr>
-<tr>
-<td>dradis</td>
-<td>报告生成</td>
-<td>web</td>
-<td>可解析burpsuite&#x2F;nmap等生成的扫描文件，并可将扫描结果转存为pdf或html</td>
-<td></td>
-</tr>
-<tr>
-<td>faraday IDE</td>
-<td>报告管理</td>
-<td>gui</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>keepnote</td>
-<td>笔记本</td>
-<td>gui</td>
-<td>较之记事本，可建文件夹，支持富文本，可导出为其他格式</td>
-<td></td>
-</tr>
-<tr>
-<td>magictree</td>
-<td>报告管理</td>
-<td>gui</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>pipal</td>
-<td>词频统计</td>
-<td>cmd-line</td>
-<td>说词频统计并不是很准确，文命令可分析统计给定文件中的词语的“<a target="_blank" rel="noopener" href="http://www.freebuf.com/sectool/49592.html">各种最</a>”</td>
-<td></td>
-</tr>
-<tr>
-<td>recordmydesktop</td>
-<td>屏幕录制</td>
-<td>cmd-line</td>
-<td>屏幕录制，输出.ogv格式视频</td>
-<td>不过感觉这视频格式占用磁盘有点大啊</td>
-</tr>
-<tr>
-<td>maltegoce</td>
-<td>关系分析</td>
-<td>gui</td>
-<td>通过网络搜索，获取某个IP或邮箱与其他IP或邮箱的拓扑关系</td>
-<td>这东西有那么强，但社工的东西还是没那么强，而且还是外国的工具在天朝的网络</td>
-</tr>
-</tbody></table>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -3274,7 +2533,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">154</span>
+          <span class="site-state-item-count">155</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -3287,7 +2546,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">63</span>
+        <span class="site-state-item-count">64</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -3312,7 +2571,7 @@
     <!--<h3 class="widget-title">Tag Cloud</h3> -->
     <div id="myCanvasContainer" class="widget tagcloud">
         <canvas width="250" height="250" id="resCanvas" style="width=100%">
-            <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AWVS/" rel="tag">AWVS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Burp-Site/" rel="tag">Burp Site</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DVWA/" rel="tag">DVWA</a><span class="tag-list-count">15</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dependency-Check/" rel="tag">Dependency-Check</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/H5/" rel="tag">H5</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hadoop/" rel="tag">Hadoop</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hive/" rel="tag">Hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jenkins/" rel="tag">Jenkins</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Metasploit/" rel="tag">Metasploit</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Nessus/" rel="tag">Nessus</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Sonic/" rel="tag">Sonic</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/airtest/" rel="tag">airtest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">android性能测试</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/app%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">app安全测试</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aritest/" rel="tag">aritest</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/centos/" rel="tag">centos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/" rel="tag">chrome</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/datax/" rel="tag">datax</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/django/" rel="tag">django</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/drozer/" rel="tag">drozer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fisco-bcos/" rel="tag">fisco-bcos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flink/" rel="tag">flink</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gin/" rel="tag">gin</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/" rel="tag">go</a><span class="tag-list-count">16</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go-zero/" rel="tag">go-zero</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hive/" rel="tag">hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/httprunner/" rel="tag">httprunner</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a><span class="tag-list-count">11</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jmeter/" rel="tag">jmeter</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka/" rel="tag">kafka</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kail/" rel="tag">kail</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode/" rel="tag">leetcode</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode-%E6%95%B0%E7%BB%84/" rel="tag">leetcode-数组</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mitmproxy/" rel="tag">mitmproxy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongodb/" rel="tag">mongodb</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/monkey/" rel="tag">monkey</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/" rel="tag">mysql</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pandas/" rel="tag">pandas</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pc%E8%87%AA%E5%8A%A8%E5%8C%96/" rel="tag">pc自动化</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/playwright/" rel="tag">playwright</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pytest/" rel="tag">pytest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a><span class="tag-list-count">23</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/" rel="tag">redis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/selenium/" rel="tag">selenium</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlite/" rel="tag">sqlite</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlmap/" rel="tag">sqlmap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tkinter/" rel="tag">tkinter</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/" rel="tag">vue</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue3/" rel="tag">vue3</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">云服务器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8C%BA%E5%9D%97%E9%93%BE/" rel="tag">区块链</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag">大数据</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">安全测试</a><span class="tag-list-count">29</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">性能测试</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%88%AC%E8%99%AB/" rel="tag">爬虫</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" rel="tag">环境搭建</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95/" rel="tag">自动化测试</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%8B%B1%E8%AF%AD%E5%AD%A6%E4%B9%A0/" rel="tag">英语学习</a><span class="tag-list-count">1</span></li></ul>
+            <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AWVS/" rel="tag">AWVS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Burp-Site/" rel="tag">Burp Site</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DVWA/" rel="tag">DVWA</a><span class="tag-list-count">15</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dependency-Check/" rel="tag">Dependency-Check</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/H5/" rel="tag">H5</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hadoop/" rel="tag">Hadoop</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hive/" rel="tag">Hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jenkins/" rel="tag">Jenkins</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Metasploit/" rel="tag">Metasploit</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Nessus/" rel="tag">Nessus</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Sonic/" rel="tag">Sonic</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/airtest/" rel="tag">airtest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">android性能测试</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/app%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">app安全测试</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aritest/" rel="tag">aritest</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/centos/" rel="tag">centos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/" rel="tag">chrome</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/datax/" rel="tag">datax</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/django/" rel="tag">django</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/drozer/" rel="tag">drozer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fisco-bcos/" rel="tag">fisco-bcos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flink/" rel="tag">flink</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gin/" rel="tag">gin</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/" rel="tag">go</a><span class="tag-list-count">16</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go-zero/" rel="tag">go-zero</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hive/" rel="tag">hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/httprunner/" rel="tag">httprunner</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a><span class="tag-list-count">12</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jmeter/" rel="tag">jmeter</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka/" rel="tag">kafka</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kail/" rel="tag">kail</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode/" rel="tag">leetcode</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode-%E6%95%B0%E7%BB%84/" rel="tag">leetcode-数组</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mitmproxy/" rel="tag">mitmproxy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongodb/" rel="tag">mongodb</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/monkey/" rel="tag">monkey</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/" rel="tag">mysql</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pandas/" rel="tag">pandas</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pc%E8%87%AA%E5%8A%A8%E5%8C%96/" rel="tag">pc自动化</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/playwright/" rel="tag">playwright</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pytest/" rel="tag">pytest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a><span class="tag-list-count">23</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/" rel="tag">redis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/selenium/" rel="tag">selenium</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring/" rel="tag">spring</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlite/" rel="tag">sqlite</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlmap/" rel="tag">sqlmap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tkinter/" rel="tag">tkinter</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/" rel="tag">vue</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue3/" rel="tag">vue3</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">云服务器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8C%BA%E5%9D%97%E9%93%BE/" rel="tag">区块链</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag">大数据</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">安全测试</a><span class="tag-list-count">29</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">性能测试</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%88%AC%E8%99%AB/" rel="tag">爬虫</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" rel="tag">环境搭建</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95/" rel="tag">自动化测试</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%8B%B1%E8%AF%AD%E5%AD%A6%E4%B9%A0/" rel="tag">英语学习</a><span class="tag-list-count">1</span></li></ul>
         </canvas>
     </div>
 </div>

@@ -191,6 +191,210 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/632627bf/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="一个正经的测试工程师">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="施坤的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/aposts/632627bf/" class="post-title-link" itemprop="url">系统架构介绍</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-10-18 15:07:13" itemprop="dateCreated datePublished" datetime="2021-10-18T15:07:13+08:00">2021-10-18</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-02-25 11:20:56" itemprop="dateModified" datetime="2022-02-25T11:20:56+08:00">2022-02-25</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" itemprop="url" rel="index"><span itemprop="name">性能测试</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/aposts/632627bf/" class="post-meta-item leancloud_visitors" data-flag-title="系统架构介绍" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/aposts/632627bf/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/aposts/632627bf/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="单机架构"><a href="#单机架构" class="headerlink" title="单机架构"></a>单机架构</h2><p>单机架构是最原始的传统架构，如下图所示，Model V1中Web服务器和App的服务器直接放在一起，随着业务持续增长，Model V2中把Web和App服务器分开管理，随着进一步业务增长需求，DB也很出现性能瓶颈，Web和App服务器频繁读取文件也会造成IO瓶颈，为了不影响现在业务，于是集群方案就产生</p>
+<p><img src="/aposts/632627bf/image-20211018151234673-1634541156515-1634541167738.png" alt="image-20211018151234673"></p>
+<h2 id="集群结构"><a href="#集群结构" class="headerlink" title="集群结构"></a>集群结构</h2><ul>
+<li>如图  所示 Model V3 结构 Web&amp;App 服务都可以用多台机器来进行负载分担，DB的瓶颈也可以采用分区、分库、分表的方式来缓解;分库、分区、分表宗旨是减小遍历范围，提高响应速度。</li>
+<li>还可以采用读写分离的方式来减轻单台服务器的 IO 负担，相当于增加了机器的处理能力。读写分离比较适合以读操作为主的应用，可以减轻写服务器压力，但是读服务器会有一定的延迟。当一些热点数据过多时，我们还可以对这些热点数据进行缓存(Model V4)。</li>
+</ul>
+<p><img src="/aposts/632627bf/image-20211018152315051-1634541797883.png" alt="image-20211018152315051"></p>
+<ul>
+<li>对于负载均衡层，目前主要是在 <strong>TCP\IP 协议的四层与七层进行负载</strong>分发，四层负载流行的有 LVS(LVS 集群采用 IP 负载均衡技术和基于内容请求分发技术，目前互联网公司大量使用，如阿里、京东等)、F5(强大的商业交换机，好处是快、但就是贵)，七层流行的有 Tengine、 Nginx、Haproxy、Vanish、ATS、Squid 等。目前互联网企业多采用 LVS+Tengine&#x2F;Nginx的组合来进行负载均衡。</li>
+<li>Model V3、Model V4 的集群架构基本能够解决多数企业的性能问题，但缺点也比较明显。多个 Web 服务器之间的用户请求状态(Session)需要同步(为保证高可用，如果其中一台宕机，另一台服务器能够正常处理用户请求，专业术语叫 Session 黏滞)，这会消耗不少 CPU 资源。另外数据库实现读写分离后，数据同步(数据一致性保证)成为一个性能问题，大量数据的同步 IO 会面临瓶颈。另外业务量大以后，数据的安全保障机制也受到挑战，备份问题凸显，也催生了分布式的发展。</li>
+</ul>
+<h2 id="分布式结构"><a href="#分布式结构" class="headerlink" title="分布式结构"></a>分布式结构</h2><ul>
+<li><p>系统分层、系统服务化(SOA 架构、微服务化等)、服务分布式、DB 分布式、缓存分布式及良好的水平扩展能力是当前分布式架构的典型特征:哪一个服务性能不佳直接增加机器即可，性能与机器数量呈线性增长关系，从而解决前面架构遇到的问题。</p>
+<p><img src="/aposts/632627bf/image-20211018154844654-1634543327407.png" alt="image-20211018154844654"></p>
+</li>
+</ul>
+<h3 id="DNS-amp-CDN静态加速"><a href="#DNS-amp-CDN静态加速" class="headerlink" title="DNS&amp;CDN静态加速"></a>DNS&amp;CDN静态加速</h3><ul>
+<li><p>DNS:智能 DNS，用户请求进入后，域名解析服务器智能判断用户请求的线路，如果是电信用户就解析到电信 IP，联通用户就解析到联通 IP。</p>
+</li>
+<li><p>CDN:用户访问 Web 页面时往往会有很多静态资源(图片、样式、JS 等)，而这些资源都是比较耗时的，CDN 服务其实就是把静态页面缓存到不同地区很多台专门的缓存服务器上，然后根据用户线路所在的地区通过 CND 服务商的智能 DNS 自动选择一个最近的缓存服务器让用户访问，以此提高速度，这种方案对静态页面效果非常好，同时它也需要智能 DNS 的帮助才能实现把用户引导到离自己最近的缓存服务器上。</p>
+</li>
+</ul>
+<h3 id="负载均衡器"><a href="#负载均衡器" class="headerlink" title="负载均衡器"></a>负载均衡器</h3><ul>
+<li><p>负载均衡器的作用是把用户请求按一定规则分发到不同的服务器进行处理，在使用负载均衡集群时，分发负载是一件性能要求极高的事情，流行的产品有 LVS、nginx、apache、F5 等。</p>
+</li>
+<li><p>LVS:LVS 集群采用 IP 负载均衡技术和基于内容请求分发技术，也就是能够在 TCP&#x2F;IP层的第四层进行请求分发。LVS 调度器具有很好的吞吐率，将请求均衡地转移到不同的服务器上执行，且调度器自动屏蔽掉服务器的故障，从而将一组服务器构成一个高性能的、高可用的虚拟服务器。整个服务器集群的结构对客户透明，无需修改客户端和服务器端的程序。为此，在设计时需要考虑系统的透明性、可伸缩性、高可用性和易维护性。关键一点是 LVS开源而且效率高，相比商业负载工具 F5 赢在免费，而且效率达到 F5 的 60%。</p>
+</li>
+<li><p>Tengine:Tengine 是一个强大的高性能反向代理服务器，Tengine 是由淘宝网发起的 Web服务器项目，它在 Nginx 的基础上针对大访问量网站的需求，添加了很多高级功能和特性。目前很多公司采用 LVS+Tengine&#x2F;Nginx 的负载架构来构建自己的负载均衡部分</p>
+</li>
+</ul>
+<h3 id="Web-服务分布式集群"><a href="#Web-服务分布式集群" class="headerlink" title="Web 服务分布式集群"></a>Web 服务分布式集群</h3><ul>
+<li>Web:Web 服务层，按照 MVC 的设计理念 Web 服务层主要是进行页面渲染，Session 保持等工作。这些应用部署在诛如 Tomcat、Jetty、Jboss 这些容器上。图 10-13 所示为一个典型的分布式 Web 结构(已经简化)，Client 请求通过前端负载均衡器(比如 LVS+Tengine)分发到 Web 层，Web 层通过 ZK(Zookeeper)注册中心找到提供业务处理(App 层中的某一个节点)的节点。Web 层请求传送到 App 层的路由由负载算法(用程序实现的负载路由)来实现通常叫软路由，它能够把请求按一定规则分发到 App 层的各节点上，Dubbo 框架中就内置了这样的软路由。</li>
+<li>对于 Web 层来说，请求会话状态(用 Session 来代替)的保持是一个问题，Session 同步是一个容易引起性能的地方，在分布式框架中一般会把 Session 信息独立出来放到缓存设备中，比如用 redis 来存储 Session 信息，当然大量的以亿来计的 Session 信息如果保存在一台或者少量几台 redis 中也会造成风险，首先是需要一个大的内存来存储数据，另外要考虑到数据安全，当服务器挂掉后数据如何恢复?想想一个200G 的 redis 数据集想恢复得花多长时间，本着风险分散原则，还是拆分成多个 redis 节点保险，所以 redis 分布式集群也变得很有必要。不少互联网公司会在 redis 之上加上一个中间层，来构建分布式缓存服务</li>
+</ul>
+<h3 id="App-服务分布式集群"><a href="#App-服务分布式集群" class="headerlink" title="App 服务分布式集群"></a>App 服务分布式集群</h3><ul>
+<li>App:应用服务层，实现主要的业务逻辑。应用服务不仅在单机上要具备更优的性能，在结构上要易于水平扩展，功能服务化且服务无状态。比如我们网购，选择商品准备结算时，如果没有登录会跳出登录框，提交登录请求会调用会员系统进行身份验证，这是一个服务;会员系统调用账务系统查询余额是另一个服务。这些服务部署多个，任意一台处理请求返回结果都一样，这样就具备良好的水平扩展能力。当遇到某一类服务性能吃紧时直接增加机器就可以了。Dubbo 就是经过实践验证的使用广泛的分布式服务框架，具备良好的水平扩展能力</li>
+</ul>
+<h3 id="分布式缓存"><a href="#分布式缓存" class="headerlink" title="分布式缓存"></a>分布式缓存</h3><ul>
+<li>Cache:缓存数据到内存，解决热点数据问题。比如 redis，memcache 等缓存产品。在内存中存储数据时不可忽视的问题是数据的安全性与存储量，当前解决数据安全性的方法主要是数据持久化与数据冗余(主从缓存服务器结构，为了性能会进行读写分离);解决存储量的问题主要是分而治之，进行分布式存储，每一个存储节点我们叫做分片，比如100G的数据我们分5个片区来存储，每个分片就是20G。</li>
+<li>图 10-14 所示常见的分布式缓存架构，Cache1 与 Cache n 构成分布式缓存集群，以 redis 为例(比如 Cache1 由 redis 担当)，Cache1 是一个分片(物理节点)，Cachen是第n个分片(物理节点)，redis 以(Key，Value)结构存储数据(有关redis 的知识请自行查阅相关资料)。</li>
+<li>Web&#x2F;App 服务先从 Zookeeper 中心取得缓存服务器访问地址(比如 Cache 1 地址)，然后向缓存服务器发起请求(读、写、修改)。缓存服务器由 Zookeeper 来提供一致性服务，这样很方便对缓存服务器数据进行冗余(读写分离)，保证数据安全，提高访问效率。当缓存数据过多时，可以水平扩展来提高服务能力。</li>
+<li>分布式缓存不仅解决热点数据问题，有些企业直接用其作为数据持久化介质，比如秒杀分布式缓存在整个分布式架构中是重要的组成部分。</li>
+</ul>
+<p><img src="/aposts/632627bf/image-20211018163041453-1634545843260.png" alt="image-20211018163041453"></p>
+<h3 id="分布式数据库"><a href="#分布式数据库" class="headerlink" title="分布式数据库"></a>分布式数据库</h3><ul>
+<li>传统集中式的数据库结构随着数据的激增，为提供良好的用户体验的成本越来越高。对于海量数据基本是分区、分表、读写分离这些手段，海量数据的访问使得对 CPU、内存、硬盘的要求更高，最后依然是无法突破瓶颈，我们并不能生产出更强的服务器，暂时办不到，也没必要，就像我们搬不动一堆东西时，我们可以分开搬，也可以几个人一起搬。所以我们可以分而治之，用普通的 PC 来做高端服务器的工作。</li>
+<li>分布式数据库是一种趋势，用廉价的普通 PC 设备堆叠出具备高可用性、高扩展性的服务集群，正如本章开篇中说到的去IOE 化，摆脱对大型设备的依赖，减少运营成本，提高服务能力。</li>
+</ul>
+<p><strong>以上知识抄录于&lt;&lt;全栈性能测试修炼宝典JMeter实战&gt;&gt;</strong></p>
+<h2 id="什么是反向代理服务器"><a href="#什么是反向代理服务器" class="headerlink" title="什么是反向代理服务器"></a>什么是反向代理服务器</h2><ul>
+<li><p>‘反向代理服务器’ 有两个概念，一是‘代理服务器’，二是‘反向’</p>
+</li>
+<li><p>‘代理服务器’比较好理解，例如需要访问某网站，不想或不能直接访问，例如网络的原因、隐私的原因等，我们就连接一个代理服务器，这样对于这个网站来说，访问他的用户是这个代理服务器，而不是我们自己</p>
+</li>
+<li><p>‘反向’的意思我们没有通过代理服务器访问网站，但网站却在自己服务器前面加了一个代理，我们输入网址发起请求后，请求先到了这个代理服务器，代理服务器再把请求转给网站服务器</p>
+<p><img src="/aposts/632627bf/image-20211018163759022-1634546287413.png" alt="image-20211018163759022"></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://www.techug.com/post/reverse-proxy-server.html">参考这里</a></p>
+</li>
+</ul>
+<h2 id="中间件总结"><a href="#中间件总结" class="headerlink" title="中间件总结"></a>中间件总结</h2><h3 id="Dubbo"><a href="#Dubbo" class="headerlink" title="Dubbo"></a>Dubbo</h3><ul>
+<li><p>Dubbo是一个分布式服务框架，是管理中间层的工具，至于你架子上放什么是完全取决于你的，就像一个汽车骨架，你需要配你的轮子引擎。这个框架中要完成调度必须要有一个分布式的注册中心，储存所有服务的元数据，你可以用zk（Zookeeper），也可以用别的，只是大家都用zk</p>
+</li>
+<li><p>Dubbo的将注册中心进行抽象，是得它可以外接不同的存储媒介给注册中心提供服务，有ZooKeeper，Memcached，Redis等。</p>
+</li>
+<li><p><strong>为什么要用zookeeper作为dubbo的注册中心？能选择其他的吗？</strong></p>
+<ul>
+<li>Zookeeper的数据模型是由一系列的Znode数据节点组成，和文件系统类似。zookeeper的数据全部存储在内存中，性能高；</li>
+<li>zookeeper也支持集群，实现了高可用；同时基于zookeeper的特性，也支持事件监听（服务的暴露方发生变化，可以进行推送），所以zookeeper适合作为dubbo的注册中心区使用。redis、Simple也可以作为dubbo的注册中心来使用。</li>
+</ul>
+</li>
+<li><p>开发步骤</p>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">1：增加dubbo的配置文件(提供者)</span><br><span class="line">    zk的通讯注册地址</span><br><span class="line">    dubbo的对外暴露接口的地址</span><br><span class="line">    对外暴露并注册的接口(zk)</span><br><span class="line">2：增加获取服务接口的配置文件dubbo(消费者)</span><br><span class="line">    配置dubbo调用的接口暴露地址</span><br><span class="line">    获取要调用消费的接口bean组件</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>使用步骤</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">1：开启zk的服务，将dubbo的接口注册到服务中</span><br><span class="line">2：启动dubbo的监控中心，监控提供者和消费者的接口调用和注册信息</span><br></pre></td></tr></table></figure>
+
+<h3 id="Dubbo与Kafka对比"><a href="#Dubbo与Kafka对比" class="headerlink" title="Dubbo与Kafka对比"></a>Dubbo与Kafka对比</h3><ul>
+<li>都可以以分布式方式处理任务和负载均衡</li>
+<li>Dubbo处理任务是同步的，可以收到返回结果值。Kafka是异步的，不能返回结果值。</li>
+<li>Kafka可以存储消息，可以从某个消息重新开始执行。如果任务执行速度较慢，消息可以缓存，不会阻塞</li>
+</ul>
+<h2 id="分布式开发应用场景"><a href="#分布式开发应用场景" class="headerlink" title="分布式开发应用场景"></a>分布式开发应用场景</h2><ul>
+<li><p>服务器中间件：Tomcat 6、7、Jboss 7、WebLogic 10、WebSphere 8</p>
+</li>
+<li><p>分布式服务：Dubbo+Zookeeper+Proxy+Restful</p>
+</li>
+<li><p>分布式消息中间件：KafKa+Flume+Zookeeper</p>
+</li>
+<li><p>分布式缓存：Redis 分布式文件：FastDFS</p>
+</li>
+<li><p>负载均衡：Keepalived+Nginx+Proxy(三重负载)</p>
+</li>
+</ul>
+<h2 id="其他总结"><a href="#其他总结" class="headerlink" title="其他总结"></a>其他总结</h2><ul>
+<li>来自于<a target="_blank" rel="noopener" href="https://blog.csdn.net/java_wxid/article/details/88706119?utm_medium=distribute.pc_relevant.none-task-blog-2~default~baidujs_title~default-4.no_search_link&spm=1001.2101.3001.4242">SpringMVC、Springboot、Mybatis、Dubbo、Zookeeper、Redis、Elasticsearch、Nginx 、Fastdfs、ActiveMQ</a></li>
+</ul>
+<h4 id="Elasticsearch"><a href="#Elasticsearch" class="headerlink" title="Elasticsearch"></a>Elasticsearch</h4><ul>
+<li>ElasticSearch是一个基于Lucene的搜索服务器。通过HTTP使用JSON进行数据索引，用于分布式全文检索，解决人们对于搜索的众多要求。</li>
+</ul>
+<h4 id="Nginx"><a href="#Nginx" class="headerlink" title="Nginx"></a>Nginx</h4><ul>
+<li>nginx本是一个web服务器和反向代理服务器，但由于丰富的负载均衡策略，常常被用于客户端可真实的服务器之间，作为负载均衡的实现。用于HTTP、HTTPS、SMTP、POP3和IMAP协议</li>
+</ul>
+<h4 id="ActiveMQ"><a href="#ActiveMQ" class="headerlink" title="ActiveMQ"></a>ActiveMQ</h4><ul>
+<li>activeMQ是一种开源的，面向消息的中间件，用来系统之间进行通信的</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/e3bdec4f/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -712,6 +916,105 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/1ac23ba2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="一个正经的测试工程师">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="施坤的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/aposts/1ac23ba2/" class="post-title-link" itemprop="url">Python3-X-md5</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-09-29 17:13:35" itemprop="dateCreated datePublished" datetime="2021-09-29T17:13:35+08:00">2021-09-29</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-02-25 11:20:56" itemprop="dateModified" datetime="2022-02-25T11:20:56+08:00">2022-02-25</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/" itemprop="url" rel="index"><span itemprop="name">python</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/aposts/1ac23ba2/" class="post-meta-item leancloud_visitors" data-flag-title="Python3-X-md5" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/aposts/1ac23ba2/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/aposts/1ac23ba2/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>python3.x已经把md5 module移除了。要想用md5得用hashlib module,</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">import hashlib  </span><br><span class="line">m = hashlib.md5()  </span><br><span class="line">m.update(b&quot;Nobody inspects the spammish repetition&quot;) #参数必须是byte类型，否则报Unicode-objects must be encoded before hashing错误  </span><br><span class="line">md5value=m.hexdigest()  </span><br><span class="line">print(md5value)  #bb649c83dd1ea5c9d9dec9a18df0ffe9  </span><br></pre></td></tr></table></figure>
+<p>其实可简写，如下面的md5的例子，hashlib.md5(data)，就可以了</p>
+<p>但是对中文字符串md5怎么办？<br>中文字符在Python中是以unicode存在的,同一个字符串在不同的编码体系下有不同的值,所以在hash前要进行编码，个人建议转为gb2312,因为对比发现，我下载的一个工具算出的md5值是与gb2312编码后算出的md5值一样。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">import hashlib  </span><br><span class="line">data=&#x27;我是&#x27;  </span><br><span class="line">m = hashlib.md5(data.encode(encoding=&#x27;gb2312&#x27;))  </span><br><span class="line">print(m.hexdigest())  </span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/2d5f3400/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -795,105 +1098,6 @@
 <ul>
 <li>其他几款操作excel对比，图片来源<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/363810440">这里</a>：<br><img src="/aposts/2d5f3400/2222.png" alt="image.png"></li>
 </ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/1ac23ba2/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="一个正经的测试工程师">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="施坤的博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/aposts/1ac23ba2/" class="post-title-link" itemprop="url">Python3-X-md5</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-09-29 17:13:35" itemprop="dateCreated datePublished" datetime="2021-09-29T17:13:35+08:00">2021-09-29</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-02-25 11:20:56" itemprop="dateModified" datetime="2022-02-25T11:20:56+08:00">2022-02-25</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/" itemprop="url" rel="index"><span itemprop="name">python</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/aposts/1ac23ba2/" class="post-meta-item leancloud_visitors" data-flag-title="Python3-X-md5" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/aposts/1ac23ba2/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/aposts/1ac23ba2/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>python3.x已经把md5 module移除了。要想用md5得用hashlib module,</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">import hashlib  </span><br><span class="line">m = hashlib.md5()  </span><br><span class="line">m.update(b&quot;Nobody inspects the spammish repetition&quot;) #参数必须是byte类型，否则报Unicode-objects must be encoded before hashing错误  </span><br><span class="line">md5value=m.hexdigest()  </span><br><span class="line">print(md5value)  #bb649c83dd1ea5c9d9dec9a18df0ffe9  </span><br></pre></td></tr></table></figure>
-<p>其实可简写，如下面的md5的例子，hashlib.md5(data)，就可以了</p>
-<p>但是对中文字符串md5怎么办？<br>中文字符在Python中是以unicode存在的,同一个字符串在不同的编码体系下有不同的值,所以在hash前要进行编码，个人建议转为gb2312,因为对比发现，我下载的一个工具算出的md5值是与gb2312编码后算出的md5值一样。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">import hashlib  </span><br><span class="line">data=&#x27;我是&#x27;  </span><br><span class="line">m = hashlib.md5(data.encode(encoding=&#x27;gb2312&#x27;))  </span><br><span class="line">print(m.hexdigest())  </span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -1261,141 +1465,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/d632d4bf/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="一个正经的测试工程师">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="施坤的博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/aposts/d632d4bf/" class="post-title-link" itemprop="url">monkey压测曲线展示app性能图</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-09-29 17:13:35" itemprop="dateCreated datePublished" datetime="2021-09-29T17:13:35+08:00">2021-09-29</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-02-25 11:20:56" itemprop="dateModified" datetime="2022-02-25T11:20:56+08:00">2022-02-25</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/" itemprop="url" rel="index"><span itemprop="name">python</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/aposts/d632d4bf/" class="post-meta-item leancloud_visitors" data-flag-title="monkey压测曲线展示app性能图" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/aposts/d632d4bf/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/aposts/d632d4bf/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>局限性。</p>
-<ul>
-<li>Monkey测试使用的事件流数据流是随机的，不能进行自定义。</li>
-<li>可对MonkeyTest的对象，事件数量，类型，频率等进行设置。</li>
-</ul>
-<h2 id="Monkey的基本用法"><a href="#Monkey的基本用法" class="headerlink" title="Monkey的基本用法"></a>Monkey的基本用法</h2><ul>
-<li>基本语法如下：<ul>
-<li>$ adb shell monkey [options]</li>
-<li>如果不指定options，Monkey将以无反馈模式启动，并把事件任意发送到安装在目标环境中的全部包。下面是一个更为典型的命令行示例，它启动指定的应用程序，并向其发送500个伪随机事件：</li>
-<li>$ adb shell monkey -p your.package.name -v 500</li>
-</ul>
-</li>
-</ul>
-<h2 id="分析日志"><a href="#分析日志" class="headerlink" title="分析日志"></a>分析日志</h2><ul>
-<li>通过Android trace文件分析死锁ANR实例过程</li>
-<li>system&#x2F;build.prop 日志文件主要记录手机系统信息，如版本，型号，品牌</li>
-<li>adb logcat 导出日志文件</li>
-</ul>
-<h2 id="monkey-ini-配置文件"><a href="#monkey-ini-配置文件" class="headerlink" title="monkey.ini 配置文件"></a>monkey.ini 配置文件</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">cmd=adb shell monkey -p com.dgm.user --throttle 500 --ignore-timeouts --ignore-crashes   --monitor-native-crashes -v -v</span><br><span class="line">package_name=com.dgm.user</span><br><span class="line">logdir=d:\android</span><br><span class="line">remote_path=d:\android_server</span><br><span class="line">phone_msg_log=d:\android_temp\phone.txt</span><br><span class="line">sum = 100 -</span><br><span class="line">activity = com.dgm.user.SplashActivity</span><br><span class="line">exceptions=[&#x27;NullPointer&#x27;,&#x27;IllegalState&#x27;,&#x27;IllegalArgument&#x27;,&#x27;ArrayIndexOutOfBounds&#x27;,&#x27;RuntimeException&#x27;,&#x27;SecurityException&#x27;] </span><br></pre></td></tr></table></figure>
-<ul>
-<li>throttle 每次事件等待500毫秒</li>
-<li>sum 定义随机事件数</li>
-<li>exceptions 异常定义，用于后面扩展</li>
-</ul>
-<h2 id="结果生成为可视化图片-使用的是matplotlib"><a href="#结果生成为可视化图片-使用的是matplotlib" class="headerlink" title="结果生成为可视化图片 使用的是matplotlib"></a>结果生成为可视化图片 使用的是matplotlib</h2><p><img src="/aposts/d632d4bf/image-20210930181002746.png" alt="image-20210930181002746"></p>
-<ul>
-<li>当然可以看日志文件</li>
-</ul>
-<h1 id="代码分析"><a href="#代码分析" class="headerlink" title="代码分析"></a>代码分析</h1><ul>
-<li>获得cpu-men</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"># -*- coding: utf-8 -*-</span><br><span class="line">import subprocess</span><br><span class="line">pkg_name = &quot;com.dgm.user&quot;</span><br><span class="line">cpu = []</span><br><span class="line">men = []</span><br><span class="line">def top_cpu(pkg_name):</span><br><span class="line">    cmd = &quot;adb shell dumpsys cpuinfo | grep &quot; + pkg_name</span><br><span class="line">    temp = []</span><br><span class="line">    # cmd = &quot;adb shell top -n %s -s cpu | grep %s$&quot; %(str(times), pkg_name)</span><br><span class="line">    top_info = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE).stdout.readlines()</span><br><span class="line">    for info in top_info:</span><br><span class="line">        temp.append(info.split()[2].decode()) # bytes转换为string</span><br><span class="line">        # print(&quot;cpu占用:%s&quot; %cpu)</span><br><span class="line">    for i in temp:</span><br><span class="line">         if i != &quot;0%&quot;:</span><br><span class="line">            cpu.append(i.split(&quot;%&quot;)[0])</span><br><span class="line">    return cpu</span><br><span class="line"></span><br><span class="line">def get_men(pkg_name):</span><br><span class="line">    cmd = &quot;adb shell  dumpsys  meminfo %s&quot;  %(pkg_name)</span><br><span class="line">    print(cmd)</span><br><span class="line">    temp = []</span><br><span class="line">    m = []</span><br><span class="line">    men_s = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE).stdout.readlines()</span><br><span class="line">    for info in men_s:</span><br><span class="line">        temp.append(info.split())</span><br><span class="line">        # print(&quot;内存占用:%s&quot; %men[19][1].decode()+&quot;K&quot;)</span><br><span class="line">    m.append(temp)</span><br><span class="line">    for t in m:</span><br><span class="line">        men.append(t[19][1].decode())</span><br><span class="line">    return men</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>入口代码</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br></pre></td><td class="code"><pre><span class="line">import monkeyConfig</span><br><span class="line">from adb_common import AndroidDebugBridge as ai</span><br><span class="line">import matplotlibBase as mt</span><br><span class="line">import MenCpu as m</span><br><span class="line">import datetime as dt</span><br><span class="line">CPU = [[],[]] # time,使用情况</span><br><span class="line">MEN = [[],[]] #当前时间，和内存使用情况</span><br><span class="line"># 得到手机信息</span><br><span class="line">def getPhoneMsg(cmd_log):</span><br><span class="line">    l_list = []</span><br><span class="line">    f = open(cmd_log, &quot;r&quot;)</span><br><span class="line">    lines = f.readlines()</span><br><span class="line">    for line in lines:</span><br><span class="line">        line = line.split(&#x27;=&#x27;)</span><br><span class="line">        #Android 系统，如anroid 4.0</span><br><span class="line">        if (line[0] == &#x27;ro.build.version.release&#x27;):</span><br><span class="line">            l_list.append(line[1])</span><br><span class="line">            #手机名字</span><br><span class="line">        if (line[0]==&#x27;ro.product.model&#x27;):</span><br><span class="line">            l_list.append(line[1])</span><br><span class="line">            #手机品牌</span><br><span class="line">        if (line[0]==&#x27;ro.product.brand&#x27;):</span><br><span class="line">            l_list.append(line[1])</span><br><span class="line">    f.close()</span><br><span class="line">    return l_list</span><br><span class="line"></span><br><span class="line">#开始脚本测试</span><br><span class="line">def start_monkey(cmd, logdir, now1, logcatname):</span><br><span class="line">    print(cmd)</span><br><span class="line">    os.popen(cmd)</span><br><span class="line">    # os.kill()</span><br><span class="line">    #print&quot;使用Logcat导出日志&quot;</span><br><span class="line">    cmd2 = &quot;adb logcat -d &gt;%s&quot; % logcatname</span><br><span class="line">    os.popen(cmd2)</span><br><span class="line">    #print&quot;导出traces文件&quot;</span><br><span class="line">    tracesname = logdir + &quot;\\&quot; + now1 + r&quot;traces.log&quot;</span><br><span class="line">    cmd3 = &quot;adb shell cat /data/anr/traces.txt&gt;%s&quot; % tracesname</span><br><span class="line">    os.popen(cmd3)</span><br><span class="line"></span><br><span class="line">if __name__ == &#x27;__main__&#x27;:</span><br><span class="line">    ini_file = &#x27;monkey.ini&#x27;</span><br><span class="line">    if os.path.isfile(ini_file):</span><br><span class="line">        if ai().attached_devices():</span><br><span class="line">            mc = monkeyConfig.baseReadnin(ini_file)</span><br><span class="line">            ai().open_app(mc.get_package_name(), mc.get_activity())</span><br><span class="line">            os.system(&#x27;adb shell cat /system/build.prop &gt;&#x27;+mc.get_phone_msg_log()) #存放的手机信息</span><br><span class="line">            ll_list = getPhoneMsg(mc.get_phone_msg_log())</span><br><span class="line">            # monkey开始测试</span><br><span class="line">            sum = mc.get_sum()</span><br><span class="line">            temp = &quot;&quot;</span><br><span class="line">            monkeylog = &quot;&quot;</span><br><span class="line">            start_monkey(mc.get_cmd(), mc.get_logdir(), mc.get_now(), mc.get_logcatname())</span><br><span class="line">            for i in range(sum):</span><br><span class="line">                time.sleep(1)</span><br><span class="line">                print(i)</span><br><span class="line">                dn = dt.datetime.now()</span><br><span class="line">                CPU[0].append(dn)</span><br><span class="line">                m.top_cpu(mc.get_package_name())</span><br><span class="line">                MEN[0].append(dn)</span><br><span class="line">                m.get_men(mc.get_package_name())</span><br><span class="line">                monkeylog = open(mc.get_logdir() + &quot;\\&quot; + mc.get_now()+&quot;monkey.log&quot;)</span><br><span class="line">                temp = monkeylog.read()</span><br><span class="line">                monkeylog.close()</span><br><span class="line">                if temp.count(&#x27;Monkey finished&#x27;)&gt;0:</span><br><span class="line">                    print(&quot;测试完成咯&quot;)</span><br><span class="line">                    CPU[1].append(m.cpu)</span><br><span class="line">                    MEN[1].append(m.men)</span><br><span class="line">                    # geterror(ll_list, mc.get_log(), mc.get_remote_path(), mc.now) 错误显示</span><br><span class="line">                    mt.cpu_men_plots(CPU, MEN)</span><br><span class="line">                    break</span><br><span class="line">        else:</span><br><span class="line">            print(&quot;设备不存在&quot;)</span><br><span class="line">    else:</span><br><span class="line">        print(u&quot;配置文件不存在&quot;+ini_file)</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>结果以曲线图展示<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">def cpu_men_plots(cpu, men):</span><br><span class="line">    import matplotlib.pyplot as pl</span><br><span class="line">    import matplotlib.dates as mdates</span><br><span class="line">    import datetime</span><br><span class="line"></span><br><span class="line">    # 处理异常数据，有时候得到数据(占用情况)会比时间多一次循环的数据，造成xy的数据不一致，而引起报错</span><br><span class="line">    if len(cpu[0]) != len(cpu[1][0]):</span><br><span class="line">        cpu[1][0]= cpu[1][0][0:len(cpu[0])]</span><br><span class="line"></span><br><span class="line">    if len(men[0]) != len(men[1][0]):</span><br><span class="line">        men[1][0]= men[1][0][0:len(men[0])]</span><br><span class="line">    print(men[0])</span><br><span class="line">    print(men[1][0])</span><br><span class="line">    a1 = pl.subplot(311)</span><br><span class="line">    a1.set_title(&quot;CPU&quot;)</span><br><span class="line">    a1.set_ylabel(&quot;占用情况%&quot;)</span><br><span class="line">    a1.plot(cpu[0], cpu[1][0])</span><br><span class="line">    a1.xaxis.set_major_locator(mdates.SecondLocator(interval=1))</span><br><span class="line">    a1.xaxis.set_major_formatter(mdates.DateFormatter(&#x27;%H:%M:%S&#x27;))</span><br><span class="line"></span><br><span class="line">    a2 = pl.subplot(312)</span><br><span class="line">    a2.set_title(&quot;内存&quot;)</span><br><span class="line">    a2.set_ylabel(&quot;使用情况 K&quot;)</span><br><span class="line">    a2.plot(men[0], men[1][0])</span><br><span class="line">    a2.xaxis.set_major_locator(mdates.SecondLocator(interval=2))</span><br><span class="line">    a2.xaxis.set_major_formatter(mdates.DateFormatter(&#x27;%H:%M:%S&#x27;))</span><br><span class="line"></span><br><span class="line">    # a3 = pl.subplot(313)</span><br><span class="line">    # a3.set_title(&quot;流量&quot;)</span><br><span class="line">    # a3.set_ylabel(&quot;使用情况 K&quot;)</span><br><span class="line">    # a3.plot(x,list2)</span><br><span class="line">    # a3.xaxis.set_major_formatter(mdates.DateFormatter(&#x27;%H:%M:%S&#x27;))</span><br><span class="line"></span><br><span class="line">    # a1.margins(x=0.2)</span><br><span class="line">    pl.tight_layout()</span><br><span class="line">    pl.show()</span><br></pre></td></tr></table></figure></li>
-</ul>
-<h2 id="更多请参考我的源码"><a href="#更多请参考我的源码" class="headerlink" title="更多请参考我的源码"></a><a target="_blank" rel="noopener" href="https://github.com/284772894/monkeyTest">更多请参考我的源码</a></h2>
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1471,7 +1540,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">154</span>
+          <span class="site-state-item-count">155</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1484,7 +1553,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">63</span>
+        <span class="site-state-item-count">64</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -1509,7 +1578,7 @@
     <!--<h3 class="widget-title">Tag Cloud</h3> -->
     <div id="myCanvasContainer" class="widget tagcloud">
         <canvas width="250" height="250" id="resCanvas" style="width=100%">
-            <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AWVS/" rel="tag">AWVS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Burp-Site/" rel="tag">Burp Site</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DVWA/" rel="tag">DVWA</a><span class="tag-list-count">15</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dependency-Check/" rel="tag">Dependency-Check</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/H5/" rel="tag">H5</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hadoop/" rel="tag">Hadoop</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hive/" rel="tag">Hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jenkins/" rel="tag">Jenkins</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Metasploit/" rel="tag">Metasploit</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Nessus/" rel="tag">Nessus</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Sonic/" rel="tag">Sonic</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/airtest/" rel="tag">airtest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">android性能测试</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/app%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">app安全测试</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aritest/" rel="tag">aritest</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/centos/" rel="tag">centos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/" rel="tag">chrome</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/datax/" rel="tag">datax</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/django/" rel="tag">django</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/drozer/" rel="tag">drozer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fisco-bcos/" rel="tag">fisco-bcos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flink/" rel="tag">flink</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gin/" rel="tag">gin</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/" rel="tag">go</a><span class="tag-list-count">16</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go-zero/" rel="tag">go-zero</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hive/" rel="tag">hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/httprunner/" rel="tag">httprunner</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a><span class="tag-list-count">11</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jmeter/" rel="tag">jmeter</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka/" rel="tag">kafka</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kail/" rel="tag">kail</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode/" rel="tag">leetcode</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode-%E6%95%B0%E7%BB%84/" rel="tag">leetcode-数组</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mitmproxy/" rel="tag">mitmproxy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongodb/" rel="tag">mongodb</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/monkey/" rel="tag">monkey</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/" rel="tag">mysql</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pandas/" rel="tag">pandas</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pc%E8%87%AA%E5%8A%A8%E5%8C%96/" rel="tag">pc自动化</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/playwright/" rel="tag">playwright</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pytest/" rel="tag">pytest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a><span class="tag-list-count">23</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/" rel="tag">redis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/selenium/" rel="tag">selenium</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlite/" rel="tag">sqlite</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlmap/" rel="tag">sqlmap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tkinter/" rel="tag">tkinter</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/" rel="tag">vue</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue3/" rel="tag">vue3</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">云服务器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8C%BA%E5%9D%97%E9%93%BE/" rel="tag">区块链</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag">大数据</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">安全测试</a><span class="tag-list-count">29</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">性能测试</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%88%AC%E8%99%AB/" rel="tag">爬虫</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" rel="tag">环境搭建</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95/" rel="tag">自动化测试</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%8B%B1%E8%AF%AD%E5%AD%A6%E4%B9%A0/" rel="tag">英语学习</a><span class="tag-list-count">1</span></li></ul>
+            <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AWVS/" rel="tag">AWVS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Burp-Site/" rel="tag">Burp Site</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DVWA/" rel="tag">DVWA</a><span class="tag-list-count">15</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dependency-Check/" rel="tag">Dependency-Check</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/H5/" rel="tag">H5</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hadoop/" rel="tag">Hadoop</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hive/" rel="tag">Hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jenkins/" rel="tag">Jenkins</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Metasploit/" rel="tag">Metasploit</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Nessus/" rel="tag">Nessus</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Sonic/" rel="tag">Sonic</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/airtest/" rel="tag">airtest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">android性能测试</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/app%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">app安全测试</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aritest/" rel="tag">aritest</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/centos/" rel="tag">centos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/" rel="tag">chrome</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/datax/" rel="tag">datax</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/django/" rel="tag">django</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/drozer/" rel="tag">drozer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fisco-bcos/" rel="tag">fisco-bcos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flink/" rel="tag">flink</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gin/" rel="tag">gin</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/" rel="tag">go</a><span class="tag-list-count">16</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go-zero/" rel="tag">go-zero</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hive/" rel="tag">hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/httprunner/" rel="tag">httprunner</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a><span class="tag-list-count">12</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jmeter/" rel="tag">jmeter</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka/" rel="tag">kafka</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kail/" rel="tag">kail</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode/" rel="tag">leetcode</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode-%E6%95%B0%E7%BB%84/" rel="tag">leetcode-数组</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mitmproxy/" rel="tag">mitmproxy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongodb/" rel="tag">mongodb</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/monkey/" rel="tag">monkey</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/" rel="tag">mysql</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pandas/" rel="tag">pandas</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pc%E8%87%AA%E5%8A%A8%E5%8C%96/" rel="tag">pc自动化</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/playwright/" rel="tag">playwright</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pytest/" rel="tag">pytest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a><span class="tag-list-count">23</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/" rel="tag">redis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/selenium/" rel="tag">selenium</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring/" rel="tag">spring</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlite/" rel="tag">sqlite</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlmap/" rel="tag">sqlmap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tkinter/" rel="tag">tkinter</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/" rel="tag">vue</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue3/" rel="tag">vue3</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">云服务器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8C%BA%E5%9D%97%E9%93%BE/" rel="tag">区块链</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag">大数据</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">安全测试</a><span class="tag-list-count">29</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">性能测试</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%88%AC%E8%99%AB/" rel="tag">爬虫</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" rel="tag">环境搭建</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95/" rel="tag">自动化测试</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%8B%B1%E8%AF%AD%E5%AD%A6%E4%B9%A0/" rel="tag">英语学习</a><span class="tag-list-count">1</span></li></ul>
         </canvas>
     </div>
 </div>

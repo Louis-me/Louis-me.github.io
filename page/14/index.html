@@ -191,6 +191,141 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/d632d4bf/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="一个正经的测试工程师">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="施坤的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/aposts/d632d4bf/" class="post-title-link" itemprop="url">monkey压测曲线展示app性能图</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-09-29 17:13:35" itemprop="dateCreated datePublished" datetime="2021-09-29T17:13:35+08:00">2021-09-29</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-02-25 11:20:56" itemprop="dateModified" datetime="2022-02-25T11:20:56+08:00">2022-02-25</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/" itemprop="url" rel="index"><span itemprop="name">python</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/aposts/d632d4bf/" class="post-meta-item leancloud_visitors" data-flag-title="monkey压测曲线展示app性能图" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/aposts/d632d4bf/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/aposts/d632d4bf/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>局限性。</p>
+<ul>
+<li>Monkey测试使用的事件流数据流是随机的，不能进行自定义。</li>
+<li>可对MonkeyTest的对象，事件数量，类型，频率等进行设置。</li>
+</ul>
+<h2 id="Monkey的基本用法"><a href="#Monkey的基本用法" class="headerlink" title="Monkey的基本用法"></a>Monkey的基本用法</h2><ul>
+<li>基本语法如下：<ul>
+<li>$ adb shell monkey [options]</li>
+<li>如果不指定options，Monkey将以无反馈模式启动，并把事件任意发送到安装在目标环境中的全部包。下面是一个更为典型的命令行示例，它启动指定的应用程序，并向其发送500个伪随机事件：</li>
+<li>$ adb shell monkey -p your.package.name -v 500</li>
+</ul>
+</li>
+</ul>
+<h2 id="分析日志"><a href="#分析日志" class="headerlink" title="分析日志"></a>分析日志</h2><ul>
+<li>通过Android trace文件分析死锁ANR实例过程</li>
+<li>system&#x2F;build.prop 日志文件主要记录手机系统信息，如版本，型号，品牌</li>
+<li>adb logcat 导出日志文件</li>
+</ul>
+<h2 id="monkey-ini-配置文件"><a href="#monkey-ini-配置文件" class="headerlink" title="monkey.ini 配置文件"></a>monkey.ini 配置文件</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">cmd=adb shell monkey -p com.dgm.user --throttle 500 --ignore-timeouts --ignore-crashes   --monitor-native-crashes -v -v</span><br><span class="line">package_name=com.dgm.user</span><br><span class="line">logdir=d:\android</span><br><span class="line">remote_path=d:\android_server</span><br><span class="line">phone_msg_log=d:\android_temp\phone.txt</span><br><span class="line">sum = 100 -</span><br><span class="line">activity = com.dgm.user.SplashActivity</span><br><span class="line">exceptions=[&#x27;NullPointer&#x27;,&#x27;IllegalState&#x27;,&#x27;IllegalArgument&#x27;,&#x27;ArrayIndexOutOfBounds&#x27;,&#x27;RuntimeException&#x27;,&#x27;SecurityException&#x27;] </span><br></pre></td></tr></table></figure>
+<ul>
+<li>throttle 每次事件等待500毫秒</li>
+<li>sum 定义随机事件数</li>
+<li>exceptions 异常定义，用于后面扩展</li>
+</ul>
+<h2 id="结果生成为可视化图片-使用的是matplotlib"><a href="#结果生成为可视化图片-使用的是matplotlib" class="headerlink" title="结果生成为可视化图片 使用的是matplotlib"></a>结果生成为可视化图片 使用的是matplotlib</h2><p><img src="/aposts/d632d4bf/image-20210930181002746.png" alt="image-20210930181002746"></p>
+<ul>
+<li>当然可以看日志文件</li>
+</ul>
+<h1 id="代码分析"><a href="#代码分析" class="headerlink" title="代码分析"></a>代码分析</h1><ul>
+<li>获得cpu-men</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"># -*- coding: utf-8 -*-</span><br><span class="line">import subprocess</span><br><span class="line">pkg_name = &quot;com.dgm.user&quot;</span><br><span class="line">cpu = []</span><br><span class="line">men = []</span><br><span class="line">def top_cpu(pkg_name):</span><br><span class="line">    cmd = &quot;adb shell dumpsys cpuinfo | grep &quot; + pkg_name</span><br><span class="line">    temp = []</span><br><span class="line">    # cmd = &quot;adb shell top -n %s -s cpu | grep %s$&quot; %(str(times), pkg_name)</span><br><span class="line">    top_info = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE).stdout.readlines()</span><br><span class="line">    for info in top_info:</span><br><span class="line">        temp.append(info.split()[2].decode()) # bytes转换为string</span><br><span class="line">        # print(&quot;cpu占用:%s&quot; %cpu)</span><br><span class="line">    for i in temp:</span><br><span class="line">         if i != &quot;0%&quot;:</span><br><span class="line">            cpu.append(i.split(&quot;%&quot;)[0])</span><br><span class="line">    return cpu</span><br><span class="line"></span><br><span class="line">def get_men(pkg_name):</span><br><span class="line">    cmd = &quot;adb shell  dumpsys  meminfo %s&quot;  %(pkg_name)</span><br><span class="line">    print(cmd)</span><br><span class="line">    temp = []</span><br><span class="line">    m = []</span><br><span class="line">    men_s = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE).stdout.readlines()</span><br><span class="line">    for info in men_s:</span><br><span class="line">        temp.append(info.split())</span><br><span class="line">        # print(&quot;内存占用:%s&quot; %men[19][1].decode()+&quot;K&quot;)</span><br><span class="line">    m.append(temp)</span><br><span class="line">    for t in m:</span><br><span class="line">        men.append(t[19][1].decode())</span><br><span class="line">    return men</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>入口代码</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br></pre></td><td class="code"><pre><span class="line">import monkeyConfig</span><br><span class="line">from adb_common import AndroidDebugBridge as ai</span><br><span class="line">import matplotlibBase as mt</span><br><span class="line">import MenCpu as m</span><br><span class="line">import datetime as dt</span><br><span class="line">CPU = [[],[]] # time,使用情况</span><br><span class="line">MEN = [[],[]] #当前时间，和内存使用情况</span><br><span class="line"># 得到手机信息</span><br><span class="line">def getPhoneMsg(cmd_log):</span><br><span class="line">    l_list = []</span><br><span class="line">    f = open(cmd_log, &quot;r&quot;)</span><br><span class="line">    lines = f.readlines()</span><br><span class="line">    for line in lines:</span><br><span class="line">        line = line.split(&#x27;=&#x27;)</span><br><span class="line">        #Android 系统，如anroid 4.0</span><br><span class="line">        if (line[0] == &#x27;ro.build.version.release&#x27;):</span><br><span class="line">            l_list.append(line[1])</span><br><span class="line">            #手机名字</span><br><span class="line">        if (line[0]==&#x27;ro.product.model&#x27;):</span><br><span class="line">            l_list.append(line[1])</span><br><span class="line">            #手机品牌</span><br><span class="line">        if (line[0]==&#x27;ro.product.brand&#x27;):</span><br><span class="line">            l_list.append(line[1])</span><br><span class="line">    f.close()</span><br><span class="line">    return l_list</span><br><span class="line"></span><br><span class="line">#开始脚本测试</span><br><span class="line">def start_monkey(cmd, logdir, now1, logcatname):</span><br><span class="line">    print(cmd)</span><br><span class="line">    os.popen(cmd)</span><br><span class="line">    # os.kill()</span><br><span class="line">    #print&quot;使用Logcat导出日志&quot;</span><br><span class="line">    cmd2 = &quot;adb logcat -d &gt;%s&quot; % logcatname</span><br><span class="line">    os.popen(cmd2)</span><br><span class="line">    #print&quot;导出traces文件&quot;</span><br><span class="line">    tracesname = logdir + &quot;\\&quot; + now1 + r&quot;traces.log&quot;</span><br><span class="line">    cmd3 = &quot;adb shell cat /data/anr/traces.txt&gt;%s&quot; % tracesname</span><br><span class="line">    os.popen(cmd3)</span><br><span class="line"></span><br><span class="line">if __name__ == &#x27;__main__&#x27;:</span><br><span class="line">    ini_file = &#x27;monkey.ini&#x27;</span><br><span class="line">    if os.path.isfile(ini_file):</span><br><span class="line">        if ai().attached_devices():</span><br><span class="line">            mc = monkeyConfig.baseReadnin(ini_file)</span><br><span class="line">            ai().open_app(mc.get_package_name(), mc.get_activity())</span><br><span class="line">            os.system(&#x27;adb shell cat /system/build.prop &gt;&#x27;+mc.get_phone_msg_log()) #存放的手机信息</span><br><span class="line">            ll_list = getPhoneMsg(mc.get_phone_msg_log())</span><br><span class="line">            # monkey开始测试</span><br><span class="line">            sum = mc.get_sum()</span><br><span class="line">            temp = &quot;&quot;</span><br><span class="line">            monkeylog = &quot;&quot;</span><br><span class="line">            start_monkey(mc.get_cmd(), mc.get_logdir(), mc.get_now(), mc.get_logcatname())</span><br><span class="line">            for i in range(sum):</span><br><span class="line">                time.sleep(1)</span><br><span class="line">                print(i)</span><br><span class="line">                dn = dt.datetime.now()</span><br><span class="line">                CPU[0].append(dn)</span><br><span class="line">                m.top_cpu(mc.get_package_name())</span><br><span class="line">                MEN[0].append(dn)</span><br><span class="line">                m.get_men(mc.get_package_name())</span><br><span class="line">                monkeylog = open(mc.get_logdir() + &quot;\\&quot; + mc.get_now()+&quot;monkey.log&quot;)</span><br><span class="line">                temp = monkeylog.read()</span><br><span class="line">                monkeylog.close()</span><br><span class="line">                if temp.count(&#x27;Monkey finished&#x27;)&gt;0:</span><br><span class="line">                    print(&quot;测试完成咯&quot;)</span><br><span class="line">                    CPU[1].append(m.cpu)</span><br><span class="line">                    MEN[1].append(m.men)</span><br><span class="line">                    # geterror(ll_list, mc.get_log(), mc.get_remote_path(), mc.now) 错误显示</span><br><span class="line">                    mt.cpu_men_plots(CPU, MEN)</span><br><span class="line">                    break</span><br><span class="line">        else:</span><br><span class="line">            print(&quot;设备不存在&quot;)</span><br><span class="line">    else:</span><br><span class="line">        print(u&quot;配置文件不存在&quot;+ini_file)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>结果以曲线图展示<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">def cpu_men_plots(cpu, men):</span><br><span class="line">    import matplotlib.pyplot as pl</span><br><span class="line">    import matplotlib.dates as mdates</span><br><span class="line">    import datetime</span><br><span class="line"></span><br><span class="line">    # 处理异常数据，有时候得到数据(占用情况)会比时间多一次循环的数据，造成xy的数据不一致，而引起报错</span><br><span class="line">    if len(cpu[0]) != len(cpu[1][0]):</span><br><span class="line">        cpu[1][0]= cpu[1][0][0:len(cpu[0])]</span><br><span class="line"></span><br><span class="line">    if len(men[0]) != len(men[1][0]):</span><br><span class="line">        men[1][0]= men[1][0][0:len(men[0])]</span><br><span class="line">    print(men[0])</span><br><span class="line">    print(men[1][0])</span><br><span class="line">    a1 = pl.subplot(311)</span><br><span class="line">    a1.set_title(&quot;CPU&quot;)</span><br><span class="line">    a1.set_ylabel(&quot;占用情况%&quot;)</span><br><span class="line">    a1.plot(cpu[0], cpu[1][0])</span><br><span class="line">    a1.xaxis.set_major_locator(mdates.SecondLocator(interval=1))</span><br><span class="line">    a1.xaxis.set_major_formatter(mdates.DateFormatter(&#x27;%H:%M:%S&#x27;))</span><br><span class="line"></span><br><span class="line">    a2 = pl.subplot(312)</span><br><span class="line">    a2.set_title(&quot;内存&quot;)</span><br><span class="line">    a2.set_ylabel(&quot;使用情况 K&quot;)</span><br><span class="line">    a2.plot(men[0], men[1][0])</span><br><span class="line">    a2.xaxis.set_major_locator(mdates.SecondLocator(interval=2))</span><br><span class="line">    a2.xaxis.set_major_formatter(mdates.DateFormatter(&#x27;%H:%M:%S&#x27;))</span><br><span class="line"></span><br><span class="line">    # a3 = pl.subplot(313)</span><br><span class="line">    # a3.set_title(&quot;流量&quot;)</span><br><span class="line">    # a3.set_ylabel(&quot;使用情况 K&quot;)</span><br><span class="line">    # a3.plot(x,list2)</span><br><span class="line">    # a3.xaxis.set_major_formatter(mdates.DateFormatter(&#x27;%H:%M:%S&#x27;))</span><br><span class="line"></span><br><span class="line">    # a1.margins(x=0.2)</span><br><span class="line">    pl.tight_layout()</span><br><span class="line">    pl.show()</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="更多请参考我的源码"><a href="#更多请参考我的源码" class="headerlink" title="更多请参考我的源码"></a><a target="_blank" rel="noopener" href="https://github.com/284772894/monkeyTest">更多请参考我的源码</a></h2>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/8d7c7783/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1359,135 +1494,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/8f15e7ee/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="一个正经的测试工程师">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="施坤的博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/aposts/8f15e7ee/" class="post-title-link" itemprop="url">python-文件,文件夹操作全面解析</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-09-29 17:13:35" itemprop="dateCreated datePublished" datetime="2021-09-29T17:13:35+08:00">2021-09-29</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-05-05 17:28:05" itemprop="dateModified" datetime="2022-05-05T17:28:05+08:00">2022-05-05</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/" itemprop="url" rel="index"><span itemprop="name">python</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/aposts/8f15e7ee/" class="post-meta-item leancloud_visitors" data-flag-title="python-文件,文件夹操作全面解析" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/aposts/8f15e7ee/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/aposts/8f15e7ee/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="读写文件"><a href="#读写文件" class="headerlink" title="读写文件"></a>读写文件</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">with open(&#x27;data1.txt&#x27;, mode=&#x27;w&#x27;, encoding=&quot;utf-8&quot;) as f:</span><br><span class="line">    data = &#x27;11111e&#x27;</span><br><span class="line">    f.seek(10)   #光标移动到10的位置</span><br><span class="line">    f.write(data)</span><br><span class="line"></span><br><span class="line">  f1 = open(r&#x27;D:\project\operate_file\data.txt&#x27;, &quot;r&quot;, encoding=&quot;utf-8&quot;)</span><br><span class="line">    print(f1.readline())</span><br><span class="line">    f1.close()</span><br></pre></td></tr></table></figure>
-<ul>
-<li>打开多个文件<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">with open(&quot;file_test&quot;,&quot;r&quot;,encoding=&quot;utf-8&quot;) as f, \</span><br><span class="line">        open(&quot;file_test2&quot;,&quot;r&quot;,encoding=&quot;utf-8&quot;) as f2:</span><br><span class="line">    ...</span><br></pre></td></tr></table></figure></li>
-</ul>
-<h3 id="flush方法"><a href="#flush方法" class="headerlink" title="flush方法"></a>flush方法</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">f = open(&quot;file_test&quot;,&quot;w&quot;,encoding=&quot;utf-8&quot;)</span><br><span class="line">f.write(&quot;hello\n&quot;)</span><br><span class="line">f.write(&quot;hello\n&quot;)</span><br><span class="line">f.write(&quot;hello\n&quot;)</span><br><span class="line">f.flush()</span><br></pre></td></tr></table></figure>
-<ul>
-<li>一般的文件流操作都包含缓冲机制，write方法并不直接将数据写入文件，而是先写入内存中特定的缓冲区。</li>
-<li>flush方法是用来刷新缓冲区的，即将缓冲区中的数据立刻写入文件，同时清空缓冲区。</li>
-<li>正常情况下缓冲区满时，操作系统会自动将缓冲数据写入到文件中。</li>
-<li>至于close方法，原理是内部先调用flush方法来刷新缓冲区，再执行关闭操作，这样即使缓冲区数据未满也能保证数据的完整性。</li>
-<li>如果进程意外退出或正常退出时而未执行文件的close方法，缓冲区中的内容将会丢失。</li>
-<li><strong>但有时你需要在关闭前刷新到硬盘中，这时就可以使用 flush() 方法</strong></li>
-</ul>
-<h2 id="操作文件夹"><a href="#操作文件夹" class="headerlink" title="操作文件夹"></a>操作文件夹</h2><ul>
-<li>判断路径或文件</li>
-</ul>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">os.path.isabs(...) 　　　　 <span class="comment"># 判断是否绝对路径</span></span><br><span class="line">os.path.exists(...)　　　　 <span class="comment"># 判断是否真实存在</span></span><br><span class="line">os.path.isdir(...)　　　　   <span class="comment"># 判断是否是个目录</span></span><br><span class="line">os.path.isfile(...)　　　　   <span class="comment"># 判断是否是个文件</span></span><br></pre></td></tr></table></figure>
-<ul>
-<li>工作目录及创建文件夹操作<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">os.getcwd() 　　　　  <span class="comment"># 获取当前工作目录 等同于os.path.dirname(__file__) </span></span><br><span class="line">os.chdir(<span class="string">&quot;.\\test_mkdir&quot;</span>) <span class="comment"># 改变工作目录,. 表示本级目录； .. 表示上级目录</span></span><br><span class="line">os.listdir(...)　　　　  <span class="comment"># 列出目录下的文件</span></span><br><span class="line">os.mkdir(...)　　　　  <span class="comment"># 创建单个目录    </span></span><br><span class="line">os.makedirs(...)　　  <span class="comment"># 创建多级目</span></span><br></pre></td></tr></table></figure></li>
-<li>删除文件夹、文件<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">os.rmdir(...) <span class="comment"># 删除空文件夹 </span></span><br><span class="line">os.remove(...) <span class="comment"># 删除单一文件</span></span><br><span class="line">shutil.rmtree(...) <span class="comment"># 删除文件夹及其下所有文</span></span><br></pre></td></tr></table></figure></li>
-<li>重命名文件夹&#x2F;文件<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">os.rename(oldfileName, newFilename)</span><br></pre></td></tr></table></figure></li>
-<li>复制文件&#x2F;文件夹<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">shutil.copyfile(<span class="string">&quot;old&quot;</span>,<span class="string">&quot;new&quot;</span>) <span class="comment"># 复制文件，都只能是文件</span></span><br><span class="line">shutil.copytree(<span class="string">&quot;old&quot;</span>,<span class="string">&quot;new&quot;</span>) <span class="comment"># 复制文件夹，都只能是目录，且new必须不存在</span></span><br><span class="line">shutil.copy(<span class="string">&quot;old&quot;</span>,<span class="string">&quot;new&quot;</span>)　　<span class="comment"># 复制文件/文件夹。经过测试，直接复制文件夹，报权限问题；直接复制文件正常</span></span><br><span class="line">shutil.move(<span class="string">&quot;old&quot;</span>,<span class="string">&quot;new&quot;</span>)  　<span class="comment"># 移动文件/文件夹至 new 文件夹中</span></span><br></pre></td></tr></table></figure></li>
-</ul>
-<h2 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h2><h3 id="进入到相对文件目录"><a href="#进入到相对文件目录" class="headerlink" title="进入到相对文件目录"></a>进入到相对文件目录</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># os.path.dirname(__file__) 表示得到当前目录路径等同于os.getcwd()</span></span><br><span class="line">PATH = <span class="keyword">lambda</span> p: os.path.abspath(</span><br><span class="line">    os.path.join(os.path.dirname(__file__), p)</span><br><span class="line">)</span><br><span class="line"><span class="comment"># 得到当前目录的t1文件夹</span></span><br><span class="line">PATH(<span class="string">&quot;t1&quot;</span>)</span><br><span class="line"><span class="comment"># 得到上级目录的t1文件夹</span></span><br><span class="line">PATH(<span class="string">&quot;.../t1&quot;</span>)</span><br><span class="line"><span class="comment"># 得到上级目录的log文件夹下的t1文件夹</span></span><br><span class="line">PATH(<span class="string">&quot;.../log/t1&quot;</span>)</span><br></pre></td></tr></table></figure>
-<h3 id="引用公共模块"><a href="#引用公共模块" class="headerlink" title="引用公共模块"></a>引用公共模块</h3><ul>
-<li>在不同的项目中，需要引用到当前项目的公用方法<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 得到当前文件绝对路径</span></span><br><span class="line">abs_path = os.path.abspath(os.path.dirname(__file__))</span><br><span class="line"><span class="comment"># 得到公共用例目录，采用切割项目名的方法</span></span><br><span class="line">common_path = os.path.join(abs_path.split(<span class="string">&quot;airtest_auto&quot;</span>)[<span class="number">0</span>], <span class="string">&quot;airtest_auto&quot;</span>, <span class="string">&quot;util&quot;</span>)</span><br><span class="line"><span class="comment"># 导入到公用目录</span></span><br><span class="line">sys.path.append(common_path)</span><br><span class="line"><span class="keyword">from</span> app_util <span class="keyword">import</span> *</span><br></pre></td></tr></table></figure></li>
-</ul>
-<h3 id="得到目录下的所有文件和文件夹"><a href="#得到目录下的所有文件和文件夹" class="headerlink" title="得到目录下的所有文件和文件夹"></a>得到目录下的所有文件和文件夹</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> root, dirs, files <span class="keyword">in</span> os.walk(<span class="string">&quot;t3&quot;</span>, topdown=<span class="literal">False</span>):</span><br><span class="line">    <span class="keyword">for</span> name <span class="keyword">in</span> files:</span><br><span class="line">        <span class="built_in">print</span>(os.path.join(root, name))</span><br><span class="line">        <span class="comment"># t3\t2\t2_1\t2_1_1\t2_1_1.air</span></span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;====打印文件======&quot;</span>)</span><br><span class="line">    <span class="keyword">for</span> name <span class="keyword">in</span> dirs:</span><br><span class="line">        <span class="built_in">print</span>(os.path.join(root, name))</span><br><span class="line">        <span class="comment"># t3\t2\t2_1\t2_1_1</span></span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;====打印目录=========&quot;</span>)</span><br></pre></td></tr></table></figure>
-<h3 id="得到文件夹下的某些文件"><a href="#得到文件夹下的某些文件" class="headerlink" title="得到文件夹下的某些文件"></a>得到文件夹下的某些文件</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> os.listdir(<span class="string">&quot;t1&quot;</span>):</span><br><span class="line">    <span class="keyword">if</span> i.find(<span class="string">&quot;txt&quot;</span>) != -<span class="number">1</span>:</span><br><span class="line">        <span class="built_in">print</span>(os.path.join(<span class="string">&quot;t1&quot;</span>, i))</span><br></pre></td></tr></table></figure>
-<h3 id="得到文件夹下的修改时间排序的文件"><a href="#得到文件夹下的修改时间排序的文件" class="headerlink" title="得到文件夹下的修改时间排序的文件"></a>得到文件夹下的修改时间排序的文件</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 得到父目录的绝对路径</span></span><br><span class="line">abs_parent = os.path.abspath(<span class="string">&quot;t1&quot;</span>)</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">sort_file_by_time</span>(<span class="params">file_path</span>):</span><br><span class="line">    files = os.listdir(file_path)</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> files:</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="comment"># os.path.getmtime表示文件最近修改的时间</span></span><br><span class="line">        <span class="comment"># sorted 里面的reverse为True就是降序，为False就是增序</span></span><br><span class="line">        files = <span class="built_in">sorted</span>(files, key=<span class="keyword">lambda</span> x: os.path.getmtime(os.path.join(file_path, x)), reverse=<span class="literal">False</span>)</span><br><span class="line">        <span class="keyword">return</span> files</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(sort_file_by_time(abs_parent))</span><br></pre></td></tr></table></figure>
-
-<h2 id="参考如下"><a href="#参考如下" class="headerlink" title="参考如下"></a>参考如下</h2><ul>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_44239490/article/details/86252212">python 文件、文件夹详细操作</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/Stephen-Qin/p/10296283.html">python按修改时间顺序排列文件</a></li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1563,7 +1569,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">154</span>
+          <span class="site-state-item-count">155</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1576,7 +1582,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">63</span>
+        <span class="site-state-item-count">64</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -1601,7 +1607,7 @@
     <!--<h3 class="widget-title">Tag Cloud</h3> -->
     <div id="myCanvasContainer" class="widget tagcloud">
         <canvas width="250" height="250" id="resCanvas" style="width=100%">
-            <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AWVS/" rel="tag">AWVS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Burp-Site/" rel="tag">Burp Site</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DVWA/" rel="tag">DVWA</a><span class="tag-list-count">15</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dependency-Check/" rel="tag">Dependency-Check</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/H5/" rel="tag">H5</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hadoop/" rel="tag">Hadoop</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hive/" rel="tag">Hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jenkins/" rel="tag">Jenkins</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Metasploit/" rel="tag">Metasploit</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Nessus/" rel="tag">Nessus</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Sonic/" rel="tag">Sonic</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/airtest/" rel="tag">airtest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">android性能测试</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/app%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">app安全测试</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aritest/" rel="tag">aritest</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/centos/" rel="tag">centos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/" rel="tag">chrome</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/datax/" rel="tag">datax</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/django/" rel="tag">django</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/drozer/" rel="tag">drozer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fisco-bcos/" rel="tag">fisco-bcos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flink/" rel="tag">flink</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gin/" rel="tag">gin</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/" rel="tag">go</a><span class="tag-list-count">16</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go-zero/" rel="tag">go-zero</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hive/" rel="tag">hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/httprunner/" rel="tag">httprunner</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a><span class="tag-list-count">11</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jmeter/" rel="tag">jmeter</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka/" rel="tag">kafka</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kail/" rel="tag">kail</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode/" rel="tag">leetcode</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode-%E6%95%B0%E7%BB%84/" rel="tag">leetcode-数组</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mitmproxy/" rel="tag">mitmproxy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongodb/" rel="tag">mongodb</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/monkey/" rel="tag">monkey</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/" rel="tag">mysql</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pandas/" rel="tag">pandas</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pc%E8%87%AA%E5%8A%A8%E5%8C%96/" rel="tag">pc自动化</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/playwright/" rel="tag">playwright</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pytest/" rel="tag">pytest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a><span class="tag-list-count">23</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/" rel="tag">redis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/selenium/" rel="tag">selenium</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlite/" rel="tag">sqlite</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlmap/" rel="tag">sqlmap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tkinter/" rel="tag">tkinter</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/" rel="tag">vue</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue3/" rel="tag">vue3</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">云服务器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8C%BA%E5%9D%97%E9%93%BE/" rel="tag">区块链</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag">大数据</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">安全测试</a><span class="tag-list-count">29</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">性能测试</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%88%AC%E8%99%AB/" rel="tag">爬虫</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" rel="tag">环境搭建</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95/" rel="tag">自动化测试</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%8B%B1%E8%AF%AD%E5%AD%A6%E4%B9%A0/" rel="tag">英语学习</a><span class="tag-list-count">1</span></li></ul>
+            <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AWVS/" rel="tag">AWVS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Burp-Site/" rel="tag">Burp Site</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DVWA/" rel="tag">DVWA</a><span class="tag-list-count">15</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dependency-Check/" rel="tag">Dependency-Check</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/H5/" rel="tag">H5</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hadoop/" rel="tag">Hadoop</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hive/" rel="tag">Hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jenkins/" rel="tag">Jenkins</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Metasploit/" rel="tag">Metasploit</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Nessus/" rel="tag">Nessus</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Sonic/" rel="tag">Sonic</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/airtest/" rel="tag">airtest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">android性能测试</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/app%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">app安全测试</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aritest/" rel="tag">aritest</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/centos/" rel="tag">centos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/" rel="tag">chrome</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/datax/" rel="tag">datax</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/django/" rel="tag">django</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/drozer/" rel="tag">drozer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fisco-bcos/" rel="tag">fisco-bcos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flink/" rel="tag">flink</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gin/" rel="tag">gin</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/" rel="tag">go</a><span class="tag-list-count">16</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go-zero/" rel="tag">go-zero</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hive/" rel="tag">hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/httprunner/" rel="tag">httprunner</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a><span class="tag-list-count">12</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jmeter/" rel="tag">jmeter</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka/" rel="tag">kafka</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kail/" rel="tag">kail</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode/" rel="tag">leetcode</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode-%E6%95%B0%E7%BB%84/" rel="tag">leetcode-数组</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mitmproxy/" rel="tag">mitmproxy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongodb/" rel="tag">mongodb</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/monkey/" rel="tag">monkey</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/" rel="tag">mysql</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pandas/" rel="tag">pandas</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pc%E8%87%AA%E5%8A%A8%E5%8C%96/" rel="tag">pc自动化</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/playwright/" rel="tag">playwright</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pytest/" rel="tag">pytest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a><span class="tag-list-count">23</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/" rel="tag">redis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/selenium/" rel="tag">selenium</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring/" rel="tag">spring</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlite/" rel="tag">sqlite</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlmap/" rel="tag">sqlmap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tkinter/" rel="tag">tkinter</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/" rel="tag">vue</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue3/" rel="tag">vue3</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">云服务器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8C%BA%E5%9D%97%E9%93%BE/" rel="tag">区块链</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag">大数据</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">安全测试</a><span class="tag-list-count">29</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">性能测试</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%88%AC%E8%99%AB/" rel="tag">爬虫</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" rel="tag">环境搭建</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95/" rel="tag">自动化测试</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%8B%B1%E8%AF%AD%E5%AD%A6%E4%B9%A0/" rel="tag">英语学习</a><span class="tag-list-count">1</span></li></ul>
         </canvas>
     </div>
 </div>
