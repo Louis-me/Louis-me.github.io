@@ -191,7 +191,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/2e455102/">
+    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/5dd780c6/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -205,7 +205,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/aposts/2e455102/" class="post-title-link" itemprop="url">python发送邮件</a>
+            <a href="/aposts/5dd780c6/" class="post-title-link" itemprop="url">python利用xlutils在已存在xls文件继续修改</a>
         </h2>
 
         <div class="post-meta">
@@ -235,7 +235,7 @@
             </span>
 
           
-            <span id="/aposts/2e455102/" class="post-meta-item leancloud_visitors" data-flag-title="python发送邮件" title="阅读次数">
+            <span id="/aposts/5dd780c6/" class="post-meta-item leancloud_visitors" data-flag-title="python利用xlutils在已存在xls文件继续修改" title="阅读次数">
               <span class="post-meta-item-icon">
                 <i class="fa fa-eye"></i>
               </span>
@@ -250,8 +250,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/aposts/2e455102/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/aposts/2e455102/" itemprop="commentCount"></span>
+    <a title="valine" href="/aposts/5dd780c6/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/aposts/5dd780c6/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -266,12 +266,10 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>直接上代码</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">from email.header import Header</span><br><span class="line">from email.mime.text import MIMEText</span><br><span class="line">from email.utils import parseaddr, formataddr</span><br><span class="line">from email.mime.multipart import MIMEMultipart</span><br><span class="line">from email.mime.application import MIMEApplication</span><br><span class="line">import smtplib</span><br><span class="line"># 第三方 SMTP 服务</span><br><span class="line">mail_host=&quot;smtp.qq.com&quot;  #设置服务器</span><br><span class="line">mail_user=&quot;111@qq.com&quot;    #用户名</span><br><span class="line">mail_pass=&quot;adfafda&quot;   #口令</span><br><span class="line"></span><br><span class="line">def _format_addr(s):</span><br><span class="line">    name, addr = parseaddr(s)</span><br><span class="line">    return formataddr((Header(name, &#x27;utf-8&#x27;).encode(), addr))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def send_mail(f, to_addr):</span><br><span class="line">    &#x27;&#x27;&#x27;</span><br><span class="line"></span><br><span class="line">    :param f: 附件路径</span><br><span class="line">    :param to_addr:发给的人 []</span><br><span class="line">    :return:</span><br><span class="line">    &#x27;&#x27;&#x27;</span><br><span class="line">    from_addr = mail_user</span><br><span class="line">    password = mail_pass</span><br><span class="line">    # to_addr = &quot;ashikun@126.com&quot;</span><br><span class="line">    smtp_server = mail_host</span><br><span class="line"></span><br><span class="line">    msg = MIMEMultipart()</span><br><span class="line"></span><br><span class="line">    # msg = MIMEText(&#x27;hello, send by Python...&#x27;, &#x27;plain&#x27;, &#x27;utf-8&#x27;)</span><br><span class="line">    msg[&#x27;From&#x27;] = _format_addr(&#x27;坤少发的邮件&lt;%s&gt;&#x27; % from_addr)</span><br><span class="line">    msg[&#x27;To&#x27;] = _format_addr(&#x27;大人 &lt;%s&gt;&#x27; % to_addr)</span><br><span class="line">    msg[&#x27;Subject&#x27;] = Header(&#x27;接口测试报告……&#x27;, &#x27;utf-8&#x27;).encode()</span><br><span class="line"></span><br><span class="line">    msg.attach(MIMEText(&#x27;接口测试报告.&#x27;, &#x27;plain&#x27;, &#x27;utf-8&#x27;))</span><br><span class="line">    part = MIMEApplication(open(f, &#x27;rb&#x27;).read())</span><br><span class="line">    part.add_header(&#x27;Content-Disposition&#x27;, &#x27;attachment&#x27;, filename=f)</span><br><span class="line">    msg.attach(part)</span><br><span class="line"></span><br><span class="line">    server = smtplib.SMTP_SSL(smtp_server, 465)</span><br><span class="line">    server.set_debuglevel(1)</span><br><span class="line">    server.login(from_addr, password)</span><br><span class="line">    server.sendmail(from_addr, to_addr, msg.as_string())</span><br><span class="line">    server.quit()</span><br></pre></td></tr></table></figure>
+          <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">import xlrd  # 导入模块</span><br><span class="line">from xlutils.copy import copy  # 导入copy模块</span><br><span class="line"></span><br><span class="line">class EditExcel():</span><br><span class="line"></span><br><span class="line">    def __init__(self, path, sheet_name):</span><br><span class="line">        self.path = path</span><br><span class="line">        self.sheet_name = sheet_name</span><br><span class="line"></span><br><span class="line">    def get_excel_sheet(self):</span><br><span class="line">        # 打开excel</span><br><span class="line">        read_open_xls = xlrd.open_workbook(self.path)</span><br><span class="line">        # 得到excel中的sheet_name</span><br><span class="line">        read_xlsx_sheet = read_open_xls.sheet_by_name(self.sheet_name)</span><br><span class="line">        # 拷贝excel</span><br><span class="line">        copy_book = copy(read_open_xls)</span><br><span class="line">        return copy_book, read_xlsx_sheet,</span><br><span class="line"></span><br><span class="line">    def write_value(self):</span><br><span class="line">        copy_book, read_xlsx_sheet = self.get_excel_sheet()</span><br><span class="line">        # 获取行数</span><br><span class="line">        row_max = read_xlsx_sheet.nrows</span><br><span class="line">        # 获取第一行的值</span><br><span class="line">        rows = read_xlsx_sheet.row_values(0)</span><br><span class="line">        # 获取列数</span><br><span class="line">        col_max = read_xlsx_sheet.ncols</span><br><span class="line">        for row in range(row_max):</span><br><span class="line">            row_value = read_xlsx_sheet.row_values(row)</span><br><span class="line">            for col in range(col_max):</span><br><span class="line">                current_value = read_xlsx_sheet.cell(row, col).value</span><br><span class="line">                # 按照条件过滤</span><br><span class="line">                if current_value == &#x27;Pass&#x27;:</span><br><span class="line">                    copy_sheet = copy_book.get_sheet(0)</span><br><span class="line">                    copy_sheet.write(row, col, &#x27;11111&#x27;)</span><br><span class="line">                    copy_book.save(self.path)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">EditExcel(&quot;test.xls&quot;, &quot;Sheet1&quot;).write_value()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-<ul>
-<li>被这里密码坑了好长时间，切记这里的密码不是登陆密码，而是授权码</li>
-<li>QQ发邮件用25端口发送不成功，用搞定ssl的465</li>
+<h2 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h2><ul>
+<li>不支持xlsx文件的修改，只支持xls</li>
 </ul>
 
       
