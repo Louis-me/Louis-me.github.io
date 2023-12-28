@@ -1618,7 +1618,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/1ac23ba2/">
+    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/2d5f3400/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -1632,7 +1632,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/aposts/1ac23ba2/" class="post-title-link" itemprop="url">Python3-X-md5</a>
+            <a href="/aposts/2d5f3400/" class="post-title-link" itemprop="url">Python-Excel-Pandas</a>
         </h2>
 
         <div class="post-meta">
@@ -1662,7 +1662,7 @@
             </span>
 
           
-            <span id="/aposts/1ac23ba2/" class="post-meta-item leancloud_visitors" data-flag-title="Python3-X-md5" title="阅读次数">
+            <span id="/aposts/2d5f3400/" class="post-meta-item leancloud_visitors" data-flag-title="Python-Excel-Pandas" title="阅读次数">
               <span class="post-meta-item-icon">
                 <i class="fa fa-eye"></i>
               </span>
@@ -1677,8 +1677,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/aposts/1ac23ba2/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/aposts/1ac23ba2/" itemprop="commentCount"></span>
+    <a title="valine" href="/aposts/2d5f3400/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/aposts/2d5f3400/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -1693,11 +1693,14 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>python3.x已经把md5 module移除了。要想用md5得用hashlib module,</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">import hashlib  </span><br><span class="line">m = hashlib.md5()  </span><br><span class="line">m.update(b&quot;Nobody inspects the spammish repetition&quot;) #参数必须是byte类型，否则报Unicode-objects must be encoded before hashing错误  </span><br><span class="line">md5value=m.hexdigest()  </span><br><span class="line">print(md5value)  #bb649c83dd1ea5c9d9dec9a18df0ffe9  </span><br></pre></td></tr></table></figure>
-<p>其实可简写，如下面的md5的例子，hashlib.md5(data)，就可以了</p>
-<p>但是对中文字符串md5怎么办？<br>中文字符在Python中是以unicode存在的,同一个字符串在不同的编码体系下有不同的值,所以在hash前要进行编码，个人建议转为gb2312,因为对比发现，我下载的一个工具算出的md5值是与gb2312编码后算出的md5值一样。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">import hashlib  </span><br><span class="line">data=&#x27;我是&#x27;  </span><br><span class="line">m = hashlib.md5(data.encode(encoding=&#x27;gb2312&#x27;))  </span><br><span class="line">print(m.hexdigest())  </span><br></pre></td></tr></table></figure>
+          <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line">import pandas as pd</span><br><span class="line">from ast import literal_eval</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class OperateExcel():</span><br><span class="line">    def __init__(self, file_path):</span><br><span class="line">        self.file_path = file_path</span><br><span class="line">        self.df = pd.read_excel(file_path, sheet_name=&quot;Sheet1&quot;)  # sheet_name不指定时默认返回全表数据</span><br><span class="line">        # self.df = pd.read_excel(file_path, sheet_name=&quot;Sheet1&quot;, usecols=[&#x27;name&#x27;, &#x27;method&#x27;])</span><br><span class="line"></span><br><span class="line">    def get_excel(self):</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">         读取表格数据存为json</span><br><span class="line">        :return: </span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line"></span><br><span class="line">        data = []</span><br><span class="line">        for i in self.df.values:</span><br><span class="line">            params = &quot;&quot;</span><br><span class="line">            if i[3] == &quot;post&quot;:</span><br><span class="line">                params = literal_eval(i[4])</span><br><span class="line">            app = &#123;&quot;id&quot;: i[0], &quot;name&quot;: i[2], &quot;method&quot;: i[3], &quot;params&quot;: params&#125;</span><br><span class="line">            data.append(app)</span><br><span class="line">        print(data)</span><br><span class="line"></span><br><span class="line">    def write_excel(self):</span><br><span class="line">        # 根据条件累加数据</span><br><span class="line">        self.df[&#x27;id&#x27;][self.df[&#x27;name&#x27;] == &#x27;测试2&#x27;] += 100</span><br><span class="line">        print(self.df.head())</span><br><span class="line">        self.df.to_excel(&#x27;data3.xlsx&#x27;, sheet_name=&#x27;Sheet1&#x27;, index=False, header=True)</span><br><span class="line"></span><br><span class="line">        # 新增一行</span><br><span class="line">        self.df.loc[10] = [5, &#x27;Eric&#x27;, &#x27;male&#x27;, 20, &#x27;&#x27;]</span><br><span class="line"></span><br><span class="line">        # 新增一列</span><br><span class="line">        self.df[&#x27;favorite&#x27;] = None</span><br><span class="line"></span><br><span class="line">        self.df.to_excel(&#x27;data3.xlsx&#x27;, sheet_name=&#x27;Sheet1&#x27;, index=False, header=True)</span><br><span class="line">        print(self.df.head())</span><br><span class="line"></span><br><span class="line">    def get_filter_excel(self):</span><br><span class="line">        # 查看所有的值</span><br><span class="line">        print(self.df.values)</span><br><span class="line"></span><br><span class="line">        # 查看第一行的值</span><br><span class="line">        print(self.df.values[0])</span><br><span class="line"></span><br><span class="line">        # 查看某一列所有的值</span><br><span class="line">        print(self.df[&#x27;name&#x27;].values)</span><br><span class="line">        print(&quot;===打印头部数据，仅查看数据示例时常用====&quot;)</span><br><span class="line">        print(self.df.head())</span><br><span class="line">        print(&quot;====打印列标题===&quot;)</span><br><span class="line">        print(self.df.columns)</span><br><span class="line">        print(&quot;====打印行========&quot;)</span><br><span class="line">        print(self.df.index)</span><br><span class="line">        print(&quot;========打印指定列============&quot;)</span><br><span class="line">        print(self.df[&quot;name&quot;])</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">if __name__ == &quot;__main__&quot;:</span><br><span class="line">    file_path = &#x27;data3.xlsx&#x27;</span><br><span class="line">    o_excel = OperateExcel(file_path)</span><br><span class="line">    o_excel.get_excel()</span><br><span class="line">    # o_excel.write_excel()</span><br><span class="line">    # o_excel.get_filter_excel()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<ul>
+<li>excel文件内容</li>
+</ul>
+<p><img src="/aposts/2d5f3400/1111.png" alt="image.png"></p>
+<ul>
+<li>其他几款操作excel对比，图片来源<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/363810440">这里</a>：<br><img src="/aposts/2d5f3400/2222.png" alt="image.png"></li>
+</ul>
 
       
     </div>
