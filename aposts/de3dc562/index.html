@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"louis-me.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":true,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="说明 本次主要针对orm中mybatis和Hibernate的关系映射进行实践  本地环境：mysql 8.0,java 1.8,idea社区版本  首先需要阅读这篇文章 介绍了对Hibernate的使用  本次实践关系映射   一对一 一对一的外键字段可以建在任何一张表中，但是，推荐建在查询频率较高的一张表中 准备如下两个表  12345678910111213create table t_id">
+<meta property="og:type" content="article">
+<meta property="og:title" content="java之orm的Hibernate关系映射">
+<meta property="og:url" content="https://louis-me.github.io/aposts/de3dc562/index.html">
+<meta property="og:site_name" content="施坤的博客">
+<meta property="og:description" content="说明 本次主要针对orm中mybatis和Hibernate的关系映射进行实践  本地环境：mysql 8.0,java 1.8,idea社区版本  首先需要阅读这篇文章 介绍了对Hibernate的使用  本次实践关系映射   一对一 一对一的外键字段可以建在任何一张表中，但是，推荐建在查询频率较高的一张表中 准备如下两个表  12345678910111213create table t_id">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://louis-me.github.io/aposts/de3dc562/image-20231226111134866.png">
+<meta property="article:published_time" content="2023-12-22T09:08:28.000Z">
+<meta property="article:modified_time" content="2023-12-28T10:07:27.541Z">
+<meta property="article:tag" content="java">
+<meta property="article:tag" content="Hibernate">
+<meta property="article:tag" content="orm">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://louis-me.github.io/aposts/de3dc562/image-20231226111134866.png">
+
+<link rel="canonical" href="https://louis-me.github.io/aposts/de3dc562/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>java之orm的Hibernate关系映射 | 施坤的博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">施坤的博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-简历">
+
+    <a href="/resume/" rel="section"><i class="fa fa-address-card fa-fw"></i>简历</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/de3dc562/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="一个正经的测试工程师">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="施坤的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          java之orm的Hibernate关系映射
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-12-22 17:08:28" itemprop="dateCreated datePublished" datetime="2023-12-22T17:08:28+08:00">2023-12-22</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-12-28 18:07:27" itemprop="dateModified" datetime="2023-12-28T18:07:27+08:00">2023-12-28</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/aposts/de3dc562/" class="post-meta-item leancloud_visitors" data-flag-title="java之orm的Hibernate关系映射" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/aposts/de3dc562/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/aposts/de3dc562/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><ul>
+<li><p>本次主要针对orm中mybatis和Hibernate的关系映射进行实践</p>
+</li>
+<li><p>本地环境：mysql 8.0,java 1.8,idea社区版本</p>
+</li>
+<li><p>首先需要阅读<a href="/aposts/e37ff1bd">这篇文章</a> 介绍了对Hibernate的使用</p>
+</li>
+<li><p>本次实践关系映射</p>
+</li>
+</ul>
+<h2 id="一对一"><a href="#一对一" class="headerlink" title="一对一"></a>一对一</h2><ul>
+<li>一对一的外键字段可以建在任何一张表中，但是，推荐建在<strong>查询频率较高</strong>的一张表中</li>
+<li>准备如下两个表</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">create table t_idCard(</span><br><span class="line">	id int primary key auto_increment comment &#x27;信用卡id&#x27;,</span><br><span class="line">	cardNo varchar(255) comment &#x27;信用卡编号&#x27;</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line">create table t_person (</span><br><span class="line">	id int primary key auto_increment comment &#x27;人员的id&#x27;,</span><br><span class="line">	name varchar(32) comment &#x27;人员信息&#x27;,</span><br><span class="line">	t_idCard_id int comment &#x27;信用卡id&#x27;,</span><br><span class="line">	foreign key(t_idCard_id) references t_idCard(id)</span><br><span class="line">);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>foreign key(t_idCard_id) references t_idCard(id) 表示就是t_idCard_id是t_person的外键</p>
+</blockquote>
+<ul>
+<li>新增Person实体类</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">package xyz.shi.domain;</span><br><span class="line"></span><br><span class="line">public class Person &#123;</span><br><span class="line"></span><br><span class="line">    private int id;</span><br><span class="line"></span><br><span class="line">    private String name;</span><br><span class="line"></span><br><span class="line">    private IdCard idCard;</span><br><span class="line"></span><br><span class="line">    public int getId() &#123;</span><br><span class="line">        return id;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setId(int id) &#123;</span><br><span class="line">        this.id = id;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public String getName() &#123;</span><br><span class="line">        return name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setName(String name) &#123;</span><br><span class="line">        this.name = name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public IdCard getIdCard() &#123;</span><br><span class="line">        return idCard;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setIdCard(IdCard idCard) &#123;</span><br><span class="line">        this.idCard = idCard;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>新增idcard实体类</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">package xyz.shi.domain;</span><br><span class="line"></span><br><span class="line">public class IdCard &#123;</span><br><span class="line">    private int id;</span><br><span class="line">    private String cardNo;</span><br><span class="line">    public int getId() &#123;</span><br><span class="line">        return id;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setId(int id) &#123;</span><br><span class="line">        this.id = id;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public String getCardNo() &#123;</span><br><span class="line">        return cardNo;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setCardNo(String cardNo) &#123;</span><br><span class="line">        this.cardNo = cardNo;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>分页的实例类</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">package xyz.shi.entity;</span><br><span class="line">import java.util.List;</span><br><span class="line"></span><br><span class="line">public class QueryResult &#123;</span><br><span class="line">    private int count; // 总记录数</span><br><span class="line">    private List list; // 一页的数据</span><br><span class="line">    public void setCount(int count) &#123;</span><br><span class="line">        this.count = count;</span><br><span class="line">    &#125;</span><br><span class="line">    public int getCount() &#123;</span><br><span class="line">        return count;</span><br><span class="line">    &#125;</span><br><span class="line">    public void setList(List list) &#123;</span><br><span class="line">        this.list = list;</span><br><span class="line">    &#125;</span><br><span class="line">    public List getList() &#123;</span><br><span class="line">        return list;</span><br><span class="line">    &#125;</span><br><span class="line">    public QueryResult(int count, List list) &#123;</span><br><span class="line">        this.count = count;</span><br><span class="line">        this.list = list;</span><br><span class="line">    &#125;</span><br><span class="line">    @Override</span><br><span class="line">    public String toString() &#123;</span><br><span class="line">        return &quot;QueryResult&#123;&quot; +</span><br><span class="line">                &quot;count=&quot; + count +</span><br><span class="line">                &quot;, list=&quot; + list +</span><br><span class="line">                &#x27;&#125;&#x27;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>实体 src-man-resources-IdCard.hbm.xml对应的xml配置文件</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot;?&gt;</span><br><span class="line">&lt;!DOCTYPE hibernate-mapping PUBLIC</span><br><span class="line">        &quot;-//Hibernate/Hibernate Mapping DTD 3.0//EN&quot;</span><br><span class="line">        &quot;http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd&quot;&gt;</span><br><span class="line">&lt;hibernate-mapping&gt;</span><br><span class="line">    &lt;class name=&quot;xyz.shi.domain.IdCard&quot; table=&quot;t_idCard&quot;&gt;</span><br><span class="line">        &lt;id name=&quot;id&quot;&gt;</span><br><span class="line">            &lt;generator class=&quot;native&quot;/&gt;</span><br><span class="line">        &lt;/id&gt;</span><br><span class="line">        &lt;property name=&quot;cardNo&quot;/&gt;</span><br><span class="line">    &lt;/class&gt;</span><br><span class="line">&lt;/hibernate-mapping&gt;</span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li>实体 src-man-resources-Persion.hbm.xml对应的xml配置文件</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot;?&gt;</span><br><span class="line">&lt;!DOCTYPE hibernate-mapping PUBLIC</span><br><span class="line">        &quot;-//Hibernate/Hibernate Mapping DTD 3.0//EN&quot;</span><br><span class="line">        &quot;http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd&quot;&gt;</span><br><span class="line">&lt;hibernate-mapping package=&quot;xyz.shi.domain&quot;&gt;</span><br><span class="line">    &lt;class name=&quot;Person&quot; table=&quot;t_person&quot;&gt;</span><br><span class="line">        &lt;id name=&quot;id&quot;&gt;</span><br><span class="line">            &lt;generator class=&quot;native&quot;&gt;&lt;/generator&gt;</span><br><span class="line">        &lt;/id&gt;</span><br><span class="line">        &lt;property name=&quot;name&quot;/&gt;</span><br><span class="line">        &lt;!-- 一对一配置，设置属性unique=”true”就变成了一对一  --&gt;</span><br><span class="line">        &lt;!-- 配置一对一的关系，基于外键的方式 --&gt;</span><br><span class="line">        &lt;many-to-one name=&quot;idCard&quot; column=&quot;t_idCard_id&quot; unique=&quot;true&quot; cascade=&quot;all&quot; &gt;&lt;/many-to-one&gt;</span><br><span class="line">    &lt;/class&gt;</span><br><span class="line">&lt;/hibernate-mapping&gt;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>外键有两种关联关系：</p>
+<p>1.基于主键的方式，我这里一直失败，Persion外键idCard的值一直为空</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- 共享主键用此 （一对一关系） --&gt;</span><br><span class="line">&lt;id name=&quot;id&quot;&gt; </span><br><span class="line">&lt;generator class=&quot;foreign&quot;&gt; </span><br><span class="line">		&lt;param name=&quot;property&quot;&gt;idCard&lt;/param&gt; </span><br><span class="line">	&lt;/generator&gt; </span><br><span class="line">&lt;/id&gt;</span><br><span class="line">&lt;one-to-one name=&quot;idCard&quot; class=&quot;IdCard&quot; constrained=&quot;true&quot;&gt;&lt;/one-to-one&gt; -</span><br></pre></td></tr></table></figure>
+
+<p>2.基于外键的方式，这里的cascade是级联关联，一定要加上，不然报错</p>
+<p><many-to-one name="idCard" column="t_idCard_id" unique="true" cascade="all"></many-to-one></p>
+<p>cascade属性：</p>
+<p>all :：       所有情况下均进行关联操作。<br>none：       所有情况下均不进行关联操作。这是默认值。<br>save-update：    在执行save&#x2F;update&#x2F;saveOrUpdate时进行关联操作。<br>delete：      在执行delete时进行关联操</p>
+</blockquote>
+<p>- </p>
+<ul>
+<li>在 Hibernate 核心配置文件 src-man-resources-hibernate.cfg.xml 中，使用 <mapping> 元素来指定映射文件 Student.hbm.xml 和 Grade.hbm.xml 的位置信息，配置代码如下。</mapping></li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span><br><span class="line">&lt;!DOCTYPE hibernate-configuration PUBLIC</span><br><span class="line">        &quot;-//Hibernate/Hibernate Configuration DTD 3.0//EN&quot;</span><br><span class="line">        &quot;http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd&quot;&gt;</span><br><span class="line">&lt;hibernate-configuration&gt;</span><br><span class="line">    &lt;session-factory&gt;</span><br><span class="line">        &lt;!-- 配置关于数据库连接的四个项：driverClass  url username password --&gt;</span><br><span class="line">        &lt;property name=&quot;hibernate.connection.driver_class&quot;&gt;com.mysql.jdbc.Driver&lt;/property&gt;</span><br><span class="line">        &lt;property name=&quot;hibernate.connection.url&quot;&gt;jdbc:mysql://127.0.0.1:3306/test?serverTimezone=Asia/Shanghai&lt;/property&gt;</span><br><span class="line">        &lt;property name=&quot;hibernate.connection.username&quot;&gt;root&lt;/property&gt;</span><br><span class="line">        &lt;property name=&quot;hibernate.connection.password&quot;&gt;123456&lt;/property&gt;</span><br><span class="line"></span><br><span class="line">        &lt;!-- 可以将向数据库发送的SQL语句显示出来 --&gt;</span><br><span class="line">        &lt;property name=&quot;hibernate.show_sql&quot;&gt;true&lt;/property&gt;</span><br><span class="line">        &lt;!-- 格式化SQL语句 --&gt;</span><br><span class="line">        &lt;property name=&quot;hibernate.format_sql&quot;&gt;true&lt;/property&gt;</span><br><span class="line">        &lt;!-- hibernate的方言 --&gt;</span><br><span class="line">        &lt;property name=&quot;hibernate.dialect&quot;&gt;org.hibernate.dialect.MySQLDialect&lt;/property&gt;</span><br><span class="line">        &lt;!-- 配置hibernate的映射文件所在的位置 --&gt;</span><br><span class="line">        &lt;mapping resource=&quot;IdCard.hbm.xml&quot;/&gt;</span><br><span class="line">        &lt;mapping resource=&quot;Person.hbm.xml&quot;/&gt;</span><br><span class="line">    &lt;/session-factory&gt;</span><br><span class="line">&lt;/hibernate-configuration&gt;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>Dao代码</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br></pre></td><td class="code"><pre><span class="line">package xyz.shi.dao;</span><br><span class="line"></span><br><span class="line">import org.hibernate.Session;</span><br><span class="line">import org.hibernate.Transaction;</span><br><span class="line">import xyz.shi.domain.Person;</span><br><span class="line">import xyz.shi.entity.QueryResult;</span><br><span class="line">import xyz.shi.utils.HibernateUtils;</span><br><span class="line"></span><br><span class="line">import java.util.List;</span><br><span class="line"></span><br><span class="line">public class PersonDao &#123;</span><br><span class="line">    /*</span><br><span class="line">     * 保存</span><br><span class="line">     */</span><br><span class="line">    public void save(Person person) &#123;</span><br><span class="line">        Session session = HibernateUtils.openSession();</span><br><span class="line">        try &#123;</span><br><span class="line">            Transaction tx = session.beginTransaction(); // 开启事务</span><br><span class="line">            session.save(person);</span><br><span class="line">            tx.commit(); // 提交事务</span><br><span class="line">        &#125; catch (RuntimeException e) &#123;</span><br><span class="line">            session.getTransaction().rollback(); // 回滚事务</span><br><span class="line">            throw e;</span><br><span class="line">        &#125; finally &#123;</span><br><span class="line">            session.close(); // 关闭session</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /*</span><br><span class="line">     * 更新</span><br><span class="line">     */</span><br><span class="line">    public void update(Person person) &#123;</span><br><span class="line">        Session session = HibernateUtils.openSession();</span><br><span class="line">        Transaction tx = null;</span><br><span class="line">        try &#123;</span><br><span class="line">            tx = session.beginTransaction();</span><br><span class="line"></span><br><span class="line">            session.update(person);// 操作</span><br><span class="line"></span><br><span class="line">            tx.commit();</span><br><span class="line">        &#125; catch (RuntimeException e) &#123;</span><br><span class="line">            tx.rollback();</span><br><span class="line">            throw e;</span><br><span class="line">        &#125; finally &#123;</span><br><span class="line">            session.close();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /*</span><br><span class="line">     * 删除</span><br><span class="line">     */</span><br><span class="line">    public void delete(int id) &#123;</span><br><span class="line">        Session session = HibernateUtils.openSession();</span><br><span class="line">        Transaction tx = null;</span><br><span class="line">        try &#123;</span><br><span class="line">            tx = session.beginTransaction();</span><br><span class="line"></span><br><span class="line">            Object user = session.get(Person.class, id); // 要先获取到这个对象</span><br><span class="line">            session.delete(user); // 删除的是实体对象</span><br><span class="line"></span><br><span class="line">            tx.commit();</span><br><span class="line">        &#125; catch (RuntimeException e) &#123;</span><br><span class="line">            tx.rollback();</span><br><span class="line">            throw e;</span><br><span class="line">        &#125; finally &#123;</span><br><span class="line">            session.close();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /*</span><br><span class="line">     * 根据id查询一个User数据</span><br><span class="line">     */</span><br><span class="line">    public Person getById(int id) &#123;</span><br><span class="line">        Session session = HibernateUtils.openSession();</span><br><span class="line">        Transaction tx = null;</span><br><span class="line">        try &#123;</span><br><span class="line">            tx = session.beginTransaction();</span><br><span class="line">            Person person = (Person) session.get(Person.class, id);// 操作</span><br><span class="line">            tx.commit();</span><br><span class="line">            return person;</span><br><span class="line">        &#125; catch (RuntimeException e) &#123;</span><br><span class="line">            tx.rollback();</span><br><span class="line">            throw e;</span><br><span class="line">        &#125; finally &#123;</span><br><span class="line">            session.close();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /*</span><br><span class="line">     * 查询所有</span><br><span class="line">     */</span><br><span class="line">    public List&lt;Person&gt; findAll() &#123;</span><br><span class="line">        Session session = HibernateUtils.openSession();</span><br><span class="line">        Transaction tx = null;</span><br><span class="line">        try &#123;</span><br><span class="line">            tx = session.beginTransaction();</span><br><span class="line"></span><br><span class="line">            // 方式一：使用HQL语句</span><br><span class="line">            // 这里的FROM User 并不是表的名字，而是User.hbm.xml中的&lt;class name=&quot;User&quot; 这个name</span><br><span class="line">            List&lt;Person&gt; list = session.createQuery(&quot;FROM Person&quot;).list(); // 使用HQL查询</span><br><span class="line"></span><br><span class="line">            tx.commit();</span><br><span class="line">            return list;</span><br><span class="line">        &#125; catch (RuntimeException e) &#123;</span><br><span class="line">            tx.rollback();</span><br><span class="line">            throw e;</span><br><span class="line">        &#125; finally &#123;</span><br><span class="line">            session.close();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 分页的查询数据列表</span><br><span class="line">     * @param firstResult 从结果列表中的哪个索引开始取数据</span><br><span class="line">     * @param maxResults 最多取多少条数据</span><br><span class="line">     * @return 一页的数据列表</span><br><span class="line">     */</span><br><span class="line">    @SuppressWarnings(&quot;unchecked&quot;)</span><br><span class="line">    public QueryResult findAll(int firstResult, int maxResults) &#123;</span><br><span class="line">        Session session = HibernateUtils.openSession();</span><br><span class="line">        Transaction tx = null;</span><br><span class="line">        try &#123;</span><br><span class="line">            tx = session.beginTransaction();</span><br><span class="line">            // 查询一页的数据列表</span><br><span class="line">            // 方式一：</span><br><span class="line">            // Query query = session.createQuery(&quot;FROM User&quot;);</span><br><span class="line">            // query.setFirstResult(firstResult);</span><br><span class="line">            // query.setMaxResults(maxResults);</span><br><span class="line">            // List&lt;User&gt; list = query.list(); // 使用HQL查询</span><br><span class="line"></span><br><span class="line">            // 方式二：方法链</span><br><span class="line">            List&lt;Person&gt; list = session.createQuery( //</span><br><span class="line">                            &quot;FROM Person&quot;) //</span><br><span class="line">                    .setFirstResult(firstResult) //</span><br><span class="line">                    .setMaxResults(maxResults) //</span><br><span class="line">                    .list();</span><br><span class="line"></span><br><span class="line">            // 查询总记录数</span><br><span class="line">            // session.createQuery(&quot;SELECT COUNT(*) FROM User&quot;).list().get(0);</span><br><span class="line">            // Long count = (Long) session.createQuery(&quot;SELECT COUNT(*) FROM User&quot;).uniqueResult();</span><br><span class="line">            Long count = (Long) session.createQuery( //</span><br><span class="line">                            &quot;SELECT COUNT(*) FROM Person&quot;) //</span><br><span class="line">                    .uniqueResult();</span><br><span class="line">            tx.commit();</span><br><span class="line">            // 返回结果</span><br><span class="line">            return new QueryResult(count.intValue(), list);</span><br><span class="line">        &#125; catch (RuntimeException e) &#123;</span><br><span class="line">            tx.rollback();</span><br><span class="line">            throw e;</span><br><span class="line">        &#125; finally &#123;</span><br><span class="line">            session.close();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>测试代码</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line">import org.hibernate.Session;</span><br><span class="line">import org.hibernate.SessionFactory;</span><br><span class="line">import org.hibernate.cfg.Configuration;</span><br><span class="line">import org.hibernate.query.Query;</span><br><span class="line">import org.junit.Test;</span><br><span class="line">import xyz.shi.dao.PersonDao;</span><br><span class="line">import xyz.shi.domain.Person;</span><br><span class="line">import xyz.shi.domain.IdCard;</span><br><span class="line">import xyz.shi.entity.QueryResult;</span><br><span class="line"></span><br><span class="line">import java.util.List;</span><br><span class="line"></span><br><span class="line">public class PersonDaoTest &#123;</span><br><span class="line">   private PersonDao personDao = new PersonDao();</span><br><span class="line"></span><br><span class="line">    @Test</span><br><span class="line">    public void saveTest() &#123;</span><br><span class="line">        // 先创建idcard</span><br><span class="line">        IdCard idCard = new IdCard();</span><br><span class="line">        idCard.setCardNo(&quot;1111111&quot;);</span><br><span class="line"></span><br><span class="line">        // 创建persion</span><br><span class="line">        Person person = new Person();</span><br><span class="line">        person.setName(&quot;王大伟&quot;);</span><br><span class="line"></span><br><span class="line">        person.setIdCard(idCard);</span><br><span class="line">        personDao.save(person);</span><br><span class="line">    &#125;</span><br><span class="line">    @Test</span><br><span class="line">    public void findIdTest() &#123;</span><br><span class="line">        personDao.getById(16);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // 修改操作</span><br><span class="line">    @Test</span><br><span class="line">    public void updateTest() &#123;</span><br><span class="line"></span><br><span class="line">        Person person = new Person();</span><br><span class="line">        person.setId(16);</span><br><span class="line">        person.setName(&quot;郑1&quot;);</span><br><span class="line">        personDao.update(person);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // 删除操作---根据id进行删除</span><br><span class="line">    @Test</span><br><span class="line">    public void deleteTest() &#123;</span><br><span class="line">        personDao.delete(19);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // 查询所有User</span><br><span class="line">    @Test</span><br><span class="line">    public void findAllTest() &#123;</span><br><span class="line">        List&lt;Person&gt; list = personDao.findAll();</span><br><span class="line">        for (Person user : list) &#123;</span><br><span class="line">            System.out.println(user);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    @Test</span><br><span class="line">    public void findAll1() &#123;</span><br><span class="line">        QueryResult result = personDao.findAll(0, 5);</span><br><span class="line">        System.out.println(result.getCount());</span><br><span class="line">        for (Object o : result.getList()) &#123;</span><br><span class="line">            System.out.println(o);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="一对多"><a href="#一对多" class="headerlink" title="一对多"></a>一对多</h2><ul>
+<li><p>在三种关联关系中，一对多（或者多对一）是最常见的一种关联关系。</p>
+</li>
+<li><p>在关系型数据库中，一对多映射关系通常是由“多”的一方指向“一”的一方。<strong>在表示“多”的一方的数据表中增加一个外键，指向“一”的一方的数据表的主键，“一”的一方称为主表，而“多”的一方称为从表</strong>。</p>
+</li>
+<li><p>准备如下两个表：</p>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">student 表为学生表，id 为学生表的主键，name 表示学生名称,gid 为学生表的外键，指向班级表的主键 id；</span><br><span class="line">grade 表为班级表，id 为班级表的主键，name 表示班级名称；</span><br><span class="line"></span><br><span class="line">create table grade(</span><br><span class="line">	id int primary key auto_increment comment &#x27;主键id&#x27;,</span><br><span class="line">	name varchar(128) comment &#x27;班级&#x27;</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line">create table student(</span><br><span class="line">	id int primary key auto_increment comment &#x27;主键id&#x27;,</span><br><span class="line">	name varchar(128) comment &#x27;学生名字&#x27;,</span><br><span class="line">	gid int comment &#x27;班级id&#x27;,</span><br><span class="line">	foreign key(gid) references grade(id)</span><br><span class="line">)comment &#x27;gid是student表的外键&#x27;;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>新增Student实体类</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line">package xyz.shi.domain;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">public class Student &#123;</span><br><span class="line">    private Integer id;</span><br><span class="line">    private String name;</span><br><span class="line">    //持有实体类 Grade 的一个引用，维护多对一关系</span><br><span class="line">    private Grade grade;</span><br><span class="line"></span><br><span class="line">    public Student() &#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public Student(Integer id, String name) &#123;</span><br><span class="line">        this.id = id;</span><br><span class="line">        this.name = name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public Integer getId() &#123;</span><br><span class="line">        return id;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setId(Integer id) &#123;</span><br><span class="line">        this.id = id;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public String getName() &#123;</span><br><span class="line">        return name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setName(String name) &#123;</span><br><span class="line">        this.name = name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public Grade getGrade() &#123;</span><br><span class="line">        return grade;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setGrade(Grade grade) &#123;</span><br><span class="line">        this.grade = grade;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public String toString() &#123;</span><br><span class="line">        return &quot;Student&#123;&quot; +</span><br><span class="line">                &quot;id=&quot; + id +</span><br><span class="line">                &quot;, name=&#x27;&quot; + name + &#x27;\&#x27;&#x27; +</span><br><span class="line">                &quot;, grade=&quot; + grade +</span><br><span class="line">                &#x27;&#125;&#x27;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>新增Grade实体类</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">package xyz.shi.domain;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">import java.util.HashSet;</span><br><span class="line">import java.util.Set;</span><br><span class="line"></span><br><span class="line">public class Grade &#123;</span><br><span class="line">    private Integer Id;</span><br><span class="line">    private String name;</span><br><span class="line">    //持有 Student 引用的集合，来维护一对多关联关系</span><br><span class="line">    private Set&lt;Student&gt; students = new HashSet&lt;&gt;();</span><br><span class="line"></span><br><span class="line">    public Integer getId() &#123;</span><br><span class="line">        return Id;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setId(Integer id) &#123;</span><br><span class="line">        Id = id;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public String getName() &#123;</span><br><span class="line">        return name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setName(String name) &#123;</span><br><span class="line">        this.name = name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public Set&lt;Student&gt; getStudents() &#123;</span><br><span class="line">        return students;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setStudents(Set&lt;Student&gt; students) &#123;</span><br><span class="line">        this.students = students;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public String toString() &#123;</span><br><span class="line">        return &quot;Grade&#123;&quot; +</span><br><span class="line">                &quot;Id=&quot; + Id +</span><br><span class="line">                &quot;, name=&#x27;&quot; + name +</span><br><span class="line">                &#x27;&#125;&#x27;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>创建 Student 的映射文件 src-man-resources-Student.hbm.xml，配置如下。</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&#x27;1.0&#x27; encoding=&#x27;utf-8&#x27;?&gt;</span><br><span class="line">&lt;!DOCTYPE hibernate-mapping PUBLIC</span><br><span class="line">        &quot;-//Hibernate/Hibernate Mapping DTD 3.0//EN&quot;</span><br><span class="line">        &quot;http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd&quot;&gt;</span><br><span class="line">&lt;hibernate-mapping&gt;</span><br><span class="line">    &lt;class name=&quot;xyz.shi.domain.Student&quot; table=&quot;student&quot; schema=&quot;shi_jdbc&quot; lazy=&quot;true&quot;&gt;</span><br><span class="line">        &lt;!--主键映射--&gt;</span><br><span class="line">        &lt;id name=&quot;id&quot; column=&quot;id&quot; type=&quot;java.lang.Integer&quot;&gt;</span><br><span class="line">            &lt;!--主键生成策略--&gt;</span><br><span class="line">            &lt;generator class=&quot;native&quot;&gt;&lt;/generator&gt;</span><br><span class="line">        &lt;/id&gt;</span><br><span class="line">        &lt;property name=&quot;name&quot; column=&quot;name&quot; length=&quot;100&quot; type=&quot;java.lang.String&quot;&gt;&lt;/property&gt;</span><br><span class="line"></span><br><span class="line">        &lt;!--维护关联关系--&gt;</span><br><span class="line">        &lt;many-to-one name=&quot;grade&quot; class=&quot;xyz.shi.domain.Grade&quot; column=&quot;gid&quot; cascade=&quot;all&quot;/&gt;</span><br><span class="line">    &lt;/class&gt;</span><br><span class="line">&lt;/hibernate-mapping&gt;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>注意many-to-one用法,cascade&#x3D;”all”为级联关系</p>
+</blockquote>
+<ul>
+<li>创建 Grade 的映射文件  src-man-resources-Grade.hbm.xml，配置如下</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&#x27;1.0&#x27; encoding=&#x27;utf-8&#x27;?&gt;</span><br><span class="line">&lt;!DOCTYPE hibernate-mapping PUBLIC</span><br><span class="line">        &quot;-//Hibernate/Hibernate Mapping DTD 3.0//EN&quot;</span><br><span class="line">        &quot;http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd&quot;&gt;</span><br><span class="line">&lt;hibernate-mapping&gt;</span><br><span class="line">    &lt;class name=&quot;xyz.shi.domain.Grade&quot; table=&quot;grade&quot; schema=&quot;shi_jdbc&quot;&gt;</span><br><span class="line">        &lt;id name=&quot;id&quot; column=&quot;id&quot; type=&quot;java.lang.Integer&quot;&gt;</span><br><span class="line">            &lt;generator class=&quot;native&quot;&gt;&lt;/generator&gt;</span><br><span class="line">        &lt;/id&gt;</span><br><span class="line">        &lt;property name=&quot;name&quot; column=&quot;name&quot; length=&quot;100&quot; type=&quot;java.lang.String&quot;/&gt;</span><br><span class="line">        &lt;!--使用 set 元素维护一对多关联关系--&gt;</span><br><span class="line">        &lt;set name=&quot;students&quot;&gt;</span><br><span class="line">            &lt;key column=&quot;gid&quot;&gt;&lt;/key&gt;</span><br><span class="line">            &lt;one-to-many class=&quot;xyz.shi.domain.Student&quot;&gt;&lt;/one-to-many&gt;</span><br><span class="line">        &lt;/set&gt;</span><br><span class="line">    &lt;/class&gt;</span><br><span class="line">&lt;/hibernate-mapping&gt;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>从 Grade（班级）的角度看，Student 和 Grade 是一对多的关系，因此 Grade 的映射文件中，需要通过 <set> 标签来维护 Grade 与 Student 的一对多关联关系。</set></p>
+</blockquote>
+<ul>
+<li><p>在 Hibernate 核心配置文件 src-man-resources-hibernate.cfg.xml 中，使用 <mapping> 元素来指定映射文件 Student.hbm.xml 和 Grade.hbm.xml 的位置信息，配置代码如下。</mapping></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">  &lt;!-- 配置hibernate的映射文件所在的位置 --&gt;</span><br><span class="line"> &lt;mapping resource=&quot;Student.hbm.xml&quot;/&gt;</span><br><span class="line"> &lt;mapping resource=&quot;Grade.hbm.xml&quot;/&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Dao代码</p>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br></pre></td><td class="code"><pre><span class="line">package xyz.shi.dao;</span><br><span class="line"></span><br><span class="line">import org.hibernate.Session;</span><br><span class="line">import org.hibernate.Transaction;</span><br><span class="line">import org.hibernate.query.Query;</span><br><span class="line">import xyz.shi.domain.Grade;</span><br><span class="line">import xyz.shi.domain.Person;</span><br><span class="line">import xyz.shi.domain.Student;</span><br><span class="line">import xyz.shi.entity.QueryResult;</span><br><span class="line">import xyz.shi.utils.HibernateUtils;</span><br><span class="line"></span><br><span class="line">import java.util.List;</span><br><span class="line"></span><br><span class="line">public class StudentDao &#123;</span><br><span class="line">    public void save(Student student) &#123;</span><br><span class="line">        Session session = HibernateUtils.openSession();</span><br><span class="line">        try &#123;</span><br><span class="line">            Transaction tx = session.beginTransaction(); // 开启事务</span><br><span class="line">            session.save(student);</span><br><span class="line">            tx.commit(); // 提交事务</span><br><span class="line">        &#125; catch (RuntimeException e) &#123;</span><br><span class="line">            session.getTransaction().rollback(); // 回滚事务</span><br><span class="line">            throw e;</span><br><span class="line">        &#125; finally &#123;</span><br><span class="line">            session.close(); // 关闭session</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /*</span><br><span class="line">     * 更新</span><br><span class="line">     */</span><br><span class="line">    public void update(Student student) &#123;</span><br><span class="line">        Session session = HibernateUtils.openSession();</span><br><span class="line">        Transaction tx = null;</span><br><span class="line">        try &#123;</span><br><span class="line">            tx = session.beginTransaction();</span><br><span class="line">            Student student1 = session.get(Student.class, student.getId());</span><br><span class="line">            // 设置学生信息</span><br><span class="line">            student1.setName(student.getName());</span><br><span class="line">            // 设置班级</span><br><span class="line">            Grade grade = student1.getGrade();</span><br><span class="line">            student.setGrade(grade);</span><br><span class="line">            //我们修改了该对象的属性，并且不需要显式调用 session.saveOrUpdate(student)，Hibernate 会自动将修改后的对象同步到数据库。</span><br><span class="line">//            session.update(student);// 操作</span><br><span class="line">            tx.commit();</span><br><span class="line">        &#125; catch (RuntimeException e) &#123;</span><br><span class="line">            tx.rollback();</span><br><span class="line">            throw e;</span><br><span class="line">        &#125; finally &#123;</span><br><span class="line">            session.close();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /*</span><br><span class="line">     * 删除</span><br><span class="line">     */</span><br><span class="line">    public void delete(int id) &#123;</span><br><span class="line">        Session session = HibernateUtils.openSession();</span><br><span class="line">        Transaction tx = null;</span><br><span class="line">        try &#123;</span><br><span class="line">            tx = session.beginTransaction();</span><br><span class="line"></span><br><span class="line">            Object user = session.get(Student.class, id); // 要先获取到这个对象</span><br><span class="line">            session.delete(user); // 删除的是实体对象</span><br><span class="line"></span><br><span class="line">            tx.commit();</span><br><span class="line">        &#125; catch (RuntimeException e) &#123;</span><br><span class="line">            tx.rollback();</span><br><span class="line">            throw e;</span><br><span class="line">        &#125; finally &#123;</span><br><span class="line">            session.close();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /*</span><br><span class="line">     * 根据id查询，返回对象为List object,然后直接转换到各自的实体类</span><br><span class="line">     */</span><br><span class="line">    public List&lt;Object[]&gt; getById(int id) &#123;</span><br><span class="line">        Session session = HibernateUtils.openSession();</span><br><span class="line">        Transaction tx = null;</span><br><span class="line">        try &#123;</span><br><span class="line">            tx = session.beginTransaction();</span><br><span class="line">            List&lt;Object[]&gt;  list =  session.createQuery(</span><br><span class="line">                    &quot;select s, g from Student s join s.grade g where s.id=&quot;+id).list();</span><br><span class="line">            tx.commit();</span><br><span class="line">            return list;</span><br><span class="line">        &#125; catch (RuntimeException e) &#123;</span><br><span class="line">            tx.rollback();</span><br><span class="line">            throw e;</span><br><span class="line">        &#125; finally &#123;</span><br><span class="line">            session.close();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /*</span><br><span class="line">     * 查询所有</span><br><span class="line">     */</span><br><span class="line">    public List&lt;Object[]&gt; findAll() &#123;</span><br><span class="line">        Session session = HibernateUtils.openSession();</span><br><span class="line">        Transaction tx = null;</span><br><span class="line">        try &#123;</span><br><span class="line">            tx = session.beginTransaction();</span><br><span class="line">            // 注意这里的用法用的原生语句,要给别名不然报错</span><br><span class="line">            List&lt;Object[]&gt; list = session.createSQLQuery(&quot;select s.id as student_id, s.name as student_name, g.id as grade_id, g.name as grade_name from student s join grade g on s.gid=g.id&quot;).list();</span><br><span class="line">            tx.commit();</span><br><span class="line">            return list;</span><br><span class="line">        &#125; catch (RuntimeException e) &#123;</span><br><span class="line">            tx.rollback();</span><br><span class="line">            throw e;</span><br><span class="line">        &#125; finally &#123;</span><br><span class="line">            session.close();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 分页的查询数据列表</span><br><span class="line">     * @param firstResult 从结果列表中的哪个索引开始取数据</span><br><span class="line">     * @param maxResults 最多取多少条数据</span><br><span class="line">     * @return 一页的数据列表</span><br><span class="line">     */</span><br><span class="line">    @SuppressWarnings(&quot;unchecked&quot;)</span><br><span class="line">    public QueryResult findAll(int firstResult, int maxResults) &#123;</span><br><span class="line">        Session session = HibernateUtils.openSession();</span><br><span class="line">        Transaction tx = null;</span><br><span class="line">        try &#123;</span><br><span class="line">            tx = session.beginTransaction();</span><br><span class="line"></span><br><span class="line">        List&lt;Object[]&gt; list = session.createQuery( //</span><br><span class="line">                            &quot;select s, g from Student s join s.grade g&quot;) //</span><br><span class="line">                    .setFirstResult(firstResult) //</span><br><span class="line">                    .setMaxResults(maxResults) //</span><br><span class="line">                    .list();</span><br><span class="line"></span><br><span class="line">            // 查询总记录数</span><br><span class="line">            Long count = (Long) session.createQuery( //</span><br><span class="line">                            &quot;SELECT COUNT(*) FROM Student&quot;) //</span><br><span class="line">                    .uniqueResult();</span><br><span class="line">            tx.commit();</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">            // 返回结果</span><br><span class="line">            return new QueryResult(count.intValue(), list);</span><br><span class="line">        &#125; catch (RuntimeException e) &#123;</span><br><span class="line">            tx.rollback();</span><br><span class="line">            throw e;</span><br><span class="line">        &#125; finally &#123;</span><br><span class="line">            session.close();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<ul>
+<li>session.createQuery( “select s, g from Student s join s.grade g”) 注意这里的用法，不支持join，s.grade其实就是Student实体类类设置的</li>
+<li>createSQLQuery 支持用原生语句查询</li>
+<li>一对多查询，返回List&lt;Object[]&gt;，然后各自的实体类去转换</li>
+</ul>
+</blockquote>
+<ul>
+<li>测试</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br></pre></td><td class="code"><pre><span class="line">import org.hibernate.Session;</span><br><span class="line">import org.hibernate.SessionFactory;</span><br><span class="line">import org.hibernate.cfg.Configuration;</span><br><span class="line">import org.hibernate.query.Query;</span><br><span class="line">import org.junit.Test;</span><br><span class="line">import xyz.shi.dao.StudentDao;</span><br><span class="line">import xyz.shi.domain.Student;</span><br><span class="line">import xyz.shi.domain.Grade;</span><br><span class="line">import xyz.shi.entity.QueryResult;</span><br><span class="line"></span><br><span class="line">import java.util.List;</span><br><span class="line"></span><br><span class="line">public class StudentDaoTest &#123;</span><br><span class="line">    private  StudentDao studentDao = new StudentDao();</span><br><span class="line"></span><br><span class="line">    @Test</span><br><span class="line">    public void saveTest() &#123;</span><br><span class="line">        Grade grade = new Grade();</span><br><span class="line">        grade.setName(&quot;三年级&quot;);</span><br><span class="line"></span><br><span class="line">        Student student = new Student();</span><br><span class="line">        student.setName(&quot;王大伟&quot;);</span><br><span class="line">        //设置学生的班级</span><br><span class="line">        student.setGrade(grade);</span><br><span class="line"></span><br><span class="line">        Student student2 = new Student();</span><br><span class="line">        student2.setGrade(grade);</span><br><span class="line">        student2.setName(&quot;小红&quot;);</span><br><span class="line"></span><br><span class="line">        studentDao.save(student);</span><br><span class="line">        studentDao.save(student2);</span><br><span class="line">    &#125;</span><br><span class="line">    @Test</span><br><span class="line">    public void findIdTest() &#123;</span><br><span class="line">       List&lt;Object[]&gt; students = studentDao.getById(12);</span><br><span class="line">        for (Object[] result : students) &#123;</span><br><span class="line">            Student student = (Student) result[0];</span><br><span class="line">            Grade grade = (Grade) result[1];</span><br><span class="line">            System.out.println(student);</span><br><span class="line">            System.out.println(grade);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // 修改操作</span><br><span class="line">    @Test</span><br><span class="line">    public void updateTest() &#123;</span><br><span class="line">        Student student = new Student();</span><br><span class="line">        student.setId(3);</span><br><span class="line">        student.setName(&quot;郑122&quot;);</span><br><span class="line">        studentDao.update(student);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // 删除操作---根据id进行删除</span><br><span class="line">    @Test</span><br><span class="line">    public void deleteTest() &#123;</span><br><span class="line">        studentDao.delete(2);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // 查询所有</span><br><span class="line">    @Test</span><br><span class="line">    public void findAllTest() &#123;</span><br><span class="line"></span><br><span class="line">        List&lt;Object[]&gt; list = studentDao.findAll();</span><br><span class="line">        for (Object[] result : list) &#123;</span><br><span class="line">            int studentId = (int) result[0];</span><br><span class="line">            String studentName = (String) result[1];</span><br><span class="line">            int gradeId = (int) result[2];</span><br><span class="line">            String gradeName = (String) result[3];</span><br><span class="line"></span><br><span class="line">            Student student = new Student();</span><br><span class="line">            student.setId(studentId);</span><br><span class="line">            student.setName(studentName);</span><br><span class="line"></span><br><span class="line">            Grade grade = new Grade();</span><br><span class="line">            grade.setId(gradeId);</span><br><span class="line">            grade.setName(gradeName);</span><br><span class="line"></span><br><span class="line">            student.setGrade(grade);</span><br><span class="line">            System.out.println(student);</span><br><span class="line">            System.out.println(grade);</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    @Test</span><br><span class="line">    public void findAll1() &#123;</span><br><span class="line">        QueryResult result = studentDao.findAll(0, 5);</span><br><span class="line">        System.out.println(result.getCount());</span><br><span class="line">        List&lt;Object[]&gt; list  = result.getList();</span><br><span class="line">        for (Object[] arr : list) &#123;</span><br><span class="line">            Student student = (Student) arr[0];</span><br><span class="line">            System.out.println(&quot;Student: &quot; + student.getName() + &quot;, Grade: &quot; + student.getGrade().getName());</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="多对多"><a href="#多对多" class="headerlink" title="多对多"></a>多对多</h2><ul>
+<li>在实际的应用中，“多对多”也是一种常见的关联关系，例如学生和课程的关系，一个学生可以选修多门课程，一个课程可以被多名学生选修。</li>
+<li>在关系型数据库中，是无法直接表达“多对多”关联关系的，<strong>我们一般会采用新建一张中间表</strong>，将一个“多对多”关联拆分为两个“一对多”关联解决此问题，如下图</li>
+</ul>
+<p><img src="/aposts/de3dc562/image-20231226111134866.png" alt="image-20231226111134866"></p>
+<ul>
+<li>创建如下数据表关系，图书和作者，他们是多对多的关系</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">-- 创建学生表,用上面的一对多的表即可</span><br><span class="line">create table student(</span><br><span class="line">	id int primary key auto_increment comment &#x27;主键id&#x27;,</span><br><span class="line">	name varchar(128) comment &#x27;学生名字&#x27;,</span><br><span class="line">	gid int comment &#x27;班级id&#x27;,</span><br><span class="line">	foreign key(gid) references grade(id)</span><br><span class="line">)</span><br><span class="line">-- 创建课程表</span><br><span class="line">create table course(</span><br><span class="line">	id int primary key auto_increment comment &#x27;主键id&#x27;,</span><br><span class="line">	name varchar(32) comment &#x27;课程名&#x27;</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line">-- 建立第三张表来保存两张表的关系</span><br><span class="line">create table student_course(</span><br><span class="line">	id int primary key auto_increment comment &#x27;联表的id&#x27;,</span><br><span class="line">	student_id int comment &#x27;学生的id&#x27;,</span><br><span class="line">	course_id int comment &#x27;课程的id&#x27;,</span><br><span class="line">	foreign key(student_id) references student(id)</span><br><span class="line">	on update cascade</span><br><span class="line">	on delete cascade,</span><br><span class="line">	foreign key(course_id) references course(id)</span><br><span class="line">	on update cascade</span><br><span class="line">	on delete cascade</span><br><span class="line">);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>创建课程实体类</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">package xyz.shi.domain;</span><br><span class="line"></span><br><span class="line">import java.util.HashSet;</span><br><span class="line">import java.util.Set;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * 课程实体类</span><br><span class="line"> */</span><br><span class="line">public class Course &#123;</span><br><span class="line">    private Integer id;</span><br><span class="line">    private String name;</span><br><span class="line">    //学生 Student 的集合作为其属性，维护多对多关联关系</span><br><span class="line">    private Set&lt;Student&gt; students = new HashSet&lt;&gt;();</span><br><span class="line">    public Integer getId() &#123;</span><br><span class="line">        return id;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setId(Integer id) &#123;</span><br><span class="line">        this.id = id;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public String getName() &#123;</span><br><span class="line">        return name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setName(String name) &#123;</span><br><span class="line">        this.name = name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public Set&lt;Student&gt; getStudents() &#123;</span><br><span class="line">        return students;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setStudents(Set&lt;Student&gt; students) &#123;</span><br><span class="line">        this.students = students;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public String toString() &#123;</span><br><span class="line">        return &quot;Course&#123;&quot; +</span><br><span class="line">                &quot;id=&quot; + id +</span><br><span class="line">                &quot;, name=&#x27;&quot; + name +</span><br><span class="line">                &#x27;&#125;&#x27;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>修改 Student 实体类的代码，在 Student 类中以 Set 的形式引入 Course 对象作为其属性，来维护 Student 与 Course 之间的多对多关联关系，代码如下。</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">package xyz.shi.domain;</span><br><span class="line">....</span><br><span class="line">public class Student &#123;</span><br><span class="line">    //将 Course 对象的集合作为其属性，以维护它们之间的多对多关联关系</span><br><span class="line">    private Set&lt;Course&gt; courses = new HashSet&lt;&gt;();</span><br><span class="line">     public Set&lt;Course&gt; getCourses() &#123;</span><br><span class="line">        return courses;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setCourses(Set&lt;Course&gt; courses) &#123;</span><br><span class="line">        this.courses = courses;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>创建 Course 的映射文件  src-man-resources-Coures.hbm.xml，具体配置如下</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&#x27;1.0&#x27; encoding=&#x27;utf-8&#x27;?&gt;</span><br><span class="line">&lt;!DOCTYPE hibernate-mapping PUBLIC</span><br><span class="line">        &quot;-//Hibernate/Hibernate Mapping DTD 3.0//EN&quot;</span><br><span class="line">        &quot;http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd&quot;&gt;</span><br><span class="line">&lt;hibernate-mapping package=&quot;xyz.shi.domain&quot;&gt;</span><br><span class="line">    &lt;class name=&quot;Course&quot; table=&quot;course&quot; schema=&quot;jdbc&quot;&gt;</span><br><span class="line">        &lt;id name=&quot;id&quot; column=&quot;id&quot; &gt;</span><br><span class="line">            &lt;generator class=&quot;native&quot;&gt;&lt;/generator&gt;</span><br><span class="line">        &lt;/id&gt;</span><br><span class="line"></span><br><span class="line">        &lt;property name=&quot;name&quot; column=&quot;name&quot; length=&quot;100&quot;/&gt;</span><br><span class="line"></span><br><span class="line">        &lt;set name=&quot;students&quot; table=&quot;student_course&quot; cascade=&quot;save-update&quot;  inverse=&quot;true&quot;&gt;</span><br><span class="line">            &lt;key column=&quot;course_id&quot;&gt;&lt;/key&gt;</span><br><span class="line">            &lt;many-to-many class=&quot;Student&quot; column=&quot;student_id&quot;&gt;&lt;/many-to-many&gt;</span><br><span class="line">        &lt;/set&gt;</span><br><span class="line">    &lt;/class&gt;</span><br><span class="line">&lt;/hibernate-mapping&gt;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>inverse（反转）属性，它的作用是控制关联的双方由哪一方管理关联关系。</p>
+<p>inverse&#x3D;”true” 如果两个映射文件的inverse都设为false（默认）,则会出现异常（主键重复）导致插入失败</p>
+<p>两映射文件中的inverse都为true，则Student和Course都去维护关联关系，即同时向连接表中插入记录，则会导致主键重复而插入失败。</p>
+<p>将其中一方的inverse设为true,让对方维持关联关系；</p>
+</blockquote>
+<ul>
+<li>修改student.hbm.xml文件</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&#x27;1.0&#x27; encoding=&#x27;utf-8&#x27;?&gt;</span><br><span class="line">&lt;!DOCTYPE hibernate-mapping PUBLIC</span><br><span class="line">        &quot;-//Hibernate/Hibernate Mapping DTD 3.0//EN&quot;</span><br><span class="line">        &quot;http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd&quot;&gt;</span><br><span class="line">&lt;hibernate-mapping&gt;</span><br><span class="line">    &lt;class name=&quot;xyz.shi.domain.Student&quot; table=&quot;student&quot; schema=&quot;shi_jdbc&quot; lazy=&quot;true&quot;&gt;</span><br><span class="line">        &lt;!--主键映射--&gt;</span><br><span class="line">        &lt;id name=&quot;id&quot; column=&quot;id&quot; type=&quot;java.lang.Integer&quot;&gt;</span><br><span class="line">            &lt;!--主键生成策略--&gt;</span><br><span class="line">            &lt;generator class=&quot;native&quot;&gt;&lt;/generator&gt;</span><br><span class="line">        &lt;/id&gt;</span><br><span class="line">        &lt;property name=&quot;name&quot; column=&quot;name&quot; length=&quot;100&quot; type=&quot;java.lang.String&quot;&gt;&lt;/property&gt;</span><br><span class="line">        &lt;!--维护关联关系--&gt;</span><br><span class="line">        &lt;many-to-one name=&quot;grade&quot; class=&quot;xyz.shi.domain.Grade&quot; column=&quot;gid&quot;/&gt;</span><br><span class="line">        &lt;set name=&quot;courses&quot; table=&quot;student_course&quot; lazy=&quot;false&quot;&gt;</span><br><span class="line">            &lt;key column=&quot;student_id&quot;&gt;&lt;/key&gt;</span><br><span class="line">            &lt;many-to-many class=&quot;xyz.shi.domain.Course&quot; column=&quot;course_id&quot;&gt;&lt;/many-to-many&gt;</span><br><span class="line">        &lt;/set&gt;</span><br><span class="line">    &lt;/class&gt;</span><br><span class="line">&lt;/hibernate-mapping&gt;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>测试</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br></pre></td><td class="code"><pre><span class="line">import org.hibernate.Session;</span><br><span class="line">import org.hibernate.SessionFactory;</span><br><span class="line">import org.hibernate.Transaction;</span><br><span class="line">import org.hibernate.cfg.Configuration;</span><br><span class="line">import org.hibernate.query.Query;</span><br><span class="line">import org.junit.Test;</span><br><span class="line">import xyz.shi.dao.StudentDao;</span><br><span class="line">import xyz.shi.domain.Grade;</span><br><span class="line">import xyz.shi.domain.Student;</span><br><span class="line">import xyz.shi.domain.Course;</span><br><span class="line">import xyz.shi.entity.QueryResult;</span><br><span class="line">import xyz.shi.utils.HibernateUtils;</span><br><span class="line"></span><br><span class="line">import java.util.List;</span><br><span class="line">import java.util.Set;</span><br><span class="line"></span><br><span class="line">public class StudentDao2Test &#123;</span><br><span class="line"></span><br><span class="line">    @Test</span><br><span class="line">    public void saveTest() &#123;</span><br><span class="line">        Session session = HibernateUtils.openSession();</span><br><span class="line">        Transaction transaction = session.beginTransaction();</span><br><span class="line"></span><br><span class="line">        //新建学生和班级信息</span><br><span class="line">        Grade grade = new Grade();</span><br><span class="line">        grade.setName(&quot;三年级&quot;);</span><br><span class="line">        Student student = new Student();</span><br><span class="line">        student.setName(&quot;选课学生1&quot;);</span><br><span class="line">        student.setGrade(grade);</span><br><span class="line">        Student student2 = new Student();</span><br><span class="line">        student2.setName(&quot;选课学生2&quot;);</span><br><span class="line">        student2.setGrade(grade);</span><br><span class="line">        grade.getStudents().add(student);</span><br><span class="line">        grade.getStudents().add(student2);</span><br><span class="line"></span><br><span class="line">        //新建三个课程</span><br><span class="line">        Course course = new Course();</span><br><span class="line">        course.setName(&quot;Java&quot;);</span><br><span class="line">        Course course2 = new Course();</span><br><span class="line">        course2.setName(&quot;PHP&quot;);</span><br><span class="line">        Course course3 = new Course();</span><br><span class="line">        course3.setName(&quot;C++&quot;);</span><br><span class="line"></span><br><span class="line">        //保存操作</span><br><span class="line">        session.save(student);</span><br><span class="line">        session.save(student2);</span><br><span class="line">        session.save(grade);</span><br><span class="line">        session.save(course);</span><br><span class="line">        session.save(course2);</span><br><span class="line">        session.save(course3);</span><br><span class="line"></span><br><span class="line">        //学生选课的关系相互关联</span><br><span class="line">        course.getStudents().add(student);</span><br><span class="line">        student.getCourses().add(course);</span><br><span class="line"></span><br><span class="line">        course2.getStudents().add(student2);</span><br><span class="line">        student2.getCourses().add(course2);</span><br><span class="line"></span><br><span class="line">        course3.getStudents().add(student2);</span><br><span class="line">        student2.getCourses().add(course3);</span><br><span class="line"></span><br><span class="line">        //提交事务</span><br><span class="line">        transaction.commit();</span><br><span class="line">        //释放资源</span><br><span class="line">        session.close();</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    @Test</span><br><span class="line">    public void findIdTest() &#123;</span><br><span class="line">        Session session = HibernateUtils.openSession();</span><br><span class="line">        Transaction transaction = session.beginTransaction();</span><br><span class="line">        String hql = &quot;SELECT s, c, g FROM Student s &quot; +</span><br><span class="line">                &quot;JOIN s.courses c &quot; +</span><br><span class="line">                &quot;JOIN s.grade g where s.name = :name&quot;;</span><br><span class="line">        Query query = session.createQuery(hql);</span><br><span class="line">        query.setParameter(&quot;name&quot;, &quot;选课学生2&quot;);</span><br><span class="line"></span><br><span class="line">        List&lt;Object[]&gt;  students = query.list();</span><br><span class="line">        for (Object[] result : students) &#123;</span><br><span class="line">            Student student = (Student) result[0];</span><br><span class="line">            Course course = (Course) result[1];</span><br><span class="line">            Grade grade = (Grade) result[2];</span><br><span class="line">            System.out.println(student);</span><br><span class="line">            System.out.println(course);</span><br><span class="line">            System.out.println(grade);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        //提交事务</span><br><span class="line">        transaction.commit();</span><br><span class="line">        //释放资源</span><br><span class="line">        session.close();</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // 修改操作</span><br><span class="line">    @Test</span><br><span class="line">    public void updateTest() &#123;</span><br><span class="line">        Configuration config = new Configuration().configure(); // Hibernate框架加载hibernate.cfg.xml文件</span><br><span class="line">        SessionFactory sessionFactory = config.buildSessionFactory();</span><br><span class="line">        Session session = sessionFactory.openSession(); // 相当于得到一个Connection</span><br><span class="line">        Transaction tx = session.getTransaction();</span><br><span class="line">        if (!tx.isActive()) &#123;</span><br><span class="line">            tx.begin();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        Student student = session.get(Student.class, 42);</span><br><span class="line">        student.setName(&quot;我是谁1&quot;);</span><br><span class="line">        // 设置学生的班级</span><br><span class="line">        Grade grade = session.get(Grade.class, 2);</span><br><span class="line">        student.setGrade(grade);</span><br><span class="line"></span><br><span class="line">        Course course = session.get(Course.class, 33);</span><br><span class="line"></span><br><span class="line">        // 先移除旧关联关系</span><br><span class="line">        for (Course existingCourse : student.getCourses()) &#123;</span><br><span class="line">            existingCourse.getStudents().remove(student);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        // 添加新关联关系</span><br><span class="line">        student.getCourses().clear();</span><br><span class="line">        student.getCourses().add(course);</span><br><span class="line">        course.getStudents().add(student);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        // 保存实体对象到数据库中</span><br><span class="line">        session.saveOrUpdate(student);</span><br><span class="line">        session.saveOrUpdate(course);</span><br><span class="line"></span><br><span class="line">        if (tx.isActive()) &#123;</span><br><span class="line">            tx.commit();</span><br><span class="line">            session.close();</span><br><span class="line">            sessionFactory.close();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // 删除操作</span><br><span class="line">    @Test</span><br><span class="line">    public void deleteTest() &#123;</span><br><span class="line">        Configuration config = new Configuration().configure(); // Hibernate框架加载hibernate.cfg.xml文件</span><br><span class="line">        SessionFactory sessionFactory = config.buildSessionFactory();</span><br><span class="line">        Session session = sessionFactory.openSession(); // 相当于得到一个Connection</span><br><span class="line">        Transaction tx = session.getTransaction();</span><br><span class="line">        if (!tx.isActive()) &#123;</span><br><span class="line">            tx.begin();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        Student student = session.get(Student.class, 40);</span><br><span class="line">        Course course = session.get(Course.class, 31);</span><br><span class="line"></span><br><span class="line">        // 移除关联关系</span><br><span class="line">        student.getCourses().remove(course);</span><br><span class="line">        course.getStudents().remove(student);</span><br><span class="line">        // 删除学生信息</span><br><span class="line">        session.delete(student);</span><br><span class="line"></span><br><span class="line">        if (tx.isActive()) &#123;</span><br><span class="line">            tx.commit();</span><br><span class="line">            session.close();</span><br><span class="line">            sessionFactory.close();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // 查询所有</span><br><span class="line">    @Test</span><br><span class="line">    public void findAllTest() &#123;</span><br><span class="line">        Session session = HibernateUtils.openSession();</span><br><span class="line">        Transaction transaction = session.beginTransaction();</span><br><span class="line">        // 根据业务来编写代码</span><br><span class="line">        String hql = &quot;SELECT s, c, g FROM Student s &quot; +</span><br><span class="line">                &quot;JOIN s.courses c &quot; +</span><br><span class="line">                &quot;JOIN s.grade g&quot;;</span><br><span class="line">        Query query = session.createQuery(hql);</span><br><span class="line">        List&lt;Object[]&gt;  students = query.list();</span><br><span class="line">        for (Object[] result : students) &#123;</span><br><span class="line">            Student student = (Student) result[0];</span><br><span class="line">            Course course = (Course) result[1];</span><br><span class="line">            Grade grade = (Grade) result[2];</span><br><span class="line">            System.out.println(student);</span><br><span class="line">            System.out.println(course);</span><br><span class="line">            System.out.println(grade);</span><br><span class="line">        &#125;</span><br><span class="line">        //提交事务</span><br><span class="line">        transaction.commit();</span><br><span class="line">        //释放资源</span><br><span class="line">        session.close();</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    @Test</span><br><span class="line">    public void findAll1() &#123;</span><br><span class="line">        Session session = HibernateUtils.openSession();</span><br><span class="line">        Transaction transaction = session.beginTransaction();</span><br><span class="line"></span><br><span class="line">        String hql = &quot;SELECT s, c, g FROM Student s &quot; +</span><br><span class="line">                &quot;JOIN s.courses c &quot; +</span><br><span class="line">                &quot;JOIN s.grade g&quot;;</span><br><span class="line">        Query query = session.createQuery(hql);</span><br><span class="line">        query.setFirstResult(0);</span><br><span class="line">        query.setMaxResults(3);</span><br><span class="line">        List&lt;Object[]&gt;  students = query.list();</span><br><span class="line">        for (Object[] result : students) &#123;</span><br><span class="line">            Student student = (Student) result[0];</span><br><span class="line">            Course course = (Course) result[1];</span><br><span class="line">            Grade grade = (Grade) result[2];</span><br><span class="line">            System.out.println(student);</span><br><span class="line">            System.out.println(course);</span><br><span class="line">            System.out.println(grade);</span><br><span class="line">        &#125;</span><br><span class="line">        //提交事务</span><br><span class="line">        transaction.commit();</span><br><span class="line">        //释放资源</span><br><span class="line">        session.close();</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
+<li><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_44145338/article/details/131704814">mysql中表关系</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/youandme520/article/details/122900819">Hibernate关系映射</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://github.com/Louis-me/studyHiberate">源代码</a></p>
+</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/java/" rel="tag"># java</a>
+              <a href="/tags/Hibernate/" rel="tag"># Hibernate</a>
+              <a href="/tags/orm/" rel="tag"># orm</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/aposts/e37ff1bd/" rel="prev" title="java之Hibernate">
+      <i class="fa fa-chevron-left"></i> java之Hibernate
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+
+
+    <div class="sidebar-inner">
+
+
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%B4%E6%98%8E"><span class="nav-number">1.</span> <span class="nav-text">说明</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E5%AF%B9%E4%B8%80"><span class="nav-number">2.</span> <span class="nav-text">一对一</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E5%AF%B9%E5%A4%9A"><span class="nav-number">3.</span> <span class="nav-text">一对多</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%9A%E5%AF%B9%E5%A4%9A"><span class="nav-number">4.</span> <span class="nav-text">多对多</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt=""
+      src="/images/avatar.gif">
+  <p class="site-author-name" itemprop="name"></p>
+  <div class="site-description" itemprop="description">一个正经的测试工程师</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">159</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">26</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">66</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Louis-me" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Louis-me" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:shikun.job@foxmail.com" title="E-Mail → mailto:shikun.job@foxmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+  <!-- 标签云 -->
+
+<script type="text/javascript" charset="utf-8" src="/js/tagcloud.js"></script>
+<script type="text/javascript" charset="utf-8" src="/js/tagcanvas.js"></script>
+<div class="widget-wrap">
+    <!--<h3 class="widget-title">Tag Cloud</h3> -->
+    <div id="myCanvasContainer" class="widget tagcloud">
+        <canvas width="250" height="250" id="resCanvas" style="width=100%">
+            <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AWVS/" rel="tag">AWVS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Burp-Site/" rel="tag">Burp Site</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DVWA/" rel="tag">DVWA</a><span class="tag-list-count">15</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dependency-Check/" rel="tag">Dependency-Check</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/H5/" rel="tag">H5</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hadoop/" rel="tag">Hadoop</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hibernate/" rel="tag">Hibernate</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hive/" rel="tag">Hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jenkins/" rel="tag">Jenkins</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Metasploit/" rel="tag">Metasploit</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Nessus/" rel="tag">Nessus</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Sonic/" rel="tag">Sonic</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/airtest/" rel="tag">airtest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">android性能测试</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/app%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">app安全测试</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aritest/" rel="tag">aritest</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/centos/" rel="tag">centos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/" rel="tag">chrome</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/datax/" rel="tag">datax</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/django/" rel="tag">django</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/drozer/" rel="tag">drozer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fisco-bcos/" rel="tag">fisco-bcos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flink/" rel="tag">flink</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gin/" rel="tag">gin</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/" rel="tag">go</a><span class="tag-list-count">16</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go-zero/" rel="tag">go-zero</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hive/" rel="tag">hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/httprunner/" rel="tag">httprunner</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a><span class="tag-list-count">16</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jmeter/" rel="tag">jmeter</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka/" rel="tag">kafka</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kail/" rel="tag">kail</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode/" rel="tag">leetcode</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode-%E6%95%B0%E7%BB%84/" rel="tag">leetcode-数组</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mitmproxy/" rel="tag">mitmproxy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongodb/" rel="tag">mongodb</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/monkey/" rel="tag">monkey</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/" rel="tag">mysql</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/orm/" rel="tag">orm</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pandas/" rel="tag">pandas</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pc%E8%87%AA%E5%8A%A8%E5%8C%96/" rel="tag">pc自动化</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/playwright/" rel="tag">playwright</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pytest/" rel="tag">pytest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a><span class="tag-list-count">23</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/" rel="tag">redis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/selenium/" rel="tag">selenium</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring/" rel="tag">spring</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlite/" rel="tag">sqlite</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlmap/" rel="tag">sqlmap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tkinter/" rel="tag">tkinter</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/" rel="tag">vue</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue3/" rel="tag">vue3</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">云服务器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8C%BA%E5%9D%97%E9%93%BE/" rel="tag">区块链</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag">大数据</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">安全测试</a><span class="tag-list-count">29</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">性能测试</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%88%AC%E8%99%AB/" rel="tag">爬虫</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" rel="tag">环境搭建</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95/" rel="tag">自动化测试</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%8B%B1%E8%AF%AD%E5%AD%A6%E4%B9%A0/" rel="tag">英语学习</a><span class="tag-list-count">1</span></li></ul>
+        </canvas>
+    </div>
+</div>
+
+</div>
+<!-- 标签云 -->
+    </div>
+
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  <a href="https://beian.miit.gov.cn/" target="_blank">湘ICP备2022002212号-1</a><br />
+  <!--
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder"></span>
+  -->
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script src='../../../js/src/av-min.js'></script>
+<script src='../../../js/src/Valine.min.js'></script>
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : true,
+      notify     : false,
+      appId      : 'mhSm1aOQmnVeiAUJxrsKIFg5-gzGzoHsz',
+      appKey     : 'kW6GQVoeJac7wDgKvy9vXhn6',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : true,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+  
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

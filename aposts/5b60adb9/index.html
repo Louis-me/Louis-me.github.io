@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"louis-me.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":true,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="说明 本次教程主要来自这里 环境信息：win10 、java1.8、IDEA 社区版本  整合JDBC 用IDEA 社区版本新建个maven项目 pom.xml的依赖文件如下  1234567891011121314151617181920212223242526272829303132333435363738394041424344&lt;?xml version&#x3D;&quot;1.0&quot;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="java之spring整合orm">
+<meta property="og:url" content="https://louis-me.github.io/aposts/5b60adb9/index.html">
+<meta property="og:site_name" content="施坤的博客">
+<meta property="og:description" content="说明 本次教程主要来自这里 环境信息：win10 、java1.8、IDEA 社区版本  整合JDBC 用IDEA 社区版本新建个maven项目 pom.xml的依赖文件如下  1234567891011121314151617181920212223242526272829303132333435363738394041424344&lt;?xml version&#x3D;&quot;1.0&quot;">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-12-20T02:53:35.000Z">
+<meta property="article:modified_time" content="2023-12-22T09:26:15.107Z">
+<meta property="article:tag" content="java">
+<meta property="article:tag" content="spring">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://louis-me.github.io/aposts/5b60adb9/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>java之spring整合orm | 施坤的博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">施坤的博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-简历">
+
+    <a href="/resume/" rel="section"><i class="fa fa-address-card fa-fw"></i>简历</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/5b60adb9/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="一个正经的测试工程师">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="施坤的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          java之spring整合orm
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-12-20 10:53:35" itemprop="dateCreated datePublished" datetime="2023-12-20T10:53:35+08:00">2023-12-20</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-12-22 17:26:15" itemprop="dateModified" datetime="2023-12-22T17:26:15+08:00">2023-12-22</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/aposts/5b60adb9/" class="post-meta-item leancloud_visitors" data-flag-title="java之spring整合orm" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/aposts/5b60adb9/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/aposts/5b60adb9/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><ul>
+<li>本次教程主要来自<a target="_blank" rel="noopener" href="https://mszlu.com/java/spring/06/06.html">这里</a></li>
+<li>环境信息：win10 、java1.8、IDEA 社区版本</li>
+</ul>
+<h2 id="整合JDBC"><a href="#整合JDBC" class="headerlink" title="整合JDBC"></a>整合JDBC</h2><ul>
+<li>用IDEA 社区版本新建个maven项目</li>
+<li>pom.xml的依赖文件如下</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span><br><span class="line">&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot;</span><br><span class="line">         xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span><br><span class="line">         xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;</span><br><span class="line">    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;</span><br><span class="line"></span><br><span class="line">    &lt;groupId&gt;org.example&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;spring-quickstart1&lt;/artifactId&gt;</span><br><span class="line">    &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;</span><br><span class="line"></span><br><span class="line">    &lt;properties&gt;</span><br><span class="line">        &lt;maven.compiler.source&gt;8&lt;/maven.compiler.source&gt;</span><br><span class="line">        &lt;maven.compiler.target&gt;8&lt;/maven.compiler.target&gt;</span><br><span class="line">        &lt;project.build.sourceEncoding&gt;UTF-8&lt;/project.build.sourceEncoding&gt;</span><br><span class="line">    &lt;/properties&gt;</span><br><span class="line">    &lt;dependencies&gt;</span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;org.springframework&lt;/groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;spring-context&lt;/artifactId&gt;</span><br><span class="line">            &lt;version&gt;5.2.16.RELEASE&lt;/version&gt;</span><br><span class="line">        &lt;/dependency&gt;</span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;org.springframework&lt;/groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;spring-jdbc&lt;/artifactId&gt;</span><br><span class="line">            &lt;version&gt;5.2.16.RELEASE&lt;/version&gt;</span><br><span class="line">        &lt;/dependency&gt;</span><br><span class="line">        &lt;!--数据库连接池 --&gt;</span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;com.zaxxer&lt;/groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;HikariCP&lt;/artifactId&gt;</span><br><span class="line">            &lt;version&gt;3.4.2&lt;/version&gt;</span><br><span class="line">        &lt;/dependency&gt;</span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;mysql&lt;/groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;mysql-connector-java&lt;/artifactId&gt;</span><br><span class="line">            &lt;version&gt;8.0.13&lt;/version&gt;</span><br><span class="line">        &lt;/dependency&gt;</span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;org.projectlombok&lt;/groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;lombok&lt;/artifactId&gt;</span><br><span class="line">            &lt;version&gt;1.18.20&lt;/version&gt;</span><br><span class="line">        &lt;/dependency&gt;</span><br><span class="line">    &lt;/dependencies&gt;</span><br><span class="line">&lt;/project&gt;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>编写Spring扫描的配置文件</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">package xyz.shi.config;</span><br><span class="line"></span><br><span class="line">import org.springframework.context.annotation.ComponentScan;</span><br><span class="line">import org.springframework.context.annotation.Configuration;</span><br><span class="line">@Configuration</span><br><span class="line">@ComponentScan(&quot;xyz.shi&quot;)</span><br><span class="line">public class SpringConfig &#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>编写jdbc的配置文件</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">package xyz.shi.config;</span><br><span class="line"></span><br><span class="line">import com.zaxxer.hikari.HikariConfig;</span><br><span class="line">import com.zaxxer.hikari.HikariDataSource;</span><br><span class="line">import org.springframework.beans.factory.annotation.Autowired;</span><br><span class="line">import org.springframework.context.annotation.Bean;</span><br><span class="line">import org.springframework.context.annotation.Configuration;</span><br><span class="line">import org.springframework.jdbc.core.JdbcTemplate;</span><br><span class="line"></span><br><span class="line">import javax.sql.DataSource;</span><br><span class="line"></span><br><span class="line">//表明当前类是spring的一个配置类，作用是替代spring的applicationContext.xml。</span><br><span class="line">// 但其本质就是@Component注解，被此注解修饰的类，也会被存入spring的ioc容器</span><br><span class="line">@Configuration</span><br><span class="line">public class JDBCConfig &#123;</span><br><span class="line">    //@Bean通常出现在Spring的配置类当中，注解在方法上，表示把当前方法的返回值存入spring的ioc容器</span><br><span class="line">    @Bean</span><br><span class="line">    public DataSource dataSource() &#123;</span><br><span class="line">        HikariConfig hikariConfig = new HikariConfig();</span><br><span class="line">        hikariConfig.setPassword(&quot;123456&quot;);</span><br><span class="line">        hikariConfig.setUsername(&quot;root&quot;);</span><br><span class="line">        hikariConfig.setJdbcUrl(&quot;jdbc:mysql://localhost:3306/test?serverTimezone=UTC&quot;);</span><br><span class="line">        hikariConfig.setDriverClassName(&quot;com.mysql.cj.jdbc.Driver&quot;);</span><br><span class="line">        hikariConfig.addDataSourceProperty(&quot;autoCommit&quot;, &quot;true&quot;);</span><br><span class="line">        hikariConfig.addDataSourceProperty(&quot;connectionTimeout&quot;, &quot;5&quot;);</span><br><span class="line">        hikariConfig.addDataSourceProperty(&quot;idleTimeout&quot;, &quot;60&quot;);</span><br><span class="line">        return new HikariDataSource(hikariConfig);</span><br><span class="line">    &#125;</span><br><span class="line">    @Bean</span><br><span class="line">    public JdbcTemplate jdbcTemplate(@Autowired DataSource dataSource) &#123;</span><br><span class="line">        return new JdbcTemplate(dataSource);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>这里代码暂时没有搞清楚原来是怎么自运行的？</p>
+</blockquote>
+<ul>
+<li>实体类</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">package xyz.shi.entity;</span><br><span class="line"></span><br><span class="line">import lombok.Data;</span><br><span class="line">@Data</span><br><span class="line">public class User &#123;</span><br><span class="line">    private int id;</span><br><span class="line">    private String name;</span><br><span class="line">    private String password;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>service代码</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line">package xyz.shi.service;</span><br><span class="line">import com.github.pagehelper.Page;</span><br><span class="line">import com.github.pagehelper.PageHelper;</span><br><span class="line">import com.github.pagehelper.PageInfo;</span><br><span class="line">import org.springframework.beans.factory.annotation.Autowired;</span><br><span class="line">import org.springframework.stereotype.Service;</span><br><span class="line">import xyz.shi.dao.UserDao;</span><br><span class="line">import xyz.shi.entity.User;</span><br><span class="line">import javax.annotation.Resource;</span><br><span class="line"></span><br><span class="line">@Service</span><br><span class="line">public class UserService &#123;</span><br><span class="line">    @Resource</span><br><span class="line">    // Resource简单理解可以把@Resource当作@Autowired和@Qualifier的合体版。</span><br><span class="line">    private UserDao userDao;</span><br><span class="line"></span><br><span class="line">    public int save(String name, String pwd) &#123;</span><br><span class="line">        User user = new User();</span><br><span class="line">        user.setName(name);</span><br><span class="line">        user.setPassword(pwd);</span><br><span class="line">        int num = this.userDao.save(user);</span><br><span class="line">        if (num &gt; 0) &#123;</span><br><span class="line">            System.out.println(&quot;新增成功，user id: &quot; + user.getId());</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            System.out.println(&quot;新增失败;&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">        return num;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public User findById(int id) &#123;</span><br><span class="line">        System.out.println(id);</span><br><span class="line">        return this.userDao.findById(id);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 分页查询</span><br><span class="line">     * @param page</span><br><span class="line">     * @param pageSize</span><br><span class="line">     * @return</span><br><span class="line">     */</span><br><span class="line">    public PageInfo&lt;User&gt; queryUserList(int page, int pageSize) &#123;</span><br><span class="line">        PageHelper.startPage(page,pageSize);</span><br><span class="line">        Page&lt;User&gt; userList = this.userDao.findAll();</span><br><span class="line">        return new PageInfo&lt;&gt;(userList);</span><br><span class="line">    &#125;</span><br><span class="line">    public boolean update(User user)&#123;</span><br><span class="line">        return this.userDao.update(user) &gt; 0;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public boolean delete(int id)&#123;</span><br><span class="line">        return this.userDao.delete(id) &gt; 0;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>测试</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">import xyz.shi.config.SpringConfig;</span><br><span class="line">import org.springframework.context.ApplicationContext;</span><br><span class="line">import org.springframework.context.annotation.AnnotationConfigApplicationContext;</span><br><span class="line">import xyz.shi.entity.User;</span><br><span class="line">import xyz.shi.service.UserService;</span><br><span class="line"></span><br><span class="line">import java.util.List;</span><br><span class="line"></span><br><span class="line">public class App &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        ApplicationContext context = new AnnotationConfigApplicationContext(SpringConfig.class);</span><br><span class="line"></span><br><span class="line">        UserService userService = context.getBean(UserService.class);</span><br><span class="line">        // 新增</span><br><span class="line">        int id = userService.save(&quot;test123&quot;,&quot;2222&quot;);</span><br><span class="line">        // 查询单条数据</span><br><span class="line">        User user = userService.getUser(id);</span><br><span class="line">        System.out.println(user.getName());</span><br><span class="line">        // 分页查询批量数据</span><br><span class="line">        List&lt;User&gt; users = userService.queryUserList(1, 2);</span><br><span class="line">        System.out.println(users);</span><br><span class="line">        // 修改</span><br><span class="line">        boolean updated = userService.update(37, &quot;hahaha&quot;);</span><br><span class="line">        System.out.println(updated);</span><br><span class="line">        // 删除</span><br><span class="line">        boolean delete = userService.delete(37);</span><br><span class="line">        System.out.println(delete);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>execute的用法</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"> package xyz.shi.service;</span><br><span class="line"></span><br><span class="line">....</span><br><span class="line"> public List&lt;User&gt; execute1(int page,int pageSize) &#123;</span><br><span class="line">        return jdbcTemplate.execute((Connection conn) -&gt; &#123;</span><br><span class="line">            PreparedStatement ps = conn.prepareStatement(&quot;select * from users limit ?,?&quot;);</span><br><span class="line">            ps.setObject(1, (page - 1) * pageSize);</span><br><span class="line">            ps.setObject(2, pageSize);</span><br><span class="line">            ResultSet resultSet = ps.executeQuery();</span><br><span class="line">            List&lt;User&gt; userList = new ArrayList&lt;&gt;();</span><br><span class="line">            while (resultSet.next()) &#123;</span><br><span class="line">                User user = new User();</span><br><span class="line">                user.setId(resultSet.getInt(&quot;id&quot;));</span><br><span class="line">                user.setName(resultSet.getString(&quot;name&quot;));</span><br><span class="line">                user.setPassword(resultSet.getString(&quot;password&quot;));</span><br><span class="line">                userList.add(user);</span><br><span class="line">            &#125;</span><br><span class="line">            return userList;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="整合Mybatis"><a href="#整合Mybatis" class="headerlink" title="整合Mybatis"></a>整合Mybatis</h2><blockquote>
+<p>SqlSessionFactory是mybatis的核心，当与spring进行整合时，我们使用mybatis-spring提供的SqlSessionFactoryBean 来创建其实例，SqlSessionFactoryBean实现了FactoryBean 接口</p>
+</blockquote>
+<ul>
+<li>依赖包</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">	&lt;!--spring整合mybatis--&gt;</span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;org.mybatis&lt;/groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;mybatis-spring&lt;/artifactId&gt;</span><br><span class="line">            &lt;version&gt;2.0.3&lt;/version&gt;</span><br><span class="line">        &lt;/dependency&gt;</span><br><span class="line">        &lt;!--mybatis环境--&gt;</span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;org.mybatis&lt;/groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;mybatis&lt;/artifactId&gt;</span><br><span class="line">            &lt;version&gt;3.5.3&lt;/version&gt;</span><br><span class="line">        &lt;/dependency&gt;</span><br><span class="line">&lt;!--分页插件坐标--&gt;</span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;com.github.pagehelper&lt;/groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;pagehelper&lt;/artifactId&gt;</span><br><span class="line">            &lt;version&gt;5.2.1&lt;/version&gt;</span><br><span class="line">        &lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>定义DataSource，上一步JDBC中已经定义，下面是xml的配置方式,resources&#x2F;application.xml</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span><br><span class="line">&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;</span><br><span class="line">       xmlns:context=&quot;http://www.springframework.org/schema/context&quot;</span><br><span class="line">       xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span><br><span class="line">       xmlns:Context=&quot;http://www.springframework.org/schema/context&quot;</span><br><span class="line">       xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd</span><br><span class="line">        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd&quot;&gt;</span><br><span class="line">    &lt;!--声明使用注解配置--&gt;</span><br><span class="line">    &lt;Context:annotation-config /&gt;</span><br><span class="line">    &lt;!--声明Spring工厂注解的扫描范围--&gt;</span><br><span class="line">    &lt;Context:component-scan base-package=&quot;xyz.shi&quot;/&gt;</span><br><span class="line"></span><br><span class="line">    &lt;bean id=&quot;hikariConfig&quot; class=&quot;com.zaxxer.hikari.HikariConfig&quot;&gt;</span><br><span class="line">        &lt;property name=&quot;jdbcUrl&quot; value=&quot;jdbc:mysql://localhost:3306/test?characterEncoding=utf8&amp;amp;serverTimezone=UTC&quot;/&gt;</span><br><span class="line">        &lt;property name=&quot;username&quot; value=&quot;root&quot;/&gt;</span><br><span class="line">        &lt;property name=&quot;password&quot; value=&quot;123456&quot;/&gt;</span><br><span class="line">        &lt;property name=&quot;driverClassName&quot; value=&quot;com.mysql.cj.jdbc.Driver&quot;/&gt;</span><br><span class="line">        &lt;property name=&quot;autoCommit&quot; value=&quot;true&quot;/&gt;</span><br><span class="line">        &lt;property name=&quot;connectionTimeout&quot; value=&quot;5000&quot; /&gt;</span><br><span class="line">        &lt;property name=&quot;idleTimeout&quot; value=&quot;60&quot; /&gt;</span><br><span class="line">    &lt;/bean&gt;</span><br><span class="line">    &lt;!--jdbc的xml配置--&gt;</span><br><span class="line">    &lt;bean id=&quot;dataSource&quot; class=&quot;com.zaxxer.hikari.HikariDataSource&quot;&gt;</span><br><span class="line">        &lt;constructor-arg name=&quot;configuration&quot; ref=&quot;hikariConfig&quot;/&gt;</span><br><span class="line">    &lt;/bean&gt;</span><br><span class="line">    &lt;!--mybatis--&gt;</span><br><span class="line">    &lt;bean id=&quot;sqlSessionFactory&quot; class=&quot;org.mybatis.spring.SqlSessionFactoryBean&quot;&gt;</span><br><span class="line">        &lt;property name=&quot;dataSource&quot; ref=&quot;dataSource&quot; /&gt;</span><br><span class="line">        &lt;!--配置mapper的路径--&gt;</span><br><span class="line">        &lt;property name=&quot;mapperLocations&quot; value=&quot;classpath*:mapper/*.xml&quot;&gt;</span><br><span class="line">        &lt;/property&gt;</span><br><span class="line">        &lt;!--配置需要定义别名的实体类的包--&gt;</span><br><span class="line">        &lt;property name=&quot;typeAliasesPackage&quot; value=&quot;xyz.shi.entity&quot;/&gt;</span><br><span class="line">        &lt;property name=&quot;plugins&quot;&gt;</span><br><span class="line">                    &lt;array&gt;</span><br><span class="line">                        &lt;bean class=&quot;com.github.pagehelper.PageInterceptor&quot;&gt;</span><br><span class="line">                            &lt;property name=&quot;properties&quot;&gt;</span><br><span class="line">                                &lt;props&gt;</span><br><span class="line">                                    &lt;prop key=&quot;helperDialect&quot;&gt;mysql&lt;/prop&gt;</span><br><span class="line">                                &lt;/props&gt;</span><br><span class="line">                            &lt;/property&gt;</span><br><span class="line">                        &lt;/bean&gt;</span><br><span class="line">                    &lt;/array&gt;</span><br><span class="line">                &lt;/property&gt;</span><br><span class="line">    &lt;/bean&gt;</span><br><span class="line">    &lt;!--配置mapper接口的扫包路径，目的是代理此接口，生成代理类 注册到spring容器中--&gt;</span><br><span class="line">    &lt;bean class=&quot;org.mybatis.spring.mapper.MapperScannerConfigurer&quot;&gt;</span><br><span class="line">        &lt;property name=&quot;basePackage&quot; value=&quot;xyz/shi/dao&quot;/&gt;</span><br><span class="line">        &lt;property name=&quot;sqlSessionFactoryBeanName&quot; value=&quot;sqlSessionFactory&quot;/&gt;</span><br><span class="line">    &lt;/bean&gt;</span><br><span class="line">&lt;/beans&gt;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>定义SqlSessionFactoryBean和MapperScannerConfigurer</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> xyz.shi.config;</span><br><span class="line"><span class="keyword">import</span> com.github.pagehelper.PageInterceptor;</span><br><span class="line"><span class="keyword">import</span> org.mybatis.spring.SqlSessionFactoryBean;</span><br><span class="line"><span class="keyword">import</span> org.mybatis.spring.mapper.MapperScannerConfigurer;</span><br><span class="line"><span class="keyword">import</span> org.springframework.beans.factory.annotation.Autowired;</span><br><span class="line"><span class="keyword">import</span> org.springframework.context.annotation.Bean;</span><br><span class="line"><span class="keyword">import</span> org.springframework.core.io.Resource;</span><br><span class="line"><span class="keyword">import</span> org.springframework.core.io.support.PathMatchingResourcePatternResolver;</span><br><span class="line"><span class="keyword">import</span> org.springframework.core.io.support.ResourcePatternResolver;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.sql.DataSource;</span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.util.Properties;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MybatisConfig</span> &#123;</span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> SqlSessionFactoryBean <span class="title function_">sqlSessionFactoryBean</span><span class="params">(<span class="meta">@Autowired</span> DataSource dataSource)</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">        <span class="type">SqlSessionFactoryBean</span> <span class="variable">sqlSessionFactoryBean</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SqlSessionFactoryBean</span>();</span><br><span class="line">        sqlSessionFactoryBean.setDataSource(dataSource);</span><br><span class="line">        <span class="type">ResourcePatternResolver</span> <span class="variable">resourceResolver</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">PathMatchingResourcePatternResolver</span>();</span><br><span class="line">        Resource[] resources = resourceResolver.getResources(<span class="string">&quot;classpath*:mapper/*.xml&quot;</span>);</span><br><span class="line">        sqlSessionFactoryBean.setMapperLocations(resources);</span><br><span class="line">        <span class="comment">//分页插件</span></span><br><span class="line">        <span class="type">PageInterceptor</span> <span class="variable">pageInterceptor</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">PageInterceptor</span>();</span><br><span class="line">        <span class="type">Properties</span> <span class="variable">properties</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Properties</span>();</span><br><span class="line">        properties.setProperty(<span class="string">&quot;helperDialect&quot;</span>,<span class="string">&quot;mysql&quot;</span>);</span><br><span class="line">        pageInterceptor.setProperties(properties);</span><br><span class="line">        sqlSessionFactoryBean.setPlugins(pageInterceptor);</span><br><span class="line">        <span class="keyword">return</span> sqlSessionFactoryBean;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> MapperScannerConfigurer <span class="title function_">mapperScannerConfigurer</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="type">MapperScannerConfigurer</span> <span class="variable">configurer</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">MapperScannerConfigurer</span>();</span><br><span class="line"><span class="comment">//        configurer.setBasePackage(&quot;xyz.shi.mapper&quot;);</span></span><br><span class="line">        configurer.setBasePackage(<span class="string">&quot;xyz.shi.dao&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> configurer;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>resources&#x2F;application.xml 中加入mybatis的配置</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"> &lt;!--mybatis--&gt;</span><br><span class="line">    &lt;bean class=&quot;org.mybatis.spring.SqlSessionFactoryBean&quot;&gt;</span><br><span class="line">        &lt;property name=&quot;dataSource&quot; ref=&quot;dataSource&quot; /&gt;</span><br><span class="line">        &lt;property name=&quot;mapperLocations&quot; value=&quot;classpath*:mapper/*.xml&quot;/&gt;</span><br><span class="line">        &lt;property name=&quot;plugins&quot;&gt;</span><br><span class="line">            &lt;array&gt;</span><br><span class="line">                &lt;bean class=&quot;com.github.pagehelper.PageInterceptor&quot;&gt;</span><br><span class="line">                    &lt;property name=&quot;properties&quot;&gt;</span><br><span class="line">                        &lt;props&gt;</span><br><span class="line">                            &lt;prop key=&quot;helperDialect&quot;&gt;mysql&lt;/prop&gt;</span><br><span class="line">                        &lt;/props&gt;</span><br><span class="line">                    &lt;/property&gt;</span><br><span class="line">                &lt;/bean&gt;</span><br><span class="line">            &lt;/array&gt;</span><br><span class="line">        &lt;/property&gt;</span><br><span class="line">    &lt;/bean&gt;</span><br><span class="line">    &lt;!--配置mapper接口的扫包路径，目的是代理此接口，生成代理类 注册到spring容器中--&gt;</span><br><span class="line">    &lt;bean class=&quot;org.mybatis.spring.mapper.MapperScannerConfigurer&quot;&gt;</span><br><span class="line">&lt;!--        &lt;property name=&quot;basePackage&quot; value=&quot;com.mszlu.mapper&quot;/&gt;--&gt;</span><br><span class="line">        &lt;property name=&quot;basePackage&quot; value=&quot;xyz.shi.dao&quot;/&gt;</span><br><span class="line">    &lt;/bean&gt;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>写mapper的接口，其实就是dao层，我用的dao</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">package xyz.shi.dao;</span><br><span class="line"></span><br><span class="line">import com.github.pagehelper.Page;</span><br><span class="line">import xyz.shi.entity.User;</span><br><span class="line"></span><br><span class="line">public interface UserDao &#123;</span><br><span class="line">    int save(User user);</span><br><span class="line">    int update(User user);</span><br><span class="line">    User findById(int id);</span><br><span class="line">    Page&lt;User&gt; findAll();</span><br><span class="line">    int delete(int id);</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>在resources下建mapper目录，在mapper下创建UserMapper.xml</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span><br><span class="line">&lt;!DOCTYPE mapper</span><br><span class="line">        PUBLIC &quot;-//mybatis.org//DTD Mapper 3.0//EN&quot;</span><br><span class="line">        &quot;http://mybatis.org/dtd/mybatis-3-mapper.dtd&quot;&gt;</span><br><span class="line">&lt;mapper namespace=&quot;xyz.shi.dao.UserDao&quot;&gt;</span><br><span class="line"></span><br><span class="line">    &lt;insert id=&quot;save&quot; parameterType=&quot;xyz.shi.entity.User&quot; keyProperty=&quot;id&quot; useGeneratedKeys=&quot;true&quot;&gt;</span><br><span class="line">        insert into users(name,password)</span><br><span class="line">        value(#&#123;name&#125;,#&#123;password&#125;)</span><br><span class="line">    &lt;/insert&gt;</span><br><span class="line">    &lt;update id=&quot;update&quot; parameterType=&quot;xyz.shi.entity.User&quot;&gt;</span><br><span class="line">        update users set name=#&#123;name&#125;,password=#&#123;password&#125; where id=#&#123;id&#125;</span><br><span class="line">    &lt;/update&gt;</span><br><span class="line">    &lt;delete id=&quot;delete&quot; parameterType=&quot;int&quot;&gt;</span><br><span class="line">        delete from users where id=#&#123;id&#125;</span><br><span class="line">    &lt;/delete&gt;</span><br><span class="line">    &lt;select id=&quot;findById&quot; parameterType=&quot;int&quot; resultType=&quot;xyz.shi.entity.User&quot;&gt;</span><br><span class="line">        select * from users where id = #&#123;id&#125;;</span><br><span class="line">    &lt;/select&gt;</span><br><span class="line">    &lt;select id=&quot;findAll&quot; resultType=&quot;xyz.shi.entity.User&quot;&gt;</span><br><span class="line">        select * from users</span><br><span class="line">    &lt;/select&gt;</span><br><span class="line">&lt;/mapper&gt;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>Service的Mybatis实现，增删改查</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line">package xyz.shi.service;</span><br><span class="line">import com.github.pagehelper.Page;</span><br><span class="line">import com.github.pagehelper.PageHelper;</span><br><span class="line">import com.github.pagehelper.PageInfo;</span><br><span class="line">import org.springframework.beans.factory.annotation.Autowired;</span><br><span class="line">import org.springframework.stereotype.Service;</span><br><span class="line">import xyz.shi.dao.UserDao;</span><br><span class="line">import xyz.shi.entity.User;</span><br><span class="line">import javax.annotation.Resource;</span><br><span class="line"></span><br><span class="line">@Service</span><br><span class="line">public class UserService &#123;</span><br><span class="line">    @Resource</span><br><span class="line">    // Resource简单理解可以把@Resource当作@Autowired和@Qualifier的合体版。</span><br><span class="line">    private UserDao userDao;</span><br><span class="line"></span><br><span class="line">    public int save(String name, String pwd) &#123;</span><br><span class="line">        User user = new User();</span><br><span class="line">        user.setName(name);</span><br><span class="line">        user.setPassword(pwd);</span><br><span class="line">        int num = this.userDao.save(user);</span><br><span class="line">        if (num &gt; 0) &#123;</span><br><span class="line">            System.out.println(&quot;新增成功，user id: &quot; + user.getId());</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            System.out.println(&quot;新增失败;&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">        return num;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public User findById(int id) &#123;</span><br><span class="line">        System.out.println(id);</span><br><span class="line">        return this.userDao.findById(id);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 分页查询</span><br><span class="line">     * @param page</span><br><span class="line">     * @param pageSize</span><br><span class="line">     * @return</span><br><span class="line">     */</span><br><span class="line">    public PageInfo&lt;User&gt; queryUserList(int page, int pageSize) &#123;</span><br><span class="line">        PageHelper.startPage(page,pageSize);</span><br><span class="line">        Page&lt;User&gt; userList = this.userDao.findAll();</span><br><span class="line">        return new PageInfo&lt;&gt;(userList);</span><br><span class="line">    &#125;</span><br><span class="line">    public boolean update(User user)&#123;</span><br><span class="line">        return this.userDao.update(user) &gt; 0;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public boolean delete(int id)&#123;</span><br><span class="line">        return this.userDao.delete(id) &gt; 0;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>测试</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">import com.github.pagehelper.PageInfo;</span><br><span class="line">import org.springframework.context.ApplicationContext;</span><br><span class="line">import org.springframework.context.support.ClassPathXmlApplicationContext;</span><br><span class="line">import xyz.shi.entity.User;</span><br><span class="line">import xyz.shi.service.UserService;</span><br><span class="line"></span><br><span class="line">public class MybatisApp &#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        ApplicationContext context = new ClassPathXmlApplicationContext(&quot;application.xml&quot;);</span><br><span class="line"></span><br><span class="line">        UserService userMybatisService = context.getBean(UserService.class);</span><br><span class="line"></span><br><span class="line">        userMybatisService.save(&quot;testsave&quot;,&quot;1111&quot;);</span><br><span class="line"></span><br><span class="line">        User user1 = userMybatisService.findById(3);</span><br><span class="line">        System.out.println(user1);</span><br><span class="line"></span><br><span class="line">        PageInfo&lt;User&gt; userList = userMybatisService.queryUserList(1, 2);</span><br><span class="line">        System.out.println(userList.getList());</span><br><span class="line"></span><br><span class="line">        User user = new User();</span><br><span class="line">        user.setId(39);</span><br><span class="line">        user.setName(&quot;tt&quot;);</span><br><span class="line">        user.setPassword(&quot;22222&quot;);</span><br><span class="line">        boolean update = userMybatisService.update(user);</span><br><span class="line">        System.out.println(&quot;update:&quot;+update);</span><br><span class="line"></span><br><span class="line">        boolean delete = userMybatisService.delete(39);</span><br><span class="line">        System.out.println(&quot;delete:&quot;+delete);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>注意本实例需要新建项目，不要和整合jdbc的项目放在一起，不然会报错</p>
+</blockquote>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/java/" rel="tag"># java</a>
+              <a href="/tags/spring/" rel="tag"># spring</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/aposts/3056ac99/" rel="prev" title="java之spring AOP">
+      <i class="fa fa-chevron-left"></i> java之spring AOP
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/aposts/e37ff1bd/" rel="next" title="java之Hibernate">
+      java之Hibernate <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+
+
+    <div class="sidebar-inner">
+
+
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%B4%E6%98%8E"><span class="nav-number">1.</span> <span class="nav-text">说明</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B4%E5%90%88JDBC"><span class="nav-number">2.</span> <span class="nav-text">整合JDBC</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B4%E5%90%88Mybatis"><span class="nav-number">3.</span> <span class="nav-text">整合Mybatis</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt=""
+      src="/images/avatar.gif">
+  <p class="site-author-name" itemprop="name"></p>
+  <div class="site-description" itemprop="description">一个正经的测试工程师</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">159</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">26</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">66</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Louis-me" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Louis-me" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:shikun.job@foxmail.com" title="E-Mail → mailto:shikun.job@foxmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+  <!-- 标签云 -->
+
+<script type="text/javascript" charset="utf-8" src="/js/tagcloud.js"></script>
+<script type="text/javascript" charset="utf-8" src="/js/tagcanvas.js"></script>
+<div class="widget-wrap">
+    <!--<h3 class="widget-title">Tag Cloud</h3> -->
+    <div id="myCanvasContainer" class="widget tagcloud">
+        <canvas width="250" height="250" id="resCanvas" style="width=100%">
+            <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AWVS/" rel="tag">AWVS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Burp-Site/" rel="tag">Burp Site</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DVWA/" rel="tag">DVWA</a><span class="tag-list-count">15</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dependency-Check/" rel="tag">Dependency-Check</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/H5/" rel="tag">H5</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hadoop/" rel="tag">Hadoop</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hibernate/" rel="tag">Hibernate</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hive/" rel="tag">Hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jenkins/" rel="tag">Jenkins</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Metasploit/" rel="tag">Metasploit</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Nessus/" rel="tag">Nessus</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Sonic/" rel="tag">Sonic</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/airtest/" rel="tag">airtest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">android性能测试</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/app%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">app安全测试</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aritest/" rel="tag">aritest</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/centos/" rel="tag">centos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/" rel="tag">chrome</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/datax/" rel="tag">datax</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/django/" rel="tag">django</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/drozer/" rel="tag">drozer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fisco-bcos/" rel="tag">fisco-bcos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flink/" rel="tag">flink</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gin/" rel="tag">gin</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/" rel="tag">go</a><span class="tag-list-count">16</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go-zero/" rel="tag">go-zero</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hive/" rel="tag">hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/httprunner/" rel="tag">httprunner</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a><span class="tag-list-count">16</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jmeter/" rel="tag">jmeter</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka/" rel="tag">kafka</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kail/" rel="tag">kail</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode/" rel="tag">leetcode</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode-%E6%95%B0%E7%BB%84/" rel="tag">leetcode-数组</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mitmproxy/" rel="tag">mitmproxy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongodb/" rel="tag">mongodb</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/monkey/" rel="tag">monkey</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/" rel="tag">mysql</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/orm/" rel="tag">orm</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pandas/" rel="tag">pandas</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pc%E8%87%AA%E5%8A%A8%E5%8C%96/" rel="tag">pc自动化</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/playwright/" rel="tag">playwright</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pytest/" rel="tag">pytest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a><span class="tag-list-count">23</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/" rel="tag">redis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/selenium/" rel="tag">selenium</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring/" rel="tag">spring</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlite/" rel="tag">sqlite</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlmap/" rel="tag">sqlmap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tkinter/" rel="tag">tkinter</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/" rel="tag">vue</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue3/" rel="tag">vue3</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">云服务器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8C%BA%E5%9D%97%E9%93%BE/" rel="tag">区块链</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag">大数据</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">安全测试</a><span class="tag-list-count">29</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">性能测试</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%88%AC%E8%99%AB/" rel="tag">爬虫</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" rel="tag">环境搭建</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95/" rel="tag">自动化测试</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%8B%B1%E8%AF%AD%E5%AD%A6%E4%B9%A0/" rel="tag">英语学习</a><span class="tag-list-count">1</span></li></ul>
+        </canvas>
+    </div>
+</div>
+
+</div>
+<!-- 标签云 -->
+    </div>
+
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  <a href="https://beian.miit.gov.cn/" target="_blank">湘ICP备2022002212号-1</a><br />
+  <!--
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder"></span>
+  -->
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script src='../../../js/src/av-min.js'></script>
+<script src='../../../js/src/Valine.min.js'></script>
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : true,
+      notify     : false,
+      appId      : 'mhSm1aOQmnVeiAUJxrsKIFg5-gzGzoHsz',
+      appKey     : 'kW6GQVoeJac7wDgKvy9vXhn6',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : true,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+  
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

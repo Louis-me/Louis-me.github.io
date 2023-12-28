@@ -191,6 +191,627 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/7993dab5/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="一个正经的测试工程师">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="施坤的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/aposts/7993dab5/" class="post-title-link" itemprop="url">go interface</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2023-06-21 10:28:36 / 修改时间：11:50:44" itemprop="dateCreated datePublished" datetime="2023-06-21T10:28:36+08:00">2023-06-21</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/go/" itemprop="url" rel="index"><span itemprop="name">go</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/aposts/7993dab5/" class="post-meta-item leancloud_visitors" data-flag-title="go interface" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/aposts/7993dab5/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/aposts/7993dab5/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="接口"><a href="#接口" class="headerlink" title="接口"></a>接口</h1><ul>
+<li>在Go语言中接口（interface）是一种类型，一种抽象的类型。</li>
+<li>interface(接口)是golang最重要的特性之一，实现多态。Interface类型可以定义<strong>一组方法</strong>，但是这些不需要实现。并且interface<strong>不能包含任何变量</strong>。</li>
+<li>本篇主要来源<a target="_blank" rel="noopener" href="https://www.topgoer.com/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/%E6%8E%A5%E5%8F%A3.html">这里</a></li>
+</ul>
+<h2 id="接口定义和实现"><a href="#接口定义和实现" class="headerlink" title="接口定义和实现"></a>接口定义和实现</h2><h3 id="接口定义"><a href="#接口定义" class="headerlink" title="接口定义"></a>接口定义</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// hello_work\iinterface\studyInterface.go</span></span><br><span class="line">/ 定义一个动物接口，接口中有个方法名称，但是不具体实现</span><br><span class="line"><span class="keyword">type</span> Animal <span class="keyword">interface</span> &#123;</span><br><span class="line">	Say()</span><br><span class="line">	GetName() <span class="type">string</span> <span class="comment">//返回内容为string</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="接口实现"><a href="#接口实现" class="headerlink" title="接口实现"></a>接口实现</h3><ul>
+<li>一个对象只要全部实现了接口中的方法，那么就实现了这个接口。换句话说，接口就是一个需要实现的方法列表。</li>
+</ul>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">type</span> Dog <span class="keyword">struct</span> &#123;</span><br><span class="line">	Name <span class="type">string</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> Cat <span class="keyword">struct</span> &#123;</span><br><span class="line">	Name <span class="type">string</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 对应实现了接口中的方法</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(d Dog)</span></span> Say() &#123;</span><br><span class="line">	fmt.Println(<span class="string">&quot;汪汪汪&quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 对应实现了接口中的方法</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(d Dog)</span></span> GetName() <span class="type">string</span> &#123;</span><br><span class="line">	<span class="keyword">return</span> d.Name</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(c Cat)</span></span> Say() &#123;</span><br><span class="line">	fmt.Println(<span class="string">&quot;喵喵喵&quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(c Cat)</span></span> GetName() <span class="type">string</span> &#123;</span><br><span class="line">	<span class="keyword">return</span> c.Name</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>完整代码如下：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">\\ hello_work/iinterface/studyInterface.<span class="keyword">go</span></span><br><span class="line"><span class="keyword">package</span> iinterface</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">&quot;fmt&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 定义一个动物接口，接口中有个方法</span></span><br><span class="line"><span class="keyword">type</span> Animal <span class="keyword">interface</span> &#123;</span><br><span class="line">	Say()</span><br><span class="line">	GetName() <span class="type">string</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 如下开始，为实现接口中的方法</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> Dog <span class="keyword">struct</span> &#123;</span><br><span class="line">	Name <span class="type">string</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> Cat <span class="keyword">struct</span> &#123;</span><br><span class="line">	Name <span class="type">string</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 对应实现了接口中的方法</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(d Dog)</span></span> Say() &#123;</span><br><span class="line">	fmt.Println(<span class="string">&quot;汪汪汪&quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(d Dog)</span></span> GetName() <span class="type">string</span> &#123;</span><br><span class="line">	<span class="keyword">return</span> d.Name</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(c Cat)</span></span> Say() &#123;</span><br><span class="line">	fmt.Println(<span class="string">&quot;喵喵喵&quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(c Cat)</span></span> GetName() <span class="type">string</span> &#123;</span><br><span class="line">	<span class="keyword">return</span> c.Name</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="接口类型变量"><a href="#接口类型变量" class="headerlink" title="接口类型变量"></a>接口类型变量</h2><ul>
+<li>接口类型变量能够存储所有实现了该接口的实例</li>
+</ul>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// hello_work\main.go</span></span><br><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">&quot;fmt&quot;</span></span><br><span class="line"></span><br><span class="line">	<span class="string">&quot;example.com/hello_work/hello_work/iinterface&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="comment">// 声明一个Animal类型的变量animal</span></span><br><span class="line">	<span class="keyword">var</span> animal iinterface.Animal</span><br><span class="line">	<span class="comment">// 实例化一个dog结构体</span></span><br><span class="line">	dog := iinterface.Dog&#123;Name: <span class="string">&quot;旺财&quot;</span>&#125;</span><br><span class="line">	<span class="comment">// 可以把dog实例直接赋值给变量animal</span></span><br><span class="line">	animal = dog</span><br><span class="line">	dogName := animal.GetName()</span><br><span class="line">	fmt.Println(dogName)</span><br><span class="line">	animal.Say()</span><br><span class="line"></span><br><span class="line">	cat := iinterface.Cat&#123;Name: <span class="string">&quot;工程喵&quot;</span>&#125;</span><br><span class="line">	animal = cat</span><br><span class="line">	catName := animal.GetName()</span><br><span class="line">	fmt.Println(catName)</span><br><span class="line">	animal.Say()</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>运行结果</li>
+</ul>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">PS E:\proj\gowork&gt; <span class="keyword">go</span> run .\hello_work\main.<span class="keyword">go</span></span><br><span class="line">旺财</span><br><span class="line">汪汪汪</span><br><span class="line">工程喵</span><br><span class="line">喵喵喵</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>注意，如果实现了接口中的方法(studyInterface.go)用的是指针，如func (d *Dog)，那么对应实例化时也要传入指针,dog :&#x3D; &amp;iinterface.Dog{Name: “旺财”}</p>
+</blockquote>
+<h2 id="空接口"><a href="#空接口" class="headerlink" title="空接口"></a>空接口</h2><ul>
+<li><p>空接口是指没有定义任何方法的接口。因此任何类型都实现了空接口。</p>
+</li>
+<li><p>空接口类型的变量可以存储任意类型的变量。</p>
+</li>
+</ul>
+<h3 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h3><ul>
+<li>可以作为字符串，数字，bool类型等</li>
+</ul>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="comment">// 定义一个空接口x</span></span><br><span class="line">    <span class="keyword">var</span> x <span class="keyword">interface</span>&#123;&#125;</span><br><span class="line">    s := <span class="string">&quot;pprof.cn&quot;</span></span><br><span class="line">    x = s</span><br><span class="line">    fmt.Printf(<span class="string">&quot;type:%T value:%v\n&quot;</span>, x, x)</span><br><span class="line">    i := <span class="number">100</span></span><br><span class="line">    x = i</span><br><span class="line">    fmt.Printf(<span class="string">&quot;type:%T value:%v\n&quot;</span>, x, x)</span><br><span class="line">    b := <span class="literal">true</span></span><br><span class="line">    x = b</span><br><span class="line">    fmt.Printf(<span class="string">&quot;type:%T value:%v\n&quot;</span>, x, x)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>空接口作为函数的参数</li>
+</ul>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 空接口作为函数参数</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">show</span><span class="params">(a <span class="keyword">interface</span>&#123;&#125;)</span></span> &#123;</span><br><span class="line">    fmt.Printf(<span class="string">&quot;type:%T value:%v\n&quot;</span>, a, a)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>空接口作为map的值</li>
+</ul>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 空接口作为map值</span></span><br><span class="line">    <span class="keyword">var</span> studentInfo = <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="type">string</span>]<span class="keyword">interface</span>&#123;&#125;)</span><br><span class="line">    studentInfo[<span class="string">&quot;name&quot;</span>] = <span class="string">&quot;李白&quot;</span></span><br><span class="line">    studentInfo[<span class="string">&quot;age&quot;</span>] = <span class="number">18</span></span><br><span class="line">    studentInfo[<span class="string">&quot;married&quot;</span>] = <span class="literal">false</span></span><br><span class="line">    fmt.Println(studentInfo)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>综合运用可以参考此笔记中<a href="/aposts/43aefcf6/">go中字符串,切片,数组,map</a>中的map下空接口接受字符串json，然后反序列化的例子</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/f9d23e4/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="一个正经的测试工程师">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="施坤的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/aposts/f9d23e4/" class="post-title-link" itemprop="url">go 爬虫练习</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2023-06-20 18:57:30 / 修改时间：20:41:18" itemprop="dateCreated datePublished" datetime="2023-06-20T18:57:30+08:00">2023-06-20</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/go/" itemprop="url" rel="index"><span itemprop="name">go</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/aposts/f9d23e4/" class="post-meta-item leancloud_visitors" data-flag-title="go 爬虫练习" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/aposts/f9d23e4/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/aposts/f9d23e4/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="分析网站"><a href="#分析网站" class="headerlink" title="分析网站"></a>分析网站</h2><ul>
+<li><p>打开爬虫的目标网站：<a target="_blank" rel="noopener" href="http://www.52desktop.cn/html/DLZM/KPBZ/20191205/15898.html">http://www.52desktop.cn/html/DLZM/KPBZ/20191205/15898.html</a></p>
+</li>
+<li><p>点击下一张图片，发现后面多了个2，往后的下一张直接进行了累加，最终网站为：<code>.../KPBZ/20191205/15898_&#123;n&#125;.html</code></p>
+</li>
+</ul>
+<p><img src="/aposts/f9d23e4/image-20230620190153496.png" alt="image-20230620190153496"></p>
+<ul>
+<li>点击下载图片时，经过分析最终的下载地址的n数量减一，为正则提取或者图片查找做准备<code>http://i.52desktop.cn:81/upimg/allimg/&#123;n&#125;/201912415221023477802.jpg</code></li>
+</ul>
+<p><img src="/aposts/f9d23e4/image-20230620190505925.png" alt="image-20230620190505925"></p>
+<h2 id="单线程"><a href="#单线程" class="headerlink" title="单线程"></a>单线程</h2><ul>
+<li><code>hello_work\craw\Craw1.go</code></li>
+</ul>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// hello_work\craw\Craw1.go</span></span><br><span class="line"><span class="keyword">package</span> crawl</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">&quot;bufio&quot;</span></span><br><span class="line">	<span class="string">&quot;fmt&quot;</span></span><br><span class="line">	<span class="string">&quot;io&quot;</span></span><br><span class="line">	<span class="string">&quot;io/ioutil&quot;</span></span><br><span class="line">	<span class="string">&quot;net/http&quot;</span></span><br><span class="line">	<span class="string">&quot;os&quot;</span></span><br><span class="line">	<span class="string">&quot;path&quot;</span></span><br><span class="line">	<span class="string">&quot;regexp&quot;</span></span><br><span class="line">	<span class="string">&quot;strconv&quot;</span></span><br><span class="line">	<span class="string">&quot;strings&quot;</span></span><br><span class="line">	<span class="string">&quot;time&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> (</span><br><span class="line">	<span class="comment">// 正则查找图片的地址</span></span><br><span class="line">	reImg = <span class="string">`http://i.52desktop.cn:81/upimg/allimg/[^&quot;]+?(\.((jpg)|(png)|(jpeg)|(gif)|(bmp)))`</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 读取链接中所有的内容</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">GetPageStr</span><span class="params">(url <span class="type">string</span>)</span></span> (pageStr <span class="type">string</span>) &#123;</span><br><span class="line"></span><br><span class="line">	resp, err := http.Get(url)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		fmt.Println(<span class="string">&quot;http.Get error&quot;</span>, err)</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">defer</span> resp.Body.Close()</span><br><span class="line">	<span class="comment">// 读取页面内容</span></span><br><span class="line">	pagebytes, err := ioutil.ReadAll(resp.Body)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		fmt.Println(<span class="string">&quot;ioutil.ReadAll error&quot;</span>, err)</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">// 字节转换为字符串</span></span><br><span class="line">	pageStr = <span class="type">string</span>(pagebytes)</span><br><span class="line">	<span class="keyword">return</span> pageStr</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 下载图片，核心内容是获取图片的reader、write对象</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">downloadImg</span><span class="params">(savePath <span class="type">string</span>, url <span class="type">string</span>)</span></span> <span class="type">error</span> &#123;</span><br><span class="line"></span><br><span class="line">	v, err := http.Get(url)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		fmt.Println(<span class="string">&quot;http.Get error&quot;</span>, err)</span><br><span class="line">		<span class="keyword">return</span> err</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">defer</span> v.Body.Close()</span><br><span class="line">	fileName := path.Base(url) <span class="comment">// 获取文件名</span></span><br><span class="line">	<span class="comment">// 获得get请求响应的reader对象</span></span><br><span class="line">	reader := bufio.NewReaderSize(v.Body, <span class="number">32</span>*<span class="number">1024</span>)</span><br><span class="line">	<span class="comment">// 创建单个文件保存下来</span></span><br><span class="line">	file, err := os.Create(savePath + fileName)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		fmt.Println(<span class="string">&quot;ioutil.WriteFile error&quot;</span>, err)</span><br><span class="line">		<span class="keyword">return</span> err</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">// // 获得文件的writer对象</span></span><br><span class="line">	writer := bufio.NewWriter(file)</span><br><span class="line"></span><br><span class="line">	written, err := io.Copy(writer, reader)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		fmt.Println(<span class="string">&quot;io.Copy error&quot;</span>, err)</span><br><span class="line">		<span class="keyword">return</span> err</span><br><span class="line">	&#125;</span><br><span class="line">	fmt.Println(fileName, <span class="string">&quot;download is success, Total length:&quot;</span>, written)</span><br><span class="line">	<span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 给main.go进行调用的外部地址</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">GetCrawl1Img</span><span class="params">()</span></span> &#123;</span><br><span class="line">	start := time.Now()</span><br><span class="line">	<span class="keyword">for</span> i := <span class="number">2</span>; i &lt;= <span class="number">21</span>; i++ &#123;</span><br><span class="line">		<span class="comment">// 根据观察规则，发现下载图片地址网站</span></span><br><span class="line">		url := <span class="string">&quot;http://www.52desktop.cn/html/DLZM/KPBZ/20191205/15898_&quot;</span> + strconv.Itoa(i) + <span class="string">&quot;.html&quot;</span></span><br><span class="line">		pageStr := GetPageStr(url)</span><br><span class="line">		re := regexp.MustCompile(reImg)</span><br><span class="line">		results := re.FindAllStringSubmatch(pageStr, <span class="number">-1</span>) <span class="comment">//  -1 表示搜索所有可能的匹配项。</span></span><br><span class="line">		<span class="keyword">for</span> _, result := <span class="keyword">range</span> results &#123;</span><br><span class="line">			<span class="keyword">if</span> strings.Contains(result[<span class="number">0</span>], <span class="string">&quot;20191204&quot;</span>) &#123; <span class="comment">// 过滤条件读取图片地址</span></span><br><span class="line">				downloadImg(<span class="string">&quot;E:\\proj\\gowork\\img\\&quot;</span>, result[<span class="number">0</span>])</span><br><span class="line"></span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line">	elapse := time.Since(start)</span><br><span class="line">	fmt.Println(<span class="string">&quot;elapsed time is : &quot;</span>, elapse, <span class="string">&quot;s&quot;</span>)</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>hello_work&#x2F;main.go</li>
+</ul>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// hello_work/main.go</span></span><br><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">&quot;example.com/hello_work/hello_work/crawl&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	crawl.GetCrawl1Img()</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>调用,共下载了20张图片，耗时20秒</li>
+</ul>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"> E:\proj\gowork&gt; <span class="keyword">go</span> run .\hello_work\main.<span class="keyword">go</span></span><br><span class="line"><span class="number">201912415221023477802.</span>jpg download is success, Total length: <span class="number">344218</span></span><br><span class="line"><span class="number">201912415221023477802.</span>jpg download is success, Total length: <span class="number">344218</span></span><br><span class="line"><span class="number">201912415221026577803.</span>jpg download is success, Total length: <span class="number">342307</span></span><br><span class="line">...</span><br><span class="line"><span class="number">2019124152210921778021.</span>jpg download is success, Total length: <span class="number">340471</span></span><br><span class="line">elapsed time is :  <span class="number">20.861619</span>s </span><br></pre></td></tr></table></figure>
+
+<h2 id="并发爬虫"><a href="#并发爬虫" class="headerlink" title="并发爬虫"></a>并发爬虫</h2><h3 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h3><ul>
+<li>初始化一个数据管道</li>
+<li>爬虫写出：创建多个协程用于添加图片</li>
+<li>任务统计协程：检查多个个任务是否都完成，完成则关闭数据管道</li>
+<li>下载协程：从管道里读取链接并下载</li>
+</ul>
+<h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><ul>
+<li><code>hello_work/crawl/Crawl2.go</code></li>
+</ul>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> crawl</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">&quot;fmt&quot;</span></span><br><span class="line">	<span class="string">&quot;io/ioutil&quot;</span></span><br><span class="line">	<span class="string">&quot;net/http&quot;</span></span><br><span class="line">	<span class="string">&quot;path&quot;</span></span><br><span class="line">	<span class="string">&quot;regexp&quot;</span></span><br><span class="line">	<span class="string">&quot;strconv&quot;</span></span><br><span class="line">	<span class="string">&quot;strings&quot;</span></span><br><span class="line">	<span class="string">&quot;sync&quot;</span></span><br><span class="line">	<span class="string">&quot;time&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> (</span><br><span class="line">	<span class="comment">// 正则提取表达式</span></span><br><span class="line">	geReImg = <span class="string">`http://i.52desktop.cn:81/upimg/allimg/[^&quot;]+?(\.((jpg)|(png)|(jpeg)|(gif)|(bmp)))`</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">// 存放图片链接的数据管道</span></span><br><span class="line">	chanImageUrls <span class="keyword">chan</span> <span class="type">string</span></span><br><span class="line">	<span class="comment">// 启动多个goroutine，sync.WaitGroup来实现goroutine的同步</span></span><br><span class="line">	waitGroup sync.WaitGroup</span><br><span class="line">	<span class="comment">// 用于监控协程</span></span><br><span class="line">	chanTask <span class="keyword">chan</span> <span class="type">string</span></span><br><span class="line">	<span class="comment">// 监控协程总数</span></span><br><span class="line">	chanTaskCount = <span class="number">23</span></span><br><span class="line">	<span class="comment">// 监控当前的下载任务是否完成的总数</span></span><br><span class="line">	count <span class="type">int</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 爬取图片链接，获取当前页的所有图片链接</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">getImgs</span><span class="params">(url <span class="type">string</span>)</span></span> (urls []<span class="type">string</span>) &#123;</span><br><span class="line">	pageStr := GetPageStr(url)</span><br><span class="line">	re := regexp.MustCompile(geReImg)</span><br><span class="line">	results := re.FindAllStringSubmatch(pageStr, <span class="number">-1</span>) <span class="comment">//  -1 表示搜索所有可能的匹配项。</span></span><br><span class="line">	fmt.Printf(<span class="string">&quot;共找到%d条结果\n&quot;</span>, <span class="built_in">len</span>(results))</span><br><span class="line">	<span class="keyword">for</span> _, result := <span class="keyword">range</span> results &#123;</span><br><span class="line">		url := result[<span class="number">0</span>]</span><br><span class="line">		<span class="keyword">if</span> strings.Contains(result[<span class="number">0</span>], <span class="string">&quot;20191204&quot;</span>) &#123; <span class="comment">// 过滤条件读取图片地址</span></span><br><span class="line">			urls = <span class="built_in">append</span>(urls, url)</span><br><span class="line">			<span class="comment">// fmt.Println(url)</span></span><br><span class="line"></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> urls</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">getImgUrls</span><span class="params">(url <span class="type">string</span>)</span></span> &#123;</span><br><span class="line">	urls := getImgs(url)</span><br><span class="line">	<span class="comment">// 遍历切片里所有链接，存入数据管道</span></span><br><span class="line">	<span class="keyword">for</span> _, url := <span class="keyword">range</span> urls &#123;</span><br><span class="line">		<span class="comment">// 存放图片链接的数据管道，发送图片链接</span></span><br><span class="line">		chanImageUrls &lt;- url</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">// 标识当前协程完成</span></span><br><span class="line">	<span class="comment">// 每完成一个任务，写一条数据</span></span><br><span class="line">	<span class="comment">// 用于监控协程知道已经完成了几个任务</span></span><br><span class="line">	chanTask &lt;- url</span><br><span class="line">	waitGroup.Done()</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 任务统计</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">CheckOk</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="keyword">for</span> &#123;</span><br><span class="line">		<span class="comment">// 从chanTask中接收值并赋值给变量,url</span></span><br><span class="line">		url := &lt;-chanTask</span><br><span class="line">		fmt.Printf(<span class="string">&quot;%s 完成了爬虫任务\n&quot;</span>, url)</span><br><span class="line">		count++</span><br><span class="line">		<span class="comment">// 任务统计个协程是否全部完成,完成了久关闭通道</span></span><br><span class="line">		<span class="comment">// 因为的我循环起始地址的索引为2，所以这里减去2</span></span><br><span class="line">		<span class="keyword">if</span> count == chanTaskCount<span class="number">-2</span> &#123;</span><br><span class="line">			<span class="built_in">close</span>(chanImageUrls)</span><br><span class="line">			<span class="keyword">break</span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	waitGroup.Done()</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">downloadFile</span><span class="params">(savePath <span class="type">string</span>, url <span class="type">string</span>)</span></span> &#123;</span><br><span class="line"></span><br><span class="line">	v, err := http.Get(url)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		fmt.Println(<span class="string">&quot;http.Get error&quot;</span>, err)</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">defer</span> v.Body.Close()</span><br><span class="line">	fileName := savePath + path.Base(url) <span class="comment">// 获取文件名</span></span><br><span class="line">	bytes, err := ioutil.ReadAll(v.Body)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		fmt.Println(<span class="string">&quot;io.ReadAll error&quot;</span>, err)</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">// 直接写入内容，比Crawl1.go代码更简单</span></span><br><span class="line">	err = ioutil.WriteFile(fileName, bytes, <span class="number">0666</span>)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		fmt.Println(<span class="string">&quot;ioutil.WriteFile error&quot;</span>, err)</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line">	fmt.Println(fileName, <span class="string">&quot; download is success&quot;</span>)</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 下载协程，从hanImageUrls管道中读取链接下载,读取的数据来自于这里函数getImgUrls，对chanImageUrls的写入</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">DownloadImg</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="keyword">for</span> url := <span class="keyword">range</span> chanImageUrls &#123;</span><br><span class="line">		downloadFile(<span class="string">&quot;E:\\proj\\gowork\\img\\&quot;</span>, url)</span><br><span class="line">	&#125;</span><br><span class="line">	waitGroup.Done()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">GetCrawl2Img</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="comment">// 初始化管道</span></span><br><span class="line">	chanImageUrls = <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="type">string</span>, <span class="number">100</span>)</span><br><span class="line">	chanTask = <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="type">string</span>, chanTaskCount)</span><br><span class="line">	start := time.Now()</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span> i := <span class="number">2</span>; i &lt; chanTaskCount; i++ &#123;</span><br><span class="line">		waitGroup.Add(<span class="number">1</span>)</span><br><span class="line">		<span class="comment">// 根据观察规则，发现下载图片地址网站</span></span><br><span class="line">		<span class="keyword">go</span> getImgUrls(<span class="string">&quot;http://www.52desktop.cn/html/DLZM/KPBZ/20191205/15898_&quot;</span> + strconv.Itoa(i) + <span class="string">&quot;.html&quot;</span>)</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">// 任务统计个协程是否全部完成</span></span><br><span class="line">	waitGroup.Add(<span class="number">1</span>)</span><br><span class="line">	<span class="keyword">go</span> CheckOk()</span><br><span class="line">	<span class="comment">// 创建一个新的协程来执行 Wait 后面的操作</span></span><br><span class="line">	<span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">		<span class="comment">// 等待所有协程完成</span></span><br><span class="line">		waitGroup.Wait()</span><br><span class="line"></span><br><span class="line">		<span class="comment">// 执行一些操作</span></span><br><span class="line">		fmt.Println(<span class="string">&quot;All workers have completed.&quot;</span>)</span><br><span class="line">	&#125;()</span><br><span class="line">	<span class="comment">// 下载协程，从管道中读取链接下载</span></span><br><span class="line">	<span class="keyword">for</span> i := <span class="number">0</span>; i &lt; <span class="number">5</span>; i++ &#123;</span><br><span class="line">		waitGroup.Add(<span class="number">1</span>)</span><br><span class="line">		<span class="keyword">go</span> DownloadImg()</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	waitGroup.Wait()</span><br><span class="line">	elapse := time.Since(start)</span><br><span class="line">	fmt.Println(<span class="string">&quot;elapsed time is : &quot;</span>, elapse, <span class="string">&quot;s&quot;</span>)</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>hello_work&#x2F;main.go</li>
+</ul>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">&quot;example.com/hello_work/hello_work/crawl&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="comment">// crawl.GetCrawl1Img()</span></span><br><span class="line">	crawl.GetCrawl2Img()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>调用，下载了20张图片，共耗时7秒，大幅提升下载速度</li>
+</ul>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">PS E:\proj\gowork&gt; <span class="keyword">go</span> run .\hello_work\main.<span class="keyword">go</span></span><br><span class="line">E:\proj\gowork\img\<span class="number">201912415221040677807.</span>jpg  download is success</span><br><span class="line">E:\proj\gowork\img\<span class="number">201912415221040677807.</span>jpg  download is success</span><br><span class="line">E:\proj\gowork\img\<span class="number">2019124152210546778011.</span>jpg  download is success</span><br><span class="line">All workers have completed.</span><br><span class="line">elapsed time is :  <span class="number">7.2002013</span>s s</span><br></pre></td></tr></table></figure>
+
+<p><img src="/aposts/f9d23e4/image-20230620203609304.png" alt="image-20230620203609304"></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
+<li><p>代码主要来自<a target="_blank" rel="noopener" href="https://www.topgoer.com/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/%E7%88%AC%E8%99%AB%E5%B0%8F%E6%A1%88%E4%BE%8B.html">这里</a></p>
+</li>
+<li><p>其中<code>CheckOk</code>代码中的<code>count</code>计算不正确，无法关闭<code>close(chanImageUrls)</code>，导致<code>waitGroup</code>无法关闭，引起阻塞，本次代码中已经修复</p>
+</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/3fcd402/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="一个正经的测试工程师">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="施坤的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/aposts/3fcd402/" class="post-title-link" itemprop="url">win7 mysql安装详解</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-06-12 10:23:03" itemprop="dateCreated datePublished" datetime="2023-06-12T10:23:03+08:00">2023-06-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-06-14 09:25:52" itemprop="dateModified" datetime="2023-06-14T09:25:52+08:00">2023-06-14</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/mysql/" itemprop="url" rel="index"><span itemprop="name">mysql</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/aposts/3fcd402/" class="post-meta-item leancloud_visitors" data-flag-title="win7 mysql安装详解" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/aposts/3fcd402/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/aposts/3fcd402/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="mysql准备"><a href="#mysql准备" class="headerlink" title="mysql准备"></a>mysql准备</h2><ul>
+<li><p><a target="_blank" rel="noopener" href="https://dev.mysql.com/downloads/mysql/">官网</a>下载对应的zip包，我选择的(mysql-8.0.22-winx64.zip)</p>
+</li>
+<li><p>在mysql-8.0.22-winx64文件夹下面新建一个<code>my.ini</code>文件和一个<code>data</code>文件夹</p>
+</li>
+<li><p>my.ini中的内容</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">my.ini内容：</span><br><span class="line"></span><br><span class="line"><span class="punctuation">[</span>mysqld<span class="punctuation">]</span></span><br><span class="line"># 设置<span class="number">3306</span>端口</span><br><span class="line">port=<span class="number">3306</span></span><br><span class="line"># 设置mysql的安装目录</span><br><span class="line">basedir=E<span class="punctuation">:</span>\\app\\mysql<span class="number">-8.0</span><span class="number">.22</span>-winx64</span><br><span class="line"># 设置mysql数据库的数据的存放目录</span><br><span class="line">datadir=E<span class="punctuation">:</span>\\app\\mysql<span class="number">-8.0</span><span class="number">.22</span>-winx64\\data</span><br><span class="line"># 允许最大连接数</span><br><span class="line">max_connections=<span class="number">200</span></span><br><span class="line"># 允许连接失败的次数。这是为了防止有人从该主机试图攻击数据库系统</span><br><span class="line">max_connect_errors=<span class="number">10</span></span><br><span class="line"># 服务端使用的字符集默认为UTF8</span><br><span class="line">character-set-server=utf8</span><br><span class="line"># 创建新表时将使用的默认存储引擎</span><br><span class="line">default-storage-engine=INNODB</span><br><span class="line"><span class="punctuation">[</span>mysql<span class="punctuation">]</span></span><br><span class="line"># 设置mysql客户端默认字符集</span><br><span class="line">default-character-set=utf8</span><br><span class="line"># 注意这里的配置，ONLY_FULL_GROUP_BY的报错问题</span><br><span class="line">sql_mode=&#x27;STRICT_TRANS_TABLES<span class="punctuation">,</span>NO_ENGINE_SUBSTITUTION&#x27;</span><br><span class="line"><span class="punctuation">[</span>client<span class="punctuation">]</span></span><br><span class="line"># 设置mysql客户端连接服务端时默认使用的端口</span><br><span class="line">port=<span class="number">3306</span></span><br><span class="line">default-character-set=utf8</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>5.7后的版本，使用了group by分组后，select后的字段必须也要是分组的，不然报错ONLY_FULL_GROUP_BY，因此需要设置sql_mode</p>
+</blockquote>
+</li>
+<li><p>我的电脑设置环境变量</p>
+<ul>
+<li>MYSQL_HOME&#x3D;e:\app\mysql-8.0.22-winx64</li>
+<li>在path中添加%MYSQL_HOME%\bin</li>
+</ul>
+</li>
+</ul>
+<h2 id="mysql安装"><a href="#mysql安装" class="headerlink" title="mysql安装"></a>mysql安装</h2><ul>
+<li>已管理员身份打开cmd,输入<code>mysqld --initialize --user=mysql --console</code>发现弹出没有<code>vcruntime140_1.dll</code>文件<ul>
+<li>找到<a target="_blank" rel="noopener" href="https://cn.dll-files.com/vcruntime140_1.dll.html">对应网站</a>下载此dll</li>
+</ul>
+</li>
+<li><code>vcruntime140_1.dll</code>文件放到<code>C:\Windows\System32</code> 和 <code>C:\Windows\SysWOW64</code>下</li>
+<li>运行下面的bat文件，进行注册<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">@echo 开始注册</span><br><span class="line">copy vcruntime140_1.dll %windir%\system32\</span><br><span class="line">regsvr32 %windir%\system32\vcruntime140_1.dll /s</span><br><span class="line">@echo system32 vcruntime140_1.dll注册成功</span><br><span class="line"></span><br><span class="line">copy vcruntime140_1.dll %windir%\SysWOW64\</span><br><span class="line">regsvr32 %windir%\system32\vcruntime140_1.dll /s</span><br><span class="line">@echo SysWOW64 vcruntime140_1.dll注册成功</span><br><span class="line">@pause</span><br></pre></td></tr></table></figure></li>
+<li>初始化数据库<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">E:\&gt;mysqld --initialize --user=mysql --console</span><br><span class="line">2020-11-28T03:32:30.871296Z 0 [System] [MY-013169] [Server] E:\app\mysql-8.0.22-</span><br><span class="line">winx64\bin\mysqld.exe (mysqld 8.0.22) initializing of server in progress as proc</span><br><span class="line">ess 6964</span><br><span class="line">2020-11-28T03:32:30.873294Z 0 [Warning] [MY-013242] [Server] --character-set-ser</span><br><span class="line">ver: &#x27;utf8&#x27; is currently an alias for the character set UTF8MB3, but will be an</span><br><span class="line">alias for UTF8MB4 in a future release. Please consider using UTF8MB4 in order to</span><br><span class="line"> be unambiguous.</span><br><span class="line">2020-11-28T03:32:30.884295Z 1 [System] [MY-013576] [InnoDB] InnoDB initializatio</span><br><span class="line">n has started.</span><br><span class="line">2020-11-28T03:32:33.331435Z 1 [System] [MY-013577] [InnoDB] InnoDB initializatio</span><br><span class="line">n has ended.</span><br><span class="line">2020-11-28T03:32:35.760574Z 6 [Note] [MY-010454] [Server] A temporary password i</span><br><span class="line">s generated for root@localhost: JoyfjqHL5)SO</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+<li><code>JoyfjqHL5)SO</code>这个就是得到的数据库密码</li>
+<li>输入命令安装mysql<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">E:\&gt;mysqld install</span><br><span class="line">Service successfully installed.</span><br></pre></td></tr></table></figure></li>
+<li>启动mysql服务<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">E:\&gt;net start mysql</span><br><span class="line">MySQL 服务正在启动 .</span><br><span class="line">MySQL 服务已经启动成功</span><br></pre></td></tr></table></figure></li>
+<li>登陆mysql,粘贴刚刚生成的密码<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">E:\&gt;mysql -u root -p</span><br></pre></td></tr></table></figure></li>
+<li>登陆成功后修改密码<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ALTER USER &#x27;root&#x27;@&#x27;localhost&#x27; IDENTIFIED WITH mysql_native_password BY &#x27;123456&#x27;;</span><br></pre></td></tr></table></figure></li>
+<li>刷新<code>FLUSH PRIVILEGES;</code></li>
+</ul>
+<h2 id="mysql连接"><a href="#mysql连接" class="headerlink" title="mysql连接"></a>mysql连接</h2><ul>
+<li>我这里使用<a target="_blank" rel="noopener" href="https://www.heidisql.com/download.php">heidisql</a></li>
+<li>新建会话，输入密码，打开下面页面就说明已经成功连接数据库<br><img src="/aposts/3fcd402/image-20230612102438254.png" alt="image-20230612102438254"></li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/a08a31/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="一个正经的测试工程师">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="施坤的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/aposts/a08a31/" class="post-title-link" itemprop="url">mysql查询练习</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-06-12 10:19:02" itemprop="dateCreated datePublished" datetime="2023-06-12T10:19:02+08:00">2023-06-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-06-14 18:36:31" itemprop="dateModified" datetime="2023-06-14T18:36:31+08:00">2023-06-14</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/mysql/" itemprop="url" rel="index"><span itemprop="name">mysql</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/aposts/a08a31/" class="post-meta-item leancloud_visitors" data-flag-title="mysql查询练习" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/aposts/a08a31/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/aposts/a08a31/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h2><ul>
+<li>参考<a href="/aposts/3fcd402/">mysql安装详解</a></li>
+</ul>
+<h2 id="库表准备"><a href="#库表准备" class="headerlink" title="库表准备"></a>库表准备</h2><ul>
+<li>创建一个数据库</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CREATE DATABASE Educational;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>创建学生表</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">use Educational </span><br><span class="line"></span><br><span class="line">CREATE TABLE student </span><br><span class="line">(</span><br><span class="line">ID CHAR(9) PRIMARY KEY, # PRIMARY KEY表示id为主键</span><br><span class="line">name VARCHAR(10),</span><br><span class="line">gender CHAR(6), # 性别</span><br><span class="line">birthdate date # 出生年月</span><br><span class="line">)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>创建课程表</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE course</span><br><span class="line">(</span><br><span class="line"># 课程号,主键</span><br><span class="line">courseID CHAR(5) PRIMARY key,</span><br><span class="line"># 课程名</span><br><span class="line">coursename VARCHAR(36),</span><br><span class="line"># 课程简介</span><br><span class="line">Syllabus text,</span><br><span class="line"># 课时</span><br><span class="line">hours INT,</span><br><span class="line"># 学分</span><br><span class="line">credit TINYINT,</span><br><span class="line"># 开课学期</span><br><span class="line">semester text</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>创建一个成绩表，将学生表和课程表进行关联</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE Score </span><br><span class="line">(</span><br><span class="line"># 学号,关联学生表中id,作为外键</span><br><span class="line">ID CHAR(9) REFERENCES student(ID),</span><br><span class="line"># 课程号.关联课程表中id,作为外键</span><br><span class="line">courseID CHAR(5) REFERENCES course(CourseID),</span><br><span class="line"># 成绩</span><br><span class="line">Results DECIMAL(4,1) CHECK(results BETWEEN 0 AND 100)</span><br><span class="line"></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>插入数据,学生表</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">INSERT INTO student VALUES(&#x27;202201001&#x27;,&#x27;汤姆猫&#x27;,&#x27;男&#x27;,&#x27;2000-01-01&#x27;);</span><br><span class="line">INSERT INTO student VALUES(&#x27;202201002&#x27;,&#x27;风火轮&#x27;,&#x27;男&#x27;,&#x27;1998-11-03&#x27;);</span><br><span class="line">INSERT INTO student VALUES(&#x27;202201003&#x27;,&#x27;闪光弹&#x27;,&#x27;女&#x27;,&#x27;2000-08-21&#x27;);</span><br><span class="line">INSERT INTO student VALUES(&#x27;202201004&#x27;,&#x27;降世拳&#x27;,&#x27;女&#x27;,&#x27;2010-04-11&#x27;);</span><br><span class="line">INSERT INTO student VALUES(&#x27;202201005&#x27;,&#x27;流星腿&#x27;,&#x27;女&#x27;,&#x27;2010-09-23&#x27;);</span><br><span class="line">INSERT INTO student VALUES(&#x27;202201006&#x27;,&#x27;闪闪光&#x27;,&#x27;女&#x27;,&#x27;2010-02-02&#x27;);</span><br><span class="line">INSERT INTO student VALUES(&#x27;202201007&#x27;,&#x27;汤汤水&#x27;,&#x27;女&#x27;,&#x27;1999-03-29&#x27;);</span><br></pre></td></tr></table></figure>
+
+<p><img src="/aposts/a08a31/image-20230612112157798.png" alt="image-20230612112157798"></p>
+<ul>
+<li>插入数据，课程表</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">INSERT INTO course VALUES(&#x27;10001&#x27;,&#x27;英语&#x27;, &#x27;英语简介介绍&#x27;,28,20,&#x27;2023-07-01&#x27;);</span><br><span class="line">INSERT INTO course VALUES(&#x27;10002&#x27;,&#x27;数学&#x27;, &#x27;英语简介介绍&#x27;,32,17,&#x27;2023-07-01&#x27;);</span><br><span class="line">INSERT INTO course VALUES(&#x27;10003&#x27;,&#x27;语文&#x27;, &#x27;语文简介介绍&#x27;,29,25,&#x27;2023-07-01&#x27;);</span><br><span class="line">INSERT INTO course VALUES(&#x27;10004&#x27;,&#x27;物理&#x27;, &#x27;物理简介介绍&#x27;,21,20,&#x27;2023-08-05&#x27;)</span><br><span class="line">INSERT INTO course VALUES(&#x27;10005&#x27;,&#x27;媒体&#x27;, &#x27;摄像媒体简介介绍&#x27;,13,12,&#x27;2023-08-01&#x27;);</span><br><span class="line">INSERT INTO course VALUES(&#x27;10006&#x27;,&#x27;java&#x27;, &#x27;java简介介绍&#x27;,17,5,&#x27;2023-08-11&#x27;)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>插入数据，成绩表</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">INSERT INTO Score VALUES(&#x27;202201001&#x27;,&#x27;10001&#x27;,89);</span><br><span class="line">INSERT INTO Score VALUES(&#x27;202201002&#x27;,&#x27;10001&#x27;,76);</span><br><span class="line">INSERT INTO Score VALUES(&#x27;202201003&#x27;,&#x27;10001&#x27;,99);</span><br><span class="line">INSERT INTO Score VALUES(&#x27;202201004&#x27;,&#x27;10001&#x27;,88);</span><br><span class="line">INSERT INTO Score VALUES(&#x27;202201005&#x27;,&#x27;10001&#x27;,59);</span><br><span class="line">INSERT INTO Score VALUES(&#x27;202201006&#x27;,&#x27;10001&#x27;,69);</span><br><span class="line"></span><br><span class="line">INSERT INTO Score VALUES(&#x27;202201001&#x27;,&#x27;10002&#x27;,80);</span><br><span class="line">INSERT INTO Score VALUES(&#x27;202201002&#x27;,&#x27;10002&#x27;,77);</span><br><span class="line">INSERT INTO Score VALUES(&#x27;202201003&#x27;,&#x27;10002&#x27;,92);</span><br><span class="line">INSERT INTO Score VALUES(&#x27;202201004&#x27;,&#x27;10002&#x27;,83);</span><br><span class="line">INSERT INTO Score VALUES(&#x27;202201005&#x27;,&#x27;10002&#x27;,56);</span><br><span class="line">INSERT INTO Score VALUES(&#x27;202201006&#x27;,&#x27;10002&#x27;,100);</span><br><span class="line"></span><br><span class="line">INSERT INTO Score VALUES(&#x27;202201001&#x27;,&#x27;10003&#x27;,81);</span><br><span class="line">INSERT INTO Score VALUES(&#x27;202201002&#x27;,&#x27;10003&#x27;,72);</span><br><span class="line">INSERT INTO Score VALUES(&#x27;202201003&#x27;,&#x27;10003&#x27;,63);</span><br><span class="line">INSERT INTO Score VALUES(&#x27;202201004&#x27;,&#x27;10003&#x27;,81);</span><br><span class="line">INSERT INTO Score VALUES(&#x27;202201005&#x27;,&#x27;10003&#x27;,55);</span><br><span class="line">INSERT INTO Score VALUES(&#x27;202201006&#x27;,&#x27;10003&#x27;,93);</span><br><span class="line"></span><br><span class="line">INSERT INTO Score VALUES(&#x27;202201001&#x27;,&#x27;10004&#x27;,82);</span><br><span class="line">INSERT INTO Score VALUES(&#x27;202201002&#x27;,&#x27;10004&#x27;,71);</span><br><span class="line">INSERT INTO Score VALUES(&#x27;202201003&#x27;,&#x27;10004&#x27;,96);</span><br><span class="line">INSERT INTO Score VALUES(&#x27;202201004&#x27;,&#x27;10004&#x27;,75);</span><br><span class="line">INSERT INTO Score VALUES(&#x27;202201005&#x27;,&#x27;10004&#x27;,58);</span><br><span class="line">INSERT INTO Score VALUES(&#x27;202201006&#x27;,&#x27;10004&#x27;,89);</span><br><span class="line"></span><br><span class="line">INSERT INTO Score VALUES(&#x27;202201001&#x27;,&#x27;10005&#x27;,91);</span><br><span class="line">INSERT INTO Score VALUES(&#x27;202201002&#x27;,&#x27;10005&#x27;,86);</span><br><span class="line">INSERT INTO Score VALUES(&#x27;202201003&#x27;,&#x27;10005&#x27;,97);</span><br><span class="line">INSERT INTO Score VALUES(&#x27;202201004&#x27;,&#x27;10005&#x27;,38);</span><br><span class="line">INSERT INTO Score VALUES(&#x27;202201005&#x27;,&#x27;10005&#x27;,61);</span><br><span class="line">INSERT INTO Score VALUES(&#x27;202201006&#x27;,&#x27;10005&#x27;,18);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="查询"><a href="#查询" class="headerlink" title="查询"></a>查询</h2><ul>
+<li>基础语法</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">select 查询列表</span><br><span class="line">from 表1 别名，表2 别名</span><br><span class="line">where 表1.key=表2.key</span><br><span class="line">【and 筛选条件】</span><br><span class="line">【group by 分组字段】</span><br><span class="line">【having 分组后的筛选】</span><br><span class="line">【order by 排序字段】</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>关于group by 分组的理解</p>
+<ul>
+<li>合并数据，比如张三有两条数据分别为100,20，合并后就成了120</li>
+<li>在使用聚合函数，如sum,avg等需要分组，比如张三有对应两条数据为10和20，李四对应两条数据为10和10，使用avg 求平均值时</li>
+</ul>
+<p><strong>不分组</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">select name,avg(num),count(1) from table </span><br><span class="line"># 若不分组就是整张表的平均值，即：（10+20+10+10）/4=12.5</span><br><span class="line">#  count(1)，则是统计表中数据行，上述计算出为4</span><br><span class="line"># 而这里的name则是读取表中一条数据，张三</span><br><span class="line"></span><br><span class="line">张三  12.5  4</span><br></pre></td></tr></table></figure>
+
+<p><strong>分组</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">select name,avg(num),count(1) from table group name</span><br><span class="line"># 首先对张三、李四进行分组，各自的数据为10+20=30、10+10=20</span><br><span class="line"># 然后对分组后的数据进行平均计算，30/2=15、10/2=10</span><br><span class="line">张三 15 2</span><br><span class="line">李四 10 2</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="实践"><a href="#实践" class="headerlink" title="实践"></a>实践</h3><ul>
+<li>不及格的学生姓名，性别，科目，分数</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT student.name, student.gender,course.coursename, score.Results FROM score, student,course WHERE score.ID=student.ID AND score.courseID=course.courseID and Results &lt;=60</span><br></pre></td></tr></table></figure>
+
+
+
+<p><img src="/aposts/a08a31/image-20230614154352090.png" alt="image-20230614154352090"></p>
+<ul>
+<li>查询所有学生共参加了几门考试的信息，并且分数大于80，<strong>一定要分组,不分组就是查询的共有多少人参加了考试</strong></li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT student.ID,student.name,COUNT(1) FROM student,score WHERE student.ID = score.ID AND score.Results&gt;80 GROUP BY student.ID</span><br></pre></td></tr></table></figure>
+
+<p><img src="/aposts/a08a31/image-20230614154417658.png" alt="image-20230614154417658"></p>
+<ul>
+<li>计算当前学生所有成绩的总分，<strong>使用的左连接</strong></li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT student.name,sum(score.Results),COUNT(1) FROM score LEFT JOIN student on score.ID=student.ID GROUP BY student.ID</span><br></pre></td></tr></table></figure>
+
+<p><img src="/aposts/a08a31/image-20230614154453362.png" alt="image-20230614154453362"></p>
+<ul>
+<li>计算当前学生所有成绩的总分大于300的信息，<strong>分组后，使用having sum</strong></li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">SELECT student.name,sum(score.Results),COUNT(1) FROM score LEFT JOIN student on score.ID=student.ID GROUP BY student.ID HAVING SUM(score.Results)&gt;90</span><br><span class="line">  </span><br></pre></td></tr></table></figure>
+
+<p><img src="/aposts/a08a31/image-20230614154545101.png" alt="image-20230614154545101"></p>
+<ul>
+<li>查询当前分数最高的学生名字、科目。<strong>注意这里and results&#x3D; 使用了子查询</strong></li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT student.name,course.coursename,results from course,score, student WHERE course.courseID=score.courseID AND student.ID=score.ID and results=(SELECT MAX(score.Results) FROM score)</span><br></pre></td></tr></table></figure>
+
+<p><img src="/aposts/a08a31/image-20230614160341440.png" alt="image-20230614160341440"></p>
+<ul>
+<li>查询各个科目的平均成绩</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select course.coursename,avg(score.Results),COUNT(1) FROM course  JOIN score ON course.courseID = score.courseID GROUP BY course.courseID</span><br></pre></td></tr></table></figure>
+
+<p><img src="/aposts/a08a31/image-20230614160434587.png" alt="image-20230614160434587"></p>
+<ul>
+<li>查询某个学生共参加了几门考试</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">SELECT student.name,count(score.Results) FROM student,score WHERE student.name=&quot;汤姆猫&quot; AND student.ID=score.ID</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>查看学生成绩总分为前三的数据。<strong>先对学生进行分组，然后用sum计算所有分数，然后取前3条数据</strong></li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT stu.name, sum(sc.Results) FROM student stu ,score sc WHERE sc.ID=stu.ID GROUP BY stu.ID ORDER BY sum(sc.Results) DESC LIMIT 3</span><br></pre></td></tr></table></figure>
+
+<p><img src="/aposts/a08a31/image-20230614160553477.png" alt="image-20230614160553477"></p>
+<ul>
+<li>查询各科成绩前三的学生信息，这个自己写不出来，用<code>chatgpt</code>写的</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">SELECT s.name AS student_name, c.coursename AS course_name, sc.Results AS course_score</span><br><span class="line">FROM score sc</span><br><span class="line">JOIN student s ON sc.ID = s.ID -- 连接score表和student表，获取学生姓名</span><br><span class="line">JOIN course c ON sc.courseID = c.courseID -- 连接score表和course表，获取课程名称</span><br><span class="line">WHERE (</span><br><span class="line">  SELECT COUNT(DISTINCT Results) -- 查询比当前成绩高的不同分数的数量</span><br><span class="line">  FROM score sc2 </span><br><span class="line">  WHERE sc2.courseID = sc.courseID AND sc2.Results &gt; sc.Results </span><br><span class="line">) &lt; 3 -- 只保留比当前成绩高的不同分数小于3个的记录，即前三名</span><br><span class="line">ORDER BY c.coursename, sc.Results DESC; -- 按照课程名称和成绩降序排序</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><img src="/aposts/a08a31/image-20230614173746372.png" alt="image-20230614173746372"></p>
+<ul>
+<li>查询所有课程最高分数的学生信息，<strong>用查询各科成绩前三的语句，把&lt;3给为&lt;1即可</strong></li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/43aefcf6/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1125,686 +1746,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/12cb96d0/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="一个正经的测试工程师">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="施坤的博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/aposts/12cb96d0/" class="post-title-link" itemprop="url">迭代器和生成器</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-03-31 10:56:44" itemprop="dateCreated datePublished" datetime="2023-03-31T10:56:44+08:00">2023-03-31</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-04-03 16:10:11" itemprop="dateModified" datetime="2023-04-03T16:10:11+08:00">2023-04-03</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/" itemprop="url" rel="index"><span itemprop="name">python</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/aposts/12cb96d0/" class="post-meta-item leancloud_visitors" data-flag-title="迭代器和生成器" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/aposts/12cb96d0/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/aposts/12cb96d0/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="迭代器"><a href="#迭代器" class="headerlink" title="迭代器"></a>迭代器</h2><ul>
-<li>内部含有<code>_iter_</code>方法和<code>_next_</code>方法都是迭代器<ul>
-<li>可迭代对象 都可以通过内置函数<code> iter</code>转换为迭代器</li>
-<li>内置函数 <code>next</code> 进行迭代操作,当所有数据迭代完毕后，再使用 <code>next</code> 迭代，会抛出异常 <code>StopIteration</code>。</li>
-</ul>
-</li>
-<li>使用<code>for</code>循环<strong>容器</strong>取值的都是<strong>可迭代的</strong></li>
-</ul>
-<blockquote>
-<p>容器就是将多个元素在一起的单元，并且，是可以迭代的，比如列表，字典，元组，字符串</p>
-</blockquote>
-<ul>
-<li>如下代码</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># 将列表转换为一个迭代器</span><br><span class="line">iter_li = iter([11,22)</span><br><span class="line"># 通过next对迭代器进行迭代操作，每次可以迭代出来一个数据</span><br><span class="line">s1 = next(iter_li)</span><br><span class="line">print(&#x27;s1:&#x27;,s1)</span><br><span class="line">s2 = next(iter_li) # s1 :11</span><br><span class="line">print(&#x27;s2:&#x27;,s2)  # s2 :22</span><br><span class="line">s3 = next(iter_li)  # StopIteration 错误</span><br></pre></td></tr></table></figure>
-
-<h2 id="生成器"><a href="#生成器" class="headerlink" title="生成器"></a>生成器</h2><ul>
-<li><p>是一种<strong>特殊的迭代器</strong>，具备迭代器所有的特性。但其相比与迭代器，占用的内存更少</p>
-</li>
-<li><p>他本质上是一个函数，只不过函数的<code>return</code>改为了<code>yield</code>语句，正常的<code>for</code>循环语句，会不停的遍历容器的对象，然后返回（如果有return的话），当我们用<code>yield</code>取而代之</p>
-</li>
-<li><p>每当函数执行时遇到<code>yield</code>时，他会记住此时的一个位置并挂起，等到使用__next__操作时，才由上一次挂起的位置继续执行。<strong>生成器不仅“记住”了它的数据状态，生成还记住了程序执行的位置</strong></p>
-</li>
-<li><p>python 中定义生成器，一共有两种方式，一种是生成器表达式，另一种是生成器函数。</p>
-</li>
-</ul>
-<h3 id="生成器表达式"><a href="#生成器表达式" class="headerlink" title="生成器表达式"></a>生成器表达式</h3><p>生成器表达式的语法其实就是把<strong>列表推导式</strong>的中括号改成小括号，如下：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">gen_ =(item <span class="keyword">for</span> item <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">2</span>))</span><br><span class="line"><span class="built_in">print</span>(gen_)</span><br><span class="line">s1 = <span class="built_in">next</span>(gen_)</span><br><span class="line"><span class="built_in">print</span>(s1)</span><br><span class="line"><span class="built_in">next</span>(gen_)</span><br><span class="line"><span class="built_in">next</span>(gen_) <span class="comment"># 报错StopIteration</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h3 id="生成器函数"><a href="#生成器函数" class="headerlink" title="生成器函数"></a>生成器函数</h3><p>在函数中使用 <code>yield</code>关键字可以定义一个生成器函数</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">func</span>():</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>):</span><br><span class="line">        <span class="keyword">yield</span> i</span><br><span class="line"></span><br><span class="line">gen_list = func()</span><br><span class="line"><span class="comment"># 调用函数</span></span><br><span class="line">gen_lsit = func()</span><br><span class="line">s2 = <span class="built_in">next</span>(gen_list)</span><br><span class="line"><span class="built_in">print</span>(s2)</span><br><span class="line"><span class="built_in">next</span>(gen_list)  <span class="comment"># 报错StopIteration</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="自定义类生成器"><a href="#自定义类生成器" class="headerlink" title="自定义类生成器"></a>自定义类生成器</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line">from collections import Iterable</span><br><span class="line">from collections import Iterator</span><br><span class="line">import time</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Classmate(object):</span><br><span class="line">    &quot;&quot;&quot;定义一个同学类&quot;&quot;&quot;</span><br><span class="line"></span><br><span class="line">    def __init__(self):</span><br><span class="line">        self.name = list()</span><br><span class="line">        self.name_num = 0</span><br><span class="line"></span><br><span class="line">    def add(self, name):</span><br><span class="line">        self.name.append(name)</span><br><span class="line"></span><br><span class="line">    def __iter__(self):</span><br><span class="line">        return self  # 返回本身</span><br><span class="line"></span><br><span class="line">    def __next__(self):</span><br><span class="line">        if self.name_num &lt; len(self.name):</span><br><span class="line">            ret = self.name[self.name_num]</span><br><span class="line">            self.name_num += 1</span><br><span class="line">            return ret</span><br><span class="line"></span><br><span class="line">        # 抛出异常，当循环后自动结束</span><br><span class="line">        else:</span><br><span class="line">            print(&quot;-------StopIteration---&quot;)</span><br><span class="line">            raise StopIteration</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class1 = Classmate()</span><br><span class="line">class1.add(&quot;张三&quot;)</span><br><span class="line">class1.add(&quot;李四&quot;)</span><br><span class="line">class1.add(&quot;王五&quot;)</span><br><span class="line"></span><br><span class="line">print(&quot;判断是否是可迭代的对象：&quot;, isinstance(class1, Iterable))</span><br><span class="line"></span><br><span class="line">print(&quot;判断是否是迭代器：&quot;, isinstance(class1, Iterator))</span><br><span class="line"></span><br><span class="line">for name in class1:</span><br><span class="line">    print(name)</span><br><span class="line">    time.sleep(1)</span><br><span class="line">    </span><br><span class="line"># 结果为</span><br><span class="line">判断是否是可迭代的对象： True</span><br><span class="line">判断是否是迭代器： True</span><br><span class="line">张三</span><br><span class="line">李四</span><br><span class="line">王五</span><br><span class="line">-------StopIteration---</span><br></pre></td></tr></table></figure>
-
-<h2 id="总结两者的区别"><a href="#总结两者的区别" class="headerlink" title="总结两者的区别"></a>总结两者的区别</h2><ul>
-<li>生成器就是迭代器，反之则不是</li>
-<li>迭代器，在创建的时候已经生成(比如上面迭代器的列子)，在需要的时候再去操作迭代器<strong>加载元素</strong>到内存中</li>
-<li>而生成器，本质是一个可以暂时挂起的函数，等到需要时再继续执行去<strong>生成元素</strong>，这样子，使得生成器比迭代器更省内存。</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/5ca15e59/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="一个正经的测试工程师">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="施坤的博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/aposts/5ca15e59/" class="post-title-link" itemprop="url">组件漏洞扫描</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-03-24 16:39:22" itemprop="dateCreated datePublished" datetime="2023-03-24T16:39:22+08:00">2023-03-24</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-03-25 10:50:35" itemprop="dateModified" datetime="2023-03-25T10:50:35+08:00">2023-03-25</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" itemprop="url" rel="index"><span itemprop="name">安全测试</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/aposts/5ca15e59/" class="post-meta-item leancloud_visitors" data-flag-title="组件漏洞扫描" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/aposts/5ca15e59/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/aposts/5ca15e59/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="Dependency-Check"><a href="#Dependency-Check" class="headerlink" title="Dependency-Check"></a>Dependency-Check</h2><ul>
-<li>使用 “存在已知漏洞的组件” 已经成为<code>OWASP TOP 10</code>的漏洞之一了，他是一个开源的程序，主要用于识别项目依赖项并检查是否存在已知的，公开披露的漏洞，目前支持<code>Java</code>、<code>.NET</code>、<code>Ruby</code>、<code>Node.js</code>、<code>Python</code>等语言。</li>
-<li>主要功能是对<code>jar</code>依赖包进行扫描。他的简单工作原理是依靠强大的库，与被扫jar依赖包进行比对，输出<code>jar</code>包详情。所以该工具只能扫描出已经公布的，无法扫描<code>0day</code></li>
-</ul>
-<h2 id="工作原理"><a href="#工作原理" class="headerlink" title="工作原理"></a>工作原理</h2><ul>
-<li><code>Dependency-Check</code>工作的方式是通过分析器对文件进行扫描搜集信息，搜集到的信息被叫做迹象。</li>
-<li>这边共搜集3种迹象，分时是<code>vendor</code>（供应商），<code>product</code>（产品）和<code>version</code>（版本）。例如，<code>jarAnalyzer</code>将从jar文件包中的<code>Mainfest</code>、<code>pom.xml</code>和包名进行信息搜集，然后把各种搜集到的源放到一个或者多个迹象表里。</li>
-<li>通过搜集到的迹象和<code>CPE</code>条目（<code>NVD</code> 美国国家通用数据库、CVE数据索引）进行匹配，分析器匹配到了就会给个标志发送到报告。</li>
-<li><code>Dependency-Check</code> 目前不使用<code>hash</code>识别文件，因为第三方依赖从源码中的hash值构建通常不会匹配官方发布版本的<code>hash</code>。后续版本中可能会增加一些<code>hash</code>来匹配一些常用的第三方库，例如<code>Spring</code>, <code>Struts</code>等。</li>
-</ul>
-<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><ul>
-<li><p>本地环境：win10 x64</p>
-</li>
-<li><p>打开<a target="_blank" rel="noopener" href="https://owasp.org/www-project-dependency-check/">官网</a>，点击command Line下载文件，并解压</p>
-</li>
-</ul>
-<p><img src="/aposts/5ca15e59/image-20230324164847298.png" alt="image-20230324164847298"></p>
-<ul>
-<li>进入到bin目录</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">D:\app\dependency-check-8.2.1-release\dependency-check\bin&gt;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>常用参数</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">  --advancedHelp              Print the advanced help message.</span><br><span class="line">   --enableExperimental        Enables the experimental analyzers.</span><br><span class="line">   --exclude &lt;pattern&gt;         指定一个排除模式。这个选项可以多次指定，它接受Ant风格的排除”</span><br><span class="line">-f,--format &lt;format&gt;           The report format (HTML, XML, CSV, JSON,</span><br><span class="line">                               JUNIT, SARIF, JENKINS, or ALL). The</span><br><span class="line">                               default is HTML. Multiple format</span><br><span class="line">                               parameters can be specified.</span><br><span class="line">   --failOnCVSS &lt;score&gt;        指定如果识别到高于指定级别的CVSS评分，是否应该使构建失败。</span><br><span class="line">   							默认值是11；因为CVSS评分是0-10，所以默认情况下构建永远不会失败</span><br><span class="line">                              </span><br><span class="line">-h,--help                      Print this message.</span><br><span class="line">   --junitFailOnCVSS &lt;score&gt;   指定在生成junit报告时被视为失败的CVSS评分。默认值是0</span><br><span class="line">-l,--log &lt;file&gt;                The file path to write verbose logging</span><br><span class="line">                               information.</span><br><span class="line">-n,--noupdate                  禁用NVD-CVE，hosted-suppressions和RetireJS数据的自动更新</span><br><span class="line">-o,--out &lt;path&gt;                指定报告目录.</span><br><span class="line">   --prettyPrint               When specified the JSON and XML report</span><br><span class="line">                               formats will be pretty printed.</span><br><span class="line">   --project &lt;name&gt;            The name of the project being scanned.</span><br><span class="line">-s,--scan &lt;path&gt;               指定被扫描的jar文件目录</span><br><span class="line">                               recommended to quote the argument value.</span><br><span class="line">   --suppression &lt;file&gt;        The file path to the suppression XML file.</span><br><span class="line">                               This can be specified more then once to</span><br><span class="line">                               utilize multiple suppression files</span><br><span class="line">-v,--version                   Print the version information.</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<ul>
-<li><a target="_blank" rel="noopener" href="https://nvd.nist.gov/">CVE</a> </li>
-<li>CVSS评分标准: 漏洞的最终得分最大为10，最小为0。得分7<del>10的漏洞通常被认为比较严重，得分在4</del>6.9之间的是中级漏洞，0~3.9的则是低级漏洞。</li>
-</ul>
-</blockquote>
-<ul>
-<li>扫描本地jar，远程更新这里的漏洞<a target="_blank" rel="noopener" href="https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json">数据</a></li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">dependency-check.bat --disableRetireJS --disableNodeJS -s  D:\project\checkjar  -o D:\project\report</span><br><span class="line"></span><br><span class="line">[INFO] NVD CVE requires several updates; this could take a couple of minutes.</span><br><span class="line">[INFO] Download Started for NVD CVE - 2002</span><br><span class="line">[INFO] Download Complete for NVD CVE - 2002  (4454 ms)</span><br><span class="line">[INFO] Processing Started for NVD CVE - 2002</span><br><span class="line">[INFO] Download Started for NVD CVE - 2003</span><br><span class="line">[INFO] Processing Complete for NVD CVE - 2002  (6277 ms)</span><br><span class="line">[INFO] Download Complete for NVD CVE - 2003  (2566 ms)</span><br><span class="line">[INFO] Processing Started for NVD CVE - 2003</span><br><span class="line">[INFO] Processing Complete for NVD CVE - 2003  (1376 ms)</span><br><span class="line">...</span><br><span class="line">INFO] Finished Dependency Bundling Analyzer (0 seconds)</span><br><span class="line">[INFO] Finished Unused Suppression Rule Analyzer (0 seconds)</span><br><span class="line">[INFO] Analysis Complete (8 seconds)</span><br><span class="line">[INFO] Writing report to: D:\project\report\dependency-check-report.html</span><br></pre></td></tr></table></figure>
-
-<h3 id="报告分析"><a href="#报告分析" class="headerlink" title="报告分析"></a>报告分析</h3><ul>
-<li>查看这里的测试报告</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">D:\project\report\dependency-check-report.html</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>比如<code>log4j-core-2.16.0.jar</code> 发现两个中等漏洞</li>
-</ul>
-<p><img src="/aposts/5ca15e59/image-20230325101328304.png" alt="image-20230325101328304"></p>
-<ul>
-<li>当配置使用<code>JDBC Appender</code>和<code>JNDI LDAP</code>数据源<code>URI</code>时，<code>Apache Log4j2</code>版本<code>2.0-beta7</code>至<code>2.17.0</code>（不包括安全修复版本<code>2.3.2和2.12.4</code>）容易受到远程代码执行（<code>RCE</code>）攻击，如果攻击者控制了目标<code>LDAP</code>服务器。这个问题通过将<code>JNDI</code>数据源名称限制为<code>java</code>协议在<code>Log4j2</code>版本<code>2.17.1，2.12.4</code>和<code>2.3.2</code>中得到修复</li>
-</ul>
-<p><img src="/aposts/5ca15e59/image-20230325101710088.png" alt="image-20230325101710088"></p>
-<h2 id="离线审计"><a href="#离线审计" class="headerlink" title="离线审计"></a>离线审计</h2><ul>
-<li>这里没有实践</li>
-<li>当然了，如果你是离线审计，也可以将<code>NVD</code>库搭建到本地，这样就会更加的方便，我们可以在本地搭建一个<code>NVD</code>库来提高更新效率，具体可以参考<a target="_blank" rel="noopener" href="https://jeremylong.github.io/DependencyCheck/data/mirrornvd.html">这里</a></li>
-<li>具体命令如下，其中<code>cveUrlModified</code>和<code>cveUrlModified</code>指定本地<code>NVD</code>库</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">dependency-check.bat</span><br><span class="line">--cveUrlModified 本地nvd库的url/nvdcve-1.1-modified.json.gz</span><br><span class="line">--cveUrlBase本地nvd库的url/nvdcve-1.1-2020.json.gz</span><br><span class="line">--project test -s D:\checkjar\ -o D:\report\</span><br></pre></td></tr></table></figure>
-
-<h2 id="集成"><a href="#集成" class="headerlink" title="集成"></a>集成</h2><ul>
-<li>此处没有实践，转载<a target="_blank" rel="noopener" href="https://developer.aliyun.com/article/698621">这里</a></li>
-</ul>
-<h3 id="与maven集成"><a href="#与maven集成" class="headerlink" title="与maven集成"></a>与maven集成</h3><ul>
-<li><code>Dependency-check-maven</code>非常易于使用，可以作为独立插件使用，也可以作为<code>maven site</code>的一部分使用。该插件需要使用<code>Maven 3.1</code>或更高版本，第一次执行时，可能需要20分钟或更长时间，因为它会从<code>NIST</code>托管的国家漏洞数据库下载漏洞数据到本地备份库。第一次批量下载后，只要插件每七天至少执行一次，本地漏洞库就会自动更新，更新只需几秒钟。</li>
-<li>集成很简单，只需要在项目的<code>pom</code>文件中增加<code>maven</code>配置即可。</li>
-</ul>
-<p><strong>用法一 在target目录中创建dependency-check-report.html</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&lt;plugin&gt;</span><br><span class="line">    &lt;groupId&gt;org.owasp&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;dependency-check-maven&lt;/artifactId&gt;</span><br><span class="line">    &lt;version&gt;4.0.2&lt;/version&gt;</span><br><span class="line">    &lt;configuration&gt;</span><br><span class="line">        &lt;autoUpdate&gt;true&lt;/autoUpdate&gt;</span><br><span class="line">    &lt;/configuration&gt;</span><br><span class="line">    &lt;executions&gt;</span><br><span class="line">        &lt;execution&gt;</span><br><span class="line">            &lt;goals&gt;</span><br><span class="line">                &lt;goal&gt;check&lt;/goal&gt;</span><br><span class="line">            &lt;/goals&gt;</span><br><span class="line">        &lt;/execution&gt;</span><br><span class="line">    &lt;/executions&gt;</span><br><span class="line">&lt;/plugin&gt;</span><br></pre></td></tr></table></figure>
-
-<p><strong>用法二 在maven site中创建聚合性的报告</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&lt;plugin&gt;</span><br><span class="line">    &lt;groupId&gt;org.owasp&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;dependency-check-maven&lt;/artifactId&gt;</span><br><span class="line">    &lt;version&gt;4.0.2&lt;/version&gt;</span><br><span class="line">    &lt;reportSets&gt;</span><br><span class="line">        &lt;reportSet&gt;</span><br><span class="line">            &lt;reports&gt;</span><br><span class="line">                &lt;report&gt;aggregate&lt;/report&gt;</span><br><span class="line">            &lt;/reports&gt;</span><br><span class="line">        &lt;/reportSet&gt;</span><br><span class="line">    &lt;/reportSets&gt;</span><br><span class="line">&lt;/plugin&gt;</span><br></pre></td></tr></table></figure>
-
-<p><strong>用法三 设置当风险指数（CVSS）大于等于8时（CVSS分数为0-10）则项目编译失败</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&lt;plugin&gt;</span><br><span class="line">    &lt;groupId&gt;org.owasp&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;dependency-check-maven&lt;/artifactId&gt;</span><br><span class="line">    &lt;version&gt;4.0.2&lt;/version&gt;</span><br><span class="line">    &lt;configuration&gt;</span><br><span class="line">        &lt;failBuildOnCVSS&gt;8&lt;/failBuildOnCVSS&gt;</span><br><span class="line">    &lt;/configuration&gt;</span><br><span class="line">    &lt;executions&gt;</span><br><span class="line">        &lt;execution&gt;</span><br><span class="line">            &lt;goals&gt;</span><br><span class="line">                &lt;goal&gt;check&lt;/goal&gt;</span><br><span class="line">            &lt;/goals&gt;</span><br><span class="line">        &lt;/execution&gt;</span><br><span class="line">    &lt;/executions&gt;</span><br><span class="line">&lt;/plugin&gt;</span><br></pre></td></tr></table></figure>
-
-<p><strong>用法四 仅更新NVD（漏洞库）数据，而不执行检查</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&lt;plugin&gt;</span><br><span class="line">    &lt;groupId&gt;org.owasp&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;dependency-check-maven&lt;/artifactId&gt;</span><br><span class="line">    &lt;version&gt;4.0.2&lt;/version&gt;</span><br><span class="line">    &lt;executions&gt;</span><br><span class="line">        &lt;execution&gt;</span><br><span class="line">            &lt;goals&gt;</span><br><span class="line">                &lt;goal&gt;update-only&lt;/goal&gt;</span><br><span class="line">            &lt;/goals&gt;</span><br><span class="line">        &lt;/execution&gt;</span><br><span class="line">    &lt;/executions&gt;</span><br><span class="line">&lt;/plugin&gt;</span><br></pre></td></tr></table></figure>
-
-<p>更多配置信息，可以根据实际情况在官网查找：<a target="_blank" rel="noopener" href="https://jeremylong.github.io/DependencyCheck/dependency-check-maven/configuration.html?spm=a2c6h.12873639.article-detail.4.32f42378DOYQnw">参考链接</a></p>
-<h3 id="与Jenkins集成"><a href="#与Jenkins集成" class="headerlink" title="与Jenkins集成"></a>与Jenkins集成</h3><ul>
-<li><p>Jenkins中需要安装插件：<code>Static Analysis Utilities</code>和<code>Dependency-Check</code><br>该插件具有执行依赖关系分析和构建后查看检查结果的功能。<br>执行依赖分析配置：<br><img src="/aposts/5ca15e59/image-20230325103550702.png" alt="image-20230325103550702"></p>
-</li>
-<li><p>查看检查分析结果配置：</p>
-</li>
-</ul>
-<p><img src="/aposts/5ca15e59/image-20230325103620374.png" alt="image-20230325103620374"></p>
-<h3 id="SonarQube-7-x集成"><a href="#SonarQube-7-x集成" class="headerlink" title="SonarQube 7.x集成"></a>SonarQube 7.x集成</h3><ul>
-<li><p>与代码质量管理平台<code>SonarQube 7.x</code>以上的版本集成</p>
-</li>
-<li><p>将插件（jar文件）复制到<code>$SONAR_INSTALL_DIR/extensions/plugins</code>并重新启动<code>SonarQube</code>。<br>但需要添加以下配置：</p>
-</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sonar.dependencyCheck.reportPath = $&#123;WORKSPACE&#125;/dependency-check-report.xml</span><br><span class="line">##以Jenkins为例报告.xml路径</span><br><span class="line">sonar.dependencyCheck.htmlReportPath = $&#123;WORKSPACE&#125;/dependency-check-report.html</span><br><span class="line">##以Jenkins为例报告.html路径</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>问题严重性分数设定：</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sonar.dependencyCheck.severity.blocker = 9.0</span><br><span class="line">sonar.dependencyCheck.severity.critical = 7.0</span><br><span class="line">sonar.dependencyCheck.severity.major = 4.0</span><br><span class="line">sonar.dependencyCheck.severity.minor = 0.0</span><br></pre></td></tr></table></figure>
-
-<h3 id="报告查看"><a href="#报告查看" class="headerlink" title="报告查看"></a>报告查看</h3><p><img src="/aposts/5ca15e59/image-20230325103731194.png" alt="image-20230325103731194"></p>
-<p><img src="/aposts/5ca15e59/image-20230325103754549.png" alt="image-20230325103754549"></p>
-<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><ul>
-<li>扫描<a target="_blank" rel="noopener" href="https://pypi.org/project/dependency-check/">python</a></li>
-<li>测试报告不好看，有能力的话，可以基于开源的代码进行修改</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/25867e8/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="一个正经的测试工程师">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="施坤的博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/aposts/25867e8/" class="post-title-link" itemprop="url">python操作sqlite和mysql</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-12-09 17:38:04 / 修改时间：20:06:06" itemprop="dateCreated datePublished" datetime="2022-12-09T17:38:04+08:00">2022-12-09</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/" itemprop="url" rel="index"><span itemprop="name">python</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/aposts/25867e8/" class="post-meta-item leancloud_visitors" data-flag-title="python操作sqlite和mysql" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/aposts/25867e8/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/aposts/25867e8/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><p>本机环境，python3.7 ,win10 64</p>
-<h2 id="操作sqlite"><a href="#操作sqlite" class="headerlink" title="操作sqlite"></a>操作sqlite</h2><ul>
-<li><p>新建一个空的后缀名文件sample.db</p>
-</li>
-<li><p>代码</p>
-</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br></pre></td><td class="code"><pre><span class="line">import time</span><br><span class="line">import sqlite3</span><br><span class="line"></span><br><span class="line">#打开数据库</span><br><span class="line">def open_db():</span><br><span class="line">    #创建SQLite数据库</span><br><span class="line">    con=sqlite3.connect(r&quot;D:\project\pythonSql\sample.db&quot;)</span><br><span class="line">    #创建表book:包含3列，id(主键，学号),name,tel</span><br><span class="line">    # con.execute(&quot;create table if not exists book(id primary key,name,tel)&quot;)</span><br><span class="line">    con.execute(&quot;create table if not exists book(id INTEGER PRIMARY KEY, name TEXT, tel TEXT, timer TEXT);&quot;)</span><br><span class="line"></span><br><span class="line">    #创建游标对象</span><br><span class="line">    cur=con.cursor()</span><br><span class="line">    # 涉及到修改，删除等入库的操作必须用con.commit()提交事务最终完成</span><br><span class="line">    # cur 主要是进行查询</span><br><span class="line">    return con,cur</span><br><span class="line"></span><br><span class="line">#查询全部信息</span><br><span class="line">def show_all_db():</span><br><span class="line">    print(&quot;******通讯录现有数据******&quot;)</span><br><span class="line">    cur_1=open_db()[1]</span><br><span class="line">    cur_1.execute(&quot;select id,name,tel from book&quot;)</span><br><span class="line">    for row in cur_1:</span><br><span class="line">        print(row)</span><br><span class="line">        print(row[0])</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#向数据库中添加内容</span><br><span class="line">def add_db(name,tel):</span><br><span class="line">    print(&quot;******数据添加功能******&quot;)</span><br><span class="line">    cur_1=open_db()</span><br><span class="line">    # cur_1[1].execute(&quot;insert into book(id,name,tel) values(?,?,?)&quot;,(id,name,tel))</span><br><span class="line">    cur_1[1].execute(&quot;insert into book(name,tel) values(?,?)&quot;,(name,tel))</span><br><span class="line">    cur_1[0].commit()</span><br><span class="line">    print(&quot;******数据添加成功******&quot;)</span><br><span class="line"></span><br><span class="line">#删除数据库中的内容</span><br><span class="line">def delete_db(del_id):</span><br><span class="line">    print(&quot;******数据删除功能******&quot;)</span><br><span class="line">    cur_1=open_db()</span><br><span class="line">    cur_1[1].execute(&quot;delete from book where id=&quot;+del_id)</span><br><span class="line">    cur_1[0].commit()</span><br><span class="line">    print(&quot;******数据删除成功******&quot;)</span><br><span class="line">    show_all_db()</span><br><span class="line">    #关闭游标对象</span><br><span class="line">    cur_1[1].close()</span><br><span class="line"></span><br><span class="line">#修改数据库中的内容</span><br><span class="line">def alter_db(id,name,tel):</span><br><span class="line">    print(&quot;******数据修改功能******&quot;)</span><br><span class="line">    cur_1=open_db()</span><br><span class="line">    #更新数据使用 SQL 语句中的 update</span><br><span class="line">    cur_1[1].execute(&quot;update book set name = ? ,tel = ? where id =&quot;+id,(name,tel))</span><br><span class="line">    #游标事务提交</span><br><span class="line">    cur_1[0].commit()</span><br><span class="line">    show_all_db()</span><br><span class="line">    cur_1[1].close()</span><br><span class="line"></span><br><span class="line">#查询数据</span><br><span class="line">def query_data(id):</span><br><span class="line"></span><br><span class="line">    print(&quot;******数据查询功能******&quot;)</span><br><span class="line">    cur_1=open_db()</span><br><span class="line">    cur_1[1].execute(&quot;select id,name,tel from book where id =&quot;+id)</span><br><span class="line">    print(&quot;******查询结果如下******&quot;)</span><br><span class="line">    for row in cur_1[1]:</span><br><span class="line">        print(row)</span><br><span class="line">    cur_1[1].close()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">if __name__==&quot;__main__&quot;:</span><br><span class="line">    # add_db(&quot;你好&quot;, &quot;185111&quot;)</span><br><span class="line">    # show_all_db()</span><br><span class="line">    # query_data(&quot;1&quot;)</span><br><span class="line">    # alter_db(&quot;1&quot;, &quot;我好&quot;, &quot;hehe&quot;)</span><br><span class="line">    # query_data(&quot;1&quot;)</span><br><span class="line">    # delete_db(&quot;1&quot;)</span><br><span class="line">    show_all_db()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>使用工具打开<a target="_blank" rel="noopener" href="https://www.yunqa.de/delphi/news/2022-07-06_sqlitespy">sqlitespy</a>打开sqlite文件</li>
-</ul>
-<p><img src="/aposts/25867e8/image-20221209174201531.png" alt="image-20221209174201531"></p>
-<h2 id="操作mysql"><a href="#操作mysql" class="headerlink" title="操作mysql"></a>操作mysql</h2><ul>
-<li>本地搭建的mysql环境，省略</li>
-<li>使用<a target="_blank" rel="noopener" href="https://www.heidisql.com/download.php">HeidiSQL</a>，连接数据库，创建表</li>
-</ul>
-<p><img src="/aposts/25867e8/image-20221209174414824.png" alt="image-20221209174414824"></p>
-<ul>
-<li>设置自增主键</li>
-</ul>
-<p><img src="/aposts/25867e8/image-20221209174525798.png" alt="image-20221209174525798"></p>
-<ul>
-<li>操作代码</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line">import pymysql</span><br><span class="line"></span><br><span class="line">dbinfo = &#123;</span><br><span class="line">    &quot;host&quot;:&quot;127.0.0.1&quot;,</span><br><span class="line">    &quot;user&quot;:&quot;root&quot;,</span><br><span class="line">    &quot;password&quot;:&quot;123456&quot;,</span><br><span class="line">    &quot;port&quot;:3306</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class DB:</span><br><span class="line">    def __init__(self,dbinfo):</span><br><span class="line">        # self.db 只要修改表，必须用self.db.commit()进行事务提交，如果报错可以用self.db.rollback()进行回滚</span><br><span class="line">        self.db = pymysql.connect(cursorclass = pymysql.cursors.DictCursor,</span><br><span class="line">                                  **dbinfo)</span><br><span class="line">        # self.cursor 用来查询</span><br><span class="line">        self.cursor = self.db.cursor()</span><br><span class="line"></span><br><span class="line">    def select(self,sql):</span><br><span class="line">        self.cursor.execute(sql)</span><br><span class="line">        result = self.cursor.fetchall()</span><br><span class="line">        return result</span><br><span class="line"></span><br><span class="line">    def execute(self,sql):</span><br><span class="line"></span><br><span class="line">        self.cursor.execute(sql)</span><br><span class="line">        self.db.commit()</span><br><span class="line"></span><br><span class="line">        #     self.db.rollback()</span><br><span class="line">        # try:</span><br><span class="line">        #     self.cursor.execute(sql)</span><br><span class="line">        #     self.db.commit()</span><br><span class="line">        # except:</span><br><span class="line">        #     self.db.rollback()</span><br><span class="line"></span><br><span class="line">    def close(self):</span><br><span class="line">        self.cursor.close()</span><br><span class="line">        self.db.close()</span><br><span class="line"></span><br><span class="line">if __name__ == &#x27;__main__&#x27;:</span><br><span class="line">    db = DB(dbinfo)</span><br><span class="line">    #查询</span><br><span class="line">    sql = &quot;SELECT * from test.class&quot;</span><br><span class="line">    result = db.select(sql)</span><br><span class="line">    print(result)</span><br><span class="line"></span><br><span class="line">    #新增</span><br><span class="line">    # sql2 = &quot;INSERT into test.class(name) VALUES (&#x27;五年一班&#x27;)&quot;</span><br><span class="line">    # db.execute(sql2)</span><br><span class="line">    # sql = &quot;SELECT * from test.class&quot;</span><br><span class="line">    # result = db.select(sql)</span><br><span class="line">    # print(result)</span><br><span class="line"></span><br><span class="line">    # 修改</span><br><span class="line">    # sql2 = &quot;update test.class set name=&#x27;综艺一般&#x27; where id=6&quot;</span><br><span class="line">    # db.execute(sql2)</span><br><span class="line">    # sql = &quot;SELECT * from test.class&quot;</span><br><span class="line">    # result = db.select(sql)</span><br><span class="line">    # print(result)</span><br><span class="line"></span><br><span class="line">    # # 删除</span><br><span class="line">    # sql2 = &quot;delete from test.class where id=5&quot;</span><br><span class="line">    # db.execute(sql2)</span><br><span class="line">    # sql = &quot;SELECT * from test.class&quot;</span><br><span class="line">    # result = db.select(sql)</span><br><span class="line">    # print(result)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h2 id="Django-mysql"><a href="#Django-mysql" class="headerlink" title="Django mysql"></a>Django mysql</h2><ul>
-<li><p>django安装<code>pip install Django</code></p>
-</li>
-<li><p>创建项目及应用</p>
-</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># 创建应用</span><br><span class="line">D:\project&gt;django-admin startproject pysql</span><br><span class="line">D:\project&gt;cd pysql</span><br><span class="line"># 创建应用下的一个项目</span><br><span class="line">D:\project\mysite&gt; python manage.py startapp myapi</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>django 配置</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"># pysql\pysql\setting.py</span><br><span class="line">import pymysql</span><br><span class="line">pymysql.version_info = (1, 4, 13, &quot;final&quot;, 0) #指定版本</span><br><span class="line">pymysql.install_as_MySQLdb()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">INSTALLED_APPS = [</span><br><span class="line">    &#x27;django.contrib.admin&#x27;,</span><br><span class="line">    &#x27;django.contrib.auth&#x27;,</span><br><span class="line">    &#x27;django.contrib.contenttypes&#x27;,</span><br><span class="line">    &#x27;django.contrib.sessions&#x27;,</span><br><span class="line">    &#x27;django.contrib.messages&#x27;,</span><br><span class="line">    &#x27;django.contrib.staticfiles&#x27;,</span><br><span class="line">    &#x27;myapi&#x27; # 注册应用</span><br><span class="line">]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">// 设置默认数据库为mysql</span><br><span class="line">DATABASES = &#123;</span><br><span class="line">    &#x27;default&#x27;: &#123;</span><br><span class="line">        &#x27;ENGINE&#x27;: &#x27;django.db.backends.mysql&#x27;,</span><br><span class="line">        &#x27;NAME&#x27;: &#x27;test&#x27;,  # 数据库名字</span><br><span class="line">        &#x27;USER&#x27;: &#x27;root&#x27;,  # 帐号</span><br><span class="line">        &#x27;PASSWORD&#x27;: &#x27;123456&#x27;,  # 密码</span><br><span class="line">        &#x27;HOST&#x27;: &#x27;127.0.0.1&#x27;,  # IP</span><br><span class="line">        &#x27;PORT&#x27;: &#x27;3306&#x27;,  # 端口</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>设置model中的表字段</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">#pysql\myapi\model.py</span><br><span class="line">from django.db import models</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class class1(models.Model):</span><br><span class="line">    id = models.IntegerField().primary_key</span><br><span class="line">    name = models.CharField(max_length=128, unique=True)</span><br><span class="line">    tel = models.CharField(max_length=256)</span><br><span class="line">    c_time = models.DateTimeField(auto_now_add=True)</span><br><span class="line"></span><br><span class="line">    def __str__(self):</span><br><span class="line">        return self.name</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>让model中的表结构在数据库中生成</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">python manage.py makemigrations # 让model生效</span><br><span class="line">python manage.py migrate # 生成表</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>编写views中代码</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br></pre></td><td class="code"><pre><span class="line"># pysql/myapi/views.py</span><br><span class="line">import json</span><br><span class="line"></span><br><span class="line">from django.core.exceptions import ObjectDoesNotExist</span><br><span class="line">from django.http import JsonResponse</span><br><span class="line">from django.views.decorators.csrf import csrf_exempt</span><br><span class="line"></span><br><span class="line">from myapi.models import *</span><br><span class="line"></span><br><span class="line">def query_all(request):</span><br><span class="line">    res = Class1.objects.all()</span><br><span class="line">    resp = []</span><br><span class="line">    for i in res:</span><br><span class="line">        resp.append(&#123;&quot;id&quot;: i.id, &quot;name&quot;: i.name, &quot;tel&quot;: i.tel&#125;)</span><br><span class="line">    return JsonResponse(&#123;&quot;code&quot;: 1, &quot;msg&quot;: &quot;success&quot;, &quot;data&quot;: resp&#125;)</span><br><span class="line"></span><br><span class="line">@csrf_exempt</span><br><span class="line">def delete(request):</span><br><span class="line">    data = json.loads(request.body)</span><br><span class="line">    id = data.get(&quot;id&quot;)</span><br><span class="line">    if not id:</span><br><span class="line">        return JsonResponse(&#123;&quot;code&quot;: -1, &quot;msg&quot;: &quot;id must be fill&quot;&#125;)</span><br><span class="line">    try:</span><br><span class="line">        entry = Class1.objects.get(id=id)</span><br><span class="line">        if not entry:</span><br><span class="line">            return JsonResponse(&#123;&quot;code&quot;: -1, &quot;msg&quot;: &quot;no effect row&quot;&#125;)</span><br><span class="line">        entry.delete()</span><br><span class="line">        return JsonResponse(&#123;&quot;code&quot;: 1, &quot;msg&quot;: &quot;success&quot;&#125;)</span><br><span class="line"></span><br><span class="line">    except ObjectDoesNotExist:</span><br><span class="line">        return JsonResponse(&#123;&quot;code&quot;: -1, &quot;msg&quot;: &quot;no effect row&quot;&#125;)</span><br><span class="line"></span><br><span class="line">@csrf_exempt</span><br><span class="line">def update(request):</span><br><span class="line">    data = json.loads(request.body)</span><br><span class="line">    name = data.get(&#x27;name&#x27;).strip()</span><br><span class="line">    tel = data.get(&#x27;tel&#x27;).strip()</span><br><span class="line">    ids = data.get(&quot;id&quot;)</span><br><span class="line">    if not name and not ids:</span><br><span class="line">        return JsonResponse(&#123;&quot;code&quot;: -1, &quot;msg&quot;: &quot;error&quot;&#125;)</span><br><span class="line">    try:</span><br><span class="line">        entry = Class1.objects.get(id=ids)</span><br><span class="line">        if not entry:</span><br><span class="line">            return JsonResponse(&#123;&quot;code&quot;: -1, &quot;msg&quot;: &quot;no effect row&quot;&#125;)</span><br><span class="line">        entry.tel = tel</span><br><span class="line">        entry.name = name</span><br><span class="line">        entry.save()</span><br><span class="line"></span><br><span class="line">        return JsonResponse(&#123;&quot;code&quot;: 1, &quot;msg&quot;: &quot;success&quot;&#125;)</span><br><span class="line"></span><br><span class="line">    except ObjectDoesNotExist:</span><br><span class="line">        return JsonResponse(&#123;&quot;code&quot;: -1, &quot;msg&quot;: &quot;no effect row&quot;&#125;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def get_class(request, id):</span><br><span class="line">    try:</span><br><span class="line">        # entry = Class1.objects.filter(id=id)</span><br><span class="line">        entry = Class1.objects.get(id=id)</span><br><span class="line">        if not entry:</span><br><span class="line">            result = &#123;&#x27;code&#x27;: -1, &#x27;msg&#x27;: &#x27;data is null&#x27;&#125;</span><br><span class="line">            return JsonResponse(result)</span><br><span class="line">        return JsonResponse(&#123;&quot;code&quot;: 1, &quot;msg&quot;: &quot;success&quot;, &quot;data&quot;: &#123;&quot;name&quot;: entry.name, &quot;tel&quot;: entry.tel&#125;&#125;)</span><br><span class="line"></span><br><span class="line">    except ObjectDoesNotExist:</span><br><span class="line">        result = &#123;&#x27;code&#x27;: -1, &#x27;msg&#x27;: &#x27;no effect row&#x27;&#125;</span><br><span class="line">        return JsonResponse(result)</span><br><span class="line"></span><br><span class="line">@csrf_exempt</span><br><span class="line">def add(request):</span><br><span class="line">    data = json.loads(request.body)</span><br><span class="line">    name = data.get(&quot;name&quot;)</span><br><span class="line">    tel = data.get(&quot;tel&quot;)</span><br><span class="line">    if not name or not tel:</span><br><span class="line">        res = &#123;&#x27;code&#x27;: -1, &#x27;msg&#x27;: &#x27;name,tel must be fill&#x27;&#125;</span><br><span class="line">        return JsonResponse(res)</span><br><span class="line">    Class1(name=name, tel=tel).save()</span><br><span class="line">    res = &#123;&#x27;code&#x27;: 1, &#x27;msg&#x27;: &#x27;success&#x27;&#125;</span><br><span class="line">    return JsonResponse(res)</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>把views中的对外接口引用到url中</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"># pysql/myapi/urls.py</span><br><span class="line"></span><br><span class="line">from django.conf.urls import url</span><br><span class="line">from django.urls import path</span><br><span class="line">from myapi import views</span><br><span class="line"></span><br><span class="line">urlpatterns = [</span><br><span class="line">    url(r&#x27;^query_all/&#x27;, views.query_all),</span><br><span class="line">    url(r&#x27;^delete/&#x27;, views.delete),</span><br><span class="line">    url(r&#x27;^update/&#x27;, views.update),</span><br><span class="line">    url(r&#x27;^add/&#x27;, views.add),</span><br><span class="line">    path(&#x27;get_class/&lt;int:id&gt;/&#x27;, views.get_class)</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
-
-<p>把myapi应用的路由url引用到pysql项目中</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">#pysql/pysql/urls.py</span><br><span class="line">from django.conf.urls import url</span><br><span class="line">from django.urls import path</span><br><span class="line"></span><br><span class="line">from myapi import views</span><br><span class="line"></span><br><span class="line">urlpatterns = [</span><br><span class="line">    url(r&#x27;^query_all/&#x27;, views.query_all),</span><br><span class="line">    url(r&#x27;^delete/&#x27;, views.delete),</span><br><span class="line">    url(r&#x27;^update/&#x27;, views.update),</span><br><span class="line">    url(r&#x27;^add/&#x27;, views.add),</span><br><span class="line">    path(&#x27;get_class/&lt;int:id&gt;/&#x27;, views.get_class)</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>运行Django</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">D:\project\pysql&gt;python manage.py runserver</span><br><span class="line">Watching for file changes with StatReloader</span><br><span class="line">Performing system checks...</span><br><span class="line"></span><br><span class="line">System check identified no issues (0 silenced).</span><br><span class="line">December 09, 2022 - 19:15:56</span><br><span class="line">Django version 3.1.3, using settings &#x27;pysql.settings&#x27;</span><br><span class="line">Starting development server at http://127.0.0.1:8000/</span><br><span class="line">Quit the server with CTRL-BREAK.</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>模拟前端访问后台接口代码</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">import requests</span><br><span class="line"></span><br><span class="line">resp = requests.post(&quot;http://127.0.0.1:8000/myapi/add/&quot;, json=&#123;&quot;name&quot;: &quot;admin1&quot;, &quot;tel&quot;: &quot;123456&quot;&#125;)</span><br><span class="line">print(resp.text)</span><br><span class="line">resp1 = requests.post(&quot;http://127.0.0.1:8000/myapi/update/&quot;, json=&#123;&quot;id&quot;: 1,&quot;name&quot;: &quot;test&quot;, &quot;tel&quot;: &quot;7999&quot;&#125;)</span><br><span class="line">print(resp1.text)</span><br><span class="line">resp2= requests.post(&quot;http://127.0.0.1:8000/myapi/update/&quot;, json=&#123;&quot;id&quot;: 1,&quot;name&quot;: &quot;test&quot;, &quot;tel&quot;: &quot;1111&quot;&#125;)</span><br><span class="line">print(resp2.text)</span><br><span class="line">resp3 = requests.post(&quot;http://127.0.0.1:8000/myapi/delete/&quot;, json=&#123;&quot;id&quot;: 1&#125;)</span><br><span class="line">print(resp3.text)</span><br><span class="line"></span><br><span class="line">resp4 = requests.get(&quot;http://127.0.0.1:8000/myapi/get_class/1/&quot;)</span><br><span class="line">print(resp4.text)</span><br><span class="line"></span><br><span class="line">resp4 = requests.get(&quot;http://127.0.0.1:8000/myapi/query_all&quot;)</span><br><span class="line">print(resp4.text)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>得到结果为：</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">D:\app\Python37\python.exe D:/project/pysql/test1.py</span><br><span class="line">&#123;&quot;code&quot;: 1, &quot;msg&quot;: &quot;success&quot;, &quot;data&quot;: [&#123;&quot;id&quot;: 5, &quot;name&quot;: &quot;admin1&quot;, &quot;tel&quot;: &quot;123456&quot;&#125;]&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="Django-sqlite"><a href="#Django-sqlite" class="headerlink" title="Django sqlite"></a>Django sqlite</h2><ul>
-<li>由于接入mysql，配置已经改的差不多，只要修改，setting.py的默认数据库引用</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># pysql/pysql/setting.py</span><br><span class="line"></span><br><span class="line">DATABASES = &#123;</span><br><span class="line">    &#x27;default&#x27;: &#123;</span><br><span class="line">        &#x27;ENGINE&#x27;: &#x27;django.db.backends.sqlite3&#x27;,</span><br><span class="line">        &#x27;NAME&#x27;: BASE_DIR / &#x27;db.sqlite3&#x27;,</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>在pysql文件夹下新建一个空文件<code>db.sqlite3</code></li>
-<li>让model的结构迁移到sqlite3数据库中</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">python manage.py makemigrations # 让model生效</span><br><span class="line">python manage.py migrate # 生成表</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>再次运行django</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">D:\project\pysql&gt;python manage.py runserver</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>模拟前端访问后台接口代码</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">import requests</span><br><span class="line"></span><br><span class="line">resp = requests.post(&quot;http://127.0.0.1:8000/myapi/add/&quot;, json=&#123;&quot;name&quot;: &quot;admin1&quot;, &quot;tel&quot;: &quot;123456&quot;&#125;)</span><br><span class="line">print(resp.text)</span><br></pre></td></tr></table></figure>
-
-<p><img src="/aposts/25867e8/image-20221209200159234.png" alt="image-20221209200159234"></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/8354ce0a/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="一个正经的测试工程师">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="施坤的博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/aposts/8354ce0a/" class="post-title-link" itemprop="url">使用 mitmproxy + python</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-10-13 17:13:44" itemprop="dateCreated datePublished" datetime="2022-10-13T17:13:44+08:00">2022-10-13</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-10-14 18:43:05" itemprop="dateModified" datetime="2022-10-14T18:43:05+08:00">2022-10-14</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/" itemprop="url" rel="index"><span itemprop="name">python</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/aposts/8354ce0a/" class="post-meta-item leancloud_visitors" data-flag-title="使用 mitmproxy + python" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/aposts/8354ce0a/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/aposts/8354ce0a/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><ul>
-<li><p>本文来自<a target="_blank" rel="noopener" href="https://blog.wolfogre.com/posts/usage-of-mitmproxy/">这里</a></p>
-</li>
-<li><p>mitmproxy 相比Charles、fiddler的优点在于，它可以命令行方式或脚本的方式进行mock mitmproxy不仅可以像Charles那样抓包，还可以对请求数据进行二次开发，进入高度二次定制</p>
-</li>
-</ul>
-<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><ul>
-<li>windows下安装，我本机的python版本为3.7</li>
-</ul>
-<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip <span class="keyword">install</span> mitmproxy</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>完成后，系统将拥有 <code>mitmproxy</code>、<code>mitmdump</code>、<code>mitmweb</code> 三个命令，由于 <code>mitmproxy</code> 命令不支持在 windows 系统中运行（这没关系，不用担心），我们可以拿 <code>mitmdump</code> 测试一下安装是否成功，执行：</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">C:\Users\Administrator&gt;mitmdump --version</span><br><span class="line">Mitmproxy: 5.3.0</span><br><span class="line">Python:    3.7.9</span><br><span class="line">OpenSSL:   OpenSSL 1.1.1h  22 Sep 2020</span><br><span class="line">Platform:  Windows-10-10.0.19041-SP0</span><br><span class="line"></span><br><span class="line">C:\Users\Administrator&gt;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>要启动 <code>mitmproxy</code> 用 <code>mitmproxy</code>、<code>mitmdump</code>、<code>mitmweb</code> 这三个命令中的任意一个即可，这三个命令功能一致，且都可以加载自定义脚本，唯一的区别是交互界面的不同。</li>
-</ul>
-<h3 id="生命周期"><a href="#生命周期" class="headerlink" title="生命周期"></a>生命周期</h3><p>原文中介绍了<code>HTTP</code>，<code>TCP</code>,<code>Websocket</code> 的生命周期，因为用<code>http</code>比较多，只需要用到 <code>http_connect</code>、<code>request</code>、<code>response</code> 三个事件就能完成大多数需求了。</p>
-<h2 id="实战"><a href="#实战" class="headerlink" title="实战"></a>实战</h2><ul>
-<li>启动mitmproxy</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mitmweb</span><br></pre></td></tr></table></figure>
-
-
-
-<ul>
-<li>cmd中启动chrome(启动前，需要先关闭所有chrome)</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;C:\Users\Administrator\AppData\Local\Google\Chrome\Application\chrome.exe &quot; --proxy-server=127.0.0.1:8080 --ignore-certificate-errors</span><br></pre></td></tr></table></figure>
-
-<p>新增三个代码文件分别为：</p>
-<ul>
-<li>counter.py，这里代码比较简单，就是发送请求前打印信息</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"># counter.py</span><br><span class="line"></span><br><span class="line">import mitmproxy.http</span><br><span class="line">from mitmproxy import ctx</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Counter:</span><br><span class="line">    def __init__(self):</span><br><span class="line">        self.num = 0</span><br><span class="line"></span><br><span class="line">    def request(self, flow: mitmproxy.http.HTTPFlow):</span><br><span class="line">        self.num = self.num + 1</span><br><span class="line">        ctx.log.info(&quot;We&#x27;ve seen %d flows&quot; % self.num)</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>joker.py</li>
-</ul>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> mitmproxy.http</span><br><span class="line"><span class="keyword">from</span> mitmproxy <span class="keyword">import</span> ctx, http</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Joker</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">request</span>(<span class="params">self, flow: mitmproxy.http.HTTPFlow</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        对百度的搜索发送请求进行拦截，对wd参数修改为360搜索</span></span><br><span class="line"><span class="string">        :param flow:</span></span><br><span class="line"><span class="string">        :return:</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">if</span> flow.request.host != <span class="string">&quot;www.baidu.com&quot;</span> <span class="keyword">or</span> <span class="keyword">not</span> flow.request.path.startswith(<span class="string">&quot;/s&quot;</span>):</span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line">        <span class="comment"># for i in flow.request.query.keys():</span></span><br><span class="line">        <span class="comment">#     print(i)</span></span><br><span class="line">        <span class="comment"># 抓取请求参数可以看到wd传的是百度搜索的具体内容</span></span><br><span class="line">        <span class="keyword">if</span> <span class="string">&quot;wd&quot;</span> <span class="keyword">not</span> <span class="keyword">in</span> flow.request.query.keys():</span><br><span class="line">            ctx.log.warn(<span class="string">&quot;can not get search word from %s&quot;</span> % flow.request.pretty_url)</span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line"></span><br><span class="line">        ctx.log.info(<span class="string">&quot;catch search word: %s&quot;</span> % flow.request.query.get(<span class="string">&quot;wd&quot;</span>))</span><br><span class="line">        flow.request.query.set_all(<span class="string">&quot;wd&quot;</span>, [<span class="string">&quot;360搜索&quot;</span>])</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">response</span>(<span class="params">self, flow: mitmproxy.http.HTTPFlow</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        点击百度搜索中的so搜索后，把当期网页标题修改</span></span><br><span class="line"><span class="string">        :param flow:</span></span><br><span class="line"><span class="string">        :return:</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">if</span> flow.request.host != <span class="string">&quot;www.so.com&quot;</span>:</span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line"></span><br><span class="line">        text = flow.response.get_text()</span><br><span class="line">        <span class="comment"># 网页标题修改</span></span><br><span class="line">        text = text.replace(<span class="string">&quot;搜索&quot;</span>, <span class="string">&quot;请使用谷歌&quot;</span>)</span><br><span class="line">        flow.response.set_text(text)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">http_connect</span>(<span class="params">self, flow: mitmproxy.http.HTTPFlow</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        连接的请求为google，则把状态码改为404</span></span><br><span class="line"><span class="string">        :param flow: </span></span><br><span class="line"><span class="string">        :return: </span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> flow.request.host == <span class="string">&quot;www.google.com&quot;</span>:</span><br><span class="line">            flow.response = http.HTTPResponse.make(<span class="number">404</span>)</span><br><span class="line">            <span class="comment"># 打印是否设置成功</span></span><br><span class="line">            <span class="built_in">print</span>(flow.response.status_code)</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>addons.py，这里代码比较简单，只是把自定义事件加载进来</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">import counter</span><br><span class="line">import joker</span><br><span class="line"></span><br><span class="line">addons = [</span><br><span class="line">    counter.Counter(),</span><br><span class="line">    joker.Joker(),</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
-
-
-
-<ul>
-<li>运行mitmproxy</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mitmweb -s addons.py</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>输入你好，因为搜索关键字被替换为了so搜索，所以结果查到了so搜索</li>
-</ul>
-<p><img src="/aposts/8354ce0a/image-20221014183654649.png" alt="image-20221014183654649"></p>
-<ul>
-<li>点击360搜索首页，标题被修改了</li>
-</ul>
-<p><img src="/aposts/8354ce0a/image-20221014184000637.png" alt="image-20221014184000637"></p>
-<ul>
-<li>如果直接输入<a target="_blank" rel="noopener" href="http://www.google.com,响应码直接为404/">www.google.com，响应码直接为404</a></li>
-</ul>
-<p><img src="/aposts/8354ce0a/image-20221014184051730.png" alt="image-20221014184051730"></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1880,7 +1821,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">155</span>
+          <span class="site-state-item-count">159</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1893,7 +1834,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">64</span>
+        <span class="site-state-item-count">66</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -1918,7 +1859,7 @@
     <!--<h3 class="widget-title">Tag Cloud</h3> -->
     <div id="myCanvasContainer" class="widget tagcloud">
         <canvas width="250" height="250" id="resCanvas" style="width=100%">
-            <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AWVS/" rel="tag">AWVS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Burp-Site/" rel="tag">Burp Site</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DVWA/" rel="tag">DVWA</a><span class="tag-list-count">15</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dependency-Check/" rel="tag">Dependency-Check</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/H5/" rel="tag">H5</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hadoop/" rel="tag">Hadoop</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hive/" rel="tag">Hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jenkins/" rel="tag">Jenkins</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Metasploit/" rel="tag">Metasploit</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Nessus/" rel="tag">Nessus</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Sonic/" rel="tag">Sonic</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/airtest/" rel="tag">airtest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">android性能测试</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/app%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">app安全测试</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aritest/" rel="tag">aritest</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/centos/" rel="tag">centos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/" rel="tag">chrome</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/datax/" rel="tag">datax</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/django/" rel="tag">django</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/drozer/" rel="tag">drozer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fisco-bcos/" rel="tag">fisco-bcos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flink/" rel="tag">flink</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gin/" rel="tag">gin</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/" rel="tag">go</a><span class="tag-list-count">16</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go-zero/" rel="tag">go-zero</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hive/" rel="tag">hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/httprunner/" rel="tag">httprunner</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a><span class="tag-list-count">12</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jmeter/" rel="tag">jmeter</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka/" rel="tag">kafka</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kail/" rel="tag">kail</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode/" rel="tag">leetcode</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode-%E6%95%B0%E7%BB%84/" rel="tag">leetcode-数组</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mitmproxy/" rel="tag">mitmproxy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongodb/" rel="tag">mongodb</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/monkey/" rel="tag">monkey</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/" rel="tag">mysql</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pandas/" rel="tag">pandas</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pc%E8%87%AA%E5%8A%A8%E5%8C%96/" rel="tag">pc自动化</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/playwright/" rel="tag">playwright</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pytest/" rel="tag">pytest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a><span class="tag-list-count">23</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/" rel="tag">redis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/selenium/" rel="tag">selenium</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring/" rel="tag">spring</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlite/" rel="tag">sqlite</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlmap/" rel="tag">sqlmap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tkinter/" rel="tag">tkinter</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/" rel="tag">vue</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue3/" rel="tag">vue3</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">云服务器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8C%BA%E5%9D%97%E9%93%BE/" rel="tag">区块链</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag">大数据</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">安全测试</a><span class="tag-list-count">29</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">性能测试</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%88%AC%E8%99%AB/" rel="tag">爬虫</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" rel="tag">环境搭建</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95/" rel="tag">自动化测试</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%8B%B1%E8%AF%AD%E5%AD%A6%E4%B9%A0/" rel="tag">英语学习</a><span class="tag-list-count">1</span></li></ul>
+            <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AWVS/" rel="tag">AWVS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Burp-Site/" rel="tag">Burp Site</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DVWA/" rel="tag">DVWA</a><span class="tag-list-count">15</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dependency-Check/" rel="tag">Dependency-Check</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/H5/" rel="tag">H5</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hadoop/" rel="tag">Hadoop</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hibernate/" rel="tag">Hibernate</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hive/" rel="tag">Hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jenkins/" rel="tag">Jenkins</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Metasploit/" rel="tag">Metasploit</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Nessus/" rel="tag">Nessus</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Sonic/" rel="tag">Sonic</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/airtest/" rel="tag">airtest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">android性能测试</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/app%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">app安全测试</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aritest/" rel="tag">aritest</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/centos/" rel="tag">centos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/" rel="tag">chrome</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/datax/" rel="tag">datax</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/django/" rel="tag">django</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/drozer/" rel="tag">drozer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fisco-bcos/" rel="tag">fisco-bcos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flink/" rel="tag">flink</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gin/" rel="tag">gin</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/" rel="tag">go</a><span class="tag-list-count">16</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go-zero/" rel="tag">go-zero</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hive/" rel="tag">hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/httprunner/" rel="tag">httprunner</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a><span class="tag-list-count">16</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jmeter/" rel="tag">jmeter</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka/" rel="tag">kafka</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kail/" rel="tag">kail</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode/" rel="tag">leetcode</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode-%E6%95%B0%E7%BB%84/" rel="tag">leetcode-数组</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mitmproxy/" rel="tag">mitmproxy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongodb/" rel="tag">mongodb</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/monkey/" rel="tag">monkey</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/" rel="tag">mysql</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/orm/" rel="tag">orm</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pandas/" rel="tag">pandas</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pc%E8%87%AA%E5%8A%A8%E5%8C%96/" rel="tag">pc自动化</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/playwright/" rel="tag">playwright</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pytest/" rel="tag">pytest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a><span class="tag-list-count">23</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/" rel="tag">redis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/selenium/" rel="tag">selenium</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring/" rel="tag">spring</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlite/" rel="tag">sqlite</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlmap/" rel="tag">sqlmap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tkinter/" rel="tag">tkinter</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/" rel="tag">vue</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue3/" rel="tag">vue3</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">云服务器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8C%BA%E5%9D%97%E9%93%BE/" rel="tag">区块链</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag">大数据</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">安全测试</a><span class="tag-list-count">29</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">性能测试</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%88%AC%E8%99%AB/" rel="tag">爬虫</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" rel="tag">环境搭建</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95/" rel="tag">自动化测试</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%8B%B1%E8%AF%AD%E5%AD%A6%E4%B9%A0/" rel="tag">英语学习</a><span class="tag-list-count">1</span></li></ul>
         </canvas>
     </div>
 </div>
