@@ -191,7 +191,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/b031d180/">
+    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/834cb703/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -205,7 +205,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/aposts/b031d180/" class="post-title-link" itemprop="url">python上传视频</a>
+            <a href="/aposts/834cb703/" class="post-title-link" itemprop="url">python中staticmethod和classmethod区别</a>
         </h2>
 
         <div class="post-meta">
@@ -222,7 +222,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-02-25 11:20:56" itemprop="dateModified" datetime="2022-02-25T11:20:56+08:00">2022-02-25</time>
+                <time title="修改时间：2022-05-05 17:05:51" itemprop="dateModified" datetime="2022-05-05T17:05:51+08:00">2022-05-05</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -235,7 +235,7 @@
             </span>
 
           
-            <span id="/aposts/b031d180/" class="post-meta-item leancloud_visitors" data-flag-title="python上传视频" title="阅读次数">
+            <span id="/aposts/834cb703/" class="post-meta-item leancloud_visitors" data-flag-title="python中staticmethod和classmethod区别" title="阅读次数">
               <span class="post-meta-item-icon">
                 <i class="fa fa-eye"></i>
               </span>
@@ -250,8 +250,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/aposts/b031d180/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/aposts/b031d180/" itemprop="commentCount"></span>
+    <a title="valine" href="/aposts/834cb703/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/aposts/834cb703/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -266,12 +266,27 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <ul>
-<li><p>http简单封装</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">class ConfigHttp:</span><br><span class="line">    def __init__(self, host, port,headers):</span><br><span class="line">        self.host = host</span><br><span class="line">        self.port = port</span><br><span class="line">        self.headers = headers</span><br><span class="line">    # 封装HTTP GET请求方法</span><br><span class="line">    def get(self, url, params=None):</span><br><span class="line">        # params = urllib.parse.urlencode(params)</span><br><span class="line">        url = &quot;http://&quot;+self.host+&quot;:&quot;+self.port+url</span><br><span class="line">        print(url)</span><br><span class="line">        try:</span><br><span class="line">            r = requests.get(url, params=params, headers=self.headers)</span><br><span class="line">            r.encoding = &#x27;UTF-8&#x27;</span><br><span class="line">            dcit_r = json.loads(r.text)</span><br><span class="line">            print(json.loads(r.text))</span><br><span class="line">            return dcit_r</span><br><span class="line">        except Exception:</span><br><span class="line">            print(&#x27;no json data returned&#x27;)</span><br><span class="line">            return &#123;&#125;</span><br><span class="line">    # 封装HTTP POST请求方法,支持上传图片</span><br><span class="line">    def post(self, url, data=None, files=None):</span><br><span class="line">        # data = eval(data)</span><br><span class="line">        url = &#x27;http://&#x27; + self.host + &#x27;:&#x27; + str(self.port)+url</span><br><span class="line">        r =requests.post(url, files=files, data=data)</span><br><span class="line">        json_response = r.text</span><br><span class="line">        print(json_response)</span><br><span class="line">        return json_response</span><br></pre></td></tr></table></figure>
+          <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">class MyClass(object):</span><br><span class="line">    def __init__(self):</span><br><span class="line">        self.ids = &quot;001&quot;</span><br><span class="line"></span><br><span class="line">    def t1(self, path=&quot;&quot;):</span><br><span class="line">        print(&quot;这个是实例化方法&quot;)</span><br><span class="line"></span><br><span class="line">    @staticmethod</span><br><span class="line">    def get_result(path):</span><br><span class="line">        print(&quot;这个是静态方法&quot;)</span><br><span class="line">        MyClass().t1()  # 显示调用类的实例化方法</span><br><span class="line">        print(MyClass().ids)</span><br><span class="line"></span><br><span class="line">    @classmethod</span><br><span class="line">    def get_test1(cls, path):</span><br><span class="line">        print(&quot;这个是类方法&quot;)</span><br><span class="line">        cls().t1()  # 调用类的实例化方法</span><br><span class="line">        print(cls().ids)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">MyClass().t1(&quot;调用实例化方法&quot;)</span><br><span class="line">MyClass.get_result(&quot;调用静态方法&quot;)</span><br><span class="line">MyClass.get_test1(&quot;调用类方法&quot;)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><ul>
+<li>类中一般包含三种方法<ul>
+<li>实例化方法（<code>MyClass().t1()</code>）</li>
+<li>静态方法（<code>staticmethod</code>）</li>
+<li>类方法（<code>classmethod</code>）</li>
+</ul>
 </li>
-<li><p>上传视频</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">def upload():</span><br><span class="line">    getToken()</span><br><span class="line">    f = &#123;&#x27;Filename&#x27;:&#x27;视频上传测试1&#x27;,</span><br><span class="line">             &#x27;Filedata&#x27;:(&#x27;1.mp4&#x27;,open(u&#x27;D:/app/dgm/1.mp4&#x27;,&#x27;rb&#x27;),&#x27;application/octet-stream&#x27;),</span><br><span class="line">             &#x27;Upload&#x27;:&#x27;视频上传测试2&#x27;</span><br><span class="line">    &#125;</span><br><span class="line">    up = baseHttp.ConfigHttp(host=UPLOAD_HOST,port=UPLOAD_PORT,headers=HEADER)</span><br><span class="line">    url = &quot;/api/upload?do=upload&amp;type=4&amp;op=video&amp;sid=&quot;+CODE +&quot;&amp;token=&quot; + TOKEN</span><br><span class="line">    res = up.post(url=url, files=f）</span><br></pre></td></tr></table></figure></li>
+<li><code>classmethod</code>（类方法），第一个参数必须是<code>cls</code>，这个<code>cls</code>指向了类本身，因此可以直接用<code>cls</code>实例化来访问类的内部方法或者属性。<ul>
+<li><code>cls().t1()</code></li>
+</ul>
+</li>
+<li><code>staticmethod</code>(静态方法)，如果要调用类的内部方法，只能显示地引用类<code>MyClass</code>，这对继承来说可不是一件好事情<ul>
+<li><code>MyClass().t1() </code></li>
+</ul>
+</li>
+</ul>
+<p><strong>因此</strong></p>
+<ul>
+<li>只要不调用类的内部方法和属性，<code>classmethod</code>和<code>staticmethod</code>都可以使用</li>
+<li>若要调用类的内部方法和属性，推荐使用<code>classmethod</code></li>
 </ul>
 
       
