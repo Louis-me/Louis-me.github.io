@@ -191,6 +191,207 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/66cae209/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="一个正经的测试工程师">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="施坤的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/aposts/66cae209/" class="post-title-link" itemprop="url">AWVS实践</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-03-02 09:39:06 / 修改时间：16:12:42" itemprop="dateCreated datePublished" datetime="2022-03-02T09:39:06+08:00">2022-03-02</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" itemprop="url" rel="index"><span itemprop="name">安全测试</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/aposts/66cae209/" class="post-meta-item leancloud_visitors" data-flag-title="AWVS实践" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/aposts/66cae209/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/aposts/66cae209/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><ul>
+<li>AWVS是最强的扫描web漏洞之一了</li>
+<li>本次的版本为14.6</li>
+<li>安装环境：win10</li>
+</ul>
+<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><ul>
+<li><p>安装主要是参考<a target="_blank" rel="noopener" href="https://www.ddosi.org/awvs-14-6/">这里</a>，不过我把一些关键步骤记录下</p>
+</li>
+<li><p>下载AWVS的<a target="_blank" rel="noopener" href="https://download.yzzpan.com/download/65055/zFm7sV6m/acunetix_14.6.211213163.exe_www.ddosi.org.rar">win安装包</a>，解压密码为：<code>www.ddosi.org</code></p>
+</li>
+<li><p>下载<a target="_blank" rel="noopener" href="https://download.yzzpan.com/download/65055/zFm7sV6m/acunetix_14.6.211213163.exe_www.ddosi.org.rar">激活工具</a>，解压密码同上</p>
+</li>
+<li><p>安装AWVS后，在浏览器登录后出现如下页面，表示未激活</p>
+</li>
+</ul>
+<p><img src="/aposts/66cae209/image-20220302094957721.png" alt="image-20220302094957721"></p>
+<ul>
+<li>把激活文件（license_info.json，wa_data.dat）复制并到AWVS安装目录（<code>E:\app\Acunetix\data\shared\license</code>）下替换</li>
+</ul>
+<p><img src="/aposts/66cae209/image-20220302101024287.png" alt="image-20220302101024287"></p>
+<ul>
+<li>到如下目录对hosts文件进行修改</li>
+</ul>
+<p><img src="/aposts/66cae209/image-20220302101458504.png" alt="image-20220302101458504"></p>
+<ul>
+<li>在hosts最后加上如下两行</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1 updates.acunetix.com</span><br><span class="line">127.0.0.1 erp.acunetix.com</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>刷新页面后，成功激活</li>
+</ul>
+<p><img src="/aposts/66cae209/image-20220302102129057.png" alt="image-20220302102129057"></p>
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><h3 id="靶场testfire-net"><a href="#靶场testfire-net" class="headerlink" title="靶场testfire.net"></a>靶场testfire.net</h3><p>填入目标网站，开始扫描，填入ibm提供的在线靶场：<code>http://testfire.net/</code></p>
+<p><img src="/aposts/66cae209/image-20220302102720203.png" alt="image-20220302102720203"></p>
+<p><img src="/aposts/66cae209/image-20220302104105251.png" alt="image-20220302104105251"></p>
+<p>点击扫描</p>
+<p><img src="/aposts/66cae209/image-20220302104204101.png" alt="image-20220302104204101"></p>
+<ul>
+<li>扫描选项中，扫描时间默认为马上扫描</li>
+</ul>
+<p><img src="/aposts/66cae209/image-20220302104239644.png" alt="image-20220302104239644"></p>
+<ul>
+<li>等待扫描中</li>
+</ul>
+<p><img src="/aposts/66cae209/image-20220302104516343.png" alt="image-20220302104516343"></p>
+<ul>
+<li>扫描完成了，差不多用了25分钟扫描完毕，发现高危漏洞有7个</li>
+</ul>
+<p><img src="/aposts/66cae209/image-20220302111052346.png" alt="image-20220302111052346"></p>
+<ul>
+<li>导出测试报告，比较清晰说明了攻击方式和结果，比如这个跨脚本攻击</li>
+</ul>
+<p><img src="/aposts/66cae209/image-20220302111833044.png" alt="image-20220302111833044"></p>
+<ul>
+<li><strong>经过手动验证发现，css漏洞，全部都是误报</strong>，其他的懒得验证了、</li>
+</ul>
+<h3 id="靶场dvwa"><a href="#靶场dvwa" class="headerlink" title="靶场dvwa"></a>靶场dvwa</h3><h4 id="设置靶场"><a href="#设置靶场" class="headerlink" title="设置靶场"></a>设置靶场</h4><ul>
+<li><p>这个是我之前搭建的<a href="/aposts/97835086/">dwva靶场</a>，首先修改下配置</p>
+</li>
+<li><p>修改apache的端口，默认端口已经被使用了</p>
+</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"> vi /etc/httpd/conf/httpd.conf</span><br><span class="line"></span><br><span class="line">Listen 8001</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>dwva把安全等级默认修改为low</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">/var/www/html/DVWA-2.0.1/config</span><br><span class="line">[root@VM-24-13-centos config]# vi config.inc.php</span><br><span class="line"><span class="meta prompt_">$</span><span class="language-bash">_DVWA[ <span class="string">&#x27;default_security_level&#x27;</span> ] = <span class="string">&#x27;low&#x27;</span>;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>防火墙打开8001，腾讯云服务器的端口开放规则需要单独设置下</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">firewall-cmd --zone=public --add-port=8001/tcp --permane</span><br><span class="line">[root@VM-24-13-centos config]# systemctl restart firewalld</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">重启httpd服务</span></span><br><span class="line">[root@VM-24-13-centos config]# systemctl start httpd</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">查看端口已经启动</span></span><br><span class="line">[root@VM-24-13-centos config]# firewall-cmd --list-ports</span><br><span class="line">3306/tcp 8080/tcp 4444/tcp 7777/tcp 80/tcp 8081/tcp 8001/tcp</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h4 id="启动AWVS"><a href="#启动AWVS" class="headerlink" title="启动AWVS"></a>启动AWVS</h4><ul>
+<li>AWVS新增目标，注意不填入login</li>
+</ul>
+<p><img src="/aposts/66cae209/image-20220302150203374.png" alt="image-20220302150203374"></p>
+<p><img src="/aposts/66cae209/image-20220302150355672.png" alt="image-20220302150355672"></p>
+<p><img src="/aposts/66cae209/image-20220302150502002.png" alt="image-20220302150502002"></p>
+<ul>
+<li>点击下一步，右侧输入被排除的url，这些url都有一些敏感信息，需求提前屏蔽掉</li>
+</ul>
+<p><img src="/aposts/66cae209/image-20220302151311220.png" alt="image-20220302151311220"></p>
+<ul>
+<li>具体排除的url如下</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">GET http://ip:8001/DVWA-2.0.1/login.php HTTP/1.1</span><br><span class="line">GET http://ip.101:8001/DVWA-2.0.1/security.php HTTP/1.1</span><br><span class="line">GET http://ip:8001/DVWA-2.0.1/phpinfo.php HTTP/1.1</span><br><span class="line">GET http://ip:8001/DVWA-2.0.1/setup.php HTTP/1.1</span><br><span class="line">GET http://ip:8001/DVWA-2.0.1/instructions.php HTTP/1.1</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>点击下一步，点击完成</p>
+<p><img src="/aposts/66cae209/image-20220302151827818.png" alt="image-20220302151827818"></p>
+<ul>
+<li>点击扫描</li>
+</ul>
+<p><img src="/aposts/66cae209/image-20220302152233313.png" alt="image-20220302152233313"></p>
+<p><img src="/aposts/66cae209/image-20220302152250630.png" alt="image-20220302152250630"></p>
+<ul>
+<li>15分钟左右扫描完毕，高危漏洞有16个</li>
+</ul>
+<p><img src="/aposts/66cae209/image-20220302154037208.png" alt="image-20220302154037208"></p>
+<h4 id="分析测试报告"><a href="#分析测试报告" class="headerlink" title="分析测试报告"></a>分析测试报告</h4><p>生成下载测试报告后，手动验证下，扫描发现这个bak文件，的确全都是一些敏感信息</p>
+<p><img src="/aposts/66cae209/image-20220302154221690.png" alt="image-20220302154221690"></p>
+<ul>
+<li>这个是跨站攻击，手动验证下发现这个也是误报的</li>
+</ul>
+<p><img src="/aposts/66cae209/image-20220302154532447.png" alt="image-20220302154532447"></p>
+<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><ul>
+<li><p>AWVS操作简单，对各种web漏洞进行检测非常强大</p>
+</li>
+<li><p>虽然有很多是误报的，不过误报总比漏报好</p>
+</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/2b1b6be5/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2983,143 +3184,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/558de72d/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="一个正经的测试工程师">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="施坤的博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/aposts/558de72d/" class="post-title-link" itemprop="url">DVWA通关指南-JavaScript Attacks</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-02-15 11:30:58" itemprop="dateCreated datePublished" datetime="2022-02-15T11:30:58+08:00">2022-02-15</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-02-25 11:20:56" itemprop="dateModified" datetime="2022-02-25T11:20:56+08:00">2022-02-25</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" itemprop="url" rel="index"><span itemprop="name">安全测试</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/aposts/558de72d/" class="post-meta-item leancloud_visitors" data-flag-title="DVWA通关指南-JavaScript Attacks" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/aposts/558de72d/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/aposts/558de72d/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>就算js前端攻击</p>
-<h2 id="安全等级Low"><a href="#安全等级Low" class="headerlink" title="安全等级Low"></a>安全等级Low</h2><p>发现输入success提交是无效的</p>
-<p><img src="/aposts/558de72d/image-20220215145045285.png" alt="image-20220215145045285"></p>
-<h3 id="源码分析"><a href="#源码分析" class="headerlink" title="源码分析"></a>源码分析</h3><h4 id="后台代码"><a href="#后台代码" class="headerlink" title="后台代码"></a>后台代码</h4><p>文本框(phrase)输入内容，经过md5+自定义函数（rol13）转换后，最终赋值给token</p>
-<p><img src="/aposts/558de72d/image-20220215150253005.png" alt="image-20220215150253005"></p>
-<h4 id="页面代码"><a href="#页面代码" class="headerlink" title="页面代码"></a>页面代码</h4><p>查看页面发现 token的值是一个隐藏控件，并且是一个固定值</p>
-<p><img src="/aposts/558de72d/image-20220215153721456.png" alt="image-20220215153721456"></p>
-<ul>
-<li>看其他人的博客，直接能看到index.php文件的逻辑，我试过了这样不行</li>
-</ul>
-<p><img src="/aposts/558de72d/image-20220215160009445.png" alt="image-20220215160009445"></p>
-<ul>
-<li>转到服务器上看下具体的index.php代码</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># 不知具体的Index.php文件在哪里，采用模糊搜索的方式找到了php文件</span><br><span class="line">[root@VM-24-13-centos DVWA-2.0.1]# grep -r &#x27;You got the phrase wrong&#x27;</span><br><span class="line">vulnerabilities/javascript/index.php:                   $message = &quot;&lt;p&gt;You got the phrase wrong.&lt;/p&gt;&quot;;</span><br><span class="line">...</span><br><span class="line">[root@VM-24-13-centos javascript]# pwd</span><br><span class="line">/var/www/html/DVWA-2.0.1/vulnerabilities/javascript</span><br><span class="line">[root@VM-24-13-centos javascript]# cat index.php</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>看下核心代码就清楚了，整个完整逻辑是这样</p>
-<ul>
-<li>文本框(phrase)输入内容，经过md5+自定义函数（rol13）转换后，最终赋值给token（隐藏控件）</li>
-<li>用token的值和加密后的success（md5(rot13)函数）对比</li>
-</ul>
-<p><img src="/aposts/558de72d/image-20220215160521487.png" alt="image-20220215160521487"></p>
-<h3 id="开始攻击"><a href="#开始攻击" class="headerlink" title="开始攻击"></a>开始攻击</h3><ul>
-<li><p>既然知道了整个逻辑，只要输入已经加密过的success字符串即可</p>
-</li>
-<li><p>谷歌浏览器按f12，打开console，输入：<code>md5(rot13(&quot;success&quot;))</code>得到了值为：38581812b435834ebf84ebcc2c6424d6</p>
-</li>
-</ul>
-<p><img src="/aposts/558de72d/image-20220215161321203.png" alt="image-20220215161321203"></p>
-<p>页面文本框输入：success，点击提交</p>
-<p><img src="/aposts/558de72d/image-20220215161946122.png" alt="image-20220215161946122"></p>
-<p>抓包拦截请求修改token的值为：38581812b435834ebf84ebcc2c6424d6，点击发送</p>
-<p><img src="/aposts/558de72d/image-20220215162218406.png" alt="image-20220215162218406"></p>
-<p>页面上展示通过</p>
-<p><img src="/aposts/558de72d/image-20220215162254369.png" alt="image-20220215162254369"></p>
-<h2 id="安全等级为Meduim"><a href="#安全等级为Meduim" class="headerlink" title="安全等级为Meduim"></a>安全等级为Meduim</h2><h3 id="源码分析-1"><a href="#源码分析-1" class="headerlink" title="源码分析"></a>源码分析</h3><p>其实就是do_someting对phrase变量进行反转，如输入的success，就是sseccus，生成的token值&#x3D;XXsseccusXX</p>
-<p><img src="/aposts/558de72d/image-20220215162917020.png" alt="image-20220215162917020"></p>
-<h3 id="开始攻击-1"><a href="#开始攻击-1" class="headerlink" title="开始攻击"></a>开始攻击</h3><p>页面上输入success</p>
-<p><img src="/aposts/558de72d/image-20220215161946122.png" alt="image-20220215161946122"></p>
-<p>token直接改为XXsseccusXX</p>
-<p><img src="/aposts/558de72d/image-20220215163915705-16449143566171.png" alt="image-20220215163915705"></p>
-<p><img src="/aposts/558de72d/image-20220215164001569.png" alt="image-20220215164001569"></p>
-<h2 id="后续攻击"><a href="#后续攻击" class="headerlink" title="后续攻击"></a>后续攻击</h2><p>不实践了，直接参考<a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_43252204/article/details/106723183?utm_medium=distribute.pc_relevant.none-task-blog-2~default~baidujs_baidulandingword~default-0.pc_relevant_paycolumn_v3&spm=1001.2101.3001.4242.1&utm_relevant_index=3">这里</a></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -3195,7 +3259,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">161</span>
+          <span class="site-state-item-count">162</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

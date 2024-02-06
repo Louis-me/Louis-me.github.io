@@ -191,6 +191,110 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/32ab6d91/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="一个正经的测试工程师">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="施坤的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/aposts/32ab6d91/" class="post-title-link" itemprop="url">多线程爬虫-BeautifulSoup</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-09-29 17:13:35" itemprop="dateCreated datePublished" datetime="2021-09-29T17:13:35+08:00">2021-09-29</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-06-20 18:59:14" itemprop="dateModified" datetime="2023-06-20T18:59:14+08:00">2023-06-20</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/" itemprop="url" rel="index"><span itemprop="name">python</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/aposts/32ab6d91/" class="post-meta-item leancloud_visitors" data-flag-title="多线程爬虫-BeautifulSoup" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/aposts/32ab6d91/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/aposts/32ab6d91/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="线程基类"><a href="#线程基类" class="headerlink" title="线程基类"></a>线程基类</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">import threading</span><br><span class="line">class base_thread(threading.Thread):</span><br><span class="line">    def __init__(self, func):</span><br><span class="line">        threading.Thread.__init__(self)</span><br><span class="line">        self.func = func</span><br><span class="line">        #print(type(self.func))</span><br><span class="line">    def run(self):</span><br><span class="line">        self.func</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="爬虫百度贴吧中某帖子图片"><a href="#爬虫百度贴吧中某帖子图片" class="headerlink" title="爬虫百度贴吧中某帖子图片"></a>爬虫百度贴吧中某帖子图片</h3><ul>
+<li>先要安装BeautifulSoup</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">import urllib.request as request</span><br><span class="line">from bs4 import BeautifulSoup</span><br><span class="line">from Base.Threads import base_thread</span><br><span class="line">path = &#x27;e:/apps/pic/&#x27;</span><br><span class="line">def CrawlerFunc(url):</span><br><span class="line">    list_img = getUrl(url)</span><br><span class="line">    multi_thread(len(list_img), downloadImg(list_img))</span><br><span class="line">def getUrl(url):</span><br><span class="line">    response = request.urlopen(url)</span><br><span class="line">    html = response.read()</span><br><span class="line">    data = html.decode(&#x27;utf-8&#x27;)</span><br><span class="line">    soup = BeautifulSoup(data)</span><br><span class="line">    list_img = []</span><br><span class="line">    for list in soup.find_all(&quot;img&quot;, &#123;&quot;class&quot;, &quot;BDE_Image&quot;&#125;):</span><br><span class="line">        list_img.append(list.attrs[&quot;src&quot;])</span><br><span class="line">    return list_img</span><br><span class="line"></span><br><span class="line">def downloadImg(list_img):</span><br><span class="line">    count = 1</span><br><span class="line">    for i in list_img:</span><br><span class="line">        filepath = path + str(count)+&quot;.jpg&quot;</span><br><span class="line">        with open(filepath, &#x27;wb&#x27;) as file:</span><br><span class="line">            print(filepath)</span><br><span class="line">            image_data = request.urlopen(i).read()</span><br><span class="line">            file.write(image_data)</span><br><span class="line">        count += 1</span><br><span class="line">def multi_thread(count, func):</span><br><span class="line">    threads = []</span><br><span class="line">    for i in range(0, count):</span><br><span class="line">        threads.append(base_thread(func))</span><br><span class="line">    for j in range(0, count):</span><br><span class="line">        threads[j].start()</span><br><span class="line">    for k in range(0, count):</span><br><span class="line">        threads[k].join()</span><br><span class="line">#CrawlerFunc(&quot;http://tieba.baidu.com/p/3764230390&quot;)</span><br></pre></td></tr></table></figure>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a target="_blank" rel="noopener" href="http://www.crummy.com/software/BeautifulSoup/bs4/doc/#css-selectors">BeautifulSoup官网api</a></li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/41c3847c/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -361,7 +465,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">161</span>
+          <span class="site-state-item-count">162</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
