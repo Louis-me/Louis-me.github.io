@@ -191,6 +191,264 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/f5236b59/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="一个正经的测试工程师">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="施坤的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/aposts/f5236b59/" class="post-title-link" itemprop="url">第六章 大数据项目开发流程</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-12-29 11:17:29" itemprop="dateCreated datePublished" datetime="2021-12-29T11:17:29+08:00">2021-12-29</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-02-25 11:20:56" itemprop="dateModified" datetime="2022-02-25T11:20:56+08:00">2022-02-25</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/" itemprop="url" rel="index"><span itemprop="name">大数据</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/aposts/f5236b59/" class="post-meta-item leancloud_visitors" data-flag-title="第六章 大数据项目开发流程" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/aposts/f5236b59/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/aposts/f5236b59/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="大数据项目开发概览"><a href="#大数据项目开发概览" class="headerlink" title="大数据项目开发概览"></a>大数据项目开发概览</h2><p>一个完整的大数据项目架构可以分为数据采集层、数据存储层、数据计算层、数据接入层、数据应用层和基础服务层，如下图所示：</p>
+<p><img src="/aposts/f5236b59/image-20211229113510858.png" alt="image-20211229113510858"></p>
+<h2 id="数据的采集和存储"><a href="#数据的采集和存储" class="headerlink" title="数据的采集和存储"></a>数据的采集和存储</h2><p>数据采集方式主要有：</p>
+<ul>
+<li><p>网络数据采集</p>
+</li>
+<li><p>服务端日志采集</p>
+</li>
+<li><p>客户端日志采集</p>
+</li>
+</ul>
+<h2 id="服务端日志采集"><a href="#服务端日志采集" class="headerlink" title="服务端日志采集"></a>服务端日志采集</h2><ul>
+<li>服务端日志是重要的数据来源,它可以支持业务问题排查、业务数据分析等。下图是常见的服务端日志架构。客户端通过API( Application Programming Interface,应用程序编程接口)向服务端发送请求,服务端会在服务器本地记录日志文件。日志文件可能包括访问日志、Lnux系统日志和业务日志等。这些日志会被服务端日志采集服务收集、同步发给日志服务器,以便后续使用。</li>
+</ul>
+<p><img src="/aposts/f5236b59/image-20211229150453592.png" alt="image-20211229150453592"></p>
+<p>一个完整的服务端日志采集流程如图4-3所示。</p>
+<ul>
+<li><p>在客户端向服务端发送请求后，服务端会在服务器本地记录请求日志或业务日志。此外，服务端会通过服务直接向Kafka推送日志。</p>
+</li>
+<li><p>服务器的本地日志在写入的同时，还会通过Flume等工具进行持续收集，并推送到 Kafka集群中指定的主题。在收集、推送的过程中，会进行一些日志数据处理工作，如请求头信息解析、接口参数提取和日志信息格式化等。</p>
+</li>
+<li><p>我们可以使用SparkStreaming实时消费处理Kafka消息，并将处理好的数据写入指定的数据库中，如MySQL、Redis等。此种方式可以提供实时的服务端日志应用，如错误日志监控报警等。对于Spark Streaming处理完的数据，将继续推送到Kafka，供其他业务</p>
+</li>
+<li><p>我们也可以使用flume消费kafka的消息，并将处理号的数据写入HDFS，为后续的离线使用提供基础数据</p>
+<p><img src="/aposts/f5236b59/image-20211229151331689.png" alt="image-20211229151331689"></p>
+</li>
+</ul>
+<h3 id="客户端日志采集"><a href="#客户端日志采集" class="headerlink" title="客户端日志采集"></a>客户端日志采集</h3><h4 id="移动端分类"><a href="#移动端分类" class="headerlink" title="移动端分类"></a>移动端分类</h4><p>移动端分为两种：</p>
+<ul>
+<li>Native App：原生应用程序。也就是基于智能手机系统的原生程式编写运行的应用程序，比如Android，IOS等</li>
+<li>Hybrid App：混合应用程序。原生应用程序嵌入h5的方式</li>
+</ul>
+<h4 id="采集方式"><a href="#采集方式" class="headerlink" title="采集方式"></a>采集方式</h4><ul>
+<li>浏览器页面的日志采集。如采集Hybrid App中h5浏览器<ul>
+<li>浏览量PV</li>
+<li>访问量UV</li>
+</ul>
+</li>
+<li>移动端客户端日志的采集。如采集Native App<ul>
+<li>埋点SDK</li>
+</ul>
+</li>
+</ul>
+<h2 id="数据同步"><a href="#数据同步" class="headerlink" title="数据同步"></a>数据同步</h2><ul>
+<li>数据仓库的特性之一是集成，即首先把未经过加工处理的、不同来源的、不同形式的数据同步到ODS层，一般情况下，这些ODS层数据包括日志数据和业务DB数据。对于业务DB数据而言(比如存储在MySQL中)，将数据采集并导入到数仓中(通常是Hive或者MaxCompute)是非常重要的一个环节。</li>
+<li>针对不同数据类型和业务场景，我们可以选择不同的数据同步方式：<ul>
+<li>直连同步</li>
+<li>数据文件同步</li>
+<li>数据库日志解析同步</li>
+</ul>
+</li>
+</ul>
+<h3 id="直连同步"><a href="#直连同步" class="headerlink" title="直连同步"></a>直连同步</h3><ul>
+<li>直连同步是指通过定义好的规范接口API和基于动态链接库的方式直接连接业务库</li>
+<li>直连同步的方式配置十分简单，很容易上手操作，比较适合操作型业务系统的数据同步，但是会存在随着业务规模的增长，<strong>数据同步花费的时间会越来越长、连数据库查询数据，对数据库影响非常大，容易造成慢查询，可能会影响业务线上的正常服务</strong></li>
+</ul>
+<p><img src="/aposts/f5236b59/image-20211229155528410.png" alt="image-20211229155528410"></p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://moon-full.gitee.io/2021/12/14/%E7%AC%AC%E4%BA%94%E7%AB%A0%20%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93%E5%AE%9E%E4%BE%8B/">第五章 数据仓库实例</a>，就是采用这种方式</li>
+</ul>
+<h3 id="数据文件同步"><a href="#数据文件同步" class="headerlink" title="数据文件同步"></a>数据文件同步</h3><ul>
+<li>对文件进行格式约定，直接从源系统生成数据（mysql，oracle，DB2等）的文件，通过FTP服务器传输到目标系统，最终加载到目标系统中。</li>
+</ul>
+<p><img src="/aposts/f5236b59/image-20211229155932718.png" alt="image-20211229155932718"></p>
+<ul>
+<li>通过文件服务进行上传、下载，可能出现丢包或出现错误。可以加一些校验机制</li>
+</ul>
+<h3 id="数据库日志解析同步"><a href="#数据库日志解析同步" class="headerlink" title="数据库日志解析同步"></a>数据库日志解析同步</h3><ul>
+<li>数据库日志解析的同步方式可以实现实时与准实时的同步，延迟可以控制在毫秒级别的，其最大的优势就是性能好、效率高，不会对源数据库造成影响，目前，从业务系统到数据仓库中的实时增量同步，<strong>广泛采取这种方式</strong>。当然，这种方式也会存在一些问题，比如批量补数时造成大量数据更新，<strong>日志解析会处理较慢</strong>，造成数据延迟。除此之外，<strong>这种方式比较复杂</strong>，<strong>投入也较大</strong>，因为需要一个实时的抽取系统去抽取并解析日志</li>
+</ul>
+<p><img src="/aposts/f5236b59/image-20211229160911594.png" alt="image-20211229160911594"></p>
+<h2 id="大数据存储"><a href="#大数据存储" class="headerlink" title="大数据存储"></a>大数据存储</h2><p>对于大数据存储选项，需要从存储成本、数据规模、数据访问特性和查询性能等方面进行考虑，下图列举了不同场景大数据存储选型。</p>
+<p><img src="/aposts/f5236b59/image-20211229161451827.png" alt="image-20211229161451827"></p>
+<h2 id="大数据计算"><a href="#大数据计算" class="headerlink" title="大数据计算"></a>大数据计算</h2><ul>
+<li>一般分为离线计算、批量计算、实时计算和流式计算，业界一般都使用<strong>离线计算和实时计算</strong>，下图是各个计算方式的区别</li>
+</ul>
+<h3 id="离线计算"><a href="#离线计算" class="headerlink" title="离线计算"></a>离线计算</h3><p><img src="/aposts/f5236b59/image-20211229164031999.png" alt="image-20211229164031999"></p>
+<ul>
+<li>离线计算使用的多数场景是周期（小时、天，月）性执行一个job任务，离线计算应用中常用的是离线ETL的处理。如MapReduce就是一个离线的计算框架，下图举例说明了离线计算工作流</li>
+</ul>
+<p><img src="/aposts/f5236b59/image-20211229165345162.png" alt="image-20211229165345162"></p>
+<ul>
+<li>离线计算需要上下游各组件合作，一般会由多个任务单元构成（HiveQL，shell，Shell和MapReduce等），多个单元由很强的依赖关系</li>
+</ul>
+<h3 id="实时计算"><a href="#实时计算" class="headerlink" title="实时计算"></a>实时计算</h3><ul>
+<li>对数据计算要求较高，如实时的ETL，实时监控等，延时一般为毫秒级别，目前笔比较流行的实时框架有<code>Spark Streaming</code>和<code>Flink</code></li>
+<li>下图展示了一个大数据计算平台架构，其中包含离线计算和实时计算</li>
+</ul>
+<p><img src="/aposts/f5236b59/image-20211229170148516.png" alt="image-20211229170148516"></p>
+<h2 id="大数据监控"><a href="#大数据监控" class="headerlink" title="大数据监控"></a>大数据监控</h2><p>在大数据进行采集、存储和处理后，下面就是项目的上线和日常运行。在运行过程中监控和报警就非常重要</p>
+<h3 id="数据监控"><a href="#数据监控" class="headerlink" title="数据监控"></a>数据监控</h3><p>一些常见的监控内容：</p>
+<ul>
+<li>以时间维度对数据记录进行监控。比如某个时间段出现明显波动</li>
+<li>对数据的NULL和0值进行监控</li>
+<li>对数据的值域进行监控。如对数据中某字段出现合理域值以外的值</li>
+<li>对数据的重复度进行监控。如电商业务的交易记录出现重复等</li>
+</ul>
+<h3 id="运维监控"><a href="#运维监控" class="headerlink" title="运维监控"></a>运维监控</h3><ul>
+<li>在当前大数据项目中，使用服务器集群方式支撑业务已经成为常态，开发自动化运维监控系统非常重要。</li>
+<li>监控常见的cpu，men，io，tps，对大数据生态系统进行监控，如zookeeper节点可用性，yarn资源空闲情况、kafka消息堆积情况，以及spark job完成进度等</li>
+<li>其他的一些监控，如端口,nginx的延迟</li>
+</ul>
+<h2 id="大数据项目开发案例"><a href="#大数据项目开发案例" class="headerlink" title="大数据项目开发案例"></a>大数据项目开发案例</h2><ul>
+<li>数据分析平台是一类重要的大数据应用,广泛应用于互联网金融、银行、电子商务和在线教育等领域。</li>
+<li>数据分析平台通常需要实时计算、查询并借助可视化平台展示数据。通过数据分析平台,用户可以更加直观、高效和全面地了解数据分布情况,观察数据变化趋势,最终达到数据驱动业务决策的目标。</li>
+<li>与单纯的数据可视化类平台或BI报表相比,数据分析平台的链路更长,除最终的可视化数据展示以外,还包括源头的数据采集;<strong>而BI报表通常只是对数据的汇总和查询展示,不涉及数据采集、数据存储等环节</strong>。如图4-15所示,根据不同的数据分析类型,数据分析平台可分为如下几类:**用户行为类(应用比较多)**、App分析类、应用市场监控类、流量分析类和广告效果监控类等。</li>
+</ul>
+<p><img src="/aposts/f5236b59/image-20211230104909426.png" alt="image-20211230104909426"></p>
+<h3 id="项目背景介绍"><a href="#项目背景介绍" class="headerlink" title="项目背景介绍"></a>项目背景介绍</h3><ul>
+<li>分析手机App用户数量和交易的某些行为习惯，实现精准营销。类似于购物推荐这种</li>
+</ul>
+<h3 id="项目需求分析"><a href="#项目需求分析" class="headerlink" title="项目需求分析"></a>项目需求分析</h3><ul>
+<li>与传统应用开发相同,在迸行大数据项目开发前,首先要明确项目的需求。用户行为分析平台需要提供多种数据釆集方式,通过对埋点数据的采集、处理、建模和存储,进行深度分析和应用,帮助企业高效获取海量数据,并进行多维、实时和准确的数据分析,还原真实业务场。用户行为分析平台的业务流程包括数据釆集、数据处理、数据建模、数据存储、数据簑理、智能分析和基础看板。图4-16是用户行为分析平台的业务流程。</li>
+</ul>
+<p><img src="/aposts/f5236b59/image-20211230110240930.png" alt="image-20211230110240930"></p>
+<ul>
+<li>用户行为分析主要包括：<strong>基础看板和智能分析</strong></li>
+<li>基础看板：如实时统计在线人数、启动次数</li>
+<li>智能分析：如从商品浏览率到提交订单，支付订单，各个节点用户转化率</li>
+</ul>
+<h3 id="项目开发流程"><a href="#项目开发流程" class="headerlink" title="项目开发流程"></a>项目开发流程</h3><ul>
+<li>大数据项目的完整流程如图4-18所示，在进行大数据项目开发时,首先,大数据开发工程师需要根据产品需求文档进行架构设<br>计、模型设计和调度设计,产出架构设计文档、ETL设计文档和调度设计文档;然后,项目<br>相关人员(包括测试人员)需要对这些设计进行评审等。</li>
+</ul>
+<p><img src="/aposts/f5236b59/image-20211230111333106.png" alt="image-20211230111333106"></p>
+<ul>
+<li>图4-19为大数据项目开发流程。</li>
+</ul>
+<p><img src="/aposts/f5236b59/image-20211230111422715.png" alt="image-20211230111422715"></p>
+<h4 id="结构设计"><a href="#结构设计" class="headerlink" title="结构设计"></a>结构设计</h4><p>根据平台需求的特点,在架构设计时,将用户行为分析平台拆分为4个服务：</p>
+<ul>
+<li>数据采集与预处理服务( og service)</li>
+<li>数据处理服务(实时数据处理服务(real-task)使用Flink,离线数据处理服务采用 Azkaban进行任务调度),</li>
+<li>数据查询服务(DAS),</li>
+<li>数据管理服务(DMS)</li>
+</ul>
+<p>如图4-20所示。数据从源数据到可视化展示需要从下至上经过这些服务的处理。</p>
+<p><img src="/aposts/f5236b59/image-20211230112924605.png" alt="image-20211230112924605"></p>
+<p>用户行为分析平台的核心是数据处理,即从数据采集到数据应用的数据流转,如图4-21</p>
+<p><img src="/aposts/f5236b59/image-20211230113054864.png" alt="image-20211230113054864"></p>
+<h4 id="模型设计"><a href="#模型设计" class="headerlink" title="模型设计"></a>模型设计</h4><p>根据用户行为分析平台的功能和特点,我们需要设计能够满足其应用需求的数据仓库架构。图4-24是一个数据仓库架构方案：</p>
+<p><img src="/aposts/f5236b59/image-20211230114656565.png" alt="image-20211230114656565"></p>
+<ul>
+<li>RB层(实时层)KRB的全称是 Kudu ReaBase,该层的表全部为未统计汇总的实时明细数如 krb. trs_app_event_log表是埋点日志事件表</li>
+<li>KRS层(实时汇总层)KRS的全称是Kucu Real Sum,该层的表全部为统计汇总的实时明细数据,如ks. rs app_user_open_dh表是App用活跃统计表(以小时为单位进行分区)表名的结尾后缀用于表明该表分区间单位，如本例中的<strong>dh表示小时进行分区</strong>。</li>
+<li>HDB层(贴源层):HDB的全称是 Hive Data Base,该层的表全部为未统计汇总的离线明细数据。该层数据是通过mpaa从KRB层同步过来的,如 hdb db app_equ_install_info表是App安装设备信息表。</li>
+<li>HDS层(汇总层):HDS的全称是 Hive Data stat,该层的表全部为统计汇总的离线数据明细</li>
+<li>HTP层(中间层):HTP的全称是 Hive Temporary,该层的表全部为数据处理过程中生成的中间临时数据,如 htp. tmp skynet user_retention d表是日用户留存分析中间表（以天为单位进行分区）</li>
+<li>IVW层(视图层):IVW的全称是 mpala View,该层的表全部为mpaa操作的视图表,如ⅳ w.trs <em>app_event log表是KRB层(实时层)中提到的 krs. trs app</em> event_log表的视图。</li>
+</ul>
+<p>在后续测试案例中,我们会使用实时层中的埋点日志事件表 krb. trs_ app_event_loc<br>这里只举例说明该表的结构设计。表4-7汇总了(贴出部分)</p>
+<ul>
+<li>以log_i作为主键。</li>
+<li>以log_id作为hash分区,以log_dt作为rang分区</li>
+<li>历史数据分区和最新数据分区一直保留</li>
+<li><strong>只新增数据,增量分区,使用 Flink SQL写数据</strong></li>
+</ul>
+<p><img src="/aposts/f5236b59/image-20211230115834627.png" alt="image-20211230115834627"></p>
+<h4 id="调度设计"><a href="#调度设计" class="headerlink" title="调度设计"></a>调度设计</h4><ul>
+<li>上面列出的HDS层数据表位于用户行为分析平台的离线数据存储层。对于离线数据理,具有周期性、重复性的特点,因此,我们使用调度工具 <strong>Azkaban</strong>提供的可靠计划来处理数据。根据各数据表中数据的前后依赖关系,用户行为分析平台的调度设计如图4-25际示。由图4-25可知,为了提高项目的可读性,子任务节点的命名与表名保持形式上的统一(子任务节点生成与之名称对应的数据表中的数据)。</li>
+</ul>
+<p><img src="/aposts/f5236b59/image-20211230151251867.png" alt="image-20211230151251867"></p>
+<ul>
+<li>在完成用户行为分析平台的架构设计、模型设计和调度设计后，开发人员便可以根据它们进行相应的代码开发。通过对用户行为分析平台项目的介绍，我们不难发现，项目中需要开发的功能多、业务流程复杂，需要测试人员的参与来保证平台质量。、</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/bcb72660/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2190,161 +2448,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/1e744d3a/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="一个正经的测试工程师">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="施坤的博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/aposts/1e744d3a/" class="post-title-link" itemprop="url">混合场景单线程组</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-11-02 18:02:40" itemprop="dateCreated datePublished" datetime="2021-11-02T18:02:40+08:00">2021-11-02</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-02-25 11:20:56" itemprop="dateModified" datetime="2022-02-25T11:20:56+08:00">2022-02-25</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/jmeter/" itemprop="url" rel="index"><span itemprop="name">jmeter</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/aposts/1e744d3a/" class="post-meta-item leancloud_visitors" data-flag-title="混合场景单线程组" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/aposts/1e744d3a/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/aposts/1e744d3a/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><ul>
-<li>本次混合场景为单个线程组</li>
-<li>结合if控制器，计数器，循环控制器</li>
-<li>jmeter v5.4.1</li>
-<li>自己搭建的jforum</li>
-<li>场景为：登录20:浏览帖子:40:回帖:15:发帖10，比例为：5:8:3:2</li>
-</ul>
-<h2 id="设置线程组"><a href="#设置线程组" class="headerlink" title="设置线程组"></a>设置线程组</h2><ul>
-<li>每秒钟并发两个登录请求，循环10次，也就是共发20次登录</li>
-</ul>
-<p><img src="/aposts/1e744d3a/image-20211102180619354.png" alt="image-20211102180619354"></p>
-<ul>
-<li><p>参数化数据设置，注意的是线程共享模式</p>
-<ul>
-<li>所有线程，默认选项，表示按照顺序执行，不会出现多次登录使用同一个用户，<strong>《全栈性能测试修炼宝典JMeter实战》书中作者，自己实现此功能，可能是书中用的jmeter版本比较老，新版本已经有了此功能</strong></li>
-<li>当前线程，在这种情况下，每个用户都会从头到尾读取 CSV 文件。</li>
-<li>当前线程组，每个文件由每个线程组单独打开（不要与每个线程单独读取文件的“当前线程”混淆。这基本上意味着每个线程组中的每个线程从头到尾读取 CSV 文件，互不影响。要实际展示这种共享模式，您需要再创建一个线程组。</li>
-<li>更详细说明请参考<a target="_blank" rel="noopener" href="https://www.blazemeter.com/blog/csv-data-set-config-in-sharing-mode-made-easy">这篇文章</a></li>
-</ul>
-<p><img src="/aposts/1e744d3a/image-20211103094204881.png" alt="image-20211103094204881"></p>
-</li>
-<li><p>新增了一个登录计数器</p>
-<p><img src="/aposts/1e744d3a/image-20211103095147850.png" alt="image-20211103095147850"></p>
-</li>
-</ul>
-<h2 id="登录简单控制器"><a href="#登录简单控制器" class="headerlink" title="登录简单控制器"></a>登录简单控制器</h2><ul>
-<li>登录成功后把模块id提出来</li>
-</ul>
-<p><img src="/aposts/1e744d3a/image-20211103095319643.png" alt="image-20211103095319643"></p>
-<h2 id="进入板块的if控制器"><a href="#进入板块的if控制器" class="headerlink" title="进入板块的if控制器"></a>进入板块的if控制器</h2><ul>
-<li><p>按照每登录4次的比例对帖子进行操作</p>
-<p><img src="/aposts/1e744d3a/image-20211103095436383.png" alt="image-20211103095436383"></p>
-</li>
-</ul>
-<h3 id="浏览帖子循环控制器"><a href="#浏览帖子循环控制器" class="headerlink" title="浏览帖子循环控制器"></a>浏览帖子循环控制器</h3><ul>
-<li>循环8次，刚好为共浏览<code>5*8=40</code>次，提取帖子id，最后进入到帖子详情</li>
-</ul>
-<p><img src="/aposts/1e744d3a/image-20211103095727165.png" alt="image-20211103095727165"></p>
-<h3 id="回复帖子循环控制器"><a href="#回复帖子循环控制器" class="headerlink" title="回复帖子循环控制器"></a>回复帖子循环控制器</h3><ul>
-<li>循环次数为3次，共发送<code>3*5=15</code></li>
-</ul>
-<p><img src="/aposts/1e744d3a/image-20211103100141261.png" alt="image-20211103100141261"></p>
-<h3 id="发帖循环控制器"><a href="#发帖循环控制器" class="headerlink" title="发帖循环控制器"></a>发帖循环控制器</h3><ul>
-<li>循环2次，共发送<code>2*5=10</code>次</li>
-</ul>
-<p><img src="/aposts/1e744d3a/image-20211103100343560.png" alt="image-20211103100343560"></p>
-<h2 id="查看运行结果"><a href="#查看运行结果" class="headerlink" title="查看运行结果"></a>查看运行结果</h2><ul>
-<li>发送的请求数量刚好对上</li>
-</ul>
-<p><img src="/aposts/1e744d3a/image-20211103100519007.png" alt="image-20211103100519007"></p>
-<h2 id="补充"><a href="#补充" class="headerlink" title="补充"></a>补充</h2><ul>
-<li><p>今天在测试过程中，发现这样的脚本用问题，直接多次回帖和发帖子虽然请求成功了，但是没有插入数据库，用抓包的方式也是如此</p>
-</li>
-<li><p>后续经过测试，要改成这样的流程，不能单独循环发帖&#x2F;回帖：</p>
-<ul>
-<li>发帖：进入板块，选择发帖按钮，发送发帖请求</li>
-<li>回帖：进入板块，选择帖子，点击回复帖子，发送回帖请求</li>
-</ul>
-<p><img src="/aposts/1e744d3a/image-20211111175757903.png" alt="image-20211111175757903"></p>
-</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -2420,7 +2523,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">162</span>
+          <span class="site-state-item-count">163</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -2458,7 +2561,7 @@
     <!--<h3 class="widget-title">Tag Cloud</h3> -->
     <div id="myCanvasContainer" class="widget tagcloud">
         <canvas width="250" height="250" id="resCanvas" style="width=100%">
-            <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AWVS/" rel="tag">AWVS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Burp-Site/" rel="tag">Burp Site</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DVWA/" rel="tag">DVWA</a><span class="tag-list-count">15</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dependency-Check/" rel="tag">Dependency-Check</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/H5/" rel="tag">H5</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hadoop/" rel="tag">Hadoop</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hibernate/" rel="tag">Hibernate</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hive/" rel="tag">Hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jenkins/" rel="tag">Jenkins</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Metasploit/" rel="tag">Metasploit</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MyBatis/" rel="tag">MyBatis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Nessus/" rel="tag">Nessus</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Sonic/" rel="tag">Sonic</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/airtest/" rel="tag">airtest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">android性能测试</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/app%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">app安全测试</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aritest/" rel="tag">aritest</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/centos/" rel="tag">centos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/" rel="tag">chrome</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/datax/" rel="tag">datax</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/django/" rel="tag">django</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/drozer/" rel="tag">drozer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fisco-bcos/" rel="tag">fisco-bcos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flink/" rel="tag">flink</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gin/" rel="tag">gin</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/" rel="tag">go</a><span class="tag-list-count">16</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go-zero/" rel="tag">go-zero</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hive/" rel="tag">hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/httprunner/" rel="tag">httprunner</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a><span class="tag-list-count">18</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jmeter/" rel="tag">jmeter</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka/" rel="tag">kafka</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kail/" rel="tag">kail</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode/" rel="tag">leetcode</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode-%E6%95%B0%E7%BB%84/" rel="tag">leetcode-数组</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mitmproxy/" rel="tag">mitmproxy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongodb/" rel="tag">mongodb</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/monkey/" rel="tag">monkey</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/" rel="tag">mysql</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/orm/" rel="tag">orm</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pandas/" rel="tag">pandas</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pc%E8%87%AA%E5%8A%A8%E5%8C%96/" rel="tag">pc自动化</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/playwright/" rel="tag">playwright</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pytest/" rel="tag">pytest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a><span class="tag-list-count">23</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/" rel="tag">redis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/selenium/" rel="tag">selenium</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring/" rel="tag">spring</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlite/" rel="tag">sqlite</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlmap/" rel="tag">sqlmap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tkinter/" rel="tag">tkinter</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/" rel="tag">vue</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue3/" rel="tag">vue3</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">云服务器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8C%BA%E5%9D%97%E9%93%BE/" rel="tag">区块链</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag">大数据</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">安全测试</a><span class="tag-list-count">29</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">性能测试</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%88%AC%E8%99%AB/" rel="tag">爬虫</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" rel="tag">环境搭建</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95/" rel="tag">自动化测试</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%8B%B1%E8%AF%AD%E5%AD%A6%E4%B9%A0/" rel="tag">英语学习</a><span class="tag-list-count">1</span></li></ul>
+            <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AWVS/" rel="tag">AWVS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Burp-Site/" rel="tag">Burp Site</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DVWA/" rel="tag">DVWA</a><span class="tag-list-count">15</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dependency-Check/" rel="tag">Dependency-Check</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/H5/" rel="tag">H5</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hadoop/" rel="tag">Hadoop</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hibernate/" rel="tag">Hibernate</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hive/" rel="tag">Hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jenkins/" rel="tag">Jenkins</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Metasploit/" rel="tag">Metasploit</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MyBatis/" rel="tag">MyBatis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Nessus/" rel="tag">Nessus</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Sonic/" rel="tag">Sonic</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/airtest/" rel="tag">airtest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">android性能测试</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/app%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">app安全测试</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aritest/" rel="tag">aritest</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/centos/" rel="tag">centos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/" rel="tag">chrome</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/datax/" rel="tag">datax</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/django/" rel="tag">django</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/drozer/" rel="tag">drozer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fisco-bcos/" rel="tag">fisco-bcos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flink/" rel="tag">flink</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gin/" rel="tag">gin</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/" rel="tag">go</a><span class="tag-list-count">16</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go-zero/" rel="tag">go-zero</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hive/" rel="tag">hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/httprunner/" rel="tag">httprunner</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a><span class="tag-list-count">20</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jmeter/" rel="tag">jmeter</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka/" rel="tag">kafka</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kail/" rel="tag">kail</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode/" rel="tag">leetcode</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode-%E6%95%B0%E7%BB%84/" rel="tag">leetcode-数组</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mitmproxy/" rel="tag">mitmproxy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongodb/" rel="tag">mongodb</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/monkey/" rel="tag">monkey</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/" rel="tag">mysql</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/orm/" rel="tag">orm</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pandas/" rel="tag">pandas</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pc%E8%87%AA%E5%8A%A8%E5%8C%96/" rel="tag">pc自动化</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/playwright/" rel="tag">playwright</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pytest/" rel="tag">pytest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a><span class="tag-list-count">23</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/" rel="tag">redis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/selenium/" rel="tag">selenium</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring/" rel="tag">spring</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlite/" rel="tag">sqlite</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlmap/" rel="tag">sqlmap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tkinter/" rel="tag">tkinter</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/" rel="tag">vue</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue3/" rel="tag">vue3</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">云服务器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8C%BA%E5%9D%97%E9%93%BE/" rel="tag">区块链</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag">大数据</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">安全测试</a><span class="tag-list-count">29</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">性能测试</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%88%AC%E8%99%AB/" rel="tag">爬虫</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" rel="tag">环境搭建</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95/" rel="tag">自动化测试</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%8B%B1%E8%AF%AD%E5%AD%A6%E4%B9%A0/" rel="tag">英语学习</a><span class="tag-list-count">1</span></li></ul>
         </canvas>
     </div>
 </div>
