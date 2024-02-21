@@ -191,6 +191,200 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/549ce9d8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="一个正经的测试工程师">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="施坤的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/aposts/549ce9d8/" class="post-title-link" itemprop="url">第七章 大数据测试方法</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-12-31 10:35:43" itemprop="dateCreated datePublished" datetime="2021-12-31T10:35:43+08:00">2021-12-31</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-02-25 11:20:56" itemprop="dateModified" datetime="2022-02-25T11:20:56+08:00">2022-02-25</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/" itemprop="url" rel="index"><span itemprop="name">大数据</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/aposts/549ce9d8/" class="post-meta-item leancloud_visitors" data-flag-title="第七章 大数据测试方法" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/aposts/549ce9d8/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/aposts/549ce9d8/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="与传统测试区别"><a href="#与传统测试区别" class="headerlink" title="与传统测试区别"></a>与传统测试区别</h2><p><img src="/aposts/549ce9d8/image-20211231104504478.png" alt="image-20211231104504478"></p>
+<h2 id="功能测试"><a href="#功能测试" class="headerlink" title="功能测试"></a>功能测试</h2><h3 id="数据质量"><a href="#数据质量" class="headerlink" title="数据质量"></a>数据质量</h3><ul>
+<li>主要包括4种测试方法</li>
+</ul>
+<p><img src="/aposts/549ce9d8/image-20211231104800758.png" alt="image-20211231104800758"></p>
+<h3 id="常用的功能测试方法"><a href="#常用的功能测试方法" class="headerlink" title="常用的功能测试方法"></a>常用的功能测试方法</h3><h4 id="数据约束检查"><a href="#数据约束检查" class="headerlink" title="数据约束检查"></a>数据约束检查</h4><ul>
+<li>如数据类型、长度、索引、主键等是否符合要求</li>
+</ul>
+<h4 id="数据存储检查"><a href="#数据存储检查" class="headerlink" title="数据存储检查"></a>数据存储检查</h4><ul>
+<li>是否需要压缩文件形式存储</li>
+<li>hive表类型是否合理（内外部表、分区、分桶表）</li>
+<li>代码中读取、写入文件目录是否正确</li>
+</ul>
+<h4 id="SQL文件检查"><a href="#SQL文件检查" class="headerlink" title="SQL文件检查"></a>SQL文件检查</h4><p>开发规范检查。一般公司都有自己的规范，如hiveql中的：</p>
+<ul>
+<li>注释</li>
+<li>字段，不行用*代替全部</li>
+<li>…..</li>
+</ul>
+<h4 id="SQ语法检查"><a href="#SQ语法检查" class="headerlink" title="SQ语法检查"></a>SQ语法检查</h4><ul>
+<li>合理使用insert into、insert overwrite、order by、group by等</li>
+</ul>
+<h4 id="数据处理逻辑验证"><a href="#数据处理逻辑验证" class="headerlink" title="数据处理逻辑验证"></a>数据处理逻辑验证</h4><ul>
+<li>脏数据处理是否符合预期</li>
+<li>去重处理</li>
+</ul>
+<h4 id="shell脚本测试"><a href="#shell脚本测试" class="headerlink" title="shell脚本测试"></a>shell脚本测试</h4><ul>
+<li>测试jar包是否引用正确</li>
+<li>mapper、reducer文件、mapreduce依赖文件等路径、运行配置参数是否合理</li>
+<li>我对shell不熟悉，一般采用python</li>
+</ul>
+<h4 id="调度任务测试"><a href="#调度任务测试" class="headerlink" title="调度任务测试"></a>调度任务测试</h4><ul>
+<li>是否支持重跑</li>
+<li>依赖层次是否合理</li>
+<li>任务是否在规定时间完成等</li>
+</ul>
+<h2 id="性能测试"><a href="#性能测试" class="headerlink" title="性能测试"></a>性能测试</h2><p>主要由六种测试：基准测试、并发测试、负载测试、压力测试、容量测试、稳定性测试</p>
+<h3 id="性能测试步骤"><a href="#性能测试步骤" class="headerlink" title="性能测试步骤"></a>性能测试步骤</h3><p><img src="/aposts/549ce9d8/image-20211231111135709.png" alt="image-20211231111135709"></p>
+<h3 id="性能测试案例"><a href="#性能测试案例" class="headerlink" title="性能测试案例"></a>性能测试案例</h3><ul>
+<li><p>以<a target="_blank" rel="noopener" href="https://moon-full.gitee.io/2021/12/29/%E7%AC%AC%E5%85%AD%E7%AB%A0-%E5%A4%A7%E6%95%B0%E6%8D%AE%E9%A1%B9%E7%9B%AE%E5%BC%80%E5%8F%91%E6%B5%81%E7%A8%8B/#%E5%A4%A7%E6%95%B0%E6%8D%AE%E9%A1%B9%E7%9B%AE%E5%BC%80%E5%8F%91%E6%A1%88%E4%BE%8B">第六章用户行为分析平台</a>为例子，采用YCSB工具，对平台底层Kudu进行性能测试</p>
+</li>
+<li><p>YCSB 是雅虎开源的性能测试工具，对NoSql产品进行测试和评估，如HBase、MongoDB等</p>
+</li>
+</ul>
+<h4 id="测试场景"><a href="#测试场景" class="headerlink" title="测试场景"></a>测试场景</h4><p><img src="/aposts/549ce9d8/image-20211231152400144.png" alt="image-20211231152400144"></p>
+<h4 id="测试结果"><a href="#测试结果" class="headerlink" title="测试结果"></a>测试结果</h4><p><img src="/aposts/549ce9d8/image-20211231152443995.png" alt="image-20211231152443995"></p>
+<p><img src="/aposts/549ce9d8/image-20211231153058203.png" alt="image-20211231153058203"></p>
+<h2 id="大数据基准测试"><a href="#大数据基准测试" class="headerlink" title="大数据基准测试"></a>大数据基准测试</h2><p>对大数据框架、大数据平台、工具的出现进行基准测试，测试步骤分为：</p>
+<ul>
+<li><p>数据准备</p>
+</li>
+<li><p>负载选择</p>
+</li>
+</ul>
+<p><img src="/aposts/549ce9d8/image-20211231153711579.png" alt="image-20211231153711579"></p>
+<ul>
+<li>指标度量</li>
+</ul>
+<h3 id="基准测试工具"><a href="#基准测试工具" class="headerlink" title="基准测试工具"></a>基准测试工具</h3><p><img src="/aposts/549ce9d8/image-20211231153834017.png" alt="image-20211231153834017"></p>
+<h2 id="大数据ETL测试"><a href="#大数据ETL测试" class="headerlink" title="大数据ETL测试"></a>大数据ETL测试</h2><h3 id="ETL测试类型"><a href="#ETL测试类型" class="headerlink" title="ETL测试类型"></a>ETL测试类型</h3><h4 id="元数据测试"><a href="#元数据测试" class="headerlink" title="元数据测试"></a>元数据测试</h4><ul>
+<li>验证表定义是否符号数据模型和应用程序的设计规范，包括对数据类型、数据长度、索引和约束等</li>
+</ul>
+<h4 id="数据完整性测试"><a href="#数据完整性测试" class="headerlink" title="数据完整性测试"></a>数据完整性测试</h4><ul>
+<li>目的是验证是否已将预期数据从源加载到目标中，主要测试：比较源和目标之间的计数，如最大、最小、总和、均值和实际数据量</li>
+</ul>
+<h4 id="数据转换测试"><a href="#数据转换测试" class="headerlink" title="数据转换测试"></a>数据转换测试</h4><ul>
+<li>白盒测试。用sql或pl&#x2F;sql对数据转换，用转换后的数据与目标中数据比较</li>
+<li>黑盒测试。外部界面方式造数据完成转换，用转换后的数据与目标中数据比较</li>
+</ul>
+<h4 id="增量ETL测试"><a href="#增量ETL测试" class="headerlink" title="增量ETL测试"></a>增量ETL测试</h4><p>目的是验证源上的更新能否正确加载到目标系统中</p>
+<h3 id="ETL集成测试"><a href="#ETL集成测试" class="headerlink" title="ETL集成测试"></a>ETL集成测试</h3><p>如下几个步骤：</p>
+<ul>
+<li>在源系统中，设置测试数据</li>
+<li>执行ETL过程把数据加载到目标中</li>
+<li>查看或处理目标系统中数据</li>
+<li>验证数据和使用该数据的应用程序的功能</li>
+</ul>
+<h4 id="ETL性能测试"><a href="#ETL性能测试" class="headerlink" title="ETL性能测试"></a>ETL性能测试</h4><p>略</p>
+<h3 id="ETL测试场景"><a href="#ETL测试场景" class="headerlink" title="ETL测试场景"></a>ETL测试场景</h3><h4 id="实时数据ETL和测试"><a href="#实时数据ETL和测试" class="headerlink" title="实时数据ETL和测试"></a>实时数据ETL和测试</h4><ul>
+<li>实时数据一般指分钟级别以下，通常包括实时计算、存储、展示和分析等。</li>
+</ul>
+<p><img src="/aposts/549ce9d8/image-20211231161902589.png" alt="image-20211231161902589"></p>
+<ul>
+<li>原始数据:可以理解为上游原始数据。对于整个上层消费应用，除数据本身以外，其他都是“黑盒，即不可见。目前，对于接入的数据源，常见的提供数据的方式人 Kafka、MQ 等。</li>
+<li>实时数据处理:这是整个数据流转路径的核心，负责根据业务需求对原始数据进行理并转发。常见的处理实时数据的应用框架有Flink、Storm和SparkStreaming等。</li>
+<li>数据存储:用于保存处理后的数据。对于业务功能，可以在这里获取需要使用的数据。在这里，我们一般使用基于内存的key-value数据库 Redis，以及列式数据医。 ClickHouse、MongoDB和HDFS等。另外，我们可以将数据转发至另一个数握 通道。</li>
+<li>数据应用:数据的具体使用。在这里，我们可以对数据进行业务层面的处理、数据的可视化展示。</li>
+</ul>
+<h4 id="离线数据ETL和测试"><a href="#离线数据ETL和测试" class="headerlink" title="离线数据ETL和测试"></a>离线数据ETL和测试</h4><ul>
+<li>离线数据一般采用T+1模式，即每天凌晨处理前一天的数据，一般采用Sqoop，datax，Flume和MapReduce等</li>
+</ul>
+<p><img src="/aposts/549ce9d8/image-20211231163101257.png" alt="image-20211231163101257"></p>
+<ul>
+<li>对于不同的数据仓库结构，有不同的测试点</li>
+</ul>
+<p><img src="/aposts/549ce9d8/image-20211231163336807.png" alt="image-20211231163336807"></p>
+<h4 id="大数据ETL测试工具"><a href="#大数据ETL测试工具" class="headerlink" title="大数据ETL测试工具"></a>大数据ETL测试工具</h4><ul>
+<li>iCDQ</li>
+<li>Talend</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/f5236b59/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2305,149 +2499,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/d39845c4/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="一个正经的测试工程师">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="施坤的博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/aposts/d39845c4/" class="post-title-link" itemprop="url">混合场景Stepping Thread Group</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-11-03 10:44:25" itemprop="dateCreated datePublished" datetime="2021-11-03T10:44:25+08:00">2021-11-03</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-02-25 11:20:56" itemprop="dateModified" datetime="2022-02-25T11:20:56+08:00">2022-02-25</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/jmeter/" itemprop="url" rel="index"><span itemprop="name">jmeter</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/aposts/d39845c4/" class="post-meta-item leancloud_visitors" data-flag-title="混合场景Stepping Thread Group" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/aposts/d39845c4/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/aposts/d39845c4/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><ul>
-<li><p>本次主要用梯次压测模式进行负载测试</p>
-</li>
-<li><p>有浏览帖子，回复帖子等场景</p>
-</li>
-<li><p>随着版本的迭代，已经有更好的线程组代替<code>Stepping Thread Group</code>了【<code>Concurrency Thread Group</code>】，所以说<code>Stepping Thread Group</code>已经是过去式了</p>
-</li>
-</ul>
-<h2 id="场景设计"><a href="#场景设计" class="headerlink" title="场景设计"></a>场景设计</h2><ul>
-<li><p>参数化设置</p>
-<p><img src="/aposts/d39845c4/image-20211109091445660.png" alt="image-20211109091445660"></p>
-</li>
-<li><p>回复，发布帖子内容的自定义变量</p>
-<p><img src="/aposts/d39845c4/image-20211109091533830.png" alt="image-20211109091533830"></p>
-</li>
-</ul>
-<h3 id="浏览帖子设置"><a href="#浏览帖子设置" class="headerlink" title="浏览帖子设置"></a>浏览帖子设置</h3><ul>
-<li><p>共启动40个线程，每隔2秒启动5个线程（表示每个梯次启动 5个线程）且持续运行10秒（每个梯次启动 5个线程）,达到40线程再次运行30秒</p>
-</li>
-<li><p>可以看到负载预览图是设置后的效果</p>
-<p><img src="/aposts/d39845c4/image-20211109093758322.png" alt="image-20211109093758322"></p>
-</li>
-<li><p><strong>this group will start：</strong>表示总共要启动的线程数；表示总共会加载到 40个线程</p>
-</li>
-<li><p><strong>first，wait for：</strong>从运行之后多长时间开始启动线程；若设置为 0 秒，表示运行之后立即启动线程</p>
-</li>
-<li><p><strong>then start：</strong>初次启动多少个线程；若设置为 0 个，表示初次不启动线程</p>
-</li>
-<li><p><strong>next add：</strong>之后每次启动多少个线程；若设置为 5个，表示每个梯次启动 5个线程</p>
-</li>
-<li><p><strong>threads every：</strong>当前运行多长时间后再次启动线程，即每一次线程启动完成之后的持续时间；若设置为 10秒，每梯次启动完线程之后再运行 10秒</p>
-</li>
-<li><p><strong>using ramp-up：</strong>启动线程的时间；若设置为 2秒，表示每次启动线程都持续 2 秒（和基础线程组的ramp-up一样意思）</p>
-</li>
-<li><p><strong>then hold load for：</strong>线程全部启动完之后持续运行多长时间，设置为 10 秒，表示 40个线程全部启动完之后再持续运行 10秒(以每梯次5次)</p>
-</li>
-<li><p><strong>finally，stop&#x2F;threads every：</strong>多长时间释放多少个线程；若设置为 5 个和 1 秒，表示持续负载结束之后每 1 秒钟释放 5 个线程，<strong>【注意：线程释放过程中，线程依然在运行】</strong></p>
-</li>
-</ul>
-<h2 id="其他场景"><a href="#其他场景" class="headerlink" title="其他场景"></a>其他场景</h2><ul>
-<li>省略</li>
-</ul>
-<h2 id="Active-Threads-Over-Time"><a href="#Active-Threads-Over-Time" class="headerlink" title="Active Threads Over Time"></a>Active Threads Over Time</h2><ul>
-<li>新增监听器，<code>Active Threads Over Time</code>，看到的效果和<code>Stepping Thread Group</code>中的负载预览图一致</li>
-</ul>
-<p><img src="/aposts/d39845c4/image-20211109094438411.png" alt="image-20211109094438411"></p>
-<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><ul>
-<li>这里之前纠结一个奇葩问题，不了解<code>Stepping Thread Group</code>运行机制，手动计算发送请求后和实际发送请求对不上，因此希望其他人不要和我一样</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -2523,7 +2574,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">163</span>
+          <span class="site-state-item-count">164</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -2561,7 +2612,7 @@
     <!--<h3 class="widget-title">Tag Cloud</h3> -->
     <div id="myCanvasContainer" class="widget tagcloud">
         <canvas width="250" height="250" id="resCanvas" style="width=100%">
-            <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AWVS/" rel="tag">AWVS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Burp-Site/" rel="tag">Burp Site</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DVWA/" rel="tag">DVWA</a><span class="tag-list-count">15</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dependency-Check/" rel="tag">Dependency-Check</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/H5/" rel="tag">H5</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hadoop/" rel="tag">Hadoop</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hibernate/" rel="tag">Hibernate</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hive/" rel="tag">Hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jenkins/" rel="tag">Jenkins</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Metasploit/" rel="tag">Metasploit</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MyBatis/" rel="tag">MyBatis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Nessus/" rel="tag">Nessus</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Sonic/" rel="tag">Sonic</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/airtest/" rel="tag">airtest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">android性能测试</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/app%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">app安全测试</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aritest/" rel="tag">aritest</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/centos/" rel="tag">centos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/" rel="tag">chrome</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/datax/" rel="tag">datax</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/django/" rel="tag">django</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/drozer/" rel="tag">drozer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fisco-bcos/" rel="tag">fisco-bcos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flink/" rel="tag">flink</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gin/" rel="tag">gin</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/" rel="tag">go</a><span class="tag-list-count">16</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go-zero/" rel="tag">go-zero</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hive/" rel="tag">hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/httprunner/" rel="tag">httprunner</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a><span class="tag-list-count">20</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jmeter/" rel="tag">jmeter</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka/" rel="tag">kafka</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kail/" rel="tag">kail</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode/" rel="tag">leetcode</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode-%E6%95%B0%E7%BB%84/" rel="tag">leetcode-数组</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mitmproxy/" rel="tag">mitmproxy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongodb/" rel="tag">mongodb</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/monkey/" rel="tag">monkey</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/" rel="tag">mysql</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/orm/" rel="tag">orm</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pandas/" rel="tag">pandas</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pc%E8%87%AA%E5%8A%A8%E5%8C%96/" rel="tag">pc自动化</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/playwright/" rel="tag">playwright</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pytest/" rel="tag">pytest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a><span class="tag-list-count">23</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/" rel="tag">redis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/selenium/" rel="tag">selenium</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring/" rel="tag">spring</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlite/" rel="tag">sqlite</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlmap/" rel="tag">sqlmap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tkinter/" rel="tag">tkinter</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/" rel="tag">vue</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue3/" rel="tag">vue3</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">云服务器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8C%BA%E5%9D%97%E9%93%BE/" rel="tag">区块链</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag">大数据</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">安全测试</a><span class="tag-list-count">29</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">性能测试</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%88%AC%E8%99%AB/" rel="tag">爬虫</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" rel="tag">环境搭建</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95/" rel="tag">自动化测试</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%8B%B1%E8%AF%AD%E5%AD%A6%E4%B9%A0/" rel="tag">英语学习</a><span class="tag-list-count">1</span></li></ul>
+            <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AWVS/" rel="tag">AWVS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Burp-Site/" rel="tag">Burp Site</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DVWA/" rel="tag">DVWA</a><span class="tag-list-count">15</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dependency-Check/" rel="tag">Dependency-Check</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/H5/" rel="tag">H5</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hadoop/" rel="tag">Hadoop</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hibernate/" rel="tag">Hibernate</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hive/" rel="tag">Hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jenkins/" rel="tag">Jenkins</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Metasploit/" rel="tag">Metasploit</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MyBatis/" rel="tag">MyBatis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Nessus/" rel="tag">Nessus</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Sonic/" rel="tag">Sonic</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/airtest/" rel="tag">airtest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">android性能测试</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/app%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">app安全测试</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aritest/" rel="tag">aritest</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/centos/" rel="tag">centos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/" rel="tag">chrome</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/datax/" rel="tag">datax</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/django/" rel="tag">django</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/drozer/" rel="tag">drozer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fisco-bcos/" rel="tag">fisco-bcos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flink/" rel="tag">flink</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gin/" rel="tag">gin</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/" rel="tag">go</a><span class="tag-list-count">16</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go-zero/" rel="tag">go-zero</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hive/" rel="tag">hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/httprunner/" rel="tag">httprunner</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a><span class="tag-list-count">21</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jmeter/" rel="tag">jmeter</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka/" rel="tag">kafka</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kail/" rel="tag">kail</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode/" rel="tag">leetcode</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode-%E6%95%B0%E7%BB%84/" rel="tag">leetcode-数组</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mitmproxy/" rel="tag">mitmproxy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongodb/" rel="tag">mongodb</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/monkey/" rel="tag">monkey</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/" rel="tag">mysql</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/orm/" rel="tag">orm</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pandas/" rel="tag">pandas</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pc%E8%87%AA%E5%8A%A8%E5%8C%96/" rel="tag">pc自动化</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/playwright/" rel="tag">playwright</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pytest/" rel="tag">pytest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a><span class="tag-list-count">23</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/" rel="tag">redis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/selenium/" rel="tag">selenium</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring/" rel="tag">spring</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlite/" rel="tag">sqlite</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlmap/" rel="tag">sqlmap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tkinter/" rel="tag">tkinter</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/" rel="tag">vue</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue3/" rel="tag">vue3</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">云服务器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8C%BA%E5%9D%97%E9%93%BE/" rel="tag">区块链</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag">大数据</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">安全测试</a><span class="tag-list-count">29</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">性能测试</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%88%AC%E8%99%AB/" rel="tag">爬虫</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" rel="tag">环境搭建</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95/" rel="tag">自动化测试</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%8B%B1%E8%AF%AD%E5%AD%A6%E4%B9%A0/" rel="tag">英语学习</a><span class="tag-list-count">1</span></li></ul>
         </canvas>
     </div>
 </div>
