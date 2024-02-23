@@ -191,6 +191,209 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/453281b/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="一个正经的测试工程师">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="施坤的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/aposts/453281b/" class="post-title-link" itemprop="url">app安全测试-M3-M10</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-04-02 10:12:15" itemprop="dateCreated datePublished" datetime="2022-04-02T10:12:15+08:00">2022-04-02</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-04-19 15:12:16" itemprop="dateModified" datetime="2022-04-19T15:12:16+08:00">2022-04-19</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/app%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" itemprop="url" rel="index"><span itemprop="name">app安全测试</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/aposts/453281b/" class="post-meta-item leancloud_visitors" data-flag-title="app安全测试-M3-M10" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/aposts/453281b/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/aposts/453281b/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="M3-不安全的通信"><a href="#M3-不安全的通信" class="headerlink" title="M3-不安全的通信"></a>M3-不安全的通信</h2><ul>
+<li>直接参考挂<a target="_blank" rel="noopener" href="https://owasp.org/www-project-mobile-top-10/2016-risks/m3-insecure-communication">官网</a></li>
+</ul>
+<h3 id="实践"><a href="#实践" class="headerlink" title="实践"></a>实践</h3><ul>
+<li>最简单的一种就是拦截app请求，然后对接口进行篡改</li>
+<li>没有进行实际的实践，把一些不错的文章记录下</li>
+<li><a target="_blank" rel="noopener" href="https://code.tutsplus.com/tutorials/securing-communications-on-android--cms-31596">这文章</a>有一些详细的实践说明，可以参考下，我大概总结如何避免：</li>
+</ul>
+<h4 id="使用https"><a href="#使用https" class="headerlink" title="使用https"></a>使用https</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">URL url = new URL(&quot;https://example.com&quot;);</span><br><span class="line">HttpsURLConnection httpsURLConnection = (HttpsURLConnection)url.openConnection();</span><br><span class="line">httpsURLConnection.connect();</span><br></pre></td></tr></table></figure>
+
+<h4 id="更新加密包"><a href="#更新加密包" class="headerlink" title="更新加密包"></a>更新加密包</h4><ul>
+<li>一些敏感重要的东西，在使用第三方提供的加密服务时，需要时常关注是否有漏洞，以及版本信息</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">implementation &#x27;com.google.android.gms:play-services-safetynet:15.0.1&#x27;</span><br></pre></td></tr></table></figure>
+
+<h4 id="证书和公钥的锁定"><a href="#证书和公钥的锁定" class="headerlink" title="证书和公钥的锁定"></a>证书和公钥的锁定</h4><h5 id="如何CertificatePinning"><a href="#如何CertificatePinning" class="headerlink" title="如何CertificatePinning"></a>如何CertificatePinning</h5><ul>
+<li><p>1.首先服务器端使用RSA算法生成一对公钥私钥对，服务器端持有私钥，线下将公钥传给客户端。App中将这个值硬编码到本地。</p>
+</li>
+<li><p>2.App端可以自己实现一个X509TrustManager接口,在其中的CheckServerTrusted()方法里通过证书链拿到PublicKey,</p>
+</li>
+<li><p>3.比较1和2中进行md5的值，如果匹配则服务器验证通过，否则立即终止与此服务器的通信</p>
+</li>
+</ul>
+<p>更多介绍来自<a target="_blank" rel="noopener" href="https://blog.csdn.net/ptwh0608/article/details/44155255?winzoom=1">这里</a></p>
+<h4 id="异常过滤和验证"><a href="#异常过滤和验证" class="headerlink" title="异常过滤和验证"></a>异常过滤和验证</h4><p>就是常见的一些异常验证和过滤，比如正则、特殊字符过滤等，下面就是典型的异常验证</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">if (editText.getText().toString().length() &lt;= 48)</span><br><span class="line">&#123;</span><br><span class="line">    ; //return something...</span><br><span class="line">&#125;</span><br><span class="line">else</span><br><span class="line">&#123;</span><br><span class="line">    ; //return default or error</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="和其他App通信"><a href="#和其他App通信" class="headerlink" title="和其他App通信"></a>和其他App通信</h4><p>和其他app通信时，有些情况下，开发人员留下了共享文件或实现了套接字来交换敏感信息，建议使用<code>Intents</code></p>
+<h4 id="端到端加密"><a href="#端到端加密" class="headerlink" title="端到端加密"></a>端到端加密</h4><p>一个很好的例子是一个加密聊天应用程序，其中两个移动设备通过服务器相互通信；只有发送者和接收者才能阅读对方的信息。</p>
+<h2 id="M4-不安全的身份验证"><a href="#M4-不安全的身份验证" class="headerlink" title="M4-不安全的身份验证"></a>M4-不安全的身份验证</h2><ul>
+<li><p>糟糕的身份验证方案允许攻击者在移动应用或该应用使用的服务器上匿名执行任何用户操作。由于移动设备的输入形式因素，弱应用认证是一个非常常见的问题</p>
+</li>
+<li><p>app在和服务器通信时，可以拦截请求，对这些请求进行参数篡改，这里就懒得验证了，有兴趣的可以自行操作</p>
+</li>
+</ul>
+<p><img src="/aposts/453281b/image-20220402112740084.png" alt="image-20220402112740084"></p>
+<h2 id="M5-弱加密"><a href="#M5-弱加密" class="headerlink" title="M5-弱加密"></a>M5-弱加密</h2><p>加密容易被破解</p>
+<ul>
+<li>常见类型：<ul>
+<li>内置代码加密</li>
+<li>硬编码密钥</li>
+<li>不安全或过时的算法（<code>RC2/MD4/MD5/SHA1</code>）</li>
+</ul>
+</li>
+</ul>
+<p><img src="/aposts/453281b/image-20220402112345282.png" alt="image-20220402112345282"></p>
+<p><img src="/aposts/453281b/image-20220402112406242.png" alt="image-20220402112406242"></p>
+<p><img src="/aposts/453281b/image-20220402112431474.png" alt="image-20220402112431474"></p>
+<h2 id="M6-不安全的授权"><a href="#M6-不安全的授权" class="headerlink" title="M6 - 不安全的授权"></a>M6 - 不安全的授权</h2><p><code>M4-不安全的身份验证</code>风险通常与M6混淆，因为两者都与用户凭据有关。M6是关于使用授权以合法用户身份登录。M4是攻击者试图以匿名用户身份登录以绕过身份验证过程的情况，通常由如下问题：</p>
+<ol>
+<li>不安全的应用程序权限设置</li>
+<li>冗余授予的权限</li>
+<li>存在不安全的直接对象引用（IDOR）漏洞</li>
+</ol>
+<h3 id="测试方法"><a href="#测试方法" class="headerlink" title="测试方法"></a>测试方法</h3><ul>
+<li><p>来自<a target="_blank" rel="noopener" href="https://blog.csdn.net/m0_37268841/article/details/104728551">这里</a></p>
+</li>
+<li><p>使用的<code>Android Killer</code>，因为这个工具会把权限这块明显的列出来</p>
+</li>
+</ul>
+<p><img src="/aposts/453281b/image-20220402113516303.png" alt="image-20220402113516303"></p>
+<ul>
+<li>上面标色的权限部分，根据业务需要分别check一下，看一下是不是真的是必须的。</li>
+<li>冗余授权也可以在这边找到，但也可以用另外一个工具<code>drozer</code>查看</li>
+</ul>
+<p><img src="/aposts/453281b/image-20220402155014773.png" alt="image-20220402155014773"></p>
+<ul>
+<li>抓包</li>
+</ul>
+<h2 id="M7-客户端代码质量"><a href="#M7-客户端代码质量" class="headerlink" title="M7-客户端代码质量"></a>M7-客户端代码质量</h2><ul>
+<li><p>M7的风险源于糟糕或不一致的编码实践，即开发团队的每个成员都遵循不同的编码实践，并在最终代码中造成不一致。</p>
+</li>
+<li><p>M7对应用程序安全没有威胁。尽管患病率很高，但这一风险区域很难发现。对于黑客来说，了解糟糕编码的模式并不容易。这个过程通常需要复杂的人工分析。</p>
+</li>
+<li><p>在获得源码情况下，可以参考这里的<a target="_blank" rel="noopener" href="https://f-sec.blog.csdn.net/article/details/104740837">测试方法</a></p>
+</li>
+</ul>
+<h2 id="M8-代码篡改"><a href="#M8-代码篡改" class="headerlink" title="M8 -代码篡改"></a>M8 -代码篡改</h2><p>测试点：</p>
+<ol>
+<li>修改代码</li>
+<li>修改资源</li>
+<li>修改API</li>
+</ol>
+<p>具体测试方法参考<a target="_blank" rel="noopener" href="https://f-sec.blog.csdn.net/article/details/104740837">这里</a></p>
+<h2 id="M10-无关功能"><a href="#M10-无关功能" class="headerlink" title="M10-无关功能"></a>M10-无关功能</h2><p>测试点：</p>
+<ul>
+<li>开发人员包括隐藏的后门功能或其他不打算发布到生产环境中的内部开发安全控件</li>
+<li>URL 修改</li>
+<li>应用程序可以在被 root 或越狱手机中使用 </li>
+<li>Back-and-Refresh 攻击</li>
+<li>应用程序中包含过时的文件</li>
+<li>没有显示最近登录信息</li>
+<li>到期后或释放的资源操作</li>
+<li>ASLR没有被使用</li>
+<li>剪切板未禁用</li>
+<li>缓存粉碎未激活</li>
+<li>Android备份检查</li>
+<li>未实行可信任发布</li>
+<li>允许所有 Hostname Verifier</li>
+<li>弱自定义 Hostname Verifier</li>
+</ul>
+<p>测试方法来源<a target="_blank" rel="noopener" href="https://f-sec.blog.csdn.net/article/details/104742476">这里</a></p>
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><ul>
+<li>安全测试思维导图</li>
+</ul>
+<p><img src="/aposts/453281b/1533540920557546-16492305970471.png" alt="1533540920557546"></p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://blog.51cto.com/laoyinga/2155341">移动APP安全测试</a></li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/fcb52a56/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1877,217 +2080,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/d7b393af/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="一个正经的测试工程师">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="施坤的博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/aposts/d7b393af/" class="post-title-link" itemprop="url">腾讯云部署vue+django</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-03-14 10:16:52 / 修改时间：11:05:37" itemprop="dateCreated datePublished" datetime="2022-03-14T10:16:52+08:00">2022-03-14</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/vue/" itemprop="url" rel="index"><span itemprop="name">vue</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/aposts/d7b393af/" class="post-meta-item leancloud_visitors" data-flag-title="腾讯云部署vue+django" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/aposts/d7b393af/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/aposts/d7b393af/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><p>本次主要针对在腾讯云服务器上对vue+django进行部署</p>
-<h2 id="vue本地配置"><a href="#vue本地配置" class="headerlink" title="vue本地配置"></a>vue本地配置</h2><ul>
-<li>vue的请求接口修改为服务器上的ip或者域名</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// 设置接口访问的根目录</span><br><span class="line">axios.defaults.baseURL = &quot;http://host:8081/myapi/&quot;</span><br><span class="line">// 设置原型属性后,其他地方如果要调用，只要用this.$http.get就可以了</span><br><span class="line">Vue.prototype.$http = axios</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>打包后</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm run build</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>压缩打包后的文件传到服务器路径：&#x2F;home&#x2F;dist，压缩软件推荐使用：<code>7-zip</code></li>
-<li>先压缩为tar</li>
-</ul>
-<p><img src="/aposts/d7b393af/image-20220314102924031.png" alt="image-20220314102924031"></p>
-<ul>
-<li>再次压缩为格式为gzip</li>
-</ul>
-<p><img src="/aposts/d7b393af/image-20220314103056936.png" alt="image-20220314103056936"></p>
-<p><img src="/aposts/d7b393af/image-20220314103209261.png" alt="image-20220314103209261"></p>
-<ul>
-<li>把dist.tar.gz上传的服务器，路径为：home</li>
-</ul>
-<h3 id="django本地"><a href="#django本地" class="headerlink" title="django本地"></a>django本地</h3><ul>
-<li>主要是导出依赖文件，执行下面的命令后，项目本地会生成一个<code>requirements.txt</code>依赖文件</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">pip install pipreqs</span><br><span class="line">pipreqs --use-local --encoding=utf8 --force .</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="服务器配置"><a href="#服务器配置" class="headerlink" title="服务器配置"></a>服务器配置</h2><ul>
-<li>腾讯云的centos7系统内置了python3环境</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@VM-24-13-centos mysite]# python  --version</span><br><span class="line">Python 3.6.8</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h3 id="端口设置"><a href="#端口设置" class="headerlink" title="端口设置"></a>端口设置</h3><ul>
-<li>端口规则，因为腾讯云的端口除了防护墙打开外，还需要单独新建端口规则</li>
-</ul>
-<p><img src="/aposts/d7b393af/image-20220314102334057.png" alt="image-20220314102334057"></p>
-<ul>
-<li>服务器开放端口的一些配置：</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">firewall-cmd --zone=public --add-port=8100/tcp --permanent</span><br><span class="line">firewall-cmd --zone=public --add-port=8081/tcp --permanent</span><br><span class="line"></span><br><span class="line">firewall-cmd --reload   # 配置立即生效</span><br><span class="line">firewall-cmd --zone=public --list-port # 查看防火墙所有开放的端口</span><br><span class="line"> firewall-cmd --state # 查看防火墙状态</span><br><span class="line">netstat -lnpt # 查看监听的端口</span><br><span class="line">netstat -lnpt |grep 8081# 查看监听的具体端口</span><br></pre></td></tr></table></figure>
-
-<h3 id="nginx配置"><a href="#nginx配置" class="headerlink" title="nginx配置"></a>nginx配置</h3><ul>
-<li>查看 Nginx 的默认配置的安装位置</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">root@VM-24-13-centos git]# nginx -t</span><br><span class="line">nginx: the configuration file /etc/nginx/nginx.conf syntax is ok</span><br><span class="line">nginx: configuration file /etc/nginx/nginx.conf test is successful</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>配置路径</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/nginx/nginx.conf</span><br><span class="line"></span><br><span class="line">   server &#123;</span><br><span class="line">        listen       8001;</span><br><span class="line">        listen       [::]:8001;</span><br><span class="line">        server_name  www.XXX.123;</span><br><span class="line">        root         /home/dist; # vue的路径</span><br><span class="line">        # Load configuration files for the default server block.</span><br><span class="line">        include /etc/nginx/default.d/*.conf;</span><br><span class="line">        error_page 404 /404.html;</span><br><span class="line">        location = /404.html &#123;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        error_page 500 502 503 504 /50x.html;</span><br><span class="line">        location = /50x.html &#123;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>解压打包的dist压缩包</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">[root@VM-24-13-centos home]# tar -zxvf dist.tar.gz</span><br><span class="line">dist/</span><br><span class="line">dist/css/</span><br><span class="line">dist/css/app.54a7ebec.css</span><br><span class="line">dist/css/chunk-vendors.84bb20f7.css</span><br><span class="line">dist/favicon.ico</span><br><span class="line">dist/fonts/</span><br><span class="line">dist/fonts/element-icons.535877f5.woff</span><br><span class="line">dist/fonts/element-icons.732389de.ttf</span><br><span class="line">dist/img/</span><br><span class="line">dist/img/logo.82b9c7a5.png</span><br><span class="line">dist/index.html</span><br><span class="line">dist/js/</span><br><span class="line">dist/js/app.942844bf.js</span><br><span class="line">dist/js/app.942844bf.js.map</span><br><span class="line">dist/js/chunk-vendors.0b404296.js</span><br><span class="line">dist/js/chunk-vendors.0b404296.js.map</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>重启nginx</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl restart nginx</span><br></pre></td></tr></table></figure>
-
-<h3 id="django"><a href="#django" class="headerlink" title="django"></a>django</h3><ul>
-<li>把django的源代码上传到服务器</li>
-<li>安装依赖文件</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd /usr/local/mysite</span><br><span class="line">pip install -r requirements.txt</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>测试django是否能运行</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 manage.py runserver 0.0.0.0:8081</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>出现报错文件，类似于</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">corsheaders 文件不存在</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>这个是django装的一个跨域访问的中间件，需要手动安装</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip3 install django-cors-headers</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>再次测试django是否正常，发现报错如下，看字面意思就知道是使用的sqlite版本python必须大于3.8.3</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ile &quot;/usr/local/lib/python3.6/site-packages/django/db/backends/sqlite3/base.py&quot;, line 67, in check_sqlite_version</span><br><span class="line">    raise ImproperlyConfigured(&#x27;SQLite 3.8.3 or later is required (found %s).&#x27; % Database.sqlite_version)</span><br><span class="line">django.core.exceptions.ImproperlyConfigured: SQLite 3.8.3 or later is required (found 3.7.17).</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>修改如下，把版本修改下就即可</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">vi /usr/local/lib/python3.6/site-packages/django/db/backends/sqlite3/base.py</span><br><span class="line"></span><br><span class="line">def check_sqlite_version():</span><br><span class="line">    if Database.sqlite_version_info &lt; (3, 7, 17):</span><br><span class="line">        raise ImproperlyConfigured(&#x27;SQLite 3.7.17 or later is required (found %s).&#x27; % Database.sqlite_version)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p>再次执行就不会报错：<code>python3 manage.py runserver 0.0.0.0:8081</code></p>
-</li>
-<li><p>直接新建一个sh文件，内容主要是日志记录文件和后台启动，注意日志这里文件要手动提前新建好：</p>
-</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">root@VM-24-13-centos mysite]# pwd</span><br><span class="line">/usr/local/mysite</span><br><span class="line">[root@VM-24-13-centos mysite]# vi start_api.sh</span><br><span class="line"></span><br><span class="line">MYDATE=`date +%Y%m%d`</span><br><span class="line">ALL_LOGFILE=/home/api_log/log/log_$MYDATE</span><br><span class="line"></span><br><span class="line">nohup python3 manage.py runserver 0.0.0.0:8081 &gt; $&#123;ALL_LOGFILE&#125; 2&gt;&amp;1 &amp;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>提前查看端口是否没有被占用，如果被占用就直接kill</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">netstat -lnpt |grep 8081</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>执行start.sh文件</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sh start.sh</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>最好重启下nginx</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl restart nginx</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>访问下域名正常</li>
-</ul>
-<p><img src="/aposts/d7b393af/image-20220314105945414.png" alt="image-20220314105945414"></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -2163,7 +2155,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">164</span>
+          <span class="site-state-item-count">165</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -2176,7 +2168,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">67</span>
+        <span class="site-state-item-count">68</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -2201,7 +2193,7 @@
     <!--<h3 class="widget-title">Tag Cloud</h3> -->
     <div id="myCanvasContainer" class="widget tagcloud">
         <canvas width="250" height="250" id="resCanvas" style="width=100%">
-            <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AWVS/" rel="tag">AWVS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Burp-Site/" rel="tag">Burp Site</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DVWA/" rel="tag">DVWA</a><span class="tag-list-count">15</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dependency-Check/" rel="tag">Dependency-Check</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/H5/" rel="tag">H5</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hadoop/" rel="tag">Hadoop</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hibernate/" rel="tag">Hibernate</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hive/" rel="tag">Hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jenkins/" rel="tag">Jenkins</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Metasploit/" rel="tag">Metasploit</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MyBatis/" rel="tag">MyBatis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Nessus/" rel="tag">Nessus</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Sonic/" rel="tag">Sonic</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/airtest/" rel="tag">airtest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">android性能测试</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/app%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">app安全测试</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aritest/" rel="tag">aritest</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/centos/" rel="tag">centos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/" rel="tag">chrome</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/datax/" rel="tag">datax</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/django/" rel="tag">django</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/drozer/" rel="tag">drozer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fisco-bcos/" rel="tag">fisco-bcos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flink/" rel="tag">flink</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gin/" rel="tag">gin</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/" rel="tag">go</a><span class="tag-list-count">16</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go-zero/" rel="tag">go-zero</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hive/" rel="tag">hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/httprunner/" rel="tag">httprunner</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a><span class="tag-list-count">21</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jmeter/" rel="tag">jmeter</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka/" rel="tag">kafka</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kail/" rel="tag">kail</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode/" rel="tag">leetcode</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode-%E6%95%B0%E7%BB%84/" rel="tag">leetcode-数组</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mitmproxy/" rel="tag">mitmproxy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongodb/" rel="tag">mongodb</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/monkey/" rel="tag">monkey</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/" rel="tag">mysql</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/orm/" rel="tag">orm</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pandas/" rel="tag">pandas</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pc%E8%87%AA%E5%8A%A8%E5%8C%96/" rel="tag">pc自动化</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/playwright/" rel="tag">playwright</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pytest/" rel="tag">pytest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a><span class="tag-list-count">23</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/" rel="tag">redis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/selenium/" rel="tag">selenium</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring/" rel="tag">spring</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlite/" rel="tag">sqlite</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlmap/" rel="tag">sqlmap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tkinter/" rel="tag">tkinter</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/" rel="tag">vue</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue3/" rel="tag">vue3</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">云服务器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8C%BA%E5%9D%97%E9%93%BE/" rel="tag">区块链</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag">大数据</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">安全测试</a><span class="tag-list-count">29</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">性能测试</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%88%AC%E8%99%AB/" rel="tag">爬虫</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" rel="tag">环境搭建</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95/" rel="tag">自动化测试</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%8B%B1%E8%AF%AD%E5%AD%A6%E4%B9%A0/" rel="tag">英语学习</a><span class="tag-list-count">1</span></li></ul>
+            <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AWVS/" rel="tag">AWVS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Burp-Site/" rel="tag">Burp Site</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DVWA/" rel="tag">DVWA</a><span class="tag-list-count">15</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dependency-Check/" rel="tag">Dependency-Check</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/H5/" rel="tag">H5</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hadoop/" rel="tag">Hadoop</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hibernate/" rel="tag">Hibernate</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hive/" rel="tag">Hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jenkins/" rel="tag">Jenkins</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Metasploit/" rel="tag">Metasploit</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MyBatis/" rel="tag">MyBatis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Nessus/" rel="tag">Nessus</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Sonic/" rel="tag">Sonic</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/airtest/" rel="tag">airtest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">android性能测试</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/app%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">app安全测试</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aritest/" rel="tag">aritest</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/centos/" rel="tag">centos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/" rel="tag">chrome</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/datax/" rel="tag">datax</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/django/" rel="tag">django</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/drozer/" rel="tag">drozer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fisco-bcos/" rel="tag">fisco-bcos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flink/" rel="tag">flink</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gin/" rel="tag">gin</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/" rel="tag">go</a><span class="tag-list-count">16</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go-zero/" rel="tag">go-zero</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hive/" rel="tag">hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/httprunner/" rel="tag">httprunner</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a><span class="tag-list-count">22</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jmeter/" rel="tag">jmeter</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka/" rel="tag">kafka</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kail/" rel="tag">kail</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode/" rel="tag">leetcode</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode-%E6%95%B0%E7%BB%84/" rel="tag">leetcode-数组</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mitmproxy/" rel="tag">mitmproxy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongodb/" rel="tag">mongodb</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/monkey/" rel="tag">monkey</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/" rel="tag">mysql</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/orm/" rel="tag">orm</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pandas/" rel="tag">pandas</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pc%E8%87%AA%E5%8A%A8%E5%8C%96/" rel="tag">pc自动化</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/playwright/" rel="tag">playwright</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pytest/" rel="tag">pytest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a><span class="tag-list-count">23</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/" rel="tag">redis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/selenium/" rel="tag">selenium</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring/" rel="tag">spring</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/springboot/" rel="tag">springboot</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlite/" rel="tag">sqlite</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlmap/" rel="tag">sqlmap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tkinter/" rel="tag">tkinter</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/" rel="tag">vue</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue3/" rel="tag">vue3</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">云服务器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8C%BA%E5%9D%97%E9%93%BE/" rel="tag">区块链</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag">大数据</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">安全测试</a><span class="tag-list-count">29</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">性能测试</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%88%AC%E8%99%AB/" rel="tag">爬虫</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" rel="tag">环境搭建</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95/" rel="tag">自动化测试</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%8B%B1%E8%AF%AD%E5%AD%A6%E4%B9%A0/" rel="tag">英语学习</a><span class="tag-list-count">1</span></li></ul>
         </canvas>
     </div>
 </div>
