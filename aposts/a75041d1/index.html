@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"louis-me.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":true,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="项目搭建 node.js 安装16.0以上的版本  12345C:\Users\Administrator&gt;node -vv18.17.0D:\project&gt;npm -v9.6.7   vite初始化Vue3项目  123456789101112D:\project&gt;npm init vite-app vue3DemoNeed to install the following">
+<meta property="og:type" content="article">
+<meta property="og:title" content="vue3系列一">
+<meta property="og:url" content="https://louis-me.github.io/aposts/a75041d1/index.html">
+<meta property="og:site_name" content="施坤的博客">
+<meta property="og:description" content="项目搭建 node.js 安装16.0以上的版本  12345C:\Users\Administrator&gt;node -vv18.17.0D:\project&gt;npm -v9.6.7   vite初始化Vue3项目  123456789101112D:\project&gt;npm init vite-app vue3DemoNeed to install the following">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://louis-me.github.io/aposts/a75041d1/28f833b829cbc1d217b7e6e7fb9f888a.gif">
+<meta property="og:image" content="https://louis-me.github.io/aposts/a75041d1/image-20240229145232356.png">
+<meta property="og:image" content="https://louis-me.github.io/aposts/a75041d1/image-20240229150642949.png">
+<meta property="og:image" content="https://louis-me.github.io/aposts/a75041d1/image-20240229150702474.png">
+<meta property="og:image" content="https://louis-me.github.io/aposts/a75041d1/image-20240229153509613.png">
+<meta property="og:image" content="https://louis-me.github.io/aposts/a75041d1/image-20240229153542699.png">
+<meta property="og:image" content="https://louis-me.github.io/aposts/a75041d1/image-20240229162030615.png">
+<meta property="og:image" content="https://louis-me.github.io/aposts/a75041d1/image-20240229164328671.png">
+<meta property="og:image" content="https://louis-me.github.io/aposts/a75041d1/image-20240229175711760.png">
+<meta property="article:published_time" content="2024-02-26T08:48:31.000Z">
+<meta property="article:modified_time" content="2024-03-01T02:20:48.134Z">
+<meta property="article:tag" content="vue">
+<meta property="article:tag" content="vue3">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://louis-me.github.io/aposts/a75041d1/28f833b829cbc1d217b7e6e7fb9f888a.gif">
+
+<link rel="canonical" href="https://louis-me.github.io/aposts/a75041d1/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>vue3系列一 | 施坤的博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">施坤的博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-简历">
+
+    <a href="/resume/" rel="section"><i class="fa fa-address-card fa-fw"></i>简历</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/a75041d1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="一个正经的测试工程师">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="施坤的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          vue3系列一
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2024-02-26 16:48:31" itemprop="dateCreated datePublished" datetime="2024-02-26T16:48:31+08:00">2024-02-26</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-03-01 10:20:48" itemprop="dateModified" datetime="2024-03-01T10:20:48+08:00">2024-03-01</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/vue3/" itemprop="url" rel="index"><span itemprop="name">vue3</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/aposts/a75041d1/" class="post-meta-item leancloud_visitors" data-flag-title="vue3系列一" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/aposts/a75041d1/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/aposts/a75041d1/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="项目搭建"><a href="#项目搭建" class="headerlink" title="项目搭建"></a>项目搭建</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://nodejs.org/en">node.js</a> 安装16.0以上的版本</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">C:\Users\Administrator&gt;node -v</span><br><span class="line">v18.17.0</span><br><span class="line"></span><br><span class="line">D:\project&gt;npm -v</span><br><span class="line">9.6.7</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>vite初始化Vue3项目</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">D:\project&gt;npm init vite-app vue3Demo</span><br><span class="line">Need to install the following packages:</span><br><span class="line">  create-vite-app@1.21.0</span><br><span class="line">Ok to proceed? (y) y</span><br><span class="line"></span><br><span class="line">cd vue3Demo</span><br><span class="line">npm install</span><br><span class="line">D:\project\vue3Demo&gt;npm run dev</span><br><span class="line">  Dev server running at:</span><br><span class="line">  &gt; Network:  http://192.168.57.198:3000/</span><br><span class="line">  &gt; Local:    http://localhost:3000/</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="项目结构分析"><a href="#项目结构分析" class="headerlink" title="项目结构分析"></a>项目结构分析</h3><ul>
+<li>这里的项目目录结构分析主要是main.js文件</li>
+<li>Vue2里面的main.js</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">new Vue(&#123;</span><br><span class="line">  el: &#x27;#app&#x27;,</span><br><span class="line">  components: &#123;&#125;,</span><br><span class="line">  template: &#x27;&#x27;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>Vue3里面的main.js</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">import &#123; createApp &#125; from &#x27;vue&#x27;</span><br><span class="line">import App from &#x27;./App.vue&#x27;</span><br><span class="line">createApp(App).mount(&#x27;#app&#x27;)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>在Vue2里面，通过<strong>new Vue({})<strong>构造函数创建应用实例对象，而Vue3引入的不再是Vue的构造函数，引入的是一个名为</strong>createApp</strong>的工厂函数创建应用实例对象。</p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd?pli=1">Vue3-devtool获取</a></p>
+</li>
+</ul>
+<h2 id="Composition-API"><a href="#Composition-API" class="headerlink" title="Composition API"></a>Composition API</h2><h3 id="setp"><a href="#setp" class="headerlink" title="setp"></a>setp</h3><ul>
+<li><p>setup是所有Composition API(组合式API)的入口，组件中所用到的数据、方法等等，均要配置在setup里面</p>
+</li>
+<li><p>组件中所用到的数据、方法等等，均要配置在setup里面</p>
+</li>
+<li><p>setup的执行时机</p>
+<ul>
+<li><strong>在beforeCreate之前执行一次，此时this为undefined</strong></li>
+</ul>
+</li>
+<li><p>setup函数的两种返回值</p>
+<ul>
+<li>若返回一个对象，则对象中的属性、方法，在模板中均可以直接使用</li>
+<li>若返回一个渲染函数，则可以自定义渲染内容</li>
+</ul>
+</li>
+<li><p>setup的参数</p>
+<ul>
+<li>props：值为对象，包含：组件外部传递过来，且组件内部声明接收了的属性</li>
+<li>context：上下文对象<ul>
+<li>attrs：值为对象，包含：组件外部传递过来，但没有在props配置中声明的属性，相当于this.$attrs</li>
+<li>slots：收到的插槽内容，相当于this.$slots</li>
+<li>emit：分发自定义事件的函数，相当于this.$emit</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><strong>注意事项：</strong></p>
+<p>尽量不要与Vue2x的配置使用</p>
+<ul>
+<li>Vue2x的配置(data、methods、computed)均可以访问到setup中的属性、方法</li>
+<li>setup中不能访问Vue2x的配置(data、methods、computed)</li>
+<li>如果data里面的属性和setup里面的属性有重名，则setup优先</li>
+</ul>
+<h3 id="返回值"><a href="#返回值" class="headerlink" title="返回值"></a>返回值</h3><h4 id="示例一：setup函数的两种返回值"><a href="#示例一：setup函数的两种返回值" class="headerlink" title="示例一：setup函数的两种返回值"></a>示例一：setup函数的两种返回值</h4><ul>
+<li>安装路由依赖</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install vue-router@4 --save</span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li><code>src\router\routers.js </code>  手动新建自定义路由</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">const routes = [</span><br><span class="line">    &#123;</span><br><span class="line">        name: &quot;home&quot;,</span><br><span class="line">        path: &quot;/home&quot;,</span><br><span class="line">        component: () =&gt; import(&quot;../components/views/home.vue&quot;)</span><br><span class="line">    &#125;</span><br><span class="line">]</span><br><span class="line">export default routes;</span><br></pre></td></tr></table></figure>
+
+<p><code>src\router\index.js</code>  对外暴露路由</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">import &#123; createRouter, createWebHistory &#125; from &quot;vue-router&quot;</span><br><span class="line"></span><br><span class="line">// createRouter方法用于创建路由实例对象</span><br><span class="line">// createWebHashHistory方法用于指定路由的工作模式（hash模式</span><br><span class="line">import routes from &quot;./routers&quot;</span><br><span class="line">var router=createRouter(&#123;</span><br><span class="line">    history:createWebHistory(),</span><br><span class="line">    routes</span><br><span class="line">&#125;)</span><br><span class="line">export default router</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>src-main.js内容引用路由</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">import &#123; createApp &#125; from &#x27;vue&#x27;</span><br><span class="line">import App from &#x27;./App.vue&#x27;</span><br><span class="line">import &#x27;./index.css&#x27;</span><br><span class="line">import router from &quot;./routers/index.js&quot;</span><br><span class="line"></span><br><span class="line">const app = createApp(App)</span><br><span class="line"></span><br><span class="line">app.use(router)</span><br><span class="line">app.mount(&quot;#app&quot;)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>编写src-components-views-home.vue</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">    &lt;h2&gt;练习setup相关内容&lt;/h2&gt;</span><br><span class="line">    &lt;!--&lt;h2&gt;setup返回一个对象，并使用对象中的属性和方法&lt;/h2&gt;--&gt;</span><br><span class="line">    &lt;!--&lt;p&gt;姓名：&#123;&#123;student.name&#125;&#125;&lt;/p&gt;--&gt;</span><br><span class="line">    &lt;!--&lt;p&gt;年龄：&#123;&#123;student.age&#125;&#125;&lt;/p&gt;--&gt;</span><br><span class="line">    &lt;!--&lt;button @click=&quot;hello&quot;&gt;点击查看控制台信息&lt;/button&gt;--&gt;</span><br><span class="line">    &lt;hr&gt;</span><br><span class="line">    &lt;h2&gt;setup返回一个函数&lt;/h2&gt;</span><br><span class="line">&lt;/template&gt;</span><br><span class="line"></span><br><span class="line">&lt;script&gt;</span><br><span class="line">    import &#123;h&#125; from &#x27;vue&#x27;</span><br><span class="line">    export default &#123;</span><br><span class="line">        name: &quot;setupComponent&quot;,</span><br><span class="line">        setup()&#123;</span><br><span class="line">            // 属性</span><br><span class="line">             let student=&#123;</span><br><span class="line">                name:&#x27;张三&#x27;,</span><br><span class="line">                age:18,</span><br><span class="line">             &#125;</span><br><span class="line">            // 方法</span><br><span class="line">        function hello() &#123;</span><br><span class="line">               console.log(`大家好，我叫$&#123;student.name&#125;,今年$&#123;student.age&#125;`)</span><br><span class="line">             &#125;</span><br><span class="line">             return&#123;	// 返回一个对象</span><br><span class="line">                 student,</span><br><span class="line">                 hello,</span><br><span class="line">             &#125;</span><br><span class="line">            // return()=&gt;h(&#x27;h1&#x27;,&#x27;你好&#x27;)	// 返回一个函数</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&lt;/script&gt;</span><br><span class="line"></span><br><span class="line">&lt;style scoped&gt;</span><br><span class="line"></span><br><span class="line">&lt;/style&gt;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>这里需要注意的是setup里面定义的<strong>属性和方法均要return出去</strong>，否则无法使用</p>
+</blockquote>
+<ul>
+<li>启动测试</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm run dev</span><br></pre></td></tr></table></figure>
+
+<h4 id="示例二：setup里面的参数和方法和配置项混合使用"><a href="#示例二：setup里面的参数和方法和配置项混合使用" class="headerlink" title="示例二：setup里面的参数和方法和配置项混合使用"></a>示例二：setup里面的参数和方法和配置项混合使用</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">    &lt;h2&gt;setup和配置项混用&lt;/h2&gt;</span><br><span class="line">    &lt;h2&gt;姓名：&#123;&#123;name&#125;&#125;&lt;/h2&gt;</span><br><span class="line">    &lt;h2&gt;年龄：&#123;&#123;age&#125;&#125;&lt;/h2&gt;</span><br><span class="line">    &lt;h2&gt;性别：&#123;&#123;sex&#125;&#125;&lt;/h2&gt;</span><br><span class="line">    &lt;button @click=&quot;sayHello&quot;&gt;sayHello（Vue3里面的方法）&lt;/button&gt;</span><br><span class="line">    &lt;button @click=&quot;sayWelcome&quot;&gt;sayWelcome（Vue2里面的方法）&lt;/button&gt;</span><br><span class="line">&lt;/template&gt;</span><br><span class="line"></span><br><span class="line">&lt;script&gt;</span><br><span class="line">    export default &#123;</span><br><span class="line">        name: &quot;setup01_component&quot;,</span><br><span class="line">        data()&#123;</span><br><span class="line">          return&#123;</span><br><span class="line">            sex:&#x27;男&#x27;,</span><br><span class="line">            sum:0,</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;,</span><br><span class="line">        methods:&#123;</span><br><span class="line">            sayWelcome()&#123;</span><br><span class="line">                console.log(`sayWelcome`)</span><br><span class="line">            &#125;,</span><br><span class="line">        &#125;,</span><br><span class="line">        setup()&#123;</span><br><span class="line">            let sum=100;</span><br><span class="line">            let name=&#x27;张三&#x27;;</span><br><span class="line">            let age=18;</span><br><span class="line">            function sayHello() &#123;</span><br><span class="line">                console.log(`我叫$&#123;name&#125;，今年$&#123;age&#125;`)</span><br><span class="line">            &#125;</span><br><span class="line">            return&#123;</span><br><span class="line">                name,</span><br><span class="line">                age,</span><br><span class="line">                sayHello,</span><br><span class="line">                sum</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&lt;/script&gt;</span><br><span class="line"></span><br><span class="line">&lt;style scoped&gt;</span><br><span class="line"></span><br><span class="line">&lt;/style&gt;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>这段代码是先实现了setup里面的属性和方法，以及Vue2中配置项里面的属性和方法。接下来添加对应的混合方法</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">    &lt;h2&gt;setup和配置项混用&lt;/h2&gt;</span><br><span class="line">    &lt;h2&gt;姓名：&#123;&#123;name&#125;&#125;&lt;/h2&gt;</span><br><span class="line">    &lt;h2&gt;年龄：&#123;&#123;age&#125;&#125;&lt;/h2&gt;</span><br><span class="line">    &lt;h2&gt;性别：&#123;&#123;sex&#125;&#125;&lt;/h2&gt;</span><br><span class="line">    &lt;button @click=&quot;sayHello&quot;&gt;sayHello（Vue3里面的方法）&lt;/button&gt;</span><br><span class="line">    &lt;button @click=&quot;sayWelcome&quot;&gt;sayWelcome（Vue2里面的方法）&lt;/button&gt;</span><br><span class="line">    &lt;br&gt;</span><br><span class="line">    &lt;br&gt;</span><br><span class="line">    &lt;button @click=&quot;test01&quot;&gt;测试Vue2里面调用Vue3里面的属性和方法&lt;/button&gt;</span><br><span class="line">    &lt;br&gt;</span><br><span class="line">    &lt;br&gt;</span><br><span class="line">    &lt;button @click=&quot;test02&quot;&gt;测试Vue3setup里面调用Vue2里面的属性和方法&lt;/button&gt;</span><br><span class="line">    &lt;br&gt;</span><br><span class="line">    &lt;h2&gt;sum的值是：&#123;&#123;sum&#125;&#125;&lt;/h2&gt;</span><br><span class="line">&lt;/template&gt;</span><br><span class="line"></span><br><span class="line">&lt;script&gt;</span><br><span class="line">    export default &#123;</span><br><span class="line">        name: &quot;setup01_component&quot;,</span><br><span class="line">        data()&#123;</span><br><span class="line">          return&#123;</span><br><span class="line">            sex:&#x27;男&#x27;,</span><br><span class="line">            sum:0,</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;,</span><br><span class="line">        methods:&#123;</span><br><span class="line">            sayWelcome()&#123;</span><br><span class="line">                console.log(`sayWelcome`)</span><br><span class="line">            &#125;,</span><br><span class="line">            test01()&#123;</span><br><span class="line">                console.log(this.sex);  // Vue2里面的属性(data里面的属性)</span><br><span class="line">                // setup里面的属性</span><br><span class="line">                console.log(this.name);</span><br><span class="line">                console.log(this.age);</span><br><span class="line">                // setup里面的方法</span><br><span class="line">                this.sayHello();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;,</span><br><span class="line">        setup()&#123;</span><br><span class="line">            let sum=100;</span><br><span class="line">            let name=&#x27;张三&#x27;;</span><br><span class="line">            let age=18;</span><br><span class="line">            function sayHello() &#123;</span><br><span class="line">                console.log(`我叫$&#123;name&#125;，今年$&#123;age&#125;`)</span><br><span class="line">            &#125;</span><br><span class="line">            function test02() &#123;</span><br><span class="line">                // setup里面的属性</span><br><span class="line">                console.log(name);</span><br><span class="line">                console.log(age);</span><br><span class="line">				</span><br><span class="line">                // data里面的属性</span><br><span class="line">                console.log(this.sex);</span><br><span class="line">                console.log(this.sayWelcome);</span><br><span class="line">            &#125;</span><br><span class="line">            return&#123;</span><br><span class="line">                name,</span><br><span class="line">                age,</span><br><span class="line">                sayHello,</span><br><span class="line">                test02,</span><br><span class="line">                sum</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&lt;/script&gt;</span><br><span class="line"></span><br><span class="line">&lt;style scoped&gt;</span><br><span class="line"></span><br><span class="line">&lt;/style&gt;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>测试Vue3setup里面调用Vue2里面的属性和方法时，this.sex无数据</p>
+</blockquote>
+<h3 id="Vue2里面props和slot的使用"><a href="#Vue2里面props和slot的使用" class="headerlink" title="Vue2里面props和slot的使用"></a>Vue2里面props和slot的使用</h3><p>讲解setup这里面的两个参数之前，先回顾一下Vue2里面的相关知识</p>
+<ul>
+<li>props和自定义事件的使用</li>
+<li>attrs</li>
+<li>slot(插槽)</li>
+</ul>
+<h4 id="示例一：Vue2props和自定义事件的使用"><a href="#示例一：Vue2props和自定义事件的使用" class="headerlink" title="示例一：Vue2props和自定义事件的使用"></a>示例一：Vue2props和自定义事件的使用</h4><p>准备两个组件，分别为parent.vue组件和child.vue组件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">    &lt;div class=&quot;parent&quot;&gt;</span><br><span class="line">      我是父组件</span><br><span class="line">      &lt;child msg=&quot;传递信息&quot; name=&quot;张三&quot; @sendParentMsg=&quot;getMsg&quot;/&gt;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">&lt;/template&gt;</span><br><span class="line">&lt;script&gt;</span><br><span class="line">    import Child from &quot;./child.vue&quot;;</span><br><span class="line">    export default &#123;</span><br><span class="line">        name: &quot;Parent&quot;,</span><br><span class="line">      components: &#123;Child&#125;,</span><br><span class="line">      methods:&#123;</span><br><span class="line">        getMsg(msg)&#123;</span><br><span class="line">          console.log(msg)</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&lt;/script&gt;</span><br><span class="line">&lt;style scoped&gt;</span><br><span class="line">  .parent&#123;</span><br><span class="line">    padding: 10px;</span><br><span class="line">    background-color: red;</span><br><span class="line">  &#125;</span><br><span class="line">&lt;/style&gt;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>child</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">    &lt;div class=&quot;child&quot;&gt;</span><br><span class="line">      &lt;h2&gt;我是子组件&lt;/h2&gt;</span><br><span class="line">      &lt;p&gt;父组件传递过来的消息是:&#123;&#123;msg&#125;&#125;&lt;/p&gt;</span><br><span class="line">      &lt;p&gt;父组件传递过来的消息是:&#123;&#123;name&#125;&#125;&lt;/p&gt;</span><br><span class="line">      &lt;button @click=&quot;sendMsg&quot;&gt;向父组件的传递信息&lt;/button&gt;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">&lt;/template&gt;</span><br><span class="line">&lt;script&gt;</span><br><span class="line">    export default &#123;</span><br><span class="line">        name: &quot;Child&quot;,</span><br><span class="line">        props:&#123;</span><br><span class="line">          msg:&#123;</span><br><span class="line">            type:String,</span><br><span class="line">            default:&#x27;&#x27;</span><br><span class="line">          &#125;,</span><br><span class="line">          name:&#123;</span><br><span class="line">            type:String,</span><br><span class="line">            default:&#x27;&#x27;</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;,</span><br><span class="line">        mounted()&#123;</span><br><span class="line">          console.log(this);</span><br><span class="line">        &#125;,</span><br><span class="line">        methods:&#123;</span><br><span class="line">          sendMsg()&#123;</span><br><span class="line">            this.$emit(&quot;sendParentMsg&quot;,&#x27;通知父组件更新123&#x27;)</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&lt;/script&gt;</span><br><span class="line">&lt;style scoped&gt;</span><br><span class="line">  .child&#123;</span><br><span class="line">    padding: 10px;</span><br><span class="line">    background-color: orange;</span><br><span class="line">  &#125;</span><br><span class="line">&lt;/style&gt;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/aposts/a75041d1/28f833b829cbc1d217b7e6e7fb9f888a.gif" alt="vue2_props.gif"></p>
+<h5 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h5><ul>
+<li>子组件通过props接收父组件传递的信息，通过this.$emit()自定义事件向父组件传递信息。当使用props接收数据的时候，attrs里面的数据为空，如果没有使用props接收数据的话，那么props里面就有值。</li>
+</ul>
+<h4 id="Vue2里面slot的使用"><a href="#Vue2里面slot的使用" class="headerlink" title="Vue2里面slot的使用"></a>Vue2里面slot的使用</h4><ul>
+<li><p>这两个分类栏里的数据都不一样，但是整体结构是一样的，这就要求组件的结构一样，但是内部 DOM 结构是由使用组件的时候决定的，这就需要插槽</p>
+</li>
+<li><p>同理准备两个组件，一个Index.vue组件，另一个为MySlot.vue组件</p>
+</li>
+<li><p>Index.vue</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">    &lt;div class=&quot;index&quot;&gt;</span><br><span class="line">      &lt;h2&gt;我是Index组件&lt;/h2&gt;</span><br><span class="line">      &lt;!--写法一--&gt;</span><br><span class="line">      &lt;my-slot&gt;</span><br><span class="line">        &lt;!--插槽里面的内容--&gt;</span><br><span class="line">        &lt;h2&gt;传入的slot参数&lt;/h2&gt;</span><br><span class="line">        &lt;h2&gt;传入的slot参数&lt;/h2&gt;</span><br><span class="line">        &lt;h2&gt;传入的slot参数&lt;/h2&gt;</span><br><span class="line">        &lt;h2&gt;传入的slot参数&lt;/h2&gt;</span><br><span class="line">      &lt;/my-slot&gt;</span><br><span class="line">      &lt;!--写法二--&gt;</span><br><span class="line">      &lt;my-slot&gt;</span><br><span class="line">        &lt;div slot=&quot;header&quot;&gt;</span><br><span class="line">         &lt;span&gt;我在header插槽中&lt;/span&gt;</span><br><span class="line">      &lt;/div&gt;  </span><br><span class="line">        </span><br><span class="line">        &lt;div slot=&quot;header&quot;&gt;</span><br><span class="line">         &lt;span&gt;我是footer附件&lt;/span&gt;</span><br><span class="line">      &lt;/div&gt;  </span><br><span class="line">      &lt;/my-slot&gt;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">&lt;/template&gt;</span><br><span class="line"></span><br><span class="line">&lt;script&gt;</span><br><span class="line">    import MySlot from &quot;./MySlot.vue&quot;;</span><br><span class="line">    export default &#123;</span><br><span class="line">        name: &quot;Index&quot;,</span><br><span class="line">      components: &#123;MySlot&#125;</span><br><span class="line">    &#125;</span><br><span class="line">&lt;/script&gt;</span><br><span class="line"></span><br><span class="line">&lt;style scoped&gt;</span><br><span class="line">  .index&#123;</span><br><span class="line">    padding: 10px;</span><br><span class="line">    background: red;</span><br><span class="line">  &#125;</span><br><span class="line">&lt;/style&gt;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>MySlot</p>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">    &lt;div class=&quot;slot&quot;&gt;</span><br><span class="line">      &lt;h2&gt;我是MySlot组件1&lt;/h2&gt;</span><br><span class="line">      &lt;slot&gt;&lt;/slot&gt;</span><br><span class="line">      &lt;br&gt;</span><br><span class="line">      &lt;slot name=&quot;header&quot;&gt;header&lt;/slot&gt;</span><br><span class="line">      &lt;br&gt;</span><br><span class="line">      &lt;slot name=&quot;footer&quot;&gt;footer&lt;/slot&gt;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">&lt;/template&gt;</span><br><span class="line"></span><br><span class="line">&lt;script&gt;</span><br><span class="line">    export default &#123;</span><br><span class="line">        name: &quot;MySlot&quot;,</span><br><span class="line">        mounted()&#123;</span><br><span class="line">          console.log(this);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&lt;/script&gt;</span><br><span class="line"></span><br><span class="line">&lt;style scoped&gt;</span><br><span class="line">  .slot&#123;</span><br><span class="line">    padding: 10px;</span><br><span class="line">    background: orange;</span><br><span class="line">  &#125;</span><br><span class="line">&lt;/style&gt;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/aposts/a75041d1/image-20240229145232356.png" alt="image-20240229145232356"></p>
+<h3 id="ref"><a href="#ref" class="headerlink" title="ref"></a>ref</h3><ul>
+<li><p>作用：<strong>ref( )</strong> 接受一个内部值，返回一个ref 对象，这个对象是响应式的、可更改的，且只有一个指向其内部值的属性 .value。</p>
+</li>
+<li><p>语法：<code>const xxx=ref(initValue)</code></p>
+</li>
+<li><p>创建一个包含响应式数据的引用对象(reference对象);</p>
+</li>
+<li><p>JS中操作数据：xxx.value&#x3D;xxx，模板中读取数据：不需要.value,直接：<code>&#123;&#123;xxx&#125;&#125;</code></p>
+</li>
+<li><p>备注：</p>
+<ul>
+<li><p>接收的数据可以是：基本类型，也可以是对象类型</p>
+</li>
+<li><p>基本类型的数据：响应式依然是靠Object.defineProperty()的get和set完成的</p>
+</li>
+<li><p>对象类型的数据：内部求助了Vue3.0中的一个新函数-reactive函数</p>
+</li>
+</ul>
+</li>
+<li><p>测试代码</p>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">    &lt;h1&gt;ref&lt;/h1&gt;</span><br><span class="line">    &lt;h2&gt;ref定义基本数据类型&lt;/h2&gt;</span><br><span class="line">    &lt;p&gt;姓名：&#123;&#123;name&#125;&#125;&lt;/p&gt;</span><br><span class="line">    &lt;p&gt;年龄：&#123;&#123;age&#125;&#125;&lt;/p&gt;</span><br><span class="line">    &lt;p&gt;婚否：&#123;&#123;isMarry&#125;&#125;&lt;/p&gt;</span><br><span class="line">    &lt;h2&gt;ref定义对象类型&lt;/h2&gt;</span><br><span class="line">    &lt;p&gt;爱好：&#123;&#123;hobby&#125;&#125;&lt;/p&gt;</span><br><span class="line">    &lt;p&gt;证件类型：&#123;&#123;user.idCard&#125;&#125;&lt;/p&gt;</span><br><span class="line">    &lt;p&gt;国籍：&#123;&#123;user.nation&#125;&#125;&lt;/p&gt;</span><br><span class="line">    &lt;button @click=&quot;changeName&quot;&gt;修改信息&lt;/button&gt;</span><br><span class="line">&lt;/template&gt;</span><br><span class="line"></span><br><span class="line">&lt;script&gt;</span><br><span class="line">    import &#123;ref&#125; from &#x27;vue&#x27;</span><br><span class="line">    export default &#123;</span><br><span class="line">        name: &quot;refComponent&quot;,</span><br><span class="line">        setup()&#123;</span><br><span class="line">            // 使用基本数据类型 number,string,boolean,</span><br><span class="line">            let name=ref(&#x27;张三&#x27;);</span><br><span class="line">            let age=ref(18);</span><br><span class="line">            let isMarry=ref(false);</span><br><span class="line">            // 使用ref定义数组</span><br><span class="line">            let hobby=ref([&#x27;吃饭&#x27;,&#x27;睡觉&#x27;,&#x27;打豆豆&#x27;]);</span><br><span class="line">            // 使用ref定义对象</span><br><span class="line">            let user=ref(&#123;</span><br><span class="line">                idCard:&#x27;身份证&#x27;,</span><br><span class="line">                nation:[&#x27;中国&#x27;,&#x27;美国&#x27;,&#x27;英国&#x27;,&#x27;俄罗斯&#x27;]</span><br><span class="line">            &#125;)</span><br><span class="line">            function changeName() &#123;</span><br><span class="line">                //  修改基本数据数据类型</span><br><span class="line">                name.value=&#x27;李四&#x27;;    // ref定义的响应式数据修改数据时必需要.value</span><br><span class="line">                age.value=20;</span><br><span class="line">                isMarry.value=true;</span><br><span class="line">                //  修改对象数据类型</span><br><span class="line">                hobby.value[0]=&#x27;玩游戏&#x27;;</span><br><span class="line">                user.value.idCard=&#x27;港澳台居民身份证&#x27;;</span><br><span class="line">                user.value.nation[0]=&#x27;挪威&#x27;;</span><br><span class="line">            &#125;</span><br><span class="line">            return&#123;</span><br><span class="line">                name,</span><br><span class="line">                age,</span><br><span class="line">                isMarry,</span><br><span class="line">                changeName,</span><br><span class="line">                user,</span><br><span class="line">                hobby</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&lt;/script&gt;</span><br><span class="line"></span><br><span class="line">&lt;style scoped&gt;</span><br><span class="line"></span><br><span class="line">&lt;/style&gt;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/aposts/a75041d1/image-20240229150642949.png" alt="image-20240229150642949"></p>
+<p>点击修改信息数据变化</p>
+<p><img src="/aposts/a75041d1/image-20240229150702474.png" alt="image-20240229150702474"></p>
+<blockquote>
+<ul>
+<li>ref定义的响应式数据修改数据时必需要.value</li>
+<li>ref定义的对象数据类型，内部求助了Vue3.0中的一个新函数-reactive函数(看下面的介绍)</li>
+<li>模板中使用数据时不需要.value</li>
+</ul>
+</blockquote>
+<h3 id="reactive"><a href="#reactive" class="headerlink" title="reactive"></a>reactive</h3><ul>
+<li><p>作用：定义一个对象类型的响应式数据(基本类型别用它，用ref函数)</p>
+</li>
+<li><p>const 代理对象&#x3D;reactive(被代理的对象)接收一个对象(或数组)，返回一个代理器对象(Proxy的实例对象，简称Proxy对象)</p>
+</li>
+<li><p>reactive定义的响应式数据是深层次的</p>
+</li>
+<li><p>内部基于ES6的Proxy实现，通过代理对象的操作源对象的内部数据都是响应式的</p>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">    &lt;h2&gt;reactive响应式数据&lt;/h2&gt;</span><br><span class="line">    &lt;p&gt;姓名：&#123;&#123;student.name&#125;&#125;&lt;/p&gt;</span><br><span class="line">    &lt;p&gt;年龄：&#123;&#123;student.age&#125;&#125;&lt;/p&gt;</span><br><span class="line">    &lt;p&gt;爱好：&#123;&#123;student.hobbies&#125;&#125;&lt;/p&gt;</span><br><span class="line">    &lt;button @click=&quot;changeStuInfo&quot;&gt;改变学生信息&lt;/button&gt;</span><br><span class="line">&lt;/template&gt;</span><br><span class="line"></span><br><span class="line">&lt;script&gt;</span><br><span class="line">    import &#123;reactive&#125; from &#x27;vue&#x27;</span><br><span class="line">    export default &#123;</span><br><span class="line">        name: &quot;reactiveComponent&quot;,</span><br><span class="line">        setup()&#123;</span><br><span class="line">                // 数据</span><br><span class="line">            let student=reactive(&#123;</span><br><span class="line">                name:&#x27;张三&#x27;,</span><br><span class="line">                age:19,</span><br><span class="line">                hobbies:[&#x27;吃饭&#x27;,&#x27;睡觉&#x27;,&#x27;打豆豆&#x27;]</span><br><span class="line">            &#125;);</span><br><span class="line">            console.log(student)</span><br><span class="line">            // 方法</span><br><span class="line">            function changeStuInfo() &#123;</span><br><span class="line">                student.name=&#x27;李四&#x27;;</span><br><span class="line">                student.age=20;</span><br><span class="line">                student.hobbies[0]=&#x27;做家务&#x27;	</span><br><span class="line">            &#125;</span><br><span class="line">            return&#123;</span><br><span class="line">                student,</span><br><span class="line">                changeStuInfo,</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&lt;/script&gt;</span><br><span class="line"></span><br><span class="line">&lt;style scoped&gt;</span><br><span class="line"></span><br><span class="line">&lt;/style&gt;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><img src="/aposts/a75041d1/image-20240229153509613.png" alt="image-20240229153509613"></p>
+<ul>
+<li>点击改变学生信息后</li>
+</ul>
+<p><img src="/aposts/a75041d1/image-20240229153542699.png" alt="image-20240229153542699"></p>
+<h4 id="reactive对比ref"><a href="#reactive对比ref" class="headerlink" title="reactive对比ref"></a>reactive对比ref</h4><ul>
+<li><p>从定义数据的角度对比</p>
+<ul>
+<li>ref用来定义：基本类型数据</li>
+<li>reactive用来定义：对象(或数组)类型数据</li>
+<li>备注：ref也可以用来定义对象（或数组）类型的数据，它内部会自动通过reactive转为代理对象</li>
+</ul>
+</li>
+<li><p>从原理角度对比</p>
+<ul>
+<li>ref通过Object.defineProperty()的get和set实现(响应式)数据劫持</li>
+<li>reactive通过使用Proxy来实现响应式(数据劫持),并通过Reflect操作源对象内部的数据</li>
+</ul>
+</li>
+<li><p>从使用角度</p>
+<ul>
+<li>ref定义的数据：操作数据需要.value,读取数据时模板中直接读取不需要.value</li>
+<li>reactive定义的数据：操作数据与读取数据均不需要.value</li>
+</ul>
+</li>
+</ul>
+<h3 id="watch和watchEffect"><a href="#watch和watchEffect" class="headerlink" title="watch和watchEffect"></a>watch和watchEffect</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">   //	attr表示需要监视的属性</span><br><span class="line">//  情况一：监视单个ref定义的响应式数据</span><br><span class="line">   watch(attr,(newValue,oldValue)=&gt;&#123;</span><br><span class="line">       console.log(&#x27;attr变化了&#x27;,newValue,oldValue);</span><br><span class="line">   &#125;)</span><br><span class="line"></span><br><span class="line">  //  情况二; 监视多个ref定义的响应式数据</span><br><span class="line">   watch([attr1,attr2,....,attrn],(newValue,oldValue)=&gt;&#123;</span><br><span class="line">       console.log(&#x27;attr1或attrn变化了&#x27;,newValue,oldValue);</span><br><span class="line">   &#125;)</span><br><span class="line"></span><br><span class="line">// obj表示需要监听的对象</span><br><span class="line">	// 情况三：监视reactive定义的响应式数据</span><br><span class="line">   //	若watch监视的是reactive定义的响应式数据，则无法正确获得oldValue</span><br><span class="line">   //	若watch监视的是reactive定义的响应式数据，则强制打开开启了深度监视</span><br><span class="line">    watch(obj,(newValue,oldValue)=&gt;&#123;</span><br><span class="line">       console.log(&#x27;obj变化了&#x27;,newValue,oldValue)</span><br><span class="line"></span><br><span class="line">    &#125;,&#123;immediate:true,deep:false&#125;); // 此处deep配置不在奏效</span><br><span class="line"></span><br><span class="line">// 情况四,监视reactive定义的响应式数据中的某个属性</span><br><span class="line">     watch(()=&gt;person.job,(newValue,oldValue)=&gt;&#123;</span><br><span class="line">        console.log(&#x27;person的job变化了&#x27;,newValue,oldValue)</span><br><span class="line">     &#125;,&#123;immediate:true,deep:true&#125;)</span><br><span class="line"></span><br><span class="line">	//  情况五：监视reactive定义的响应式数据中的某一些属性</span><br><span class="line">   watch([()=&gt;person.name,()=&gt;person.age],(newValue,oldValue)=&gt;&#123;</span><br><span class="line">           console.log(&#x27;person的job变化了&#x27;,newValue,oldValue)</span><br><span class="line">   &#125;)</span><br><span class="line">// 特殊情况</span><br><span class="line">   watch(()=&gt;person.job,(newValue,oldValue)=&gt;&#123;</span><br><span class="line">       console.log(&#x27;person的job变化了&#x27;,newValue,oldValue)</span><br><span class="line">   &#125;,&#123;deep:false&#125;);//  此处由于是监视reactive所定义的对象中的某个属性，所以deep配置有效</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>watch</p>
+<ul>
+<li><p>监视reactive定义的响应式数据时：oldValue无法正确获取、强制开启了深度监视(deep配置失效)</p>
+</li>
+<li><p>监视reactive定义的响应式数据中某个属性时deep配置有效</p>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="示例一：wath监听ref定义的响应式数据"><a href="#示例一：wath监听ref定义的响应式数据" class="headerlink" title="示例一：wath监听ref定义的响应式数据"></a>示例一：wath监听ref定义的响应式数据</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">    &lt;h2&gt;watch监听ref定义的响应式数据&lt;/h2&gt;</span><br><span class="line">    &lt;h2&gt;姓名：&#123;&#123;userName&#125;&#125;&lt;/h2&gt;</span><br><span class="line">    &lt;h2&gt;年龄：&#123;&#123;age&#125;&#125;&lt;/h2&gt;</span><br><span class="line">    &lt;button @click=&quot;userName+=&#x27;!&#x27;&quot;&gt;修改姓名&lt;/button&gt;</span><br><span class="line">    &lt;button @click=&quot;age++&quot;&gt;修改年龄&lt;/button&gt;</span><br><span class="line">    &lt;hr&gt;</span><br><span class="line">    &lt;h2&gt;姓名：&#123;&#123;user.name&#125;&#125;&lt;/h2&gt;</span><br><span class="line">    &lt;h2&gt;年龄：&#123;&#123;user.age&#125;&#125;&lt;/h2&gt;</span><br><span class="line">    &lt;button @click=&quot;user.name+=&#x27;!&#x27;&quot;&gt;修改姓名&lt;/button&gt;</span><br><span class="line">    &lt;button @click=&quot;user.age++&quot;&gt;修改年龄&lt;/button&gt;</span><br><span class="line"> &lt;/template&gt;</span><br><span class="line"> </span><br><span class="line"> &lt;script&gt;</span><br><span class="line">    import &#123;ref,watch&#125; from &#x27;vue&#x27;;</span><br><span class="line">    export default &#123;</span><br><span class="line">        name: &quot;watch_component01&quot;,</span><br><span class="line">        setup()&#123;</span><br><span class="line">            let userName=ref(&#x27;张三&#x27;);</span><br><span class="line">            let age=ref(18);</span><br><span class="line">            let user=ref(&#123;</span><br><span class="line">                name:&#x27;张三&#x27;,</span><br><span class="line">                age:21,</span><br><span class="line">            &#125;)</span><br><span class="line">            // watch监听ref定义的单个响应式数据</span><br><span class="line">            watch(userName,(newValue,oldValue)=&gt;&#123;</span><br><span class="line">                console.log(`userName发生了变化,新值是:$&#123;newValue&#125;,旧值是:$&#123;oldValue&#125;`)</span><br><span class="line">            &#125;);</span><br><span class="line">            watch(age,(newValue,oldValue)=&gt;&#123;</span><br><span class="line">                console.log(`age发生了变化,新值是:$&#123;newValue&#125;,旧值是:$&#123;oldValue&#125;`);</span><br><span class="line">            &#125;);</span><br><span class="line"> </span><br><span class="line">            // 如果需要监听多个ref定义的响应式数据的话，代码如下</span><br><span class="line">            /**</span><br><span class="line">             * newValue和oldValue都是数组的形式，其中数组的第n位表示监听位置的第n位</span><br><span class="line">             * 例如：此例子中，监听属性的第一位是userName,那位newValue和oldValue对应的第一位也是</span><br><span class="line">             * userName。</span><br><span class="line">             * 如果有立即执行，那么最开始的值为[],而不是[undefined,undefined]</span><br><span class="line">             */</span><br><span class="line">            watch([userName,age],(newValue,oldValue)=&gt;&#123;</span><br><span class="line">               console.log(&#x27;userName或age中的其中一个发生了变化,&#x27;,newValue,oldValue)</span><br><span class="line">            &#125;)</span><br><span class="line">            </span><br><span class="line">            // watch监视ref定义的响应式对象数据</span><br><span class="line">            watch(user.value,(newValue,oldValue)=&gt;&#123;</span><br><span class="line">                console.log(&#x27;person发生了变化&#x27;,newValue,oldValue)</span><br><span class="line">            &#125;)</span><br><span class="line">            watch(user,(newValue,oldValue)=&gt;&#123;</span><br><span class="line">                console.log(&#x27;person发生了变化&#x27;,newValue,oldValue);</span><br><span class="line">            &#125;,&#123;deep:false&#125;)</span><br><span class="line">            </span><br><span class="line">            return&#123;</span><br><span class="line">                userName,</span><br><span class="line">                age,</span><br><span class="line">                user</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"> &lt;/script&gt;</span><br><span class="line"> </span><br><span class="line"> &lt;style scoped&gt;</span><br><span class="line"> </span><br><span class="line"> &lt;/style&gt;</span><br><span class="line"> </span><br></pre></td></tr></table></figure>
+
+<p><img src="/aposts/a75041d1/image-20240229162030615.png" alt="image-20240229162030615"></p>
+<ul>
+<li>点击修改按钮</li>
+</ul>
+<p><img src="/aposts/a75041d1/image-20240229164328671.png" alt="image-20240229164328671"></p>
+<h4 id="示例二：watch监听reactive定义的响应式数据"><a href="#示例二：watch监听reactive定义的响应式数据" class="headerlink" title="示例二：watch监听reactive定义的响应式数据"></a>示例二：watch监听reactive定义的响应式数据</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">    &lt;h1&gt;watch监听reactive定义的响应式数据&lt;/h1&gt;</span><br><span class="line">    &lt;p&gt;姓名：&#123;&#123;user.name&#125;&#125;&lt;/p&gt;</span><br><span class="line">    &lt;p&gt;年龄：&#123;&#123;user.age&#125;&#125;&lt;/p&gt;</span><br><span class="line">    &lt;p&gt;薪水：&#123;&#123;user.job.salary&#125;&#125;K&lt;/p&gt;</span><br><span class="line">    &lt;button @click=&quot;user.name+=&#x27;!&#x27;&quot;&gt;改变姓名&lt;/button&gt;</span><br><span class="line">    &lt;button @click=&quot;user.age++&quot;&gt;改变年龄&lt;/button&gt;</span><br><span class="line">    &lt;button @click=&quot;user.job.salary++&quot;&gt;改变薪水&lt;/button&gt;</span><br><span class="line">&lt;/template&gt;</span><br><span class="line"></span><br><span class="line">&lt;script&gt;</span><br><span class="line">    import &#123;watch,reactive&#125; from &#x27;vue&#x27;</span><br><span class="line">    export default &#123;</span><br><span class="line">        name: &quot;watch_component02&quot;,</span><br><span class="line">        setup()&#123;</span><br><span class="line">            let user=reactive(&#123;</span><br><span class="line">                name:&#x27;张三&#x27;,</span><br><span class="line">                age:18,</span><br><span class="line">                job:&#123;</span><br><span class="line">                   salary:20</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;);</span><br><span class="line">            </span><br><span class="line">            // 情况一：监听reactive定义的响应式数据，无法正确获取oldValue</span><br><span class="line">            /**</span><br><span class="line">             * 此时的newValue和oldValue都是最新的数据</span><br><span class="line">             * 默认强制开启深度监视，此时深度监视失效</span><br><span class="line">             */</span><br><span class="line">            watch(user,(newValue,oldValue)=&gt;&#123;</span><br><span class="line">                console.log(newValue,oldValue);</span><br><span class="line">            &#125;,&#123;deep:false&#125;);</span><br><span class="line"></span><br><span class="line">            </span><br><span class="line">            //  情况二，监视reactive定义的响应式数据的单个属性</span><br><span class="line">            // watch(()=&gt;user.name,(newValue,oldValue)=&gt;&#123;</span><br><span class="line">            //     console.log(&#x27;name发生了变化&#x27;,newValue,oldValue);</span><br><span class="line">            // &#125;);</span><br><span class="line">            // watch(()=&gt;user.age,(newValue,oldValue)=&gt;&#123;</span><br><span class="line">            //     console.log(&#x27;age发生了变化&#x27;,newValue,oldValue);</span><br><span class="line">            // &#125;)</span><br><span class="line"></span><br><span class="line">            </span><br><span class="line">            // 情况三：监视reactive定义的响应式数据的多个属性</span><br><span class="line">            /**</span><br><span class="line">             * newValue和oldValue都是数组的形式，其中数组的第n位表示监听位置的第n位</span><br><span class="line">             * 例如：此例子中，监听属性的第一位是userName,那位newValue和oldValue对应的第一位也是</span><br><span class="line">             * userName,</span><br><span class="line">             */</span><br><span class="line">            // watch([()=&gt;user.name,()=&gt;user.age],(newValue,oldValue)=&gt;&#123;   // 写法一</span><br><span class="line">            //     console.log(&#x27;name或age中的某个属性发生了变化&#x27;,newValue,oldValue);</span><br><span class="line">            // &#125;)</span><br><span class="line">            // watch(()=&gt;[user.name,user.age],(newValue,oldValue)=&gt;&#123;   // 写法二</span><br><span class="line">            //     console.log(&#x27;name或者age中的某个属性发生了变化&#x27;,newValue,oldValue)</span><br><span class="line">            // &#125;)</span><br><span class="line"></span><br><span class="line">            //  情况四：监视reactive定义的响应式数据的对象的某个属性，此时deep有效</span><br><span class="line">            /**</span><br><span class="line">             * 注意：此时需要区别是reactive定义的对象还是reactive定义的对象里面的某个属性</span><br><span class="line">             * 此时deep有效，关闭了监视</span><br><span class="line">             */</span><br><span class="line">              // watch(()=&gt;user.job,(newValue,oldValue)=&gt;&#123;</span><br><span class="line">              //     console.log(newValue,oldValue);</span><br><span class="line">              // &#125;,&#123;deep:false&#125;);</span><br><span class="line">            return&#123;</span><br><span class="line">                user</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&lt;/script&gt;</span><br><span class="line"></span><br><span class="line">&lt;style scoped&gt;</span><br><span class="line"></span><br><span class="line">&lt;/style&gt;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>watchEffect</p>
+<ul>
+<li><p>watch的套路是：既要指明监视的属性，也要指明监视的回调</p>
+</li>
+<li><p>watchEffect的套路是：不用指明监视那个属性，监视的回调中用到那个属性，那就监视那个属性</p>
+</li>
+<li><p>watchEffect有点像computed</p>
+<ul>
+<li><p>但computed注重的是计算出来的值(回调函数的返回值)，所以必需要写返回值</p>
+</li>
+<li><p>而watchEffect更注重的是过程(回调函数的函数体),所以不用写返回值</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>代码</p>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">   &lt;h1&gt;watchEffect监视ref和reactive定义的响应式数据&lt;/h1&gt;</span><br><span class="line">   &lt;h2&gt;当前求和：&#123;&#123;sum&#125;&#125;&lt;/h2&gt;</span><br><span class="line">   &lt;button @click=&quot;sum++&quot;&gt;点我加1&lt;/button&gt;</span><br><span class="line">   &lt;hr&gt;</span><br><span class="line">   &lt;h2&gt;当前的信息:&#123;&#123;msg&#125;&#125;&lt;/h2&gt;</span><br><span class="line">   &lt;button @click=&quot;msg+=&#x27;!&#x27;&quot;&gt;修改信息&lt;/button&gt;</span><br><span class="line">   &lt;hr&gt;</span><br><span class="line">   &lt;h2&gt;姓名：&#123;&#123;person.name&#125;&#125;&lt;/h2&gt;</span><br><span class="line">   &lt;h2&gt;年龄：&#123;&#123;person.age&#125;&#125;&lt;/h2&gt;</span><br><span class="line">   &lt;h2&gt;薪资:&#123;&#123;person.job.j1.salary&#125;&#125;&lt;/h2&gt;</span><br><span class="line">   &lt;button @click=&quot;person.name+=&#x27;!&#x27;&quot;&gt;修改姓名&lt;/button&gt;</span><br><span class="line">   &lt;button @click=&quot;person.age++&quot;&gt;修改年龄&lt;/button&gt;</span><br><span class="line">   &lt;button @click=&quot;person.job.j1.salary++&quot;&gt;涨薪&lt;/button&gt;</span><br><span class="line">&lt;/template&gt;</span><br><span class="line"></span><br><span class="line">&lt;script&gt;</span><br><span class="line">   import &#123;ref,reactive,watchEffect&#125; from &#x27;vue&#x27;;</span><br><span class="line">   export default &#123;</span><br><span class="line">       name: &quot;watch_effect_component01&quot;,</span><br><span class="line">       setup()&#123;</span><br><span class="line">           let sum=ref(0);</span><br><span class="line">           let msg=ref(&#x27;你好&#x27;);</span><br><span class="line">           let person=reactive(&#123;</span><br><span class="line">               name:&#x27;张三&#x27;,</span><br><span class="line">               age:18,</span><br><span class="line">               job:&#123;</span><br><span class="line">                   j1:&#123;</span><br><span class="line">                       salary:100,</span><br><span class="line">                   &#125;</span><br><span class="line">               &#125;</span><br><span class="line">           &#125;);</span><br><span class="line">           /**</span><br><span class="line">            * 在watchEffect里面写需要监视的属性，默认会执行一次</span><br><span class="line">            * 如果是监视ref定义的响应式书则需要.value</span><br><span class="line">            * 如果是监视reactive定义的响应式数据则直接监视</span><br><span class="line">            */</span><br><span class="line">           watchEffect(()=&gt;&#123;</span><br><span class="line">               let x1=sum.value;</span><br><span class="line">               let x2=person.job.j1.salary;</span><br><span class="line">               console.log(&#x27;watchEffect所指定的回调函数执行了&#x27;);</span><br><span class="line">           &#125;)</span><br><span class="line"></span><br><span class="line">           return&#123;</span><br><span class="line">               sum,</span><br><span class="line">               msg,</span><br><span class="line">               person</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br><span class="line">&lt;/script&gt;</span><br><span class="line"></span><br><span class="line">&lt;style scoped&gt;</span><br><span class="line"></span><br><span class="line">&lt;/style&gt;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>点我加1和涨薪，就会触发watchEffect监控中的内容</li>
+</ul>
+<p><img src="/aposts/a75041d1/image-20240229175711760.png" alt="image-20240229175711760"></p>
+<h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><ul>
+<li><p>本教程主要来自<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_43655374/article/details/122324620">这里</a></p>
+</li>
+<li><p>本次练习<a target="_blank" rel="noopener" href="https://github.com/Louis-me/Vue3Demo.git">源代码</a></p>
+</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/vue/" rel="tag"># vue</a>
+              <a href="/tags/vue3/" rel="tag"># vue3</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/aposts/8049be4c/" rel="prev" title="springboot">
+      <i class="fa fa-chevron-left"></i> springboot
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+
+
+    <div class="sidebar-inner">
+
+
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA"><span class="nav-number">1.</span> <span class="nav-text">项目搭建</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A1%B9%E7%9B%AE%E7%BB%93%E6%9E%84%E5%88%86%E6%9E%90"><span class="nav-number">1.1.</span> <span class="nav-text">项目结构分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Composition-API"><span class="nav-number">2.</span> <span class="nav-text">Composition API</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#setp"><span class="nav-number">2.1.</span> <span class="nav-text">setp</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%94%E5%9B%9E%E5%80%BC"><span class="nav-number">2.2.</span> <span class="nav-text">返回值</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B%E4%B8%80%EF%BC%9Asetup%E5%87%BD%E6%95%B0%E7%9A%84%E4%B8%A4%E7%A7%8D%E8%BF%94%E5%9B%9E%E5%80%BC"><span class="nav-number">2.2.1.</span> <span class="nav-text">示例一：setup函数的两种返回值</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B%E4%BA%8C%EF%BC%9Asetup%E9%87%8C%E9%9D%A2%E7%9A%84%E5%8F%82%E6%95%B0%E5%92%8C%E6%96%B9%E6%B3%95%E5%92%8C%E9%85%8D%E7%BD%AE%E9%A1%B9%E6%B7%B7%E5%90%88%E4%BD%BF%E7%94%A8"><span class="nav-number">2.2.2.</span> <span class="nav-text">示例二：setup里面的参数和方法和配置项混合使用</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Vue2%E9%87%8C%E9%9D%A2props%E5%92%8Cslot%E7%9A%84%E4%BD%BF%E7%94%A8"><span class="nav-number">2.3.</span> <span class="nav-text">Vue2里面props和slot的使用</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B%E4%B8%80%EF%BC%9AVue2props%E5%92%8C%E8%87%AA%E5%AE%9A%E4%B9%89%E4%BA%8B%E4%BB%B6%E7%9A%84%E4%BD%BF%E7%94%A8"><span class="nav-number">2.3.1.</span> <span class="nav-text">示例一：Vue2props和自定义事件的使用</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">2.3.1.1.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Vue2%E9%87%8C%E9%9D%A2slot%E7%9A%84%E4%BD%BF%E7%94%A8"><span class="nav-number">2.3.2.</span> <span class="nav-text">Vue2里面slot的使用</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ref"><span class="nav-number">2.4.</span> <span class="nav-text">ref</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#reactive"><span class="nav-number">2.5.</span> <span class="nav-text">reactive</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#reactive%E5%AF%B9%E6%AF%94ref"><span class="nav-number">2.5.1.</span> <span class="nav-text">reactive对比ref</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#watch%E5%92%8CwatchEffect"><span class="nav-number">2.6.</span> <span class="nav-text">watch和watchEffect</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B%E4%B8%80%EF%BC%9Awath%E7%9B%91%E5%90%ACref%E5%AE%9A%E4%B9%89%E7%9A%84%E5%93%8D%E5%BA%94%E5%BC%8F%E6%95%B0%E6%8D%AE"><span class="nav-number">2.6.1.</span> <span class="nav-text">示例一：wath监听ref定义的响应式数据</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B%E4%BA%8C%EF%BC%9Awatch%E7%9B%91%E5%90%ACreactive%E5%AE%9A%E4%B9%89%E7%9A%84%E5%93%8D%E5%BA%94%E5%BC%8F%E6%95%B0%E6%8D%AE"><span class="nav-number">2.6.2.</span> <span class="nav-text">示例二：watch监听reactive定义的响应式数据</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%B4%E6%98%8E"><span class="nav-number">3.</span> <span class="nav-text">说明</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt=""
+      src="/images/avatar.gif">
+  <p class="site-author-name" itemprop="name"></p>
+  <div class="site-description" itemprop="description">一个正经的测试工程师</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">166</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">26</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">68</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Louis-me" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Louis-me" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:shikun.job@foxmail.com" title="E-Mail → mailto:shikun.job@foxmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+  <!-- 标签云 -->
+
+<script type="text/javascript" charset="utf-8" src="/js/tagcloud.js"></script>
+<script type="text/javascript" charset="utf-8" src="/js/tagcanvas.js"></script>
+<div class="widget-wrap">
+    <!--<h3 class="widget-title">Tag Cloud</h3> -->
+    <div id="myCanvasContainer" class="widget tagcloud">
+        <canvas width="250" height="250" id="resCanvas" style="width=100%">
+            <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AWVS/" rel="tag">AWVS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Burp-Site/" rel="tag">Burp Site</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DVWA/" rel="tag">DVWA</a><span class="tag-list-count">15</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dependency-Check/" rel="tag">Dependency-Check</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/H5/" rel="tag">H5</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hadoop/" rel="tag">Hadoop</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hibernate/" rel="tag">Hibernate</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hive/" rel="tag">Hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jenkins/" rel="tag">Jenkins</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Metasploit/" rel="tag">Metasploit</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MyBatis/" rel="tag">MyBatis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Nessus/" rel="tag">Nessus</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Sonic/" rel="tag">Sonic</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/airtest/" rel="tag">airtest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">android性能测试</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/app%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">app安全测试</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aritest/" rel="tag">aritest</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/centos/" rel="tag">centos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/" rel="tag">chrome</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/datax/" rel="tag">datax</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/django/" rel="tag">django</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/drozer/" rel="tag">drozer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fisco-bcos/" rel="tag">fisco-bcos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flink/" rel="tag">flink</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gin/" rel="tag">gin</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/" rel="tag">go</a><span class="tag-list-count">16</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go-zero/" rel="tag">go-zero</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hive/" rel="tag">hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/httprunner/" rel="tag">httprunner</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a><span class="tag-list-count">22</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jmeter/" rel="tag">jmeter</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka/" rel="tag">kafka</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kail/" rel="tag">kail</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode/" rel="tag">leetcode</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode-%E6%95%B0%E7%BB%84/" rel="tag">leetcode-数组</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mitmproxy/" rel="tag">mitmproxy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongodb/" rel="tag">mongodb</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/monkey/" rel="tag">monkey</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/" rel="tag">mysql</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/orm/" rel="tag">orm</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pandas/" rel="tag">pandas</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pc%E8%87%AA%E5%8A%A8%E5%8C%96/" rel="tag">pc自动化</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/playwright/" rel="tag">playwright</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pytest/" rel="tag">pytest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a><span class="tag-list-count">23</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/" rel="tag">redis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/selenium/" rel="tag">selenium</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring/" rel="tag">spring</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/springboot/" rel="tag">springboot</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlite/" rel="tag">sqlite</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlmap/" rel="tag">sqlmap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tkinter/" rel="tag">tkinter</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/" rel="tag">vue</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue3/" rel="tag">vue3</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">云服务器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8C%BA%E5%9D%97%E9%93%BE/" rel="tag">区块链</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag">大数据</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">安全测试</a><span class="tag-list-count">29</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">性能测试</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%88%AC%E8%99%AB/" rel="tag">爬虫</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" rel="tag">环境搭建</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95/" rel="tag">自动化测试</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%8B%B1%E8%AF%AD%E5%AD%A6%E4%B9%A0/" rel="tag">英语学习</a><span class="tag-list-count">1</span></li></ul>
+        </canvas>
+    </div>
+</div>
+
+</div>
+<!-- 标签云 -->
+    </div>
+
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  <a href="https://beian.miit.gov.cn/" target="_blank">湘ICP备2022002212号-1</a><br />
+  <!--
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder"></span>
+  -->
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script src='../../../js/src/av-min.js'></script>
+<script src='../../../js/src/Valine.min.js'></script>
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : true,
+      notify     : false,
+      appId      : 'mhSm1aOQmnVeiAUJxrsKIFg5-gzGzoHsz',
+      appKey     : 'kW6GQVoeJac7wDgKvy9vXhn6',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : true,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+  
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

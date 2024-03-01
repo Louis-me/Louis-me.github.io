@@ -191,6 +191,160 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/61a75a58/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="一个正经的测试工程师">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="施坤的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/aposts/61a75a58/" class="post-title-link" itemprop="url">python-执行外部命令的几种方式</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-09-29 17:13:35" itemprop="dateCreated datePublished" datetime="2021-09-29T17:13:35+08:00">2021-09-29</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-02-25 11:20:56" itemprop="dateModified" datetime="2022-02-25T11:20:56+08:00">2022-02-25</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/" itemprop="url" rel="index"><span itemprop="name">python</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/aposts/61a75a58/" class="post-meta-item leancloud_visitors" data-flag-title="python-执行外部命令的几种方式" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/aposts/61a75a58/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/aposts/61a75a58/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="os-system"><a href="#os-system" class="headerlink" title="os.system"></a><code>os.system</code></h2><ul>
+<li>执行的时候程序会打出cmd在linux上执行的信息</li>
+<li>执行命令成功返回为0，否则为1</li>
+<li>如果想获取在cmd输出的内容，是没办法获到的<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">t2 = os.system(&quot;1adb devices&quot;)</span><br><span class="line">t3 = os.system(&quot;adb devices&quot;)</span><br><span class="line">print(t2)  # 打印为1</span><br><span class="line">print(t3) # 打印为0</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="subprocess-call"><a href="#subprocess-call" class="headerlink" title="subprocess.call"></a><code>subprocess.call</code></h2><ul>
+<li>取代<code>os.system</code>，但是也是无法获取cmd输出的内容</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">import subprocess</span><br><span class="line">t = subprocess.call(&#x27;adb devices&#x27;)</span><br><span class="line">print(t) # 打印为0</span><br></pre></td></tr></table></figure>
+
+<h2 id="os-popen"><a href="#os-popen" class="headerlink" title="os.popen"></a><code>os.popen</code></h2><ul>
+<li>popen返回的是一个file对象，跟open打开文件一样操作了，r是以读的方式打开</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">output = os.popen(&#x27;adb devices&#x27;)</span><br><span class="line">print(output.read()) # 得到List of devices attached</span><br></pre></td></tr></table></figure>
+
+<h2 id="subprocess-Popen"><a href="#subprocess-Popen" class="headerlink" title="subprocess.Popen"></a><code>subprocess.Popen</code></h2><ul>
+<li><code>subprocess</code>模块代替<code>os.system</code>、<code>os.popen</code>,能够得到命令输出的值</li>
+</ul>
+<h3 id="shell参数"><a href="#shell参数" class="headerlink" title="shell参数"></a><code>shell</code>参数</h3><ul>
+<li>在<code>linux</code>下，当<code>shell=False</code>（默认）时，<code>Popen</code>使用<code>os.execvp()</code>来执行子程序。<code>args</code>一般要是一个【列表】。如果<code>args</code>是个字符串的<br>话，会被当做是可执行文件的路径，这样就不能传入任何参数了。<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">subprocess.Popen(&quot;cat test.txt&quot;, shell=True)</span><br><span class="line">这是因为它相当于</span><br><span class="line">subprocess.Popen([&quot;/bin/sh&quot;, &quot;-c&quot;, &quot;cat test.txt&quot;])</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="stdin-stdout-stderr-参数"><a href="#stdin-stdout-stderr-参数" class="headerlink" title="stdin stdout stderr 参数"></a><code>stdin</code> <code>stdout</code> <code>stderr</code> 参数</h3><ul>
+<li>分别表示程序的标准输入、输出、错误句柄。他们可以是<code>PIPE</code>，文件描述符或文件对象，也可以设置为<code>None</code>表示从父进程继承</li>
+<li><strong>执行结果使用管道输出的实例：</strong></li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">pipe=subprocess.Popen(&quot;adb devices&quot;,shell=True,stdout=subprocess.PIPE).stdout</span><br><span class="line">print(pipe.read()) # 得到值b&#x27;List of devices attached\r\n\r\n&#x27;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p><strong>执行结果保存在文件实例</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cmd = &quot;adb shell ls /sdcard/ | findstr aa.png&quot;  </span><br><span class="line">fhandle = open(r&quot;e:\aa.txt&quot;, &quot;w&quot;)  </span><br><span class="line">pipe = subprocess.Popen(cmd, shell=True, stdout=fhandle).stdout  </span><br><span class="line">fhandle.close()</span><br></pre></td></tr></table></figure></li>
+<li><p>子进程的文本流控制</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">#!/usr/bin/env python</span><br><span class="line"></span><br><span class="line">import subprocess</span><br><span class="line"></span><br><span class="line">child1 = subprocess.Popen([&quot;ls&quot;,&quot;-l&quot;], stdout=subprocess.PIPE)</span><br><span class="line">child2 = subprocess.Popen([&quot;wc&quot;], stdin=child1.stdout,stdout=subprocess.PIPE)</span><br><span class="line">out = child2.communicate()</span><br><span class="line">print out</span><br></pre></td></tr></table></figure></li>
+<li><p>child1.stdout–&gt;subprocess.PIPE</p>
+</li>
+<li><p>child2.stdin&lt;–subprocess.PIPE        </p>
+</li>
+<li><p>child2.stdout–&gt;subprocess.PIPE</p>
+</li>
+<li><p>相当于将child1.stdout–&gt;child2.stdin-&gt;child2.stdout-&gt;subprocess.PIPE</p>
+</li>
+<li><p>subprocess.PIPE实际上为文本流提供一个缓存区。child1的stdout将文本输出到缓存区，随后child2的stdin从该PIPE中将文本读取走。child2的输出文本也被存放在PIPE中，直到<code>communicate()</code>方法从PIPE中读取出PIPE中的文本。</p>
+</li>
+<li><p>要注意的是，<code>communicate()</code>是Popen对象的一个方法，该方法会阻塞父进程，直到子进程完成。</p>
+</li>
+<li><p><strong>我们还可以利用communicate()方法来使用PIPE给子进程输入:</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">import subprocess</span><br><span class="line">child = subprocess.Popen([&quot;cat&quot;], stdin=subprocess.PIPE)</span><br><span class="line">child.communicate(&quot;vamei&quot;) //()不为空，则写入subprocess.PIPE，为空，则从subprocess.PIPE读取</span><br></pre></td></tr></table></figure></li>
+<li><p>subprocess.PIPE–&gt;child.stdin</p>
+</li>
+<li><p>commiuncate相当于写入subprocess.PIPE，然后child从subprocess.PIPE读取</p>
+</li>
+<li><p><strong>利用python的subprocess模块执行外部命令, 并捕获stdout, stderr的输出</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">import subprocess</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># print ’popen3:’</span><br><span class="line"></span><br><span class="line">def external_cmd(cmd, msg_in=&#x27;&#x27;):</span><br><span class="line">    try:</span><br><span class="line">        proc = subprocess.Popen(cmd,</span><br><span class="line">                                shell=True,</span><br><span class="line">                                stdin=subprocess.PIPE,</span><br><span class="line">                                stdout=subprocess.PIPE,</span><br><span class="line">                                stderr=subprocess.PIPE,</span><br><span class="line">                                )</span><br><span class="line">        stdout_value, stderr_value = proc.communicate(msg_in)</span><br><span class="line">        return stdout_value, stderr_value</span><br><span class="line">    except ValueError as err:</span><br><span class="line">        # log(&quot;ValueError: %s&quot; % err)</span><br><span class="line">        return None, None</span><br><span class="line">    except IOError as err:</span><br><span class="line">        # log(&quot;IOError: %s&quot; % err)</span><br><span class="line">        return None, None</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">if __name__ == &#x27;__main__&#x27;:</span><br><span class="line">    stdout_val, stderr_val = external_cmd(&#x27;dir&#x27;)</span><br><span class="line">    print (&#x27;Standard Output: %s&#x27; % stdout_val)</span><br><span class="line">    print (&#x27;Standard Error: %s&#x27; % stderr_val)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>得到命令的返回值，wait</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">p=subprocess.Popen(&quot;dir&quot;, shell=True)  </span><br><span class="line">p.wait()</span><br></pre></td></tr></table></figure></li>
+<li><p>但是Popen函数有一个缺陷，就是它是一个阻塞的方法。如果运行cmd时产生的内容非常多，函数非常容易阻塞住。解决办法是不使用wait()方法，但是也不能获得执行的返回值了。</p>
+</li>
+</ul>
+<h2 id="commands-getstatusoutput"><a href="#commands-getstatusoutput" class="headerlink" title="commands.getstatusoutput"></a><code>commands.getstatusoutput</code></h2><ul>
+<li>不推荐使用，因为在python3中被废弃</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/8f15e7ee/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1225,359 +1379,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/90b973a1/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="一个正经的测试工程师">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="施坤的博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/aposts/90b973a1/" class="post-title-link" itemprop="url">python优秀项目总结</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-09-29 17:13:35" itemprop="dateCreated datePublished" datetime="2021-09-29T17:13:35+08:00">2021-09-29</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-02-25 11:20:56" itemprop="dateModified" datetime="2022-02-25T11:20:56+08:00">2022-02-25</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/" itemprop="url" rel="index"><span itemprop="name">python</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/aposts/90b973a1/" class="post-meta-item leancloud_visitors" data-flag-title="python优秀项目总结" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/aposts/90b973a1/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/aposts/90b973a1/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p><strong>sql注入</strong></p>
-<ul>
-<li><a target="_blank" rel="noopener" href="https://github.com/sqlmapproject/sqlmap">sqlmap</a></li>
-<li>DNS安全监测: [DNSRecon]<a target="_blank" rel="noopener" href="https://github.com/darkoperator/dnsrecon">https://github.com/darkoperator/dnsrecon</a>)</li>
-<li>暴力破解测试工具：<a target="_blank" rel="noopener" href="http://code.google.com/p/patator/">patator</a></li>
-<li>XSS漏洞利用工具：<a target="_blank" rel="noopener" href="http://sourceforge.net/projects/xsser/files/">XSSer</a></li>
-<li>Web服务器压力测试工具：<a target="_blank" rel="noopener" href="http://www.freebuf.com/tools/1833.html">HULK</a></li>
-<li>SSL安全扫描器：<a target="_blank" rel="noopener" href="http://www.freebuf.com/tools/22984.html">SSLyze</a></li>
-</ul>
-<p><strong>网络</strong></p>
-<ul>
-<li><a target="_blank" rel="noopener" href="http://secdev.org/projects/scapy">Scapy</a>: send, sniff and dissect and forge network packets. Usable interactively or as a library</li>
-<li><a target="_blank" rel="noopener" href="http://code.google.com/p/pypcap/">pypcap</a>, <a target="_blank" rel="noopener" href="http://oss.coresecurity.com/projects/pcapy.html">Pcapy</a> and <a target="_blank" rel="noopener" href="http://pylibpcap.sourceforge.net/">pylibpcap</a>: several different Python bindings for libpcap</li>
-<li><a target="_blank" rel="noopener" href="http://code.google.com/p/libdnet/">libdnet</a>: low-level networking routines, including interface lookup and Ethernet frame transmission</li>
-<li><a target="_blank" rel="noopener" href="http://code.google.com/p/dpkt/">dpkt</a>: fast, simple packet creation&#x2F;parsing, with definitions for the basic TCP&#x2F;IP protocols</li>
-<li><a target="_blank" rel="noopener" href="http://oss.coresecurity.com/projects/impacket.html">Impacket</a>: craft and decode network packets. Includes support for higher-level protocols such as NMB and SMB</li>
-<li><a target="_blank" rel="noopener" href="http://jon.oberheide.org/pynids/">pynids</a>: libnids wrapper offering sniffing, IP defragmentation, TCP stream reassembly and port scan detection</li>
-<li><a target="_blank" rel="noopener" href="http://dirtbags.net/py-pcap.html">Dirtbags py-pcap</a>: read pcap files without libpcap</li>
-<li><a target="_blank" rel="noopener" href="http://monkey.org/~jose/software/flowgrep/">flowgrep</a>: grep through packet payloads using regular expressions</li>
-<li><a target="_blank" rel="noopener" href="http://code.google.com/p/knock/">Knock Subdomain Scan</a>, enumerate subdomains on a target domain through a wordlist</li>
-<li><a target="_blank" rel="noopener" href="https://bitbucket.org/IntrepidusGroup/mallory">Mallory</a>, extensible TCP&#x2F;UDP man-in-the-middle proxy, supports modifying non-standard protocols on the fly</li>
-<li><a target="_blank" rel="noopener" href="http://pytbull.sourceforge.net/">Pytbull</a>: flexible IDS&#x2F;IPS testing framework (shipped with more than 300 tests)</li>
-</ul>
-<p><strong>调试和逆向工程</strong></p>
-<ul>
-<li><a target="_blank" rel="noopener" href="https://github.com/OpenRCE/paimei">Paimei</a>: reverse engineering framework, includes <a target="_blank" rel="noopener" href="https://github.com/OpenRCE/pydbg">PyDBG</a>, PIDA, pGRAPH</li>
-<li><a target="_blank" rel="noopener" href="http://www.immunityinc.com/products-immdbg.shtml">Immunity Debugger</a>: scriptable GUI and command line debugger</li>
-<li><a target="_blank" rel="noopener" href="https://www.corelan.be/index.php/2011/07/14/mona-py-the-manual/">mona.py</a>: PyCommand for Immunity Debugger that replaces and improves on pvefindaddr</li>
-<li><a target="_blank" rel="noopener" href="http://d-dome.net/idapython/">IDAPython</a>: IDA Pro plugin that integrates the Python programming language, allowing scripts to run in IDA Pro</li>
-<li><a target="_blank" rel="noopener" href="http://code.google.com/p/pyemu/">PyEMU</a>: fully scriptable IA-32 emulator, useful for malware analysis</li>
-<li><a target="_blank" rel="noopener" href="http://code.google.com/p/pefile/">pefile</a>: read and work with Portable Executable (aka PE) files</li>
-<li><a target="_blank" rel="noopener" href="http://code.google.com/p/libdasm/source/browse/trunk/pydasm/pydasm.c">pydasm</a>: Python interface to the <a target="_blank" rel="noopener" href="http://code.google.com/p/libdasm/">libdasm</a> x86 disassembling library</li>
-<li><a target="_blank" rel="noopener" href="http://pydbgeng.sourceforge.net/">PyDbgEng</a>: Python wrapper for the Microsoft Windows Debugging Engine</li>
-<li><a target="_blank" rel="noopener" href="http://oss.coresecurity.com/projects/uhooker.htm">uhooker</a>: intercept calls to API calls inside DLLs, and also arbitrary addresses within the executable file in memory</li>
-<li><a target="_blank" rel="noopener" href="http://www.ragestorm.net/distorm/">diStorm</a>: disassembler library for AMD64, licensed under the BSD license</li>
-<li><a target="_blank" rel="noopener" href="http://bitbucket.org/haypo/python-ptrace/wiki/Home">python-ptrace</a>: debugger using ptrace (Linux, BSD and Darwin system call to trace processes) written in Python</li>
-<li><a target="_blank" rel="noopener" href="http://code.google.com/p/vdebug/">vdb &#x2F; vtrace</a>: vtrace is a cross-platform process debugging API implemented in python, and vdb is a debugger which uses it</li>
-<li><a target="_blank" rel="noopener" href="http://code.google.com/p/androguard/">Androguard</a>: reverse engineering and analysis of Android applications</li>
-</ul>
-<p><strong>Fuzzing</strong></p>
-<ul>
-<li><a target="_blank" rel="noopener" href="https://github.com/OpenRCE/sulley">Sulley</a>: fuzzer development and fuzz testing framework consisting of multiple extensible components</li>
-<li><a target="_blank" rel="noopener" href="http://peachfuzz.sourceforge.net/">Peach Fuzzing Platform</a>: extensible fuzzing framework for generation and mutation based fuzzing (v2 was written in Python)</li>
-<li><a target="_blank" rel="noopener" href="http://antiparser.sourceforge.net/">antiparser</a>: fuzz testing and fault injection API</li>
-<li><a target="_blank" rel="noopener" href="http://sourceforge.net/projects/taof/">TAOF</a>, (The Art of Fuzzing) including ProxyFuzz, a man-in-the-middle non-deterministic network fuzzer</li>
-<li><a target="_blank" rel="noopener" href="http://untidy.sourceforge.net/">untidy</a>: general purpose XML fuzzer</li>
-<li><a target="_blank" rel="noopener" href="http://www.powerfuzzer.com/">Powerfuzzer</a>: highly automated and fully customizable web fuzzer (HTTP protocol based application fuzzer)</li>
-<li><a target="_blank" rel="noopener" href="http://www.fuzzing.org/wp-content/SMUDGE.zip">SMUDGE</a></li>
-<li><a target="_blank" rel="noopener" href="http://www.packetstormsecurity.org/fuzzer/mistress.rar">Mistress</a>: probe file formats on the fly and protocols with malformed data, based on pre-defined patterns</li>
-<li><a target="_blank" rel="noopener" href="https://isecpartners.com/tools/application-security/fuzzbox.aspx">Fuzzbox</a>: multi-codec media fuzzer</li>
-<li><a target="_blank" rel="noopener" href="https://isecpartners.com/tools/application-security/forensic-fuzzing-tools.aspx">Forensic Fuzzing Tools</a>: generate fuzzed files, fuzzed file systems, and file systems containing fuzzed files in order to test the robustness of forensics tools and examination systems</li>
-<li><a target="_blank" rel="noopener" href="https://isecpartners.com/tools/application-security/windows-ipc-fuzzing-tools.aspx">Windows IPC Fuzzing Tools</a>: tools used to fuzz applications that use Windows Interprocess Communication mechanisms</li>
-<li><a target="_blank" rel="noopener" href="https://www.isecpartners.com/tools/application-security/wsbang.aspx">WSBang</a>: perform automated security testing of SOAP based web services</li>
-<li><a target="_blank" rel="noopener" href="http://construct.wikispaces.com/">Construct</a>: library for parsing and building of data structures (binary or textual). Define your data structures in a declarative manner</li>
-<li><a target="_blank" rel="noopener" href="http://sites.google.com/site/felipeandresmanzano/fuzzer.py?attredirects=0">fuzzer.py (feliam)</a>: simple fuzzer by Felipe Andres Manzano</li>
-<li><a target="_blank" rel="noopener" href="https://bitbucket.org/haypo/fusil/wiki/Home">Fusil</a>: Python library used to write fuzzing programs</li>
-</ul>
-<p><strong>Web</strong></p>
-<ul>
-<li><a target="_blank" rel="noopener" href="http://python-requests.org/">Requests</a>: elegant and simple HTTP library, built for human beings</li>
-<li><a target="_blank" rel="noopener" href="http://httpie.org/">HTTPie</a>: human-friendly cURL-like command line HTTP client</li>
-<li><a target="_blank" rel="noopener" href="https://www.isecpartners.com/tools/application-security/proxmon.aspx">ProxMon</a>: processes proxy logs and reports discovered issues</li>
-<li><a target="_blank" rel="noopener" href="https://www.isecpartners.com/tools/application-security/wsmap.aspx">WSMap</a>: find web service endpoints and discovery files<br><a target="_blank" rel="noopener" href="http://twill.idyll.org/">Twill</a>: browse the Web from a command-line interface. Supports automated Web testing</li>
-<li><a target="_blank" rel="noopener" href="http://jeanphix.me/Ghost.py/">Ghost.py</a>: webkit web client written in Python</li>
-<li><a target="_blank" rel="noopener" href="http://www.getwindmill.com/">Windmill</a>: web testing tool designed to let you painlessly automate and debug your web application</li>
-<li><a target="_blank" rel="noopener" href="http://funkload.nuxeo.org/">FunkLoad</a>: functional and load web tester</li>
-<li><a target="_blank" rel="noopener" href="http://code.google.com/p/spynner/">spynner</a>: Programmatic web browsing module for Python with Javascript&#x2F;AJAX support</li>
-<li><a target="_blank" rel="noopener" href="http://code.google.com/p/python-spidermonkey/">python-spidermonkey</a>: bridge to the Mozilla SpiderMonkey JavaScript engine; allows for the evaluation and calling of Javascript scripts and functions</li>
-<li><a target="_blank" rel="noopener" href="http://mitmproxy.org/">mitmproxy</a>: SSL-capable, intercepting HTTP proxy. Console interface allows traffic flows to be inspected and edited on the fly</li>
-<li><a target="_blank" rel="noopener" href="http://pathod.net/">pathod &#x2F; pathoc</a>: pathological daemon&#x2F;client for tormenting HTTP clients and servers</li>
-</ul>
-<p><strong>取证</strong></p>
-<ul>
-<li><a target="_blank" rel="noopener" href="https://www.volatilesystems.com/default/volatility/">Volatility</a>: extract digital artifacts from volatile memory (RAM) samples</li>
-<li><a target="_blank" rel="noopener" href="http://code.google.com/p/libforensics/">LibForensics</a>: library for developing digital forensics applications</li>
-<li><a target="_blank" rel="noopener" href="http://mark0.net/code-tridlib-e.html">TrIDLib</a>, identify file types from their binary signatures. Now includes Python binding</li>
-<li><a target="_blank" rel="noopener" href="http://code.google.com/p/aft/">aft</a>: Android forensic toolkit</li>
-</ul>
-<p><strong>恶意程序分析</strong></p>
-<ul>
-<li><a target="_blank" rel="noopener" href="http://code.google.com/p/pyew/">pyew</a>: command line hexadecimal editor and disassembler, mainly to analyze malware</li>
-<li><a target="_blank" rel="noopener" href="http://www.decalage.info/exefilter">Exefilter</a>: filter file formats in e-mails, web pages or files. Detects many common file formats and can remove active content</li>
-<li><a target="_blank" rel="noopener" href="http://xael.org/norman/python/pyclamav/index.html">pyClamAV</a>: add virus detection capabilities to your Python software</li>
-<li><a target="_blank" rel="noopener" href="https://code.google.com/p/jsunpack-n/">jsunpack-n</a>, generic JavaScript unpacker: emulates browser functionality to detect exploits that target browser and browser plug-in vulnerabilities</li>
-<li><a target="_blank" rel="noopener" href="http://code.google.com/p/yara-project/source/browse/trunk/yara-python/README">yara-python</a>: identify and classify malware samples</li>
-<li><a target="_blank" rel="noopener" href="http://code.google.com/p/phoneyc/">phoneyc</a>: pure Python honeyclient implementation</li>
-</ul>
-<p><strong>PDF</strong></p>
-<ul>
-<li><a target="_blank" rel="noopener" href="http://blog.didierstevens.com/programs/pdf-tools">Didier Stevens’ PDF tools</a>: analyse, identify and create PDF files (includes <a target="_blank" rel="noopener" href="http://blog.didierstevens.com/programs/pdf-tools/#pdfid">PDFiD</a>, <a target="_blank" rel="noopener" href="http://blog.didierstevens.com/programs/pdf-tools/#pdf-parser">pdf-parser</a>and <a target="_blank" rel="noopener" href="http://blog.didierstevens.com/programs/pdf-tools/#make-pdf">make-pdf</a> and mPDF)</li>
-<li><a target="_blank" rel="noopener" href="http://code.google.com/p/opaf/">Opaf</a>: Open PDF Analysis Framework. Converts PDF to an XML tree that can be analyzed and modified.</li>
-<li><a target="_blank" rel="noopener" href="http://www.decalage.info/python/origapy">Origapy</a>: Python wrapper for the Origami Ruby module which sanitizes PDF files</li>
-<li><a target="_blank" rel="noopener" href="http://pybrary.net/pyPdf/">pyPDF</a>: pure Python PDF toolkit: extract info, spilt, merge, crop, encrypt, decrypt…</li>
-<li><a target="_blank" rel="noopener" href="http://www.unixuser.org/~euske/python/pdfminer/index.html">PDFMiner</a>: extract text from PDF files</li>
-<li><a target="_blank" rel="noopener" href="http://code.google.com/p/python-poppler-qt4/">python-poppler-qt4</a>: Python binding for the Poppler PDF library, including Qt4 support</li>
-</ul>
-<p><strong>Misc</strong></p>
-<ul>
-<li><a target="_blank" rel="noopener" href="http://oss.coresecurity.com/projects/inlineegg.html">InlineEgg</a>: toolbox of classes for writing small assembly programs in Python</li>
-<li><a target="_blank" rel="noopener" href="http://corelabs.coresecurity.com/index.php?module=Wiki&action=view&type=tool&name=Exomind">Exomind</a>: framework for building decorated graphs and developing open-source intelligence modules and ideas, centered on social network services, search engines and instant messaging</li>
-<li><a target="_blank" rel="noopener" href="http://www.securityfocus.com/tools/3851">RevHosts</a>: enumerate virtual hosts for a given IP address</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/simplejson/simplejson/">simplejson</a>: JSON encoder&#x2F;decoder, e.g. to use <a target="_blank" rel="noopener" href="http://dcortesi.com/2008/05/28/google-ajax-search-api-example-python-code/">Google’s AJAX API</a></li>
-<li><a target="_blank" rel="noopener" href="http://code.google.com/p/pymangle/">PyMangle</a>: command line tool and a python library used to create word lists for use with other penetration testing tools</li>
-<li><a target="_blank" rel="noopener" href="https://bitbucket.org/haypo/hachoir/wiki/Home">Hachoir</a>: view and edit a binary stream field by field</li>
-<li><a target="_blank" rel="noopener" href="http://code.google.com/p/pymangle/">py-mangle</a>: command line tool and a python library used to create word lists for use with other penetration testing tools</li>
-</ul>
-<p><strong>其他有用的Py库和工具</strong></p>
-<ul>
-<li><a target="_blank" rel="noopener" href="http://ipython.scipy.org/">IPython</a>: enhanced interactive Python shell with many features for object introspection, system shell access, and its own special command system</li>
-<li><a target="_blank" rel="noopener" href="http://www.crummy.com/software/BeautifulSoup/">Beautiful Soup</a>: HTML parser optimized for screen-scraping</li>
-<li><a target="_blank" rel="noopener" href="http://matplotlib.sourceforge.net/">matplotlib</a>: make 2D plots of arrays</li>
-<li><a target="_blank" rel="noopener" href="http://code.enthought.com/projects/mayavi/">Mayavi</a>: 3D scientific data visualization and plotting</li>
-<li><a target="_blank" rel="noopener" href="http://www.secdev.org/projects/rtgraph3d/">RTGraph3D</a>: create dynamic graphs in 3D</li>
-<li><a target="_blank" rel="noopener" href="http://twistedmatrix.com/">Twisted</a>: event-driven networking engine</li>
-<li><a target="_blank" rel="noopener" href="https://fedorahosted.org/suds/">Suds</a>: lightweight SOAP client for consuming Web Services</li>
-<li><a target="_blank" rel="noopener" href="http://chandlerproject.org/bin/view/Projects/MeTooCrypto">M2Crypto</a>: most complete OpenSSL wrapper</li>
-<li><a target="_blank" rel="noopener" href="http://networkx.lanl.gov/">NetworkX</a>: graph library (edges, nodes)</li>
-<li><a target="_blank" rel="noopener" href="http://pandas.pydata.org/">Pandas</a>: library providing high-performance, easy-to-use data structures and data analysis tools</li>
-<li><a target="_blank" rel="noopener" href="http://pyparsing.wikispaces.com/">pyparsing</a>: general parsing module</li>
-<li><a target="_blank" rel="noopener" href="http://lxml.de/">lxml</a>: most feature-rich and easy-to-use library for working with XML and HTML in the Python language</li>
-<li><a target="_blank" rel="noopener" href="https://bitbucket.org/mchaput/whoosh/">Whoosh</a>: fast, featureful full-text indexing and searching library implemented in pure Python</li>
-<li><a target="_blank" rel="noopener" href="http://www.noah.org/wiki/Pexpect">Pexpect</a>: control and automate other programs, similar to Don Libes <code>Expect</code> system</li>
-<li><a target="_blank" rel="noopener" href="http://groups.csail.mit.edu/uid/sikuli/">Sikuli</a>, visual technology to search and automate GUIs using screenshots. Scriptable in<a target="_blank" rel="noopener" href="http://www.jython.org/">Jython</a></li>
-<li><a target="_blank" rel="noopener" href="http://www.riverbankcomputing.co.uk/software/pyqt">PyQt</a> and <a target="_blank" rel="noopener" href="http://www.pyside.org/">PySide</a>: Python bindings for the Qt application framework and GUI library</li>
-</ul>
-<p><strong>其他</strong><br>Python 作为程序员的宠儿，越来越得到人们的关注，使用 Python 进行应用程序开发的越来也多。那么，在 2013 年有哪些流行的 Python 项目呢？下面，我们一起来看下。<br><strong>一、测试和调试</strong></p>
-<ul>
-<li><a target="_blank" rel="noopener" href="https://github.com/gregmalcolm/python_koans">python_koans</a>：Python Koans 算 “Ruby Koans” 的一部分，作为交互式教程，可以学习 <a target="_blank" rel="noopener" href="http://en.wikipedia.org/wiki/Test-driven_development">TDD</a> 技巧。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/gabrielfalcao/sure">sure</a>：Sure 是最适合自动化测试的 Python 工具，包含流利的断言、深度选择器等等特性。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/dropbox/responses">responses</a>：用 responses 能令测试更加轻松，这是一个可以伪装各种请求的库。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/tarekziade/boom">boom</a>：Boom! <a target="_blank" rel="noopener" href="http://httpd.apache.org/docs/2.2/programs/ab.html">Apache Bench</a> 的替代品。作为一个命令行工具，Boom 能对你的应用进行快捷的 <a target="_blank" rel="noopener" href="http://en.wikipedia.org/wiki/Smoke_testing">smoke test</a>。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/pybee/cricket">cricket</a>：<a target="_blank" rel="noopener" href="http://pybee.org/">BeeWare</a> 套件的一部分，cricket 是种图形化工具，协助你进行案例测试。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/pybee/bugjar">bugjar</a>：<a target="_blank" rel="noopener" href="http://pybee.org/">BeeWare</a> 套件的一部分，bugjar 是针对 Python 的图形化交互式调试器。</li>
-<li><a target="_blank" rel="noopener" href="https://pypi.python.org/pypi/pudb">pudb</a>：pudn 是针对 Python 的全屏命令行调试器。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/snarez/voltron">voltron</a>：更好的 gdb 界面。</li>
-</ul>
-<p><strong>二、Web 框架</strong></p>
-<ul>
-<li><a target="_blank" rel="noopener" href="https://github.com/mgrouchy/django-stronghold">django-stronghold</a>：试过将 login_required 装饰器四处乱放? 在你的堡垒中令所有 Django 视图有默认 login_required 呗。</li>
-<li><a target="_blank" rel="noopener" href="http://falconframework.org/">Falcon Framework</a>：Falcon 自称为髙性能云接口框架，号称能在相同硬件条件下提高服务端性能 30 倍! 听起来有点儿意思?</li>
-<li><a target="_blank" rel="noopener" href="http://sshwsfc.github.io/django-xadmin/">django-xadmin</a>：用 bootstrap 对 django-admin 进行了深度升级，提供了可插件安装的仪表盘。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/uber/clay">clay</a>：基于 <a target="_blank" rel="noopener" href="http://flask.pocoo.org/">Flask</a> 的封装，能令我们轻松的创建 RESTful 后端服务，完整文档可查看 <a target="_blank" rel="noopener" href="http://uber.github.io/clay/">clay</a>。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/twilio/flask-restful">flask-restful</a>：基于 Flask 的简单框架，用以创建 REST 接口。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/jeffknupp/sandman">sandman</a>：Sandman 希望通过 REST 接口暴露你现有的 app，相关 <a target="_blank" rel="noopener" href="http://www.jeffknupp.com/blog/2013/07/23/sandman-a-boilerplatefree-python-rest-api-for-existing-databases/">博客</a>也值得一读。</li>
-<li><a target="_blank" rel="noopener" href="http://nahimnasser.github.com/django-unchained/">Django Unchained</a>：名字很髙大上，也的确是 Python Django 初学者的靠谱指南。</li>
-</ul>
-<p><strong>三、并发</strong></p>
-<ul>
-<li><a target="_blank" rel="noopener" href="https://github.com/quantmind/pulsar">pulsar</a>：部署新 web 服务器走起! 有趣的事件驱动的并发框架 ! 兼容从 2.6+ 到 pypy 的所有 python 版本!</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/ajdavis/toro">toro</a>：同步化的 Tornado 协程支持。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/benoitc/offset">offset</a>：Offset <a target="_blank" rel="noopener" href="http://golang.org/">Go</a> 的并发模式在 Python 中的实现，请参考相关演讲 <a target="_blank" rel="noopener" href="https://docs.google.com/file/d/0B2gNkR7hgkIRVFgwSWR4Y2JaZHc/edit?hl=en&forcehl=1">幻灯</a>来理解!</li>
-</ul>
-<p><strong>四、任务调度</strong></p>
-<ul>
-<li><a target="_blank" rel="noopener" href="https://github.com/binarydud/pyres">pyres</a>：从 <a target="_blank" rel="noopener" href="http://github.com/defunkt/resque">resque</a> 获得灵感的纯 Python 任务调度模块，是 celery 的替代。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/tthieman/dagobah">dagobah</a>：Dagobah 是 Python 完成的简单关系依赖为基础的任务调度模块，还包含很 COOL 的关联任务工作流图形工具。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/dbader/schedule">schedule</a>：使用生成器模式来为定期任务生成配置的进程调度模块。</li>
-</ul>
-<p><strong>五、实用工具</strong></p>
-<ul>
-<li><a target="_blank" rel="noopener" href="https://github.com/gleitz/howdoi">howdoi</a>：发觉你总在 Google 一些简单的最简单的编程任务? howdoi 能让你远离浏览器，就解决这类事儿!</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/myusuf3/delorean">delorean</a>：时间旅行?简单! Delorean 的目标就是令你的 Python 项目在处理时间&#x2F;日期时轻而易举!查阅完备的 <a target="_blank" rel="noopener" href="http://delorean.readthedocs.org/en/latest/">文档</a>。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/milkbikis/powerline-shell">powerline-shell</a>：对于那些想让常用工具漂亮起来人，一定要用 powerline-bash，能打造漂亮的 shell 提示符，增加力线(powerline)，兼容 Bash&#x2F;Zsh。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/kachayev/fn.py">fn.py</a>：在 Python 中谈及函数编程时失落的那节”电池”终于出现了! 如果对 <a target="_blank" rel="noopener" href="http://ua.pycon.org/static/talks/kachayev/">Python 函数式编程</a>有兴趣的立即下手安装体验吧！</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/jcarbaugh/lice">lice</a>：为你的开源工程方便的追加许可证，而不用自个儿去 Google，支持 BSD、MIT 和 GPL 以及变种协议。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/Svenito/usblock">usblock</a>：基于 USB 来锁定或是解锁你的笔记本!</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/Max00355/MatchBox">Matchbox</a>：MatchBox 能在你自个儿的服务器上提供类似 Dropbox 风格的备份服务! 基于 Flask 并通过 http 协议进行文件传输。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/kirang89/cleanify">cleanify</a>：用 cleanify 能异步美化你项目的所有 html&#x2F;css&#x2F;js 文件。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/ehazlett/locksmith">locksmith</a>：Locksmith 是 AES 加密的口令管理器，看起来不错，完全开源，源代码、截屏都有。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/emre/storm">storm</a>：在 Storm 的命令行界面，管理你所有的 SSH 连接。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/andialbrecht/sqlparse/">sqlparse</a>：：这个很给力! sqlparse 是个 SQL 有效性分析器，支持解析&#x2F;分裂&#x2F;格式化 SQL 语句。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/hhatto/autopep8">autopep8</a>：能自动化以 <a target="_blank" rel="noopener" href="http://www.python.org/dev/peps/pep-0008/">pep8</a>来格式化你的代码。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/nojhan/colout">colout</a>：colout 用以在命令行中色彩化输出，这就从其 <a target="_blank" rel="noopener" href="http://nojhan.github.io/colout/">github page</a> 查看范例来体验吧。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/peritus/bumpversion">bumpversion</a>：版本号冲撞总是恼人的，而每个人总是忘记给发行版本打 tag，bumpversion 用一条简单的命令简化了这方面的操作。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/yyuu/pyenv">pyenv</a>：需要更好的管理你 Python 的多版本环境 ? pyenv 让你能简洁的作到!(甚至超出你的预期!有插件能将 VirtualEnv 也无缝结合进来!)</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/nvie/pip-tools">pip-tools</a>：一整套能令你的 Python 项目保持清爽的工具。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/ymattw/cdiff">cdiff</a>：Cdiff 是种非常 nice 的工具，可以用彩色输出统一 diff 格式信息，或用双栏形式来展示。</li>
-</ul>
-<p><strong>六、数据科学及可视化</strong></p>
-<ul>
-<li><a target="_blank" rel="noopener" href="https://github.com/bitly/data_hacks">data_hacks</a>：由 <a target="_blank" rel="noopener" href="http://bitly.com/">bitly</a> 发布的一堆数据分析用命令行工具。这些工具接受命令行或是其它工具输入的数据，轻易的生成柱图以及直方图等等。<br><a target="_blank" rel="noopener" href="https://github.com/CamDavidsonPilon/Probabilistic-Programming-and-Bayesian-Methods-for-Hackers">给黒客的概率编程和贝叶斯方法</a>：这书是极好的，介绍如何用贝叶斯方法和概率编程进行数据分析，而且每章都提供了用以 iPython Notebooks 的示例。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/o/simmetrica">simmetrica</a>：想对自个儿的应用基于时间的数据序列进行展示、汇总、分享嘛? 赶紧上 simmetrica 吧，同时还提供了可定制的仪表盘。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/wrobstory/vincent">vincent</a>： Python 构建的专为运用 D3.js 进行可视化的 vega 转换工具。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/SEL-Columbia/bamboo">bamboo</a>：一种简洁的实时数据分析应用，bamboo 提供了一个进行合并、汇总、数值计算的数据实时接口。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/pudo/dataset">dataset</a>：难以置信的工具，dataset 让对数据库的读写简单的象对 JSON 文件的操作，没有其它的文件配置，顷刻间就让你在 BOSS 面前高大上起来。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/wrobstory/folium">folium</a>：喜欢地图?也爱 Python? Folium 让你在地图上自在操纵数据。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/olgabot/prettyplotlib">prettyplotlib</a>：用 prettyplotlib 来强化你的 matplotlib，让你默认的 matplotlib 输出图片更加漂亮.</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/CamDavidsonPilon/lifelines">lifelines</a>：有兴趣在 Python 中研究<a target="_blank" rel="noopener" href="http://zh.wikipedia.org/zh-cn/%E7%94%9F%E5%AD%98%E5%88%86%E6%9E%90">生存分析</a>的话，不用观望了，用 lifelines! 包含对 Kaplan-Meier、Nelson-Aalen 和生存回归分析。</li>
-</ul>
-<p><em>七、编辑器及其改善</em>*</p>
-<ul>
-<li><a target="_blank" rel="noopener" href="https://github.com/jf8073/sublime-snake">sublime-snake</a>：想在无尽的 coding 中喘口气? 当然是这种经典游戏了……</li>
-<li><a target="_blank" rel="noopener" href="https://code.google.com/p/spyderlib/">spyderlib</a>：又一个用 Python 写的开源 IDE。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/dbsr/vimfox">vimfox</a>：对于 Vim 党最贴心的 web 专发工具，VimFox 能让 vim 实时的看到 css&#x2F;js&#x2F;html 的修改效果，能神奇的让 vim 中的修订，立即在浏览器中看到。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/fortharris/Pcode">pcode</a>：基于 Py3 的 IDE，通过简单的 UI 提供了重构、工程管理等。</li>
-</ul>
-<p><strong>八、持续交付</strong></p>
-<ul>
-<li><a target="_blank" rel="noopener" href="https://github.com/cyberdelia/metrology">metrology</a>：这个库很酷，支持你对应用进行多种测量并轻松输出给类似 <a target="_blank" rel="noopener" href="http://graphite.wikidot.com/">graphite</a> 的外部系统。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/zedshaw/python-lust">python-lust</a>：支持在 Unix 系统中用 Python 实现一个守护进程。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/Cue/scales">scales</a>：Scales 对你的 Python 应用进行持续状态和统计，并发送数据到 <a target="_blank" rel="noopener" href="http://graphite.wikidot.com/">graphite</a>。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/nicolargo/glances">glances</a>：跨平台，基于 <a target="_blank" rel="noopener" href="http://en.wikipedia.org/wiki/Curses_%28programming_library%29">curses</a> 命令行的系统监视工具。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/ateska/ramona">ramona</a>：企业级的应用监管。 Ramona 保证每个进程在值，一但需要立即重启，并有监控&#x2F;日志输出，会发送邮件提醒。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/lincolnloop/salmon">salmon</a>：基于 <a target="_blank" rel="noopener" href="http://saltstack.com/community.html">Salt Stack</a> 的多服务监视系统，即能作报警系统，也能当监控系统。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/vimeo/graph-explorer">graph-explorer</a>：Graph-explorer 是对 <a target="_blank" rel="noopener" href="http://graphite.wikidot.com/">Graphite</a> 面板的增强，比原版的好很多，值得体验。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/al3x/sovereign">sovereign</a>：Sovereign 是一系列 <a target="_blank" rel="noopener" href="https://github.com/ansible/ansible">ansible</a> 的攻略手册，能为自个儿建造个私人云。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/ehazlett/shipyard">shipyard</a>：能在指定的机器上弹出你的弹窗实例，也支持你创建&#x2F;删除等等对弹窗的远程控制。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/dotcloud/docker-py">docker-py</a>：疯狂的 <a target="_blank" rel="noopener" href="https://github.com/dotcloud/docker">docker</a> 工程接口的 Python 包装。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/crosbymichael/dockerui">dockerui</a>：基于 <a target="_blank" rel="noopener" href="https://github.com/dotcloud/docker">docker</a> 接口通过 web 界面进行交互操作的工具。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/kencochrane/django-docker">django-docker</a>：如果想知道怎么将 Djnago 应用同 Docker 结合? 可以从这里学习。<br><a target="_blank" rel="noopener" href="https://github.com/BrightcoveOS/Diamond">diamond</a>：Python 实现的守护进程，自动从你的服务或是其它指定数据源中提取数值，并 <a target="_blank" rel="noopener" href="http://graphite.wikidot.com/">graphite</a>、<a target="_blank" rel="noopener" href="https://github.com/BrightcoveOS/Diamond/wiki/Handlers">以及其它支持的</a>状态面板&#x2F;收集系统输出。</li>
-</ul>
-<p><strong>九、Git</strong></p>
-<ul>
-<li><a target="_blank" rel="noopener" href="https://github.com/jvns/git-workflow">git-workflow</a>：可视化你的 git 工作流程的工具，示例： <a target="_blank" rel="noopener" href="http://visualize-your-git.herokuapp.com/display/2">Demo</a>。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/bhuztez/gitto">gitto</a>：简洁的库，协助你建立自个儿的 git 主机。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/mhagger/git-imerge">git-imerge</a>：git-imerge 能让 git 进行增量合并。 本质上是允许你在进行 imerge 有冲突时，有机会先合并掉，再继续。</li>
-</ul>
-<p><strong>十、邮件与聊天</strong></p>
-<ul>
-<li><a target="_blank" rel="noopener" href="https://github.com/martinrusev/mailbox">mailbox</a>：Mailbox 是对 Python 的 IMAP 一个人性化的再造。 基于简单即是美的态度，作者对 IMAP 接口给出了一个简单又好理解的形式。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/jeztek/deadchat">deadchat</a>：deadchat 旨在不安全的网络环境中提供安全的单一房间群聊服务以及客户端。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/pagekite/Mailpile">Mailpile</a>：Mailpile 是针对邮件的索引及搜索引擎 。</li>
-</ul>
-<p><strong>十一、音频和视频</strong></p>
-<ul>
-<li><a target="_blank" rel="noopener" href="https://github.com/np1/pms">pms</a>：穷人的 <a target="_blank" rel="noopener" href="https://www.spotify.com/">Spotify</a>，搜索和收集音乐流!</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/worldveil/dejavu">dejavu</a>：在琢磨 Shazam 的原理? 音频指纹识别算法的 Python 实现在此!（译注:<a target="_blank" rel="noopener" href="http://www.shazam.com/">Shazam</a>：是个神奇的音乐识别应用，对她啍个几秒调子，就能精确告诉你是什么歌曲、作者、歌词……）</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/styxit/HTPC-Manager">HTPC-Manager</a>：为 <a target="_blank" rel="noopener" href="http://en.wikipedia.org/wiki/Home_theater_PC">HTPC</a> 粉丝准备的工具，提供了完备的界面来管理所有家庭媒体服务器上的好物。</li>
-<li><a target="_blank" rel="noopener" href="http://fomori.org/cherrymusic/">cherrymusic</a>：Python 实现的一个音乐流媒体服务器。 流化输出你的音乐到所有设备上。</li>
-<li><a target="_blank" rel="noopener" href="http://zulko.github.io/moviepy/">moviepy</a>：脚本化的电影剪辑包，切&#x2F;串&#x2F;插入标题等基本操作，几行就搞定!</li>
-</ul>
-<p><strong>十二、其它</strong></p>
-<ul>
-<li><a target="_blank" rel="noopener" href="https://github.com/BrianHicks/emit">emit</a>：用 redis 为你的函式追加可订阅能力，很有趣。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/quantopian/zipline">zipline</a>：Zipline 是种很 Pythonic 的交易算法库。</li>
-<li><a target="_blank" rel="noopener" href="http://raspberry.io/">raspberry.io</a>：Raspberry.io 是树莓派的社区实现。 刚刚发布，汇集了各种创意想法，有兴趣的话立即检出折腾吧。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/samuelclay/NewsBlur">NewsBlur</a>：Google Reader 已经关张儿了，Newsblur 已经发布了有段日子了，开源的 RSS 阅读器，这绝对是应该首先体验的。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/lihaoyi/macropy">macropy</a>：Macropy 是在 Python 中实现 <a target="_blank" rel="noopener" href="http://en.wikipedia.org/wiki/Macro_%28computer_science%29">macros</a> 的库。 检出文档，参考所有功能，看怎么用上了。<br><a target="_blank" rel="noopener" href="https://github.com/halst/mini">- mini</a>：对编译器以及语言设计有兴趣的，一定要看看这个仓库，以及配套的录像!</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/erikrose/parsimonious">parsimonious</a>：Parsimonious 的目标是最快的 arbitrary-lookahead 解析器。 用 Python 实现，基本可用。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/posativ/isso">isso</a>：Disqus 的开源替代，从 demo 看很不错，而且提供了更好的隐私设置。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/deaddrop/deaddrop">deaddrop</a>：Deaddrop 能为新闻机构或是其它人提供在线投递箱，详细信息参考其 <a target="_blank" rel="noopener" href="http://deaddrop.github.io/">github page</a>。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/hhatto/nude.py">nude.py</a>：裸体检测的 Python 实现，是 node.js 的仿制。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/emre/kaptan">kaptan</a>： Kaptan 是你应用的配置管理器！</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/spotify/luigi">luigi</a>：Luigi 帮你构建复杂的管道来完成批处理。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/waawal/gramme">gramme</a>：Gramme 以简单而优雅的方式，通过 UDP 接口对易失数据完成消息包装序列化。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/zestyping/q">q</a>：为你的 Python 程序提供快速而随性的日志。 有一系列帮手来追踪你的函式参数，并能在控制台快速交互式加载。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/zedshaw/fuqit">fuqit</a>：来自伟大的 <a target="_blank" rel="noopener" href="http://twitter.com/zedshaw">Zed Shaw</a> 最新作品，fuqit 试图令你忘记 MVC 的经验，用全新的方式专注简洁一切。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/pydanny/simplicity">simplicity</a>：基于靠谱的 <a target="_blank" rel="noopener" href="http://twitter.com/pydanny">pydanny</a> 将你的新结构化文本转换为 JSON 格式。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/michaelhelmick/lassie">lassie</a>：Lassie 允许你轻松的从网站检索出内容来。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/jflesch/paperwork">paperwork</a>：Paperwork 是个 OCR 文档并完成可搜索转化的工具，用 GTK&#x2F;Glade 实现了友好的界面。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/chrisallenlane/cheat">cheat</a>：cheat 允许你创建并查阅命令行上的交互式备忘。设计目的是帮助 *nix 的系统管理员们在习惯的环境中，快速调阅不易记忆的常用命令。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/audreyr/cookiecutter">cookiecutter</a>：良心模块! 提供一堆有用但是不常写，所以记不下来的代码模板，也支持自制代码模板。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/isnowfy/pydown">pydown</a>：支持用 Python 构建亮丽的 HTML5 效果幻灯，<a target="_blank" rel="noopener" href="http://isnowfy.github.io/pydown/">Demo</a>。<br><a target="_blank" rel="noopener" href="https://github.com/scottrice/Ice">Ice</a>：模拟器粉丝们现在能用 Ice 向 <a target="_blank" rel="noopener" href="http://store.steampowered.com/">Steam</a> 里塞 ROM 来玩了。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/ecdavis/pants">pants</a>：用以编写异步网络应用的轻量级框架。 Pants 是单线程，回调服务，也包含支持 Websockets 的 HTTP 服务、WSGI 支持和一个简单的 web 框架。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/asperous/pipeless">pipeless</a>：Pipeless 是一个构建简单 <a target="_blank" rel="noopener" href="http://en.wikipedia.org/wiki/Pipeline_%28software%29">数据管道</a>的框架。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/sloria/marshmallow">marshmallow</a>：marshmallow 是个 ORM 无关的库，能将复杂的数据类型转换为 Python 原生类型对象，以便容易的转换为 JSON 提供接口使用。</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/Ceasar/twosheds/">twosheds</a>：Python 实现的库，用来构造命令或是 shell 解释器。Twosheds 让你用 Python 来定制自个儿的 shell 环境。</li>
-</ul>
-<p>来自：<a target="_blank" rel="noopener" href="http://www.cnblogs.com/hongfei/p/3874419.html">http://www.cnblogs.com/hongfei/p/3874419.html</a></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1653,7 +1454,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">165</span>
+          <span class="site-state-item-count">166</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1691,7 +1492,7 @@
     <!--<h3 class="widget-title">Tag Cloud</h3> -->
     <div id="myCanvasContainer" class="widget tagcloud">
         <canvas width="250" height="250" id="resCanvas" style="width=100%">
-            <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AWVS/" rel="tag">AWVS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Burp-Site/" rel="tag">Burp Site</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DVWA/" rel="tag">DVWA</a><span class="tag-list-count">15</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dependency-Check/" rel="tag">Dependency-Check</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/H5/" rel="tag">H5</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hadoop/" rel="tag">Hadoop</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hibernate/" rel="tag">Hibernate</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hive/" rel="tag">Hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jenkins/" rel="tag">Jenkins</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Metasploit/" rel="tag">Metasploit</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MyBatis/" rel="tag">MyBatis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Nessus/" rel="tag">Nessus</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Sonic/" rel="tag">Sonic</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/airtest/" rel="tag">airtest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">android性能测试</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/app%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">app安全测试</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aritest/" rel="tag">aritest</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/centos/" rel="tag">centos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/" rel="tag">chrome</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/datax/" rel="tag">datax</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/django/" rel="tag">django</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/drozer/" rel="tag">drozer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fisco-bcos/" rel="tag">fisco-bcos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flink/" rel="tag">flink</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gin/" rel="tag">gin</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/" rel="tag">go</a><span class="tag-list-count">16</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go-zero/" rel="tag">go-zero</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hive/" rel="tag">hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/httprunner/" rel="tag">httprunner</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a><span class="tag-list-count">22</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jmeter/" rel="tag">jmeter</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka/" rel="tag">kafka</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kail/" rel="tag">kail</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode/" rel="tag">leetcode</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode-%E6%95%B0%E7%BB%84/" rel="tag">leetcode-数组</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mitmproxy/" rel="tag">mitmproxy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongodb/" rel="tag">mongodb</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/monkey/" rel="tag">monkey</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/" rel="tag">mysql</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/orm/" rel="tag">orm</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pandas/" rel="tag">pandas</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pc%E8%87%AA%E5%8A%A8%E5%8C%96/" rel="tag">pc自动化</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/playwright/" rel="tag">playwright</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pytest/" rel="tag">pytest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a><span class="tag-list-count">23</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/" rel="tag">redis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/selenium/" rel="tag">selenium</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring/" rel="tag">spring</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/springboot/" rel="tag">springboot</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlite/" rel="tag">sqlite</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlmap/" rel="tag">sqlmap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tkinter/" rel="tag">tkinter</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/" rel="tag">vue</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue3/" rel="tag">vue3</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">云服务器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8C%BA%E5%9D%97%E9%93%BE/" rel="tag">区块链</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag">大数据</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">安全测试</a><span class="tag-list-count">29</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">性能测试</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%88%AC%E8%99%AB/" rel="tag">爬虫</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" rel="tag">环境搭建</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95/" rel="tag">自动化测试</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%8B%B1%E8%AF%AD%E5%AD%A6%E4%B9%A0/" rel="tag">英语学习</a><span class="tag-list-count">1</span></li></ul>
+            <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AWVS/" rel="tag">AWVS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Burp-Site/" rel="tag">Burp Site</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DVWA/" rel="tag">DVWA</a><span class="tag-list-count">15</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dependency-Check/" rel="tag">Dependency-Check</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/H5/" rel="tag">H5</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hadoop/" rel="tag">Hadoop</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hibernate/" rel="tag">Hibernate</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hive/" rel="tag">Hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jenkins/" rel="tag">Jenkins</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Metasploit/" rel="tag">Metasploit</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MyBatis/" rel="tag">MyBatis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Nessus/" rel="tag">Nessus</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Sonic/" rel="tag">Sonic</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/airtest/" rel="tag">airtest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">android性能测试</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/app%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">app安全测试</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aritest/" rel="tag">aritest</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/centos/" rel="tag">centos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/" rel="tag">chrome</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/datax/" rel="tag">datax</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/django/" rel="tag">django</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/drozer/" rel="tag">drozer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fisco-bcos/" rel="tag">fisco-bcos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flink/" rel="tag">flink</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gin/" rel="tag">gin</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/" rel="tag">go</a><span class="tag-list-count">16</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go-zero/" rel="tag">go-zero</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hive/" rel="tag">hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/httprunner/" rel="tag">httprunner</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a><span class="tag-list-count">22</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jmeter/" rel="tag">jmeter</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka/" rel="tag">kafka</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kail/" rel="tag">kail</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode/" rel="tag">leetcode</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode-%E6%95%B0%E7%BB%84/" rel="tag">leetcode-数组</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mitmproxy/" rel="tag">mitmproxy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongodb/" rel="tag">mongodb</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/monkey/" rel="tag">monkey</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/" rel="tag">mysql</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/orm/" rel="tag">orm</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pandas/" rel="tag">pandas</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pc%E8%87%AA%E5%8A%A8%E5%8C%96/" rel="tag">pc自动化</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/playwright/" rel="tag">playwright</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pytest/" rel="tag">pytest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a><span class="tag-list-count">23</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/" rel="tag">redis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/selenium/" rel="tag">selenium</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring/" rel="tag">spring</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/springboot/" rel="tag">springboot</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlite/" rel="tag">sqlite</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlmap/" rel="tag">sqlmap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tkinter/" rel="tag">tkinter</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/" rel="tag">vue</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue3/" rel="tag">vue3</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">云服务器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8C%BA%E5%9D%97%E9%93%BE/" rel="tag">区块链</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag">大数据</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">安全测试</a><span class="tag-list-count">29</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">性能测试</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%88%AC%E8%99%AB/" rel="tag">爬虫</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" rel="tag">环境搭建</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95/" rel="tag">自动化测试</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%8B%B1%E8%AF%AD%E5%AD%A6%E4%B9%A0/" rel="tag">英语学习</a><span class="tag-list-count">1</span></li></ul>
         </canvas>
     </div>
 </div>
