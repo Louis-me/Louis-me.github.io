@@ -191,6 +191,231 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/f05ef477/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="一个正经的测试工程师">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="施坤的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/aposts/f05ef477/" class="post-title-link" itemprop="url">第一章 大数据技术生态</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-12-01 09:35:36" itemprop="dateCreated datePublished" datetime="2021-12-01T09:35:36+08:00">2021-12-01</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-02-25 11:20:56" itemprop="dateModified" datetime="2022-02-25T11:20:56+08:00">2022-02-25</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/" itemprop="url" rel="index"><span itemprop="name">大数据</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/aposts/f05ef477/" class="post-meta-item leancloud_visitors" data-flag-title="第一章 大数据技术生态" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/aposts/f05ef477/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/aposts/f05ef477/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="大数据技术生态"><a href="#大数据技术生态" class="headerlink" title="大数据技术生态"></a>大数据技术生态</h1><blockquote>
+<p>本文主要抄录《大数据测试技术与实践》</p>
+</blockquote>
+<p>由下而上可以划分为：</p>
+<ul>
+<li>数据采集<ul>
+<li>关系与非关系数据采集组件，分布式消息队列等，如kafka、sqoop</li>
+</ul>
+</li>
+<li>数据存储<ul>
+<li>分布式存储系统、关系和非关系数据库等，如HDFS、MySQL</li>
+</ul>
+</li>
+<li>管理调度<ul>
+<li>资源管理和调度YARN，容器Kubernetes、服务协调zookeeper、工作流调度平台（如Azkaban）等</li>
+</ul>
+</li>
+<li>计算机分析<ul>
+<li>批处理（MapReduce）、流计算(Flink)、查询分析(Impala)和图计算(Gelly)等</li>
+</ul>
+</li>
+<li>组件应用<ul>
+<li>各种数据分析和机器学习工具，如Hive、Pig、TensorFlow</li>
+</ul>
+</li>
+</ul>
+<h2 id="大数据采集计算"><a href="#大数据采集计算" class="headerlink" title="大数据采集计算"></a>大数据采集计算</h2><ul>
+<li>系统日志采集，如kafka、Flume</li>
+<li>网络数据采集，如爬虫</li>
+<li>其他数据采集</li>
+</ul>
+<h2 id="大数据存储计算"><a href="#大数据存储计算" class="headerlink" title="大数据存储计算"></a>大数据存储计算</h2><h3 id="分布式文件系统-HDFS"><a href="#分布式文件系统-HDFS" class="headerlink" title="分布式文件系统 HDFS"></a>分布式文件系统 HDFS</h3><ul>
+<li><p>主要解决大数据存储问题</p>
+</li>
+<li><p>GFS（Google File System）的开源实现</p>
+</li>
+<li><p>Hadoop两大核心组成部分之一，另外一个是MapReduce</p>
+</li>
+<li><p>遵循主从（master&#x2F;salve）框架</p>
+</li>
+<li><p>可以由单台服务器扩展到数千台服务器</p>
+</li>
+<li><p>NameNode关联和维护HDFS文件系统的读写操作</p>
+</li>
+<li><p>多个DataNode1负责存储数据</p>
+</li>
+</ul>
+<p><img src="/aposts/f05ef477/image-20211201095407758.png" alt="image-20211201095407758"></p>
+<h4 id="HDFS优点"><a href="#HDFS优点" class="headerlink" title="HDFS优点"></a>HDFS优点</h4><ul>
+<li>具有高度容错能力，能实时监测错误并且自动恢复。<ul>
+<li>类似于服务器的容灾能力，当某台服务器挂了，就启用备用服务器，进行数据同步</li>
+</ul>
+</li>
+<li>数据存储为Streaming流式数据存储 。批处理数据，而不是实时处理，提高了大量处理数据的能力，但是会<strong>牺牲响应时间</strong></li>
+<li>大数据集。提供了<a target="_blank" rel="noopener" href="https://links.jianshu.com/go?to=%5Bhttps://www.ibm.com/developerworks/cn/linux/cluster/lw-clustering.html%5D(https://www.ibm.com/developerworks/cn/linux/cluster/lw-clustering.html)">cluster</a>集群架构，集群可扩展为数百个节点</li>
+<li>数据简单一致性。一次性写入多次读取，一个文件创建后就不可再修改，这样可以简化数据一致性</li>
+<li>跨硬件和跨软件。平台的可移植性</li>
+</ul>
+<h3 id="海量数据列式存储：Hbase"><a href="#海量数据列式存储：Hbase" class="headerlink" title="海量数据列式存储：Hbase"></a>海量数据列式存储：Hbase</h3><ul>
+<li><p>HDFS容错率很高，即便是在系统崩溃的情况下，也能够在节点之间快速传输数据。<strong>HBase是非关系数据库，是开源的Not-Only-SQL数据库</strong>，它的运行<strong>建立在Hadoop上</strong>。HBase依赖于CAP定理(Consistency, Availability, and Partition Tolerance）中的CP项</p>
+</li>
+<li><p>HDFS最适于执行批次分析。然而，<strong>它最大的缺点是无法执行实时分析</strong>，而实时分析是信息科技行业的标配。<strong>HBase能够处理大规模数据，它不适于批次分析，但它可以向Hadoop实时地调用数据</strong>。</p>
+</li>
+<li><p>HDFS和HBase都可以处理结构、半结构和非结构数据。因为HDFS建立在旧的MapReduce框架上，所以它缺乏内存引擎，数据分析速度较慢。相反，HBase使用了内存引擎，大大提高了数据的读写速度。</p>
+</li>
+<li><p>HDFS执行的数据分析过程是透明的。HBase与之相反，因为其结构基于NoSQL，它通过在不同的关键字下进行排序而获取数据。</p>
+</li>
+</ul>
+<p><img src="/aposts/f05ef477/image-20211201100832525.png" alt="image-20211201100832525"></p>
+<h2 id="大数据分析技术"><a href="#大数据分析技术" class="headerlink" title="大数据分析技术"></a>大数据分析技术</h2><ul>
+<li>批处理计算。针对大规模数据的批量处理，主要代表产品有MapReduce、Spark</li>
+<li>流计算。针对流数据的实时计算，主要代表产品有，Spark Streaming、Flink 、Storm等</li>
+<li>查询分析计算。针对大规模数据的存储管理和查询分析，主要代表产品有Hive、Impala等</li>
+<li>图计算。针对大规模图结构数据的处理，主要代表产品有Pregel、Gelly等</li>
+</ul>
+<h3 id="批处理计算-MapReduce"><a href="#批处理计算-MapReduce" class="headerlink" title="批处理计算-MapReduce"></a>批处理计算-MapReduce</h3><ul>
+<li><p>进行大量数据处理时，用MapReduce进行分布式计算，这样可大量减少计算时间，还有Spark、Pig等就是类似的代表产品或技术</p>
+</li>
+<li><p>Map将任务分割成更小任务，由每台服务器分别执行</p>
+</li>
+<li><p>Reduce将所有服务器返回的结果汇总，整理成最终结果</p>
+</li>
+</ul>
+<p><img src="/aposts/f05ef477/image-20211201102027603.png" alt="image-20211201102027603"></p>
+<h3 id="流计算"><a href="#流计算" class="headerlink" title="流计算"></a>流计算</h3><ul>
+<li><p>流式处理假设数据的潜在价值是数据的<strong>新鲜度、实时性</strong>，需要尽快处理得到结果。在这种方式下，数据以流的方式到达。在数据连续到达的过程中，由于流携带了大量数据，只有小部分的流数据被保存在有限的<strong>内存中</strong>。流处理方式用于在线应用，通常工作在<strong>秒或毫秒级</strong>别。</p>
+</li>
+<li><p>目前主流的流处理组件包括：<strong>Strom</strong>、<strong>Spark Streaming</strong>、KafKa、Flume、<strong>Flink</strong>、S3等</p>
+<ul>
+<li>Spark 和 Strom、Flink对比，无法在对实施要求很高的流处理场景中</li>
+</ul>
+</li>
+</ul>
+<p><img src="/aposts/f05ef477/image-20211201104503379.png" alt="image-20211201104503379"></p>
+<h3 id="OLAP引擎"><a href="#OLAP引擎" class="headerlink" title="OLAP引擎"></a>OLAP引擎</h3><ul>
+<li>即联机分析处理。OLAP对业务数据执行多维分析，并提供复杂计算，趋势分析和复杂数据建模的能力。它主要用于支持企业决策管理分析，是许多商务智能（BI）应用程序背后的技术。</li>
+<li>目前开源的引擎很多，如Hive、Impala、Persto等</li>
+</ul>
+<h4 id="Hive"><a href="#Hive" class="headerlink" title="Hive"></a>Hive</h4><p><img src="/aposts/f05ef477/image-20211201111306662.png" alt="image-20211201111306662"></p>
+<h4 id="其他参考"><a href="#其他参考" class="headerlink" title="其他参考"></a>其他参考</h4><ul>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_43665254/article/details/112552106">Hive SQL vs SQL 区别</a></li>
+</ul>
+<h2 id="大数据管理调度技术"><a href="#大数据管理调度技术" class="headerlink" title="大数据管理调度技术"></a>大数据管理调度技术</h2><h3 id="分布式集群资源调度框架-YARN"><a href="#分布式集群资源调度框架-YARN" class="headerlink" title="分布式集群资源调度框架-YARN"></a>分布式集群资源调度框架-YARN</h3><ul>
+<li>针对Hadoop1.0中MR的不足，引入了Yarn框架。Yarn框架中将JobTracker资源分配和作业控制分开，分为Resource Manager(RM)以及Application Master(AM)。</li>
+<li>Hadoop的MapReduce架构称为<a target="_blank" rel="noopener" href="https://links.jianshu.com/go?to=%5Bhttp://hadoop.apache.org/docs/current/hadoop-yarn/hadoop-yarn-site/YARN.html%5D(http://hadoop.apache.org/docs/current/hadoop-yarn/hadoop-yarn-site/YARN.html)">YARN</a>(另一种资源协助者)，是效率更高的资源管理器核心</li>
+<li>Client客户端，用户向Resource Manage请求执行运算</li>
+<li>在NameNode会有Resource Manage统筹管理运算请求</li>
+<li>在其他的DateNode会有 Node Manager负责运行，监督每个任务运行情况，并向Resource Manage 汇报状态</li>
+</ul>
+<p><img src="/aposts/f05ef477/image-20211201102156648.png" alt="image-20211201102156648"></p>
+<h3 id="容器管理系统：Kubernetes"><a href="#容器管理系统：Kubernetes" class="headerlink" title="容器管理系统：Kubernetes"></a>容器管理系统：Kubernetes</h3><ul>
+<li>常见的大数据技术组件一般有对应的开源项目支持部署，如Flink，Spark也有官方支持Spark on Kubernetes运行模式等</li>
+</ul>
+<h3 id="ZooKeeper"><a href="#ZooKeeper" class="headerlink" title="ZooKeeper"></a>ZooKeeper</h3><ul>
+<li><p>是大数据的动物管理员，是一个开源的分布式的，是Hadoop的一个子项目</p>
+</li>
+<li><p>Zookeeper从设计模式角度来理解：是一个基于观察者模式设计的分布式服务管理框架，它负责存储和管理大家都关心的数据，然后接受观察者的注册，一旦这些数据的状态发生变化，Zookeeper就将负责通知已经在Zookeeper上注册的那些观察者做出相应的反应，从而实现集群中类似Master&#x2F;Slave管理模式</p>
+</li>
+<li><p><strong>Zookeeper&#x3D;文件系统+通知机制</strong></p>
+</li>
+</ul>
+<h3 id="常用的工作流调度平台"><a href="#常用的工作流调度平台" class="headerlink" title="常用的工作流调度平台"></a>常用的工作流调度平台</h3><ul>
+<li>对于简单的任务调度，可以使用Linux Crontab，但是对于在多台机器上、任务之前有依赖关系时，Linux Crontab就不能满足需求，因此需要分布式任务调度系统来进行任务编排</li>
+<li>业界常用开源调度平台有：Azkaban、Oozie、Airflow等</li>
+</ul>
+<h2 id="大数据商业产品"><a href="#大数据商业产品" class="headerlink" title="大数据商业产品"></a>大数据商业产品</h2><ul>
+<li>大数据解决方案提供商</li>
+<li>大数据云计算服务商</li>
+<li>大数据SaaS服务商</li>
+<li>大数据开发平台</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/66ac71c6/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1656,186 +1881,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/65807ab6/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="一个正经的测试工程师">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="施坤的博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/aposts/65807ab6/" class="post-title-link" itemprop="url">centos7搭建jforum</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-10-20 10:15:30" itemprop="dateCreated datePublished" datetime="2021-10-20T10:15:30+08:00">2021-10-20</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-02-25 11:20:56" itemprop="dateModified" datetime="2022-02-25T11:20:56+08:00">2022-02-25</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" itemprop="url" rel="index"><span itemprop="name">性能测试</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/aposts/65807ab6/" class="post-meta-item leancloud_visitors" data-flag-title="centos7搭建jforum" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/aposts/65807ab6/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/aposts/65807ab6/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><p>作为性能测试的压测目标网站，本次教程主要是在centos7上搭建iforum论坛的步骤</p>
-<h3 id="按照mysql"><a href="#按照mysql" class="headerlink" title="按照mysql"></a>按照mysql</h3><ul>
-<li><p>去官网查看最新安装包<br><a target="_blank" rel="noopener" href="https://links.jianshu.com/go?to=https://dev.mysql.com/downloads/repo/yum/">https://dev.mysql.com/downloads/repo/yum/</a></p>
-</li>
-<li><p>下载MySQL源安装包</p>
-</li>
-</ul>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget hhttps:<span class="comment">//repo.mysql.com//mysql80-community-release-el7-3.noarch.rpm</span></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>安装MySql源</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@racknerd-4dbd89 <span class="built_in">local</span>]<span class="comment"># rpm -ivh mysql80-community-release-el7-3.noarch.rpm</span></span><br><span class="line">warning: mysql80-community-release-el7-3.noarch.rpm: Header V3 DSA/SHA1 Signature, key ID 5072e1f5: NOKEY</span><br><span class="line">Preparing...                          <span class="comment">################################# [100%]</span></span><br><span class="line">Updating / installing...</span><br><span class="line">   1:mysql80-community-release-el7-3  <span class="comment">################################# [100%]</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p>安装MySQL服务器<br><code>yum install mysql-community-server</code></p>
-</li>
-<li><p>开启mysql服务</p>
-</li>
-</ul>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">service mysqld <span class="keyword">start</span></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>mysql安装成功后创建的超级用户‘root‘@’localhost’的密码会被存储在<code>/var/log/mysqld.log</code>，可以使用如下命令查看密码</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep <span class="string">&#x27;temporary password&#x27;</span> /var/log/mysqld.log</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p>输入 <code>mysql -u root -p</code>,输入得到的密码，然后修改密码：</p>
-<figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ALTER USER <span class="comment">&#x27;root&#x27;@&#x27;localhost&#x27; IDENTIFIED BY &#x27;new password&#x27;;</span></span><br></pre></td></tr></table></figure>
-
-
-</li>
-<li><p>添加远程登录用户</p>
-</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">use mysql;</span><br><span class="line">mysql&gt; select host, user from user;</span><br><span class="line">+-----------+------------------+</span><br><span class="line">| host      | user             |</span><br><span class="line">+-----------+------------------+</span><br><span class="line">| localhost | mysql.infoschema |</span><br><span class="line">| localhost | mysql.session    |</span><br><span class="line">| localhost | mysql.sys        |</span><br><span class="line">| localhost | root             |</span><br><span class="line">+-----------+------------------+</span><br><span class="line">4 rows <span class="keyword">in</span> <span class="built_in">set</span> (0.01 sec)</span><br><span class="line"><span class="comment"># 查看表格中 root 用户的 host，默认应该显示的 localhost，只支持本地访问，不允许远程访问。</span></span><br><span class="line"></span><br><span class="line">update user <span class="built_in">set</span> host=<span class="string">&#x27;%&#x27;</span> <span class="built_in">where</span> user =<span class="string">&#x27;root&#x27;</span>;</span><br><span class="line"><span class="comment"># 说明： % 代表任意的客户端,可替换成具体IP地址。</span></span><br><span class="line">flush privileges;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>防火墙中开放mysql的访问端口</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">firewall-cmd --zone=public --add-port=3306/tcp --permanent</span><br><span class="line">firewall-cmd --reload   <span class="comment"># 配置立即生效</span></span><br><span class="line">firewall-cmd --zone=public --list-port <span class="comment"># 查看防火墙所有开放的端口</span></span><br><span class="line">firewall-cmd --state <span class="comment"># 查看防火墙状态</span></span><br><span class="line">netstat -lnpt <span class="comment"># 查看监听的端口</span></span><br><span class="line">netstat -lnpt |grep 3306 <span class="comment"># 查看监听的具体端口</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p>用HeidiSQL远程连接mysql成功</p>
-<p><img src="/aposts/65807ab6/image-20211020114616786.png" alt="image-20211020114616786"></p>
-</li>
-<li><p>新建数据库，名字为：iforum</p>
-<p><img src="/aposts/65807ab6/image-20211020163450656.png" alt="image-20211020163450656"></p>
-</li>
-</ul>
-<h3 id="安装java"><a href="#安装java" class="headerlink" title="安装java"></a>安装java</h3><ul>
-<li><p>我的服务器上已经按照好了java</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@racknerd-4dbd89 ~]<span class="comment"># java -version</span></span><br><span class="line">java version <span class="string">&quot;1.8.0_291&quot;</span></span><br><span class="line">Java(TM) SE Runtime Environment (build 1.8.0_291-b10)</span><br><span class="line">Java HotSpot(TM) 64-Bit Server VM (build 25.291-b10, mixed mode)</span><br></pre></td></tr></table></figure></li>
-</ul>
-<h3 id="安装tomcat"><a href="#安装tomcat" class="headerlink" title="安装tomcat"></a>安装tomcat</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">wget https://dlcdn.apache.org/tomcat/tomcat-8/v8.5.72/bin/apache-tomcat-8.5.72.tar.gz</span><br><span class="line">tar  zxvf apache-tomcat-8.5.72.tar.gz</span><br><span class="line"></span><br><span class="line"><span class="comment"># 启动tomcat</span></span><br><span class="line">[root@racknerd-4dbd89 bin]<span class="comment"># sh startup.sh</span></span><br><span class="line">Using CATALINA_BASE:   /usr/local/apache-tomcat-8.5.72</span><br><span class="line">Using CATALINA_HOME:   /usr/local/apache-tomcat-8.5.72</span><br><span class="line">Using CATALINA_TMPDIR: /usr/local/apache-tomcat-8.5.72/temp</span><br><span class="line">Using JRE_HOME:        /usr/jdk1.8.0_291/jre</span><br><span class="line">Using CLASSPATH:       /usr/local/apache-tomcat-8.5.72/bin/bootstrap.jar:/usr/local/apache-tomcat-8.5.72/bin/tomcat-juli.jar</span><br><span class="line">Using CATALINA_OPTS:</span><br><span class="line">Tomcat started.</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h4 id="配置tomcat"><a href="#配置tomcat" class="headerlink" title="配置tomcat"></a>配置tomcat</h4><ul>
-<li>防火墙开发8080端口给tomcat</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">firewall-cmd --zone=public --add-port=8080/tcp --permanent</span><br><span class="line">firewall-cmd --reload</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p>已经可以访问</p>
-<p><img src="/aposts/65807ab6/image-20211020162109704.png" alt="image-20211020162109704"></p>
-</li>
-</ul>
-<h3 id="安装jforum"><a href="#安装jforum" class="headerlink" title="安装jforum"></a>安装jforum</h3><ul>
-<li><p><a target="_blank" rel="noopener" href="https://sourceforge.net/projects/jforum2/files/latest/download">打开地址</a>并下载</p>
-</li>
-<li><p>将 jforum-2.6.2.war放到tomcat目录的webapps下；</p>
-</li>
-<li><p>重启tomcat，<code>sh shutdown.sh   sh startup.sh</code></p>
-</li>
-<li><p>输入 host:8080&#x2F;jforum-2.6.2 进入安装流程</p>
-<p><img src="/aposts/65807ab6/image-20211020165041066.png" alt="image-20211020165041066"></p>
-<p><img src="/aposts/65807ab6/image-20211020165234244.png" alt="image-20211020165234244"></p>
-</li>
-</ul>
-<p><img src="/aposts/65807ab6/image-20211020165311313.png" alt="image-20211020165311313"></p>
-<p><img src="/aposts/65807ab6/image-20211020171443069.png" alt="image-20211020171443069"></p>
-<h3 id="新增批量用户"><a href="#新增批量用户" class="headerlink" title="新增批量用户"></a>新增批量用户</h3><ul>
-<li><p>新增存储过程，批量新增用户，密码都是123456</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">BEGIN</span></span><br><span class="line"><span class="keyword">DECLARE</span> userName <span class="type">VARCHAR</span> (<span class="number">20</span>) ;</span><br><span class="line"><span class="keyword">DECLARE</span> userMail <span class="type">VARCHAR</span> (<span class="number">20</span>) ;</span><br><span class="line"><span class="keyword">DECLARE</span> i <span class="type">INT</span> <span class="keyword">DEFAULT</span> <span class="number">9</span>;#原来是<span class="number">1</span>，要看jforum_users表最新一个用户的id是多少，要比最新那个用户id大就行</span><br><span class="line">WHILE i<span class="operator">&lt;=</span> <span class="number">400</span> DO</span><br><span class="line"><span class="keyword">set</span> userName <span class="operator">=</span> CONCAT (<span class="string">&#x27;test1&#x27;</span>, LPAD ( i, <span class="number">3</span>, <span class="string">&#x27;0&#x27;</span> )) ;</span><br><span class="line"><span class="keyword">set</span> userMail <span class="operator">=</span> CONCAT (userName, <span class="string">&#x27;@test.com&#x27;</span> ) ;</span><br><span class="line">#密码<span class="number">123456</span></span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> jforum_users <span class="keyword">VALUES</span> (i, <span class="string">&#x27;1&#x27;</span>, userName,   <span class="string">&#x27;e10adc3949ba59abbe56e057f20f883e&#x27;</span>, <span class="string">&#x27;0&#x27;</span>, <span class="string">&#x27;0&#x27;</span>,</span><br><span class="line">  <span class="keyword">null</span>, <span class="string">&#x27;2015-05-06 09:33:18&#x27;</span>, <span class="keyword">NULL</span>,    <span class="string">&#x27;0&#x27;</span>, <span class="string">&#x27;&#x27;</span>, <span class="keyword">NULL</span>, <span class="string">&#x27;&#x27;</span>,   <span class="string">&#x27;%d/%M/%Y %H:%i&#x27;</span>, <span class="string">&#x27;0&#x27;</span>,    <span class="string">&#x27;0&#x27;</span>, <span class="keyword">null</span>, <span class="keyword">NULL</span>,    <span class="string">&#x27;0&#x27;</span>, <span class="string">&#x27;1&#x27;</span>,</span><br><span class="line"><span class="string">&#x27;0&#x27;</span>,    <span class="string">&#x27;1&#x27;</span>, <span class="string">&#x27;1&#x27;</span>, <span class="string">&#x27;1&#x27;</span>,    <span class="string">&#x27;1&#x27;</span>, <span class="string">&#x27;1&#x27;</span>, <span class="string">&#x27;0&#x27;</span>,    <span class="string">&#x27;0&#x27;</span>, <span class="string">&#x27;1&#x27;</span>, <span class="string">&#x27;1&#x27;</span>,   <span class="string">&#x27;0&#x27;</span>, <span class="keyword">NULL</span>,   <span class="string">&#x27;0&#x27;</span>,userMail, <span class="keyword">null</span>, <span class="keyword">null</span>, <span class="keyword">null</span>,</span><br><span class="line"><span class="keyword">null</span>, <span class="keyword">null</span>, <span class="keyword">null</span>, <span class="keyword">null</span>, <span class="keyword">null</span>, <span class="keyword">null</span>, <span class="keyword">null</span>, <span class="keyword">null</span>, <span class="keyword">null</span>, <span class="keyword">null</span>, <span class="keyword">null</span>, <span class="keyword">NULL</span>);</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> jforum_user_groups <span class="keyword">VALUES</span> (<span class="number">2</span>,i) ;</span><br><span class="line"><span class="keyword">SET</span> i <span class="operator">=</span> i<span class="operator">+</span><span class="number">1</span>;</span><br><span class="line"><span class="keyword">END</span> WHILE;</span><br><span class="line"><span class="keyword">END</span></span><br></pre></td></tr></table></figure></li>
-</ul>
-<p><img src="/aposts/65807ab6/image-20211111112111795.png" alt="image-20211111112111795"></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1911,7 +1956,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">166</span>
+          <span class="site-state-item-count">167</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1949,7 +1994,7 @@
     <!--<h3 class="widget-title">Tag Cloud</h3> -->
     <div id="myCanvasContainer" class="widget tagcloud">
         <canvas width="250" height="250" id="resCanvas" style="width=100%">
-            <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AWVS/" rel="tag">AWVS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Burp-Site/" rel="tag">Burp Site</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DVWA/" rel="tag">DVWA</a><span class="tag-list-count">15</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dependency-Check/" rel="tag">Dependency-Check</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/H5/" rel="tag">H5</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hadoop/" rel="tag">Hadoop</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hibernate/" rel="tag">Hibernate</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hive/" rel="tag">Hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jenkins/" rel="tag">Jenkins</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Metasploit/" rel="tag">Metasploit</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MyBatis/" rel="tag">MyBatis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Nessus/" rel="tag">Nessus</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Sonic/" rel="tag">Sonic</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/airtest/" rel="tag">airtest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">android性能测试</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/app%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">app安全测试</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aritest/" rel="tag">aritest</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/centos/" rel="tag">centos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/" rel="tag">chrome</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/datax/" rel="tag">datax</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/django/" rel="tag">django</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/drozer/" rel="tag">drozer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fisco-bcos/" rel="tag">fisco-bcos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flink/" rel="tag">flink</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gin/" rel="tag">gin</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/" rel="tag">go</a><span class="tag-list-count">16</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go-zero/" rel="tag">go-zero</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hive/" rel="tag">hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/httprunner/" rel="tag">httprunner</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a><span class="tag-list-count">22</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jmeter/" rel="tag">jmeter</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka/" rel="tag">kafka</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kail/" rel="tag">kail</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode/" rel="tag">leetcode</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode-%E6%95%B0%E7%BB%84/" rel="tag">leetcode-数组</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mitmproxy/" rel="tag">mitmproxy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongodb/" rel="tag">mongodb</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/monkey/" rel="tag">monkey</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/" rel="tag">mysql</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/orm/" rel="tag">orm</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pandas/" rel="tag">pandas</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pc%E8%87%AA%E5%8A%A8%E5%8C%96/" rel="tag">pc自动化</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/playwright/" rel="tag">playwright</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pytest/" rel="tag">pytest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a><span class="tag-list-count">23</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/" rel="tag">redis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/selenium/" rel="tag">selenium</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring/" rel="tag">spring</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/springboot/" rel="tag">springboot</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlite/" rel="tag">sqlite</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlmap/" rel="tag">sqlmap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tkinter/" rel="tag">tkinter</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/" rel="tag">vue</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue3/" rel="tag">vue3</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">云服务器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8C%BA%E5%9D%97%E9%93%BE/" rel="tag">区块链</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag">大数据</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">安全测试</a><span class="tag-list-count">29</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">性能测试</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%88%AC%E8%99%AB/" rel="tag">爬虫</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" rel="tag">环境搭建</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95/" rel="tag">自动化测试</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%8B%B1%E8%AF%AD%E5%AD%A6%E4%B9%A0/" rel="tag">英语学习</a><span class="tag-list-count">1</span></li></ul>
+            <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AWVS/" rel="tag">AWVS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Burp-Site/" rel="tag">Burp Site</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DVWA/" rel="tag">DVWA</a><span class="tag-list-count">15</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dependency-Check/" rel="tag">Dependency-Check</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/H5/" rel="tag">H5</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hadoop/" rel="tag">Hadoop</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hibernate/" rel="tag">Hibernate</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hive/" rel="tag">Hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jenkins/" rel="tag">Jenkins</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Metasploit/" rel="tag">Metasploit</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MyBatis/" rel="tag">MyBatis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Nessus/" rel="tag">Nessus</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Sonic/" rel="tag">Sonic</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/airtest/" rel="tag">airtest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">android性能测试</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/app%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">app安全测试</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aritest/" rel="tag">aritest</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/centos/" rel="tag">centos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/" rel="tag">chrome</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/datax/" rel="tag">datax</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/django/" rel="tag">django</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/drozer/" rel="tag">drozer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fisco-bcos/" rel="tag">fisco-bcos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flink/" rel="tag">flink</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gin/" rel="tag">gin</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/" rel="tag">go</a><span class="tag-list-count">16</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go-zero/" rel="tag">go-zero</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hive/" rel="tag">hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/httprunner/" rel="tag">httprunner</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a><span class="tag-list-count">22</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jmeter/" rel="tag">jmeter</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka/" rel="tag">kafka</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kail/" rel="tag">kail</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode/" rel="tag">leetcode</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode-%E6%95%B0%E7%BB%84/" rel="tag">leetcode-数组</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mitmproxy/" rel="tag">mitmproxy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongodb/" rel="tag">mongodb</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/monkey/" rel="tag">monkey</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/" rel="tag">mysql</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/orm/" rel="tag">orm</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pandas/" rel="tag">pandas</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pc%E8%87%AA%E5%8A%A8%E5%8C%96/" rel="tag">pc自动化</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/playwright/" rel="tag">playwright</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pytest/" rel="tag">pytest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a><span class="tag-list-count">23</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/" rel="tag">redis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/selenium/" rel="tag">selenium</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring/" rel="tag">spring</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/springboot/" rel="tag">springboot</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlite/" rel="tag">sqlite</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlmap/" rel="tag">sqlmap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tkinter/" rel="tag">tkinter</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/" rel="tag">vue</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue3/" rel="tag">vue3</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">云服务器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8C%BA%E5%9D%97%E9%93%BE/" rel="tag">区块链</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag">大数据</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">安全测试</a><span class="tag-list-count">29</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">性能测试</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%88%AC%E8%99%AB/" rel="tag">爬虫</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" rel="tag">环境搭建</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95/" rel="tag">自动化测试</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%8B%B1%E8%AF%AD%E5%AD%A6%E4%B9%A0/" rel="tag">英语学习</a><span class="tag-list-count">1</span></li></ul>
         </canvas>
     </div>
 </div>

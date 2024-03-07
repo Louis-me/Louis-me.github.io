@@ -191,6 +191,186 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/f3700316/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="一个正经的测试工程师">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="施坤的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/aposts/f3700316/" class="post-title-link" itemprop="url">Metasploitable3靶场搭建</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-02-22 11:36:26" itemprop="dateCreated datePublished" datetime="2022-02-22T11:36:26+08:00">2022-02-22</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-03-01 09:17:19" itemprop="dateModified" datetime="2022-03-01T09:17:19+08:00">2022-03-01</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Metasploit/" itemprop="url" rel="index"><span itemprop="name">Metasploit</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/aposts/f3700316/" class="post-meta-item leancloud_visitors" data-flag-title="Metasploitable3靶场搭建" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/aposts/f3700316/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/aposts/f3700316/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><ul>
+<li>为了练习使用Metasploit，本篇主要介绍如何搭建靶场Metasploitable3</li>
+<li>本机为win10，网络为无线网络，cpu为i5，内存为8G</li>
+<li><strong>本次装的靶场环境是windows_2008_r2</strong>，ubuntu_1404系统没有装</li>
+</ul>
+<h2 id="开始搭建"><a href="#开始搭建" class="headerlink" title="开始搭建"></a>开始搭建</h2><ul>
+<li>packer我们不需要</li>
+<li>打开<a target="_blank" rel="noopener" href="https://www.vagrantup.com/downloads">vagrant</a>下载最新的版本，安装后要重启电脑</li>
+<li>安装vagren插件</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">E:\app&gt;cd Vagrant</span><br><span class="line"></span><br><span class="line">E:\app\Vagrant&gt;vagrant plugin install vagrant-reload</span><br><span class="line">Installing the &#x27;vagrant-reload&#x27; plugin. This can take a few minutes...</span><br><span class="line">Fetching vagrant-reload-0.0.1.gem</span><br><span class="line">Installed the plugin &#x27;vagrant-reload (0.0.1)&#x27;!</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>下载<a target="_blank" rel="noopener" href="https://vagrantcloud.com/rapid7/boxes/metasploitable3-win2k8/versions/0.1.0-weekly/providers/virtualbox.box">metasploitable3-win2k8.box</a>，用IDM下载后，发现名字如下：</li>
+</ul>
+<p><img src="/aposts/f3700316/image-20220223144417638.png" alt="image-20220223144417638"></p>
+<p>重命名修改为：metasploitable3-win2k8.box</p>
+<ul>
+<li>打开powershell，执行脚本</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">mkdir metasploitable3-workspace</span><br><span class="line">cd metasploitable3-workspace</span><br><span class="line"></span><br><span class="line">PS E:\app\metasploitable3-workspace&gt; vagrant box add rapid7/metasploitable3-win2k8 d:\exe\metasploitable3-win2k8.box</span><br><span class="line">==&gt; box: Box file was not detected as metadata. Adding it directly...</span><br><span class="line">==&gt; box: Adding box &#x27;rapid7/metasploitable3-win2k8&#x27; (v0) for provider:</span><br><span class="line">    box: Unpacking necessary files from: file:///d:/exe/metasploitable3-win2k8.box</span><br><span class="line">    box:</span><br><span class="line">==&gt; box: Successfully added box &#x27;rapid7/metasploitable3-win2k8&#x27; (v0) for &#x27;virtualbox&#x27;!</span><br><span class="line">PS E:\app\metasploitable3-workspace&gt;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>最终生成的文件目录：C:\Users\Admin.vagrant.d\boxes\rapid7-VAGRANTSLASH-metasploitable3-win2k8\0\virtualbox</li>
+</ul>
+<p><img src="/aposts/f3700316/image-20220223145644884.png" alt="image-20220223145644884"></p>
+<ul>
+<li>复制数据元文件<code>C:\Users\Admin\.vagrant.d\boxes\rapid7-VAGRANTSLASH-metasploitable3-win2k8\0\virtualbox\metadata.json</code>到<code>C:\Users\Admin\.vagrant.d\boxes\rapid7-VAGRANTSLASH-metasploitable3-win2k8</code>目录下</li>
+</ul>
+<p><img src="/aposts/f3700316/image-20220223145847948.png" alt="image-20220223145847948"></p>
+<ul>
+<li>开始创建Metasploitable3 虚拟机，如果有发现Vagrantfile文件，先<strong>将它删除或者移到其他地方去</strong>，随后，调出命令行，输入命令<code>vagrant init rapid7/metasploitable3-win2k8</code>：</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">PS C:\Users\Admin\.vagrant.d\boxes\rapid7-VAGRANTSLASH-metasploitable3-win2k8\0\virtualbox&gt; vagrant init rapid7/metasploitable3-win2k8</span><br><span class="line">A `Vagrantfile` has been placed in this directory. You are now</span><br><span class="line">ready to `vagrant up` your first virtual environment! Please read</span><br><span class="line">the comments in the Vagrantfile as well as documentation on</span><br><span class="line">`vagrantup.com` for more information on using Vagrant.</span><br></pre></td></tr></table></figure>
+
+<p>然后执行下面命令，可能出现超时，我出现了一次，然后开了个代理重试了下（不知大是否可这个有关）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vagrant up</span><br></pre></td></tr></table></figure>
+
+<p>打开虚拟机</p>
+<p><img src="/aposts/f3700316/image-20220223151549011.png" alt="image-20220223151549011"></p>
+<p>输入默认密码：<strong>vagrant</strong></p>
+<p><img src="/aposts/f3700316/image-20220223151748473.png" alt="image-20220223151748473"></p>
+<p>登录后网络也是没有问题</p>
+<p><img src="/aposts/f3700316/image-20220223151916993.png" alt="image-20220223151916993"></p>
+<ul>
+<li>启动两个虚拟机（一个是kail攻击机，一个是win 2008 靶场），电脑cpu直接爆满，我把靶场内存调整为了2G</li>
+</ul>
+<p><img src="/aposts/f3700316/image-20220223154329578.png" alt="image-20220223154329578"></p>
+<h2 id="部署网络"><a href="#部署网络" class="headerlink" title="部署网络"></a>部署网络</h2><ul>
+<li><p>部署好网络，把<strong>攻击机和靶机的通信网络设置的一样</strong></p>
+</li>
+<li><p>首先，把攻击机和靶机全部关机，然后在Oracle VM VirtualBox管理器中，点击管理——全局设定——网络，创建一个NAT网络，名字可以随意起。</p>
+<p><img src="/aposts/f3700316/image-20220224104741466.png" alt="image-20220224104741466"></p>
+<p><img src="/aposts/f3700316/image-20220224104800241.png" alt="image-20220224104800241"></p>
+</li>
+<li><p>在两个虚拟机中分别部署好网络，以刚刚安装好的靶机为例，选择该虚拟机——设置——网络，将网卡1~4全部打上勾启动网络连接，并在这四个网卡的页面中各自选择连接方式，分别为：仅主机（Host-Only）网络、内部网络、NAT网络、桥接网卡，顺序可以自由安排。对于另一个虚拟机，同样也是如上设置。四个网卡的配置如下四图：</p>
+</li>
+</ul>
+<p><img src="/aposts/f3700316/image-20220224104852965.png" alt="image-20220224104852965"></p>
+<p><img src="/aposts/f3700316/image-20220224104914609.png" alt="image-20220224104914609"></p>
+<p><img src="/aposts/f3700316/image-20220224104934036.png" alt="image-20220224104934036"></p>
+<p><img src="/aposts/f3700316/image-20220224104956186.png" alt="image-20220224104956186"></p>
+<ul>
+<li><p>这时候，两个虚拟机都已经部署完毕了，可以同时启动</p>
+</li>
+<li><p>启动靶场window 2008 打开cmd，ping下，发现网络是通的</p>
+</li>
+</ul>
+<p><img src="/aposts/f3700316/image-20220224105225893.png" alt="image-20220224105225893"></p>
+<ul>
+<li>查看下IP，<strong>注意经过测试只有第一个ip：192.168.56.102在攻击机上，才能被访问和nmap扫描到端口</strong></li>
+</ul>
+<p><img src="/aposts/f3700316/image-20220224105339740.png" alt="image-20220224105339740"></p>
+<ul>
+<li>打开攻击机kali，在浏览器中输入：192.168.56.102</li>
+</ul>
+<p><img src="/aposts/f3700316/image-20220224105545840.png" alt="image-20220224105545840"></p>
+<ul>
+<li>用攻击机nmap扫描端口测试下<code>nmap -sV 192.168.56.102</code></li>
+</ul>
+<p><img src="/aposts/f3700316/image-20220224105733663.png" alt="image-20220224105733663"></p>
+<ul>
+<li><strong>安装步骤来源于<a target="_blank" rel="noopener" href="https://jeza-chen.com/2018/09/21/MetaSploit3_Setup/">这里</a></strong></li>
+<li>截止目前为止，Metasploitable3包含以下的漏洞应用或服务：具体请查看：<a target="_blank" rel="noopener" href="https://github.com/rapid7/metasploitable3/wiki/Vulnerabilities">https://github.com/rapid7/metasploitable3/wiki/Vulnerabilities</a></li>
+</ul>
+<p><img src="/aposts/f3700316/image-20220223162222020.png" alt="image-20220223162222020"></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/40ebc0af/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2857,181 +3037,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/616944d0/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="一个正经的测试工程师">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="施坤的博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/aposts/616944d0/" class="post-title-link" itemprop="url">DVWA通关指南-Weak Session IDs(弱会话ID)</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-02-11 10:43:23" itemprop="dateCreated datePublished" datetime="2022-02-11T10:43:23+08:00">2022-02-11</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-02-25 11:20:56" itemprop="dateModified" datetime="2022-02-25T11:20:56+08:00">2022-02-25</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" itemprop="url" rel="index"><span itemprop="name">安全测试</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/aposts/616944d0/" class="post-meta-item leancloud_visitors" data-flag-title="DVWA通关指南-Weak Session IDs(弱会话ID)" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/aposts/616944d0/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/aposts/616944d0/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
-<li><p>对于本篇的攻击方式，感觉应该有问题，其实无论安全等级为何种，只要在谷歌打开dvwa抓包到cookie值后，然后再火狐浏览器打开url，修改为谷歌dvwa中cookie值后，都能绕过登录</p>
-</li>
-<li><p>但是我搜索了其他博客，都是采用这样的方式来做的</p>
-</li>
-</ul>
-<h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><ul>
-<li><p>用户访问服务器的时候，一般服务器都会分配一个身份证 session id 给用户，用于标识。</p>
-</li>
-<li><p>获得session后，用户访问页面就不用登陆，只需要携带session就可以了。</p>
-</li>
-</ul>
-<h3 id="如何利用"><a href="#如何利用" class="headerlink" title="如何利用"></a>如何利用</h3><ul>
-<li><p>由于SessonID是用户登陆后拥有的唯一认证凭证，因此黑客不需要再攻击登陆过程，就可以获取访问权限</p>
-</li>
-<li><p>常见类型保存在cookie中，保存在url中(太不安全)</p>
-</li>
-</ul>
-<h2 id="安全等级Low"><a href="#安全等级Low" class="headerlink" title="安全等级Low"></a>安全等级Low</h2><p>用谷歌浏览器打开dvwa</p>
-<p><img src="/aposts/616944d0/image-20220211105704983.png" alt="image-20220211105704983"></p>
-<h3 id="源码分析"><a href="#源码分析" class="headerlink" title="源码分析"></a>源码分析</h3><p>服务器每次生成的session_id加1给客户端，  <code>setcookie(&quot;dvwaSession&quot;, $cookie_value);</code>就是设置session的值</p>
-<p><img src="/aposts/616944d0/image-20220211110634046.png" alt="image-20220211110634046"></p>
-<h3 id="开始攻击"><a href="#开始攻击" class="headerlink" title="开始攻击"></a>开始攻击</h3><ul>
-<li><p>抓包，得到cookie的值：</p>
-<p><code>Cookie: dvwaSession=4; security=low; PHPSESSID=e1r12c4ddu75vdmch70gkmr087</code></p>
-</li>
-<li><p>得到请求连接为：<a target="_blank" rel="noopener" href="http://xxxx1/DVWA-2.0.1/vulnerabilities/weak_id/">http://XXXX1/DVWA-2.0.1/vulnerabilities/weak_id/</a></p>
-</li>
-</ul>
-<p><img src="/aposts/616944d0/image-20220211153530303.png" alt="image-20220211153530303"></p>
-<ul>
-<li>打开火狐浏览器（没有自行安装）,输入上面的url:<a target="_blank" rel="noopener" href="http://xxxx1/DVWA-2.0.1/vulnerabilities/weak_id/">http://XXXX1/DVWA-2.0.1/vulnerabilities/weak_id/</a></li>
-</ul>
-<p><img src="/aposts/616944d0/image-20220211164333448.png" alt="image-20220211164333448"></p>
-<p>抓包火狐发送的请求，发现security&#x3D;impossible，并不是Low，据我观察好像在登录后才会读取security的值，不然默认就是impossible</p>
-<p><img src="/aposts/616944d0/image-20220211164609202.png" alt="image-20220211164609202"></p>
-<p>把cookie改过来：dvwaSession&#x3D;4; security&#x3D;low; PHPSESSID&#x3D;e1r12c4ddu75vdmch70gkmr087，点击发送</p>
-<p><img src="/aposts/616944d0/image-20220211164918914.png" alt="image-20220211164918914"></p>
-<h2 id="安全等级为Medium"><a href="#安全等级为Medium" class="headerlink" title="安全等级为Medium"></a>安全等级为Medium</h2><h3 id="源代码分析"><a href="#源代码分析" class="headerlink" title="源代码分析"></a>源代码分析</h3><p>采用time函数获取时间戳，作为cookie值(session)</p>
-<p><img src="/aposts/616944d0/image-20220211112526717.png" alt="image-20220211112526717"></p>
-<h3 id="开始攻击-1"><a href="#开始攻击-1" class="headerlink" title="开始攻击"></a>开始攻击</h3><p>谷歌浏览器抓包后，得到 <code>cookie:dvwaSession=1644566404; security=medium; PHPSESSID=e1r12c4ddu75vdmch70gkmr087</code></p>
-<p><img src="/aposts/616944d0/image-20220211165037092.png" alt="image-20220211165037092"></p>
-<p>注意dvaSession的值为时间戳，需要这里我们就需要去时间戳的网站进行转换：<a target="_blank" rel="noopener" href="https://tool.lu/timestamp/">https://tool.lu/timestamp/</a></p>
-<p><img src="/aposts/616944d0/image-20220211160435148.png" alt="image-20220211160435148"></p>
-<p>火狐浏览器先退出登录的DVWA，输入<a target="_blank" rel="noopener" href="http://xxxx1/DVWA-2.0.1/vulnerabilities/weak_id/">http://XXXX1/DVWA-2.0.1/vulnerabilities/weak_id/</a></p>
-<p>抓包修改cookie的值为：dvwaSession&#x3D;1644566404; security&#x3D;medium; PHPSESSID&#x3D;e1r12c4ddu75vdmch70gkmr087</p>
-<p><img src="/aposts/616944d0/image-20220211165419235.png" alt="image-20220211165419235"></p>
-<ul>
-<li>成功跳过登录验证，发现一个奇怪问题，就算是<strong>谷歌浏览器中设置了安全等级的难度，在火狐请求中直接修改cookie的值就能绕过？</strong></li>
-</ul>
-<h2 id="安全等级High"><a href="#安全等级High" class="headerlink" title="安全等级High"></a>安全等级High</h2><h3 id="源码分析-1"><a href="#源码分析-1" class="headerlink" title="源码分析"></a>源码分析</h3><ul>
-<li>首先使用!isset()函数对session变量进行检查，如果没有进行赋值。则设置为0，然后每一次都递增1。</li>
-<li>然后将session变量进行MD5加密后赋值为cookie_value变量。</li>
-<li>最终，将 cookie_value这个值发送给浏览器作为cookie。</li>
-<li>这里进行哈希加密处理，但初始的值始终是从0开始这种形式作为cookie</li>
-</ul>
-<p><img src="/aposts/616944d0/image-20220211165923234.png" alt="image-20220211165923234"></p>
-<h3 id="开始攻击-2"><a href="#开始攻击-2" class="headerlink" title="开始攻击"></a>开始攻击</h3><p>谷歌浏览器，点击生成按钮</p>
-<p><img src="/aposts/616944d0/image-20220211170403199.png" alt="image-20220211170403199"></p>
-<p>抓包谷歌浏览器中的请求，发现请求参数其实<strong>和安全等级为medium一样的</strong></p>
-<p><img src="/aposts/616944d0/image-20220211172637304.png" alt="image-20220211172637304"></p>
-<p>发给重发器观察下</p>
-<p><img src="/aposts/616944d0/image-20220211172716229.png" alt="image-20220211172716229"></p>
-<p> 在重发去中发送请求，得到dvwaSession的值为：e4da3b7fbbce2345d7772b0674a318d5</p>
-<p><img src="/aposts/616944d0/image-20220211171042169.png" alt="image-20220211171042169"></p>
-<p>用<a target="_blank" rel="noopener" href="https://www.cmd5.com/">在线md5</a>解密工具看看，这样的话就明白了它的逻辑，<strong>又服务器端提供dvwaSession在low的基础上加入了MD5加密</strong></p>
-<p><img src="/aposts/616944d0/image-20220211171315505.png" alt="image-20220211171315505"></p>
-<ul>
-<li><p>把构造的cookie复制：<code>dvwaSession=e4da3b7fbbce2345d7772b0674a318d5; security=high; PHPSESSID=e1r12c4ddu75vdmch70gkmr087</code></p>
-</li>
-<li><p>打开火狐浏览器你，输入url，抓包拦截,修改cookie的值，<strong>dvwaSession的值输入的是时间戳也能成功</strong></p>
-</li>
-<li><p><strong>其实这里的攻击我并没有看出和安全等级为中的时候的区别</strong></p>
-</li>
-</ul>
-<p><img src="/aposts/616944d0/image-20220211172040526.png" alt="image-20220211172040526"></p>
-<p>点击发送后，成功绕过登录</p>
-<p><img src="/aposts/616944d0/image-20220211172118623.png" alt="image-20220211172118623"></p>
-<h2 id="安全等级为impossible"><a href="#安全等级为impossible" class="headerlink" title="安全等级为impossible"></a>安全等级为impossible</h2><h3 id="分析源码"><a href="#分析源码" class="headerlink" title="分析源码"></a>分析源码</h3><p>$cookie_value采用随机数+时间戳+固定字符串”Impossible”，再进行sha1运算，完全不能猜测到dvwaSession的值。</p>
-<p><img src="/aposts/616944d0/image-20220211173247187.png" alt="image-20220211173247187"></p>
-<p>参考<a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_45808483/article/details/121385412">这里</a></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -3107,7 +3112,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">166</span>
+          <span class="site-state-item-count">167</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -3145,7 +3150,7 @@
     <!--<h3 class="widget-title">Tag Cloud</h3> -->
     <div id="myCanvasContainer" class="widget tagcloud">
         <canvas width="250" height="250" id="resCanvas" style="width=100%">
-            <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AWVS/" rel="tag">AWVS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Burp-Site/" rel="tag">Burp Site</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DVWA/" rel="tag">DVWA</a><span class="tag-list-count">15</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dependency-Check/" rel="tag">Dependency-Check</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/H5/" rel="tag">H5</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hadoop/" rel="tag">Hadoop</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hibernate/" rel="tag">Hibernate</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hive/" rel="tag">Hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jenkins/" rel="tag">Jenkins</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Metasploit/" rel="tag">Metasploit</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MyBatis/" rel="tag">MyBatis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Nessus/" rel="tag">Nessus</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Sonic/" rel="tag">Sonic</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/airtest/" rel="tag">airtest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">android性能测试</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/app%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">app安全测试</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aritest/" rel="tag">aritest</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/centos/" rel="tag">centos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/" rel="tag">chrome</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/datax/" rel="tag">datax</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/django/" rel="tag">django</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/drozer/" rel="tag">drozer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fisco-bcos/" rel="tag">fisco-bcos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flink/" rel="tag">flink</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gin/" rel="tag">gin</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/" rel="tag">go</a><span class="tag-list-count">16</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go-zero/" rel="tag">go-zero</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hive/" rel="tag">hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/httprunner/" rel="tag">httprunner</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a><span class="tag-list-count">22</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jmeter/" rel="tag">jmeter</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka/" rel="tag">kafka</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kail/" rel="tag">kail</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode/" rel="tag">leetcode</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode-%E6%95%B0%E7%BB%84/" rel="tag">leetcode-数组</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mitmproxy/" rel="tag">mitmproxy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongodb/" rel="tag">mongodb</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/monkey/" rel="tag">monkey</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/" rel="tag">mysql</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/orm/" rel="tag">orm</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pandas/" rel="tag">pandas</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pc%E8%87%AA%E5%8A%A8%E5%8C%96/" rel="tag">pc自动化</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/playwright/" rel="tag">playwright</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pytest/" rel="tag">pytest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a><span class="tag-list-count">23</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/" rel="tag">redis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/selenium/" rel="tag">selenium</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring/" rel="tag">spring</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/springboot/" rel="tag">springboot</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlite/" rel="tag">sqlite</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlmap/" rel="tag">sqlmap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tkinter/" rel="tag">tkinter</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/" rel="tag">vue</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue3/" rel="tag">vue3</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">云服务器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8C%BA%E5%9D%97%E9%93%BE/" rel="tag">区块链</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag">大数据</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">安全测试</a><span class="tag-list-count">29</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">性能测试</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%88%AC%E8%99%AB/" rel="tag">爬虫</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" rel="tag">环境搭建</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95/" rel="tag">自动化测试</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%8B%B1%E8%AF%AD%E5%AD%A6%E4%B9%A0/" rel="tag">英语学习</a><span class="tag-list-count">1</span></li></ul>
+            <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AWVS/" rel="tag">AWVS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Burp-Site/" rel="tag">Burp Site</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DVWA/" rel="tag">DVWA</a><span class="tag-list-count">15</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dependency-Check/" rel="tag">Dependency-Check</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/H5/" rel="tag">H5</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hadoop/" rel="tag">Hadoop</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hibernate/" rel="tag">Hibernate</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hive/" rel="tag">Hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jenkins/" rel="tag">Jenkins</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Metasploit/" rel="tag">Metasploit</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MyBatis/" rel="tag">MyBatis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Nessus/" rel="tag">Nessus</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Sonic/" rel="tag">Sonic</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/airtest/" rel="tag">airtest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">android性能测试</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/app%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">app安全测试</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aritest/" rel="tag">aritest</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/centos/" rel="tag">centos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/" rel="tag">chrome</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/datax/" rel="tag">datax</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/django/" rel="tag">django</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/drozer/" rel="tag">drozer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fisco-bcos/" rel="tag">fisco-bcos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flink/" rel="tag">flink</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gin/" rel="tag">gin</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/" rel="tag">go</a><span class="tag-list-count">16</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go-zero/" rel="tag">go-zero</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hive/" rel="tag">hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/httprunner/" rel="tag">httprunner</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a><span class="tag-list-count">22</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jmeter/" rel="tag">jmeter</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka/" rel="tag">kafka</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kail/" rel="tag">kail</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode/" rel="tag">leetcode</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode-%E6%95%B0%E7%BB%84/" rel="tag">leetcode-数组</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mitmproxy/" rel="tag">mitmproxy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongodb/" rel="tag">mongodb</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/monkey/" rel="tag">monkey</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/" rel="tag">mysql</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/orm/" rel="tag">orm</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pandas/" rel="tag">pandas</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pc%E8%87%AA%E5%8A%A8%E5%8C%96/" rel="tag">pc自动化</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/playwright/" rel="tag">playwright</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pytest/" rel="tag">pytest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a><span class="tag-list-count">23</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/" rel="tag">redis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/selenium/" rel="tag">selenium</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring/" rel="tag">spring</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/springboot/" rel="tag">springboot</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlite/" rel="tag">sqlite</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlmap/" rel="tag">sqlmap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tkinter/" rel="tag">tkinter</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/" rel="tag">vue</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue3/" rel="tag">vue3</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">云服务器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8C%BA%E5%9D%97%E9%93%BE/" rel="tag">区块链</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag">大数据</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">安全测试</a><span class="tag-list-count">29</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">性能测试</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%88%AC%E8%99%AB/" rel="tag">爬虫</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" rel="tag">环境搭建</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95/" rel="tag">自动化测试</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%8B%B1%E8%AF%AD%E5%AD%A6%E4%B9%A0/" rel="tag">英语学习</a><span class="tag-list-count">1</span></li></ul>
         </canvas>
     </div>
 </div>
