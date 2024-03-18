@@ -191,6 +191,148 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/a2f19617/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="一个正经的测试工程师">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="施坤的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/aposts/a2f19617/" class="post-title-link" itemprop="url">python-unittest全面解析</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-09-29 17:13:35" itemprop="dateCreated datePublished" datetime="2021-09-29T17:13:35+08:00">2021-09-29</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-02-25 11:20:56" itemprop="dateModified" datetime="2022-02-25T11:20:56+08:00">2022-02-25</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/" itemprop="url" rel="index"><span itemprop="name">python</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/aposts/a2f19617/" class="post-meta-item leancloud_visitors" data-flag-title="python-unittest全面解析" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/aposts/a2f19617/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/aposts/a2f19617/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">import unittest</span><br><span class="line">import os</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class MyUnittest(unittest.TestCase):</span><br><span class="line"></span><br><span class="line">    def setUp(self) -&gt; None:</span><br><span class="line">        print(&quot;setUp_每运行一次用例都会执行一次&quot;)</span><br><span class="line">        self.name = &quot;hi&quot;</span><br><span class="line">        print(&quot;setUp_name_%s&quot; % self.name)</span><br><span class="line"></span><br><span class="line">    def tearDown(self) -&gt; None:</span><br><span class="line">        print(&quot;tearDown_每结束一次用例都会执行一次&quot;)</span><br><span class="line">        print(&quot;tearDown_name_%s&quot; % self.name)</span><br><span class="line"></span><br><span class="line">    @classmethod</span><br><span class="line">    def setUpClass(cls) -&gt; None:</span><br><span class="line">        print(&quot;setUpClass_整个测试开始后执行，只执行一次&quot;)</span><br><span class="line">        cls.func = &quot;setUpClass&quot;</span><br><span class="line">        print(&quot;setUpClass_func_%s&quot; % cls.func)</span><br><span class="line"></span><br><span class="line">    @classmethod</span><br><span class="line">    def tearDownClass(cls) -&gt; None:</span><br><span class="line">        print(&quot;tearDownClass_整个测试完成后执行，只执行一次&quot;)</span><br><span class="line">        print(&quot;tearDownClass_func_%s&quot; % cls.func)</span><br><span class="line"></span><br><span class="line">    def test_add(self):</span><br><span class="line">        print(&quot;测试函数：test_add&quot;)</span><br><span class="line">        self.name = &quot;test_add&quot;</span><br><span class="line">        print(&quot;setUpClass_cls.func_%s&quot; % self.func)</span><br><span class="line"></span><br><span class="line">    def test_subtract(self):</span><br><span class="line">        print(&quot;测试函数：test_subtract&quot;)</span><br><span class="line">        self.name = &quot;test_subtract&quot;</span><br><span class="line">        self.func = &quot;test_subtract&quot;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">if __name__ == &quot;__main__&quot;:</span><br><span class="line">    # 运行方式一</span><br><span class="line">    unittest.main()</span><br></pre></td></tr></table></figure>
+<h2 id="执行结果"><a href="#执行结果" class="headerlink" title="执行结果"></a>执行结果</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">setUpClass_整个测试开始后执行，只执行一次</span><br><span class="line">setUpClass_func_setUpClass</span><br><span class="line">test_add (ut_module.ut1_test.MyUnittest) ... setUp_每运行一次用例都会执行一次</span><br><span class="line">setUp_name_hi</span><br><span class="line">测试函数：test_add</span><br><span class="line">setUpClass_cls.func_setUpClass</span><br><span class="line">tearDown_每结束一次用例都会执行一次</span><br><span class="line">tearDown_name_test_add</span><br><span class="line">ok</span><br><span class="line">test_subtract (ut_module.ut1_test.MyUnittest) ... setUp_每运行一次用例都会执行一次</span><br><span class="line">setUp_name_hi</span><br><span class="line">测试函数：test_subtract</span><br><span class="line">tearDown_每结束一次用例都会执行一次</span><br><span class="line">tearDown_name_test_subtract</span><br><span class="line">ok</span><br><span class="line">tearDownClass_整个测试完成后执行，只执行一次</span><br><span class="line">tearDownClass_func_setUpClass</span><br><span class="line"></span><br><span class="line">----------------------------------------------------------------------</span><br><span class="line">Ran 2 tests in 0.003s</span><br><span class="line"></span><br><span class="line">OK</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<h2 id="测试分析"><a href="#测试分析" class="headerlink" title="测试分析"></a>测试分析</h2><h3 id="结果分析"><a href="#结果分析" class="headerlink" title="结果分析"></a>结果分析</h3><h4 id="setUp初始化的值可以改变"><a href="#setUp初始化的值可以改变" class="headerlink" title="setUp初始化的值可以改变"></a>setUp初始化的值可以改变</h4> <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">setUp_name_hi</span><br><span class="line">测试函数：test_add</span><br><span class="line">setUpClass_cls.func_setUpClass</span><br><span class="line">tearDown_每结束一次用例都会执行一次</span><br><span class="line">tearDown_name_test_add</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>setUp</code>中的<code>self.name</code>的值，在测试函数中是可以被改变的，一开始<code>name</code>为hi，后面为<code>test_add</code></li>
+</ul>
+<h4 id="setUpClass的的值无法改变"><a href="#setUpClass的的值无法改变" class="headerlink" title="setUpClass的的值无法改变"></a>setUpClass的的值无法改变</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">在def setUpClass赋值</span><br><span class="line">self.func = &quot;setUpClass&quot;</span><br><span class="line">在 def test_subtract中赋值</span><br><span class="line">self.func = &quot;test_subtract&quot;</span><br><span class="line"># 执行结果</span><br><span class="line">setUpClass_整个测试开始后执行，只执行一次</span><br><span class="line">setUpClass_func_setUpClass</span><br><span class="line">.....</span><br><span class="line">tearDownClass_整个测试完成后执行，只执行一次</span><br><span class="line">tearDownClass_func_setUpClass</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>setUpClass</code>初始化的值在函数中无法改变，应该是<code>cls</code>和<code>self</code>的指向不一样</li>
+</ul>
+<h3 id="setUp和setUpClass"><a href="#setUp和setUpClass" class="headerlink" title="setUp和setUpClass"></a>setUp和setUpClass</h3><ul>
+<li>每个用例都要独立，也就是每个用执行时，都会重开设备，就使用<code>setup</code>，比如<code>appium</code>中的driver</li>
+<li>若想复用某个初始化条件，单不期望每个用例都重启再打开，可以使用<code>setUpClass</code><ul>
+<li>在使用<code>appium</code>时，用<code>setUp</code>频繁初始化<code>driver</code>造成执行用例时间太长，可以使用<code>setUpClass</code>初始化driver，结合<a target="_blank" rel="noopener" href="https://appium.readthedocs.io/en/latest/en/commands/device/app/launch-app/">launch-app</a>达到每个用例不重启，同时解决依赖关系的问题</li>
+</ul>
+</li>
+</ul>
+<h2 id="不同的运行unittest的方式"><a href="#不同的运行unittest的方式" class="headerlink" title="不同的运行unittest的方式"></a>不同的运行unittest的方式</h2><h3 id="方式一"><a href="#方式一" class="headerlink" title="方式一"></a>方式一</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">unittest.main()</span><br></pre></td></tr></table></figure>
+<h3 id="方式二"><a href="#方式二" class="headerlink" title="方式二"></a>方式二</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"># 构造测试集</span><br><span class="line">suite = unittest.TestSuite()</span><br><span class="line">suite.addTest(MyUnittest(&quot;test_add&quot;))</span><br><span class="line">suite.addTest(MyUnittest(&quot;test_subtract&quot;))</span><br><span class="line"># 执行测试</span><br><span class="line">runner = unittest.TextTestRunner()</span><br><span class="line">runner.run(suite)</span><br></pre></td></tr></table></figure>
+<h3 id="方式三"><a href="#方式三" class="headerlink" title="方式三"></a>方式三</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># TestLoader 用来加载TestCase到TestSuite中的，其中有几个  loadTestsFrom__()方法，就是从各个地方寻找TestCase，创建它们的实例，然后add到TestSuite中，再返回一个TestSuite实例</span><br><span class="line"># TestSuite 测试套件集合，最终将传递给testRunner进行测试执行</span><br><span class="line"># TextTestRunner 用来执行测试用例，将测试结果保存在TextTestResult中</span><br><span class="line"># 此用法可以同时测试多个类</span><br><span class="line">suite1 = unittest.TestLoader().loadTestsFromTestCase(MyUnittest)</span><br><span class="line">suite2 = unittest.TestLoader().loadTestsFromTestCase(MyUnittest1)</span><br><span class="line">suite = unittest.TestSuite([suite1, suite2 ])</span><br><span class="line">unittest.TextTestRunner(verbosity=2).run(suite)</span><br></pre></td></tr></table></figure>
+<h3 id="方式四"><a href="#方式四" class="headerlink" title="方式四"></a>方式四</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># 进入到测试目录</span><br><span class="line">os.chdir(&quot;.//ut_module&quot;)</span><br><span class="line">os.system(&quot;python -m unittest -v ut1_test&quot;)</span><br></pre></td></tr></table></figure>
+
+<h3 id="方式五，直接到终端中输入命令"><a href="#方式五，直接到终端中输入命令" class="headerlink" title="方式五，直接到终端中输入命令"></a>方式五，直接到终端中输入命令</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"># 测试某个类下的所有函数</span><br><span class="line">D:\project\ut&gt;python -m unittest -v  ut_module.ut1_test</span><br><span class="line"># 测试类中某一个函数</span><br><span class="line">D:\project\ut&gt;python -m unittest -v ut_module.ut1_test.MyUnittest.test_add</span><br><span class="line"># 执行模块下所有test结尾的文件</span><br><span class="line">D:\project\ut&gt;python -m unittest discover D:\project\ut\ut_module &quot;*_test.py&quot;</span><br><span class="line"># 同时执行多个测试类下的测试函数</span><br><span class="line">D:\project\ut&gt;python -m unittest  ut_module.ut1_test.MyUnittest.test_add  ut_module.ut2_test.MyUnittest.test_subtract1</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h2 id="其他扩展"><a href="#其他扩展" class="headerlink" title="其他扩展"></a>其他扩展</h2><h3 id="unittest的条件装饰器的使用"><a href="#unittest的条件装饰器的使用" class="headerlink" title="unittest的条件装饰器的使用"></a>unittest的条件装饰器的使用</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">class MyTestCase(unittest.TestCase):</span><br><span class="line"></span><br><span class="line">    @unittest.skip(&quot;demonstrating skipping&quot;)</span><br><span class="line">    def test_nothing(self):</span><br><span class="line">        self.fail(&quot;shouldn&#x27;t happen&quot;)</span><br><span class="line"></span><br><span class="line">    @unittest.skipIf(mylib.__version__ &lt; (1, 3),</span><br><span class="line">                     &quot;not supported in this library version&quot;)</span><br><span class="line">    def test_format(self):</span><br><span class="line">        # Tests that work for only a certain version of the library.</span><br><span class="line">        pass</span><br><span class="line"></span><br><span class="line">    @unittest.skipUnless(sys.platform.startswith(&quot;win&quot;), &quot;requires Windows&quot;)</span><br><span class="line">    def test_windows_support(self):</span><br><span class="line">        # windows specific testing code</span><br><span class="line">        pass</span><br><span class="line"></span><br><span class="line">    def test_maybe_skipped(self):</span><br><span class="line">        if not external_resource_available():</span><br><span class="line">            self.skipTest(&quot;external resource not available&quot;)</span><br><span class="line">        # test code that depends on the external resource</span><br><span class="line">        pass</span><br><span class="line">   @unittest.expectedFailure</span><br><span class="line">    def test_fail(self):</span><br><span class="line">        self.assertEqual(1, 0, &quot;broken&quot;)</span><br><span class="line"></span><br><span class="line">@unittest.skip(&quot;showing class skipping&quot;)</span><br><span class="line">class MySkippedTestCase(unittest.TestCase):</span><br><span class="line">    def test_not_run(self):</span><br><span class="line">        pass</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>@unittest.skip(reason)</code><br>跳过被此装饰器装饰的测试。 reason 为测试被跳过的原因。</li>
+<li><code>@unittest.skipIf(condition, reason)</code><br>当 condition 为真时，跳过被装饰的测试。</li>
+<li><code>@unittest.skipUnless(condition, reason)</code><br>跳过被装饰的测试，除非 condition 为真。</li>
+</ul>
+<p><code>@unittest.expectedFailure</code><br>把测试标记为预计失败。如果测试不通过，会被认为测试成功；如果测试通过了，则被认为是测试失败。</p>
+<ul>
+<li><code>exception unittest.SkipTest(reason)</code><br>引发此异常以跳过一个测试。</li>
+</ul>
+<h3 id="参数化"><a href="#参数化" class="headerlink" title="参数化"></a>参数化</h3><ul>
+<li>在使用<code>unittest</code>时，希望<code>testcase</code>传参给<code>unittest</code>,下面时用<code>appium</code>的一个伪代码<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line">class ParametrizedTestCase(unittest.TestCase):</span><br><span class="line">    &quot;&quot;&quot; TestCase classes that want to be parametrized should  </span><br><span class="line">        inherit from this class.  </span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line"></span><br><span class="line">    def __init__(self, methodName=&#x27;runTest&#x27;, param=None):</span><br><span class="line">        super(ParametrizedTestCase, self).__init__(methodName)</span><br><span class="line">      # 得到testcase传来的参数</span><br><span class="line">        global devicess</span><br><span class="line">        devicess = param</span><br><span class="line"></span><br><span class="line">    @classmethod</span><br><span class="line">    def setUpClass(cls):</span><br><span class="line">        pass</span><br><span class="line">        cls.driver = get_driver(devicess)</span><br><span class="line">        cls.logTest = myLog().getLog(cls.devicesName)  # 每个设备实例化一个日志记录器</span><br><span class="line"></span><br><span class="line">    def setUp(self):</span><br><span class="line">        pass</span><br><span class="line"></span><br><span class="line">    @classmethod</span><br><span class="line">    def tearDownClass(cls):</span><br><span class="line">        cls.driver.close_app()</span><br><span class="line">        cls.driver.quit()</span><br><span class="line">        pass</span><br><span class="line">    def tearDown(self):</span><br><span class="line">        pass</span><br><span class="line"></span><br><span class="line">    @staticmethod</span><br><span class="line">    def parametrize(testcase_klass, param=None):</span><br><span class="line">        testloader = unittest.TestLoader()</span><br><span class="line">        testnames = testloader.getTestCaseNames(testcase_klass)</span><br><span class="line">        suite = unittest.TestSuite()</span><br><span class="line">        for name in testnames:</span><br><span class="line">            suite.addTest(testcase_klass(name, param=param))</span><br><span class="line">        return suite</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class HomeTest(ParametrizedTestCase):</span><br><span class="line">    def testFirstOpen(self):</span><br><span class="line">        app = &#123;&quot;logTest&quot;: self.logTest, &quot;driver&quot;: self.driver, &quot;path&quot;: PATH(&quot;../yamls/home/firstOpen.yaml&quot;),</span><br><span class="line">               &quot;device&quot;: self.devicesName, &quot;caseName&quot;: sys._getframe().f_code.co_name&#125;</span><br><span class="line"></span><br><span class="line">        page = FirstOpenPage(app)</span><br><span class="line">        page.operate()</span><br><span class="line">        page.checkPoint()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    @classmethod</span><br><span class="line">    def setUpClass(cls):</span><br><span class="line">        super(HomeTest, cls).setUpClass()</span><br><span class="line"></span><br><span class="line">    @classmethod</span><br><span class="line">    def tearDownClass(cls):</span><br><span class="line">        super(HomeTest, cls).tearDownClass()</span><br><span class="line"></span><br><span class="line">if __name__ == &#x27;__main__&#x27;:</span><br><span class="line">    devices = &#123;&quot;设备信息&quot;&#125;</span><br><span class="line">    suite = unittest.TestSuite()</span><br><span class="line">    suite.addTest(ParametrizedTestCase.parametrize(HomeTest, param=devices))</span><br><span class="line">    unittest.TextTestRunner(verbosity=2).run(suite)</span><br><span class="line">    </span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="ddt"><a href="#ddt" class="headerlink" title="ddt"></a>ddt</h2><ul>
+<li><code>pip install ddt</code></li>
+</ul>
+<h3 id="使用json"><a href="#使用json" class="headerlink" title="使用json"></a>使用json</h3><ul>
+<li>新建文件 test_data_list.json：<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[</span><br><span class="line">    &quot;Hello&quot;,</span><br><span class="line">    &quot;Goodbye&quot;</span><br><span class="line">]</span><br></pre></td></tr></table></figure></li>
+<li>新建文件  test_data_dict.json：<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    &quot;unsorted_list&quot;: [ 10, 12, 15 ],</span><br><span class="line">    &quot;sorted_list&quot;: [ 15, 12, 50 ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li>实例代码</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">import unittest</span><br><span class="line">from ddt import ddt, file_data</span><br><span class="line">from ddt_demo.mycode import has_three_elements,is_a_greeting</span><br><span class="line"></span><br><span class="line">@ddt</span><br><span class="line">class FooTestCase(unittest.TestCase):</span><br><span class="line"></span><br><span class="line">    @file_data(&#x27;test_data_dict.json&#x27;)</span><br><span class="line">    def test_file_data_json_dict(self, value):</span><br><span class="line">        self.assertTrue(has_three_elements(value))</span><br><span class="line"></span><br><span class="line">    @file_data(&#x27;test_data_list.json&#x27;)</span><br><span class="line">    def test_file_data_json_list(self, value):</span><br><span class="line">        self.assertTrue(is_a_greeting(value))</span><br><span class="line">        </span><br><span class="line">if __name__==&#x27;__main__&#x27;:</span><br><span class="line">    unittest.main(verbosity=2</span><br></pre></td></tr></table></figure>
+<h3 id="使用yaml文件"><a href="#使用yaml文件" class="headerlink" title="使用yaml文件"></a>使用yaml文件</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">import unittest</span><br><span class="line">from ddt import ddt, file_data</span><br><span class="line">from ddt_demo.mycode import has_three_elements,is_a_greeting</span><br><span class="line"></span><br><span class="line">@ddt</span><br><span class="line">class FooTestCase(unittest.TestCase):</span><br><span class="line"></span><br><span class="line">    @file_data(&#x27;test_data_dict.yaml&#x27;)</span><br><span class="line">    def test_file_data_yaml_dict(self, value):</span><br><span class="line">        self.assertTrue(has_three_elements(value))</span><br><span class="line"></span><br><span class="line">    @file_data(&#x27;test_data_list.yaml&#x27;)</span><br><span class="line">    def test_file_data_yaml_list(self, value):</span><br><span class="line">        self.assertTrue(is_a_greeting(value))</span><br><span class="line">        </span><br><span class="line">if __name__==&#x27;__main__&#x27;:</span><br><span class="line">    unittest.main(verbosity=2)</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/4c7badec/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1011,6 +1153,122 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/834cb703/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="一个正经的测试工程师">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="施坤的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/aposts/834cb703/" class="post-title-link" itemprop="url">python中staticmethod和classmethod区别</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-09-29 17:13:35" itemprop="dateCreated datePublished" datetime="2021-09-29T17:13:35+08:00">2021-09-29</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-05-05 17:05:51" itemprop="dateModified" datetime="2022-05-05T17:05:51+08:00">2022-05-05</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/" itemprop="url" rel="index"><span itemprop="name">python</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/aposts/834cb703/" class="post-meta-item leancloud_visitors" data-flag-title="python中staticmethod和classmethod区别" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/aposts/834cb703/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/aposts/834cb703/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">class MyClass(object):</span><br><span class="line">    def __init__(self):</span><br><span class="line">        self.ids = &quot;001&quot;</span><br><span class="line"></span><br><span class="line">    def t1(self, path=&quot;&quot;):</span><br><span class="line">        print(&quot;这个是实例化方法&quot;)</span><br><span class="line"></span><br><span class="line">    @staticmethod</span><br><span class="line">    def get_result(path):</span><br><span class="line">        print(&quot;这个是静态方法&quot;)</span><br><span class="line">        MyClass().t1()  # 显示调用类的实例化方法</span><br><span class="line">        print(MyClass().ids)</span><br><span class="line"></span><br><span class="line">    @classmethod</span><br><span class="line">    def get_test1(cls, path):</span><br><span class="line">        print(&quot;这个是类方法&quot;)</span><br><span class="line">        cls().t1()  # 调用类的实例化方法</span><br><span class="line">        print(cls().ids)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">MyClass().t1(&quot;调用实例化方法&quot;)</span><br><span class="line">MyClass.get_result(&quot;调用静态方法&quot;)</span><br><span class="line">MyClass.get_test1(&quot;调用类方法&quot;)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><ul>
+<li>类中一般包含三种方法<ul>
+<li>实例化方法（<code>MyClass().t1()</code>）</li>
+<li>静态方法（<code>staticmethod</code>）</li>
+<li>类方法（<code>classmethod</code>）</li>
+</ul>
+</li>
+<li><code>classmethod</code>（类方法），第一个参数必须是<code>cls</code>，这个<code>cls</code>指向了类本身，因此可以直接用<code>cls</code>实例化来访问类的内部方法或者属性。<ul>
+<li><code>cls().t1()</code></li>
+</ul>
+</li>
+<li><code>staticmethod</code>(静态方法)，如果要调用类的内部方法，只能显示地引用类<code>MyClass</code>，这对继承来说可不是一件好事情<ul>
+<li><code>MyClass().t1() </code></li>
+</ul>
+</li>
+</ul>
+<p><strong>因此</strong></p>
+<ul>
+<li>只要不调用类的内部方法和属性，<code>classmethod</code>和<code>staticmethod</code>都可以使用</li>
+<li>若要调用类的内部方法和属性，推荐使用<code>classmethod</code></li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/43e69bf0/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1147,272 +1405,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/900bcde7/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="一个正经的测试工程师">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="施坤的博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/aposts/900bcde7/" class="post-title-link" itemprop="url">python中的map、filter、reduce函数</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-09-29 17:13:35" itemprop="dateCreated datePublished" datetime="2021-09-29T17:13:35+08:00">2021-09-29</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-02-25 11:20:56" itemprop="dateModified" datetime="2022-02-25T11:20:56+08:00">2022-02-25</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/" itemprop="url" rel="index"><span itemprop="name">python</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/aposts/900bcde7/" class="post-meta-item leancloud_visitors" data-flag-title="python中的map、filter、reduce函数" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/aposts/900bcde7/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/aposts/900bcde7/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="map函数"><a href="#map函数" class="headerlink" title="map函数"></a>map函数</h1><ul>
-<li><p>map函数会根据提供的函数对指定序列做映射。</p>
-</li>
-<li><p>map函数的定义：map(function, sequence[, sequence, …]) -&gt; list</p>
-<ul>
-<li>通过定义可以看到，这个函数的第一个参数是一个函数，剩下的参数是一个或多个序列，返回值是一个集合。<br>function可以理解为是一个一对一或多对一函数，map的作用是以参数序列中的每一个元素调用function函数，返回包含每次function函数返回值的list。</li>
-</ul>
-<p><strong>lambda 结合的例子</strong></p>
-</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">map(lambda x: x ** 2, [1, 2, 3, 4, 5])</span><br><span class="line">返回结果为：</span><br><span class="line">[1, 4, 9, 16, 25]</span><br></pre></td></tr></table></figure>
-
-<p>  <strong>单参数例子</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">def add100(x):</span><br><span class="line">     return x+100</span><br><span class="line"></span><br><span class="line"> hh = [11,22,33]</span><br><span class="line"> map(add100,hh)</span><br><span class="line"> [111, 122, 133]</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>** list参数的例子**<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; def abc(a, b, c):</span><br><span class="line">...     return a*10000 + b*100 + c</span><br><span class="line">... </span><br><span class="line">&gt;&gt;&gt; list1 = [11,22,33]</span><br><span class="line">&gt;&gt;&gt; list2 = [44,55,66]</span><br><span class="line">&gt;&gt;&gt; list3 = [77,88,99]</span><br><span class="line">&gt;&gt;&gt; map(abc,list1,list2,list3)</span><br><span class="line">[114477, 225588, 336699]</span><br></pre></td></tr></table></figure></li>
-<li><strong>function为None的例子</strong><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; list1 = [11,22,33]</span><br><span class="line">&gt;&gt;&gt; map(None,list1)</span><br><span class="line">[11, 22, 33]</span><br><span class="line">&gt;&gt;&gt; list1 = [11,22,33]</span><br><span class="line">&gt;&gt;&gt; list2 = [44,55,66]</span><br><span class="line">&gt;&gt;&gt; list3 = [77,88,99]</span><br><span class="line">&gt;&gt;&gt; map(None,list1,list2,list3)</span><br><span class="line">[(11, 44, 77), (22, 55, 88), (33, 66, 99)]</span><br></pre></td></tr></table></figure></li>
-</ul>
-<h1 id="filter函数"><a href="#filter函数" class="headerlink" title="filter函数"></a>filter函数</h1><ul>
-<li>filter函数会对指定序列执行过滤操作。</li>
-<li>filter函数的定义：filter(function or None, sequence) -&gt; list, tuple, or string<ul>
-<li><p>function是一个谓词函数，接受一个参数，返回布尔值True或False。</p>
-</li>
-<li><p>filter函数会对序列参数sequence中的每个元素调用function函数，最后返回的结果包含调用结果为True的元素。返回值的类型和参数sequence的类型相同</p>
-</li>
-<li><p><strong>返回序列中的所有奇数</strong></p>
-</li>
-</ul>
-</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">def is_even(x):</span><br><span class="line">      return x &amp; 1 != 0</span><br><span class="line">filter(is_even, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10])</span><br><span class="line">返回结果为：</span><br><span class="line">[1, 3, 5, 7, 9]</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>如果function参数为None，返回结果和sequence参数相同。</li>
-</ul>
-<h1 id="reduce函数"><a href="#reduce函数" class="headerlink" title="reduce函数"></a>reduce函数</h1><ul>
-<li>reduce函数，reduce函数会对参数序列中元素进行累积。</li>
-<li>py3以后使用，必须导入 from functools import reduce </li>
-<li>reduce函数的定义：reduce(function, sequence[, initial]) -&gt; value<ul>
-<li><p>function参数是一个有两个参数的函数，reduce依次从sequence中取一个元素，和上一次调用function的结果做参数再次调用function。<br>第一次调用function时，如果提供initial参数，会以sequence中的第一个元素和initial作为参数调用function，否则会以序列sequence中的前两个元素做参数调用function。</p>
-</li>
-<li><p>累加例子</p>
-</li>
-</ul>
-</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">def myadd(x,y):  </span><br><span class="line">        return x+y  </span><br><span class="line">    sum=reduce(myadd,(1,2,3,4,5,6,7))  </span><br><span class="line">    print(sum)  </span><br><span class="line">    #结果就是输出1+2+3+4+5+6+7的结果即28</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>lambda 结合的例子</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">reduce(lambda x, y: x + y, [2, 3, 4, 5, 6], 1)</span><br><span class="line">结果为21(  (((((1+2)+3)+4)+5)+6)  )</span><br><span class="line">reduce(lambda x, y: x + y, [2, 3, 4, 5, 6])</span><br><span class="line">结果为20</span><br></pre></td></tr></table></figure>
-<ul>
-<li>注意function函数不能为None。</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/834cb703/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="一个正经的测试工程师">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="施坤的博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/aposts/834cb703/" class="post-title-link" itemprop="url">python中staticmethod和classmethod区别</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-09-29 17:13:35" itemprop="dateCreated datePublished" datetime="2021-09-29T17:13:35+08:00">2021-09-29</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-05-05 17:05:51" itemprop="dateModified" datetime="2022-05-05T17:05:51+08:00">2022-05-05</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/" itemprop="url" rel="index"><span itemprop="name">python</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/aposts/834cb703/" class="post-meta-item leancloud_visitors" data-flag-title="python中staticmethod和classmethod区别" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/aposts/834cb703/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/aposts/834cb703/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">class MyClass(object):</span><br><span class="line">    def __init__(self):</span><br><span class="line">        self.ids = &quot;001&quot;</span><br><span class="line"></span><br><span class="line">    def t1(self, path=&quot;&quot;):</span><br><span class="line">        print(&quot;这个是实例化方法&quot;)</span><br><span class="line"></span><br><span class="line">    @staticmethod</span><br><span class="line">    def get_result(path):</span><br><span class="line">        print(&quot;这个是静态方法&quot;)</span><br><span class="line">        MyClass().t1()  # 显示调用类的实例化方法</span><br><span class="line">        print(MyClass().ids)</span><br><span class="line"></span><br><span class="line">    @classmethod</span><br><span class="line">    def get_test1(cls, path):</span><br><span class="line">        print(&quot;这个是类方法&quot;)</span><br><span class="line">        cls().t1()  # 调用类的实例化方法</span><br><span class="line">        print(cls().ids)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">MyClass().t1(&quot;调用实例化方法&quot;)</span><br><span class="line">MyClass.get_result(&quot;调用静态方法&quot;)</span><br><span class="line">MyClass.get_test1(&quot;调用类方法&quot;)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><ul>
-<li>类中一般包含三种方法<ul>
-<li>实例化方法（<code>MyClass().t1()</code>）</li>
-<li>静态方法（<code>staticmethod</code>）</li>
-<li>类方法（<code>classmethod</code>）</li>
-</ul>
-</li>
-<li><code>classmethod</code>（类方法），第一个参数必须是<code>cls</code>，这个<code>cls</code>指向了类本身，因此可以直接用<code>cls</code>实例化来访问类的内部方法或者属性。<ul>
-<li><code>cls().t1()</code></li>
-</ul>
-</li>
-<li><code>staticmethod</code>(静态方法)，如果要调用类的内部方法，只能显示地引用类<code>MyClass</code>，这对继承来说可不是一件好事情<ul>
-<li><code>MyClass().t1() </code></li>
-</ul>
-</li>
-</ul>
-<p><strong>因此</strong></p>
-<ul>
-<li>只要不调用类的内部方法和属性，<code>classmethod</code>和<code>staticmethod</code>都可以使用</li>
-<li>若要调用类的内部方法和属性，推荐使用<code>classmethod</code></li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1488,20 +1480,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">167</span>
+          <span class="site-state-item-count">168</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">26</span>
+        <span class="site-state-item-count">27</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">68</span>
+        <span class="site-state-item-count">70</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -1526,7 +1518,7 @@
     <!--<h3 class="widget-title">Tag Cloud</h3> -->
     <div id="myCanvasContainer" class="widget tagcloud">
         <canvas width="250" height="250" id="resCanvas" style="width=100%">
-            <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AWVS/" rel="tag">AWVS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Burp-Site/" rel="tag">Burp Site</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DVWA/" rel="tag">DVWA</a><span class="tag-list-count">15</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dependency-Check/" rel="tag">Dependency-Check</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/H5/" rel="tag">H5</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hadoop/" rel="tag">Hadoop</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hibernate/" rel="tag">Hibernate</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hive/" rel="tag">Hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jenkins/" rel="tag">Jenkins</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Metasploit/" rel="tag">Metasploit</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MyBatis/" rel="tag">MyBatis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Nessus/" rel="tag">Nessus</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Sonic/" rel="tag">Sonic</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/airtest/" rel="tag">airtest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">android性能测试</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/app%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">app安全测试</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aritest/" rel="tag">aritest</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/centos/" rel="tag">centos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/" rel="tag">chrome</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/datax/" rel="tag">datax</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/django/" rel="tag">django</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/drozer/" rel="tag">drozer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fisco-bcos/" rel="tag">fisco-bcos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flink/" rel="tag">flink</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gin/" rel="tag">gin</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/" rel="tag">go</a><span class="tag-list-count">16</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go-zero/" rel="tag">go-zero</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hive/" rel="tag">hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/httprunner/" rel="tag">httprunner</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a><span class="tag-list-count">22</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jmeter/" rel="tag">jmeter</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka/" rel="tag">kafka</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kail/" rel="tag">kail</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode/" rel="tag">leetcode</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode-%E6%95%B0%E7%BB%84/" rel="tag">leetcode-数组</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mitmproxy/" rel="tag">mitmproxy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongodb/" rel="tag">mongodb</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/monkey/" rel="tag">monkey</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/" rel="tag">mysql</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/orm/" rel="tag">orm</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pandas/" rel="tag">pandas</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pc%E8%87%AA%E5%8A%A8%E5%8C%96/" rel="tag">pc自动化</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/playwright/" rel="tag">playwright</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pytest/" rel="tag">pytest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a><span class="tag-list-count">23</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/" rel="tag">redis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/selenium/" rel="tag">selenium</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring/" rel="tag">spring</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/springboot/" rel="tag">springboot</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlite/" rel="tag">sqlite</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlmap/" rel="tag">sqlmap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tkinter/" rel="tag">tkinter</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/" rel="tag">vue</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue3/" rel="tag">vue3</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">云服务器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8C%BA%E5%9D%97%E9%93%BE/" rel="tag">区块链</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag">大数据</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">安全测试</a><span class="tag-list-count">29</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">性能测试</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%88%AC%E8%99%AB/" rel="tag">爬虫</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" rel="tag">环境搭建</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95/" rel="tag">自动化测试</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%8B%B1%E8%AF%AD%E5%AD%A6%E4%B9%A0/" rel="tag">英语学习</a><span class="tag-list-count">1</span></li></ul>
+            <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AWVS/" rel="tag">AWVS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Burp-Site/" rel="tag">Burp Site</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DVWA/" rel="tag">DVWA</a><span class="tag-list-count">15</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dependency-Check/" rel="tag">Dependency-Check</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/H5/" rel="tag">H5</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hadoop/" rel="tag">Hadoop</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hibernate/" rel="tag">Hibernate</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hive/" rel="tag">Hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jenkins/" rel="tag">Jenkins</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Metasploit/" rel="tag">Metasploit</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MyBatis/" rel="tag">MyBatis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Nessus/" rel="tag">Nessus</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Sonic/" rel="tag">Sonic</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/airtest/" rel="tag">airtest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">android性能测试</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/app%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">app安全测试</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aritest/" rel="tag">aritest</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/centos/" rel="tag">centos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/" rel="tag">chrome</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/datax/" rel="tag">datax</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/django/" rel="tag">django</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/drozer/" rel="tag">drozer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fisco-bcos/" rel="tag">fisco-bcos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flink/" rel="tag">flink</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gin/" rel="tag">gin</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/" rel="tag">go</a><span class="tag-list-count">16</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go-zero/" rel="tag">go-zero</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hive/" rel="tag">hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/httprunner/" rel="tag">httprunner</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a><span class="tag-list-count">23</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jmeter/" rel="tag">jmeter</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka/" rel="tag">kafka</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kail/" rel="tag">kail</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode/" rel="tag">leetcode</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode-%E6%95%B0%E7%BB%84/" rel="tag">leetcode-数组</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mitmproxy/" rel="tag">mitmproxy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongodb/" rel="tag">mongodb</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/monkey/" rel="tag">monkey</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/" rel="tag">mysql</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/orm/" rel="tag">orm</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pandas/" rel="tag">pandas</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pc%E8%87%AA%E5%8A%A8%E5%8C%96/" rel="tag">pc自动化</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/playwright/" rel="tag">playwright</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pytest/" rel="tag">pytest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a><span class="tag-list-count">23</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/" rel="tag">redis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/selenium/" rel="tag">selenium</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring/" rel="tag">spring</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring-cloud/" rel="tag">spring cloud</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/springboot/" rel="tag">springboot</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlite/" rel="tag">sqlite</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlmap/" rel="tag">sqlmap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tkinter/" rel="tag">tkinter</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/" rel="tag">vue</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue3/" rel="tag">vue3</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">云服务器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8C%BA%E5%9D%97%E9%93%BE/" rel="tag">区块链</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag">大数据</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">安全测试</a><span class="tag-list-count">29</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/" rel="tag">微服务</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">性能测试</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%88%AC%E8%99%AB/" rel="tag">爬虫</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" rel="tag">环境搭建</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95/" rel="tag">自动化测试</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%8B%B1%E8%AF%AD%E5%AD%A6%E4%B9%A0/" rel="tag">英语学习</a><span class="tag-list-count">1</span></li></ul>
         </canvas>
     </div>
 </div>

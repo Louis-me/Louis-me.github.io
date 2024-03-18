@@ -191,6 +191,171 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/27850020/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="一个正经的测试工程师">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="施坤的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/aposts/27850020/" class="post-title-link" itemprop="url">DVWA通关指南-DOM-XSS-DOM型跨站脚本攻击</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-02-14 09:34:27" itemprop="dateCreated datePublished" datetime="2022-02-14T09:34:27+08:00">2022-02-14</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-02-25 11:20:56" itemprop="dateModified" datetime="2022-02-25T11:20:56+08:00">2022-02-25</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" itemprop="url" rel="index"><span itemprop="name">安全测试</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/aposts/27850020/" class="post-meta-item leancloud_visitors" data-flag-title="DVWA通关指南-DOM-XSS-DOM型跨站脚本攻击" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/aposts/27850020/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/aposts/27850020/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="详解"><a href="#详解" class="headerlink" title="详解"></a>详解</h2><h3 id="XSS"><a href="#XSS" class="headerlink" title="XSS"></a>XSS</h3><ul>
+<li>XSS(跨站脚本攻击)，是指恶意攻击者往Web页面里插入恶意Script代码，当用户浏览该页之时，嵌入其中Web里面的Script代码会被执行，从而达到恶意攻击用户的目的。</li>
+<li>XSS存在的根本原因是,对URL中的参数和对用户输入提交给web server的内容,没有进行充分的过滤</li>
+</ul>
+<h4 id="分类"><a href="#分类" class="headerlink" title="分类"></a>分类</h4><ul>
+<li><strong>持久化 XSS</strong>：恶意代码通常来自网站数据库。</li>
+<li><strong>反射式 XSS</strong>：恶意代码通常来自用户请求。</li>
+<li><strong>基于 DOM 的XSS</strong>：漏洞通常在客户端而非服务端，DOM XSS 是由于浏览器解析机制导致的漏洞，服务器不参与，而存储型与反射型都需要服务器响应参与</li>
+</ul>
+<h4 id="危害"><a href="#危害" class="headerlink" title="危害"></a>危害</h4><p>从以下我们可以知道,存储型的XSS危害最大。因为他存储在服务器端,所以不需要我们和被攻击者有任何接触, 只要被攻击者访问了该页面就会遭受攻击。而反射型和DOM型的XSS则需要我们去诱使用户点击我们构造的恶意的URL, 需要我们和用户有直接或者间接的接触,比如利用社会工程学或者利用在其他网页挂马的方式。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">							|---&gt;窃取cookie</span><br><span class="line">						|---&gt;网络钓鱼</span><br><span class="line">	|-------&gt;针对用户--&gt;|---&gt;放马挖矿	</span><br><span class="line">	|					|---&gt;广告刷流量</span><br><span class="line">XSS----|					</span><br><span class="line">	|					</span><br><span class="line">	|					|---&gt;篡改页面</span><br><span class="line">	|-----&gt;针对web服务-&gt;|---&gt;传播蠕虫</span><br><span class="line">						|---&gt;内网扫描</span><br><span class="line">						|---&gt;劫持后台</span><br><span class="line">						</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="DOM型XSS"><a href="#DOM型XSS" class="headerlink" title="DOM型XSS"></a>DOM型XSS</h3><ul>
+<li><p>DOM型XSS其实是一种特殊类型的反射型XSS，它是基于DOM文档对象模型的一种漏洞。</p>
+</li>
+<li><p>用户请求一个经过专门设计的URL，它由攻击者提交，而且其中包含XSS代码。服务器的响应不会以任何形式包含攻击者的脚本。当用户的浏览器处理这个响应时，DOM对象就会处理XSS代码，导致存在XSS漏洞。</p>
+</li>
+</ul>
+<p><strong>什么是DOM</strong></p>
+<p>知道html的知识，应该都清楚什么是DOM，比如一个典型的html格式</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">head</span>&gt;</span><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;wap&quot;</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;1.jpg&quot;</span> /&gt;</span></span><br><span class="line">		<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>常见注入代码</strong></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span>alert(1)<span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">1</span> <span class="attr">onerror</span>=<span class="string">alert(1)</span> <span class="attr">hidden</span>=<span class="string">&quot;true&quot;</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">iframe</span> <span class="attr">onload</span>=<span class="string">alert(1)</span> <span class="attr">height</span>=<span class="string">&quot;0&quot;</span> <span class="attr">width</span>=<span class="string">&quot;0&quot;</span> <span class="attr">hidden</span>=<span class="string">&quot;true&quot;</span>/&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h2 id="安全等级为Low"><a href="#安全等级为Low" class="headerlink" title="安全等级为Low"></a>安全等级为Low</h2><p>服务器代码</p>
+<p><img src="/aposts/27850020/image-20220214103755950.png" alt="image-20220214103755950"></p>
+<h3 id="源码分析"><a href="#源码分析" class="headerlink" title="源码分析"></a>源码分析</h3><p><strong>服务器代码</strong></p>
+<ul>
+<li><p>可以看到代码中没有做任何保护，而表单是让我们选择语言</p>
+</li>
+<li><p>点击select，可以看到?default&#x3D;English,所以可以在&#x3D;号后插入xss <strong>payload</strong></p>
+</li>
+</ul>
+<p><img src="/aposts/27850020/image-20220214104034792.png" alt="image-20220214104034792"></p>
+<p><strong>前端代码</strong></p>
+<p>右键查看前端源码，发现有URI解码的函数，被前端执行</p>
+<p><img src="/aposts/27850020/image-20220214151722967.png" alt="image-20220214151722967"></p>
+<p><strong>POC、EXP、Payload与Shellcode</strong></p>
+<blockquote>
+<p>POC，全称”Proof of Concept”，中文“概念验证”，常指一段漏洞证明的代码。</p>
+<p>EXP，全称”Exploit”，中文“利用”，指利用系统漏洞进行攻击的动作。</p>
+<p>Payload，中文“有效载荷”，指成功exploit之后，真正在目标系统执行的代码或指令。</p>
+<p>Shellcode，简单翻译“shell代码”，是Payload的一种，由于其建立正向&#x2F;反向shell而得名。</p>
+</blockquote>
+<h3 id="开始攻击"><a href="#开始攻击" class="headerlink" title="开始攻击"></a>开始攻击</h3><p>直接把请求参数改为：<code>default=&lt;script&gt;alert(document.cookie)&lt;/script&gt;</code>，就获取到了cookie</p>
+<p><img src="/aposts/27850020/image-20220214110216672.png" alt="image-20220214110216672"></p>
+<h2 id="安全等级为Medium"><a href="#安全等级为Medium" class="headerlink" title="安全等级为Medium"></a>安全等级为Medium</h2><h3 id="源码分析-1"><a href="#源码分析-1" class="headerlink" title="源码分析"></a>源码分析</h3><p>主要过滤了script标签</p>
+<p><img src="/aposts/27850020/image-20220214104951307.png" alt="image-20220214104951307"></p>
+<h3 id="开始攻击-1"><a href="#开始攻击-1" class="headerlink" title="开始攻击"></a>开始攻击</h3><p>直接把参数改为：<code>&lt;/option&gt;&lt;/select&gt;&lt;img src=1 onerror=alert(&quot;xss&quot;)&gt;</code>，这里的是为了破坏选择框的结构。</p>
+<p><img src="/aposts/27850020/image-20220214110140539.png" alt="image-20220214110140539"></p>
+<h2 id="安全等级High"><a href="#安全等级High" class="headerlink" title="安全等级High"></a>安全等级High</h2><h3 id="源码分析-2"><a href="#源码分析-2" class="headerlink" title="源码分析"></a>源码分析</h3><p>default&#x3D;只允许是French、English、German、Spanish、这几个通过。（采用了白名单过滤）</p>
+<p><img src="/aposts/27850020/image-20220214111011079.png" alt="image-20220214111011079"></p>
+<h3 id="开始攻击-2"><a href="#开始攻击-2" class="headerlink" title="开始攻击"></a>开始攻击</h3><p>用#号绕过提交到服务器，参数改为：<code>default=English#&lt;/option&gt;&lt;/select&gt;&lt;img src=1 onerror=alert(document.cookie)&gt;</code></p>
+<p><img src="/aposts/27850020/image-20220214111327747.png" alt="image-20220214111327747"></p>
+<h2 id="安全等级为-Impossible"><a href="#安全等级为-Impossible" class="headerlink" title="安全等级为 Impossible"></a>安全等级为 Impossible</h2><h3 id="源代码分析"><a href="#源代码分析" class="headerlink" title="源代码分析"></a>源代码分析</h3><p>后台什么也不做</p>
+<p><img src="/aposts/27850020/image-20220214112250124.png" alt="image-20220214112250124"></p>
+<p>前端去除了URI解码的函数，默认不解码，所以无法被前端执行。</p>
+<p><img src="/aposts/27850020/image-20220214152239910.png" alt="image-20220214152239910"></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
+<li><p>利用：任何URL带参页面，都可以尝试渗透</p>
+</li>
+<li><p>预防：在页面跳转时，不要过分依赖URL数据，尽量通过POST重新获取数据</p>
+</li>
+<li><p>本文操作步骤来自<a target="_blank" rel="noopener" href="https://blog.csdn.net/qqchaozai/article/details/102753847?spm=1001.2101.3001.6650.9&utm_medium=distribute.pc_relevant.none-task-blog-2~default~CTRLIST~Rate-9.pc_relevant_default&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2~default~CTRLIST~Rate-9.pc_relevant_default&utm_relevant_index=12">这里</a></p>
+</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/616944d0/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1842,194 +2007,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/97835086/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="一个正经的测试工程师">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="施坤的博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/aposts/97835086/" class="post-title-link" itemprop="url">安全测试-搭建漏洞环境</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-01-25 17:30:30" itemprop="dateCreated datePublished" datetime="2022-01-25T17:30:30+08:00">2022-01-25</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-02-25 11:20:56" itemprop="dateModified" datetime="2022-02-25T11:20:56+08:00">2022-02-25</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" itemprop="url" rel="index"><span itemprop="name">安全测试</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/aposts/97835086/" class="post-meta-item leancloud_visitors" data-flag-title="安全测试-搭建漏洞环境" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/aposts/97835086/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/aposts/97835086/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="DVWA简介"><a href="#DVWA简介" class="headerlink" title="DVWA简介"></a>DVWA简介</h1><p>DVWA（Damn Vulnerable Web App）是一个基于PHP&#x2F;MySql搭建的Web应用程序，旨在为安全专业人员测试自己的专业技能和工具提供合法的 环境，帮助Web开发者更好的理解Web应用安全防范的过程。DVWA一共包含十个模块分别是：</p>
-<ul>
-<li><p>Bruce Force &#x2F;&#x2F;暴力破解</p>
-</li>
-<li><p>Command Injection &#x2F;&#x2F;命令注入</p>
-</li>
-<li><p>CSRF &#x2F;&#x2F;跨站请求伪造</p>
-</li>
-<li><p>File Inclusion &#x2F;&#x2F;文件包含</p>
-</li>
-<li><p>File Upload &#x2F;&#x2F;文件上传漏洞</p>
-</li>
-<li><p>Insecure CAPTCHA &#x2F;&#x2F;不安全的验证</p>
-</li>
-<li><p>SQL Injection &#x2F;&#x2F;sql注入</p>
-</li>
-<li><p>SQL Injection（Blind） &#x2F;&#x2F;sql注入（盲注）</p>
-</li>
-<li><p>XSS（Reflected） &#x2F;&#x2F;反射型XSS</p>
-</li>
-<li><p>XSS（Stored） &#x2F;&#x2F;存储型XSS</p>
-</li>
-</ul>
-<p>同时每个模块的代码都有4种安全等级：Low、Medium、High、Impossible。通过从低难度到高难度的测试并参考代码变化可帮助学习者更快的理解漏洞的原理。</p>
-<h1 id="DVWA的搭建"><a href="#DVWA的搭建" class="headerlink" title="DVWA的搭建"></a>DVWA的搭建</h1><ul>
-<li>DVWA是由PHP代码开发的，可以采用更简单的搭建方式，就是用<a target="_blank" rel="noopener" href="https://sourceforge.net/projects/xampp/">xampp</a></li>
-<li>我本次搭建到腾讯云服务器上，采用手动安装服务的方式，并不安装mariadb和mariadb-server，因为我服务器已经安装了mysql</li>
-</ul>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install php php-mysql php-gd  httpd -y</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>下载最新的DVWA并解压</li>
-</ul>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">[root@VM-24-13-centos local]# wget https://codeload.github.com/digininja/DVWA/zip/refs/tags/2.0.1</span><br><span class="line">[root@VM-24-13-centos local]# unzip 2.0.1 -d  dvwa</span><br><span class="line">[root@VM-24-13-centos local]# cd  dvwa</span><br><span class="line">[root@VM-24-13-centos dvwa]# ll</span><br><span class="line">total 4</span><br><span class="line">drwxr-xr-x 10 root root 4096 Sep  1  2020 DVWA-2.0.1</span><br><span class="line">[root@VM-24-13-centos dvwa]# cd DVWA-2.0.1/</span><br><span class="line">[root@VM-24-13-centos DVWA-2.0.1]# ll</span><br><span class="line">total 148</span><br><span class="line">-rw-r--r--  1 root root  3415 Sep  1  2020 about.php</span><br><span class="line">-rw-r--r--  1 root root  7296 Sep  1  2020 CHANGELOG.md</span><br><span class="line">drwxr-xr-x  2 root root  4096 Sep  1  2020 config</span><br><span class="line">-rw-r--r--  1 root root 33107 Sep  1  2020 COPYING.txt</span><br><span class="line">drwxr-xr-x  2 root root  4096 Sep  1  2020 docs</span><br><span class="line">drwxr-xr-x  6 root root  4096 Sep  1  2020 dvwa</span><br><span class="line">drwxr-xr-x  4 root root  4096 Sep  1  2020 external</span><br><span class="line">-rw-r--r--  1 root root  1406 Sep  1  2020 favicon.ico</span><br><span class="line">drwxr-xr-x  5 root root  4096 Sep  1  2020 hackable</span><br><span class="line">-rw-r--r--  1 root root   895 Sep  1  2020 ids_log.php</span><br><span class="line">-rw-r--r--  1 root root  4393 Sep  1  2020 index.php</span><br><span class="line">-rw-r--r--  1 root root  1869 Sep  1  2020 instructions.php</span><br><span class="line">-rw-r--r--  1 root root  4183 Sep  1  2020 login.php</span><br><span class="line">-rw-r--r--  1 root root   414 Sep  1  2020 logout.php</span><br><span class="line">-rw-r--r--  1 root root   199 Sep  1  2020 phpinfo.php</span><br><span class="line">-rw-r--r--  1 root root   154 Sep  1  2020 php.ini</span><br><span class="line">-rw-r--r--  1 root root 15490 Sep  1  2020 README.md</span><br><span class="line">-rw-r--r--  1 root root    26 Sep  1  2020 robots.txt</span><br><span class="line">-rw-r--r--  1 root root  4724 Sep  1  2020 security.php</span><br><span class="line">-rw-r--r--  1 root root  3063 Sep  1  2020 setup.php</span><br><span class="line">drwxr-xr-x  2 root root  4096 Sep  1  2020 tests</span><br><span class="line">drwxr-xr-x 16 root root  4096 Sep  1  2020 vulnerabilities</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>开启服务</li>
-</ul>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl start  httpd </span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>移动到apache根目录下</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@VM-24-13-centos dvwa]# cp -r DVWA-2.0.1/ /var/www/html/</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>配置文件</li>
-</ul>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">[root@VM-24-13-centos config]# pwd</span><br><span class="line">/var/www/html/DVWA-2.0.1/config</span><br><span class="line"></span><br><span class="line">[root@VM-24-13-centos config]# cp config.inc.php.dist config.inc.php</span><br><span class="line"></span><br><span class="line">[root@VM-24-13-centos config]#  vi config.inc.php</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">_DVWA = array();</span><br><span class="line"><span class="meta prompt_">$</span><span class="language-bash">_DVWA[ <span class="string">&#x27;db_server&#x27;</span> ]   = <span class="string">&#x27;127.0.0.1&#x27;</span>;</span></span><br><span class="line"><span class="meta prompt_">$</span><span class="language-bash">_DVWA[ <span class="string">&#x27;db_database&#x27;</span> ] = <span class="string">&#x27;dvwa&#x27;</span>;</span></span><br><span class="line"><span class="meta prompt_">$</span><span class="language-bash">_DVWA[ <span class="string">&#x27;db_user&#x27;</span> ]     = <span class="string">&#x27;dvwa&#x27;</span>;</span></span><br><span class="line"><span class="meta prompt_">$</span><span class="language-bash">_DVWA[ <span class="string">&#x27;db_password&#x27;</span> ] = <span class="string">&#x27;dvwa1234&#x27;</span>;</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">$</span><span class="language-bash">_DVWA[ <span class="string">&#x27;db_port &#x27;</span>] = <span class="string">&#x27;3306&#x27;</span>;</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">$</span><span class="language-bash">_DVWA[ <span class="string">&#x27;recaptcha_public_key&#x27;</span> ]  = <span class="string">&#x27;XXXXXAAAKPoVVMvbWSGeo4rm0D-Ev5TKSTr&#x27;</span>;</span></span><br><span class="line"><span class="meta prompt_">$</span><span class="language-bash">_DVWA[ <span class="string">&#x27;recaptcha_private_key&#x27;</span> ] = <span class="string">&#x27;XXXXAJfPh10KQCdJZizM0yfmQTHQjA3y&#x27;</span>;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>recaptcha_public_key和recaptcha_private_key 的生成</li>
-<li>打开<a target="_blank" rel="noopener" href="https://www.google.com/recaptcha/admin%E8%BF%9B%E8%A1%8C%E5%88%9B%E5%BB%BA">https://www.google.com/recaptcha/admin进行创建</a></li>
-</ul>
-<p><img src="/aposts/97835086/image-20220126100635195.png" alt="image-20220126100635195"></p>
-<p><img src="/aposts/97835086/image-20220126100827029.png" alt="image-20220126100827029"></p>
-<ul>
-<li>创建数据库</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">[root@VM-24-13-centos config]# mysql -u root -p</span><br><span class="line">mysql&gt; create database dvwa;</span><br><span class="line">mysql&gt;use dvwa;</span><br><span class="line">mysql&gt; set global validate_password.policy=&#x27;LOW&#x27;; # mysql8后，有密码策略要求，改为低</span><br><span class="line">mysql &gt;create user &#x27;dvwa&#x27;@&#x27;%&#x27; identified by &#x27;dvwa1234&#x27;; # 创建用户和密码</span><br><span class="line">mysql&gt;use mysql;</span><br><span class="line">mysql&gt; select host, user, authentication_string, plugin from user;</span><br><span class="line">+-----------+------------------+------------------------------------------------------------------------+-----------------------+</span><br><span class="line">| host      | user             | authentication_string                                                  | plugin                |</span><br><span class="line">+-----------+------------------+------------------------------------------------------------------------+-----------------------+</span><br><span class="line">X3%         | dvwa             | $A$005$6?yx</span><br><span class="line"></span><br><span class="line">mysql&gt;use dvwa;</span><br><span class="line">mysql&gt; grant all privileges on dvwa.* to &#x27;dvwa&#x27;@&#x27;%&#x27;; # 授权数据库给用户</span><br><span class="line">mysql&gt;flush privileges;</span><br><span class="line">mysql&gt;exit;</span><br><span class="line"></span><br><span class="line"># 登录成功</span><br><span class="line">mysql -u dvwa -p</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>80端口腾讯云在规则中已经默认打开，设置下防火墙</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"># 开启防火墙</span><br><span class="line">systemctl start firewalld</span><br><span class="line"># 防火墙打开80端口</span><br><span class="line">[root@VM-24-13-centos config]# firewall-cmd --zone=public --add-port=80/tcp --permane</span><br><span class="line"># 重启httpd服务</span><br><span class="line">service httpd restart</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>用外网ip打开安装目录</li>
-</ul>
-<p><img src="/aposts/97835086/image-20220126150340578.png" alt="image-20220126150340578"></p>
-<ul>
-<li>出现一些红色错误，一个个来解决</li>
-</ul>
-<p><img src="/aposts/97835086/image-20220126151224710.png" alt="image-20220126151224710"></p>
-<ul>
-<li>设置php.ini</li>
-</ul>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/php.ini</span><br><span class="line"></span><br><span class="line">allow_url_fopen = On</span><br><span class="line">allow_url_include = On</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>设置权限</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@VM-24-13-centos hackable]# pwd</span><br><span class="line">/var/www/html/DVWA-2.0.1/hackable</span><br><span class="line"></span><br><span class="line">[root@VM-24-13-centos hackable]# chmod 777 uploads</span><br><span class="line">[root@VM-24-13-centos DVWA-2.0.1]# chmod 777 external/phpids/0.6/lib/IDS/tmp/phpids_log.txt</span><br><span class="line"></span><br><span class="line">[root@VM-24-13-centos DVWA-2.0.1]# chmod 7777 config/</span><br><span class="line"># 重启httpd服务</span><br><span class="line">service httpd restart</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>出现加密的插件不存在</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mysql -uroot -p</span><br><span class="line">set global validate_password.policy=&#x27;LOW&#x27;</span><br><span class="line">ALTER USER &#x27;dvwa&#x27;@&#x27;%&#x27; IDENTIFIED WITH mysql_native_password BY &#x27;dvwa1234&#x27;;</span><br><span class="line">flush privileges;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>再次打开页面，就可以了，点击登录，用户名和密码为：admin&#x2F;password</li>
-</ul>
-<p><img src="/aposts/97835086/image-20220126152915786.png" alt="image-20220126152915786"></p>
-<p><img src="/aposts/97835086/image-20220126153115113.png" alt="image-20220126153115113"></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -2105,20 +2082,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">167</span>
+          <span class="site-state-item-count">168</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">26</span>
+        <span class="site-state-item-count">27</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">68</span>
+        <span class="site-state-item-count">70</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -2143,7 +2120,7 @@
     <!--<h3 class="widget-title">Tag Cloud</h3> -->
     <div id="myCanvasContainer" class="widget tagcloud">
         <canvas width="250" height="250" id="resCanvas" style="width=100%">
-            <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AWVS/" rel="tag">AWVS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Burp-Site/" rel="tag">Burp Site</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DVWA/" rel="tag">DVWA</a><span class="tag-list-count">15</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dependency-Check/" rel="tag">Dependency-Check</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/H5/" rel="tag">H5</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hadoop/" rel="tag">Hadoop</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hibernate/" rel="tag">Hibernate</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hive/" rel="tag">Hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jenkins/" rel="tag">Jenkins</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Metasploit/" rel="tag">Metasploit</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MyBatis/" rel="tag">MyBatis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Nessus/" rel="tag">Nessus</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Sonic/" rel="tag">Sonic</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/airtest/" rel="tag">airtest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">android性能测试</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/app%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">app安全测试</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aritest/" rel="tag">aritest</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/centos/" rel="tag">centos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/" rel="tag">chrome</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/datax/" rel="tag">datax</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/django/" rel="tag">django</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/drozer/" rel="tag">drozer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fisco-bcos/" rel="tag">fisco-bcos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flink/" rel="tag">flink</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gin/" rel="tag">gin</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/" rel="tag">go</a><span class="tag-list-count">16</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go-zero/" rel="tag">go-zero</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hive/" rel="tag">hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/httprunner/" rel="tag">httprunner</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a><span class="tag-list-count">22</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jmeter/" rel="tag">jmeter</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka/" rel="tag">kafka</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kail/" rel="tag">kail</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode/" rel="tag">leetcode</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode-%E6%95%B0%E7%BB%84/" rel="tag">leetcode-数组</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mitmproxy/" rel="tag">mitmproxy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongodb/" rel="tag">mongodb</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/monkey/" rel="tag">monkey</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/" rel="tag">mysql</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/orm/" rel="tag">orm</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pandas/" rel="tag">pandas</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pc%E8%87%AA%E5%8A%A8%E5%8C%96/" rel="tag">pc自动化</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/playwright/" rel="tag">playwright</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pytest/" rel="tag">pytest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a><span class="tag-list-count">23</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/" rel="tag">redis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/selenium/" rel="tag">selenium</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring/" rel="tag">spring</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/springboot/" rel="tag">springboot</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlite/" rel="tag">sqlite</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlmap/" rel="tag">sqlmap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tkinter/" rel="tag">tkinter</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/" rel="tag">vue</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue3/" rel="tag">vue3</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">云服务器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8C%BA%E5%9D%97%E9%93%BE/" rel="tag">区块链</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag">大数据</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">安全测试</a><span class="tag-list-count">29</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">性能测试</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%88%AC%E8%99%AB/" rel="tag">爬虫</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" rel="tag">环境搭建</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95/" rel="tag">自动化测试</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%8B%B1%E8%AF%AD%E5%AD%A6%E4%B9%A0/" rel="tag">英语学习</a><span class="tag-list-count">1</span></li></ul>
+            <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AWVS/" rel="tag">AWVS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Burp-Site/" rel="tag">Burp Site</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DVWA/" rel="tag">DVWA</a><span class="tag-list-count">15</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dependency-Check/" rel="tag">Dependency-Check</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/H5/" rel="tag">H5</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hadoop/" rel="tag">Hadoop</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hibernate/" rel="tag">Hibernate</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hive/" rel="tag">Hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jenkins/" rel="tag">Jenkins</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Metasploit/" rel="tag">Metasploit</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MyBatis/" rel="tag">MyBatis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Nessus/" rel="tag">Nessus</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Sonic/" rel="tag">Sonic</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/airtest/" rel="tag">airtest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">android性能测试</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/app%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">app安全测试</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aritest/" rel="tag">aritest</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/centos/" rel="tag">centos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/" rel="tag">chrome</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/datax/" rel="tag">datax</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/django/" rel="tag">django</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/drozer/" rel="tag">drozer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fisco-bcos/" rel="tag">fisco-bcos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flink/" rel="tag">flink</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gin/" rel="tag">gin</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/" rel="tag">go</a><span class="tag-list-count">16</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go-zero/" rel="tag">go-zero</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hive/" rel="tag">hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/httprunner/" rel="tag">httprunner</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a><span class="tag-list-count">23</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jmeter/" rel="tag">jmeter</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka/" rel="tag">kafka</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kail/" rel="tag">kail</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode/" rel="tag">leetcode</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode-%E6%95%B0%E7%BB%84/" rel="tag">leetcode-数组</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mitmproxy/" rel="tag">mitmproxy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongodb/" rel="tag">mongodb</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/monkey/" rel="tag">monkey</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/" rel="tag">mysql</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/orm/" rel="tag">orm</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pandas/" rel="tag">pandas</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pc%E8%87%AA%E5%8A%A8%E5%8C%96/" rel="tag">pc自动化</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/playwright/" rel="tag">playwright</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pytest/" rel="tag">pytest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a><span class="tag-list-count">23</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/" rel="tag">redis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/selenium/" rel="tag">selenium</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring/" rel="tag">spring</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring-cloud/" rel="tag">spring cloud</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/springboot/" rel="tag">springboot</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlite/" rel="tag">sqlite</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlmap/" rel="tag">sqlmap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tkinter/" rel="tag">tkinter</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/" rel="tag">vue</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue3/" rel="tag">vue3</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">云服务器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8C%BA%E5%9D%97%E9%93%BE/" rel="tag">区块链</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag">大数据</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">安全测试</a><span class="tag-list-count">29</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/" rel="tag">微服务</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">性能测试</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%88%AC%E8%99%AB/" rel="tag">爬虫</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" rel="tag">环境搭建</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95/" rel="tag">自动化测试</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%8B%B1%E8%AF%AD%E5%AD%A6%E4%B9%A0/" rel="tag">英语学习</a><span class="tag-list-count">1</span></li></ul>
         </canvas>
     </div>
 </div>
