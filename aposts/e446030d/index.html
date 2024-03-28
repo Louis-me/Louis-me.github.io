@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"louis-me.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":true,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="说明 上篇文章 主要介绍了spring cloud的业务演示，本次主要介绍服务治理  服务治理介绍前面我们实现了微服务之间的调用，但是我们把服务提供者的网络地址（ip，端口）等硬编码到了代码中，这种做法存在许多问题：  一旦服务提供者地址变化，就需要手工修改代码 一旦服务提供者为多个，无法实现负载均衡功能 一旦服务变的越来越多，人工维护调用关系困难  那么应该则么解决呢？这时候就需要通过注册中心动">
+<meta property="og:type" content="article">
+<meta property="og:title" content="springcloud服务容错">
+<meta property="og:url" content="https://louis-me.github.io/aposts/e446030d/index.html">
+<meta property="og:site_name" content="施坤的博客">
+<meta property="og:description" content="说明 上篇文章 主要介绍了spring cloud的业务演示，本次主要介绍服务治理  服务治理介绍前面我们实现了微服务之间的调用，但是我们把服务提供者的网络地址（ip，端口）等硬编码到了代码中，这种做法存在许多问题：  一旦服务提供者地址变化，就需要手工修改代码 一旦服务提供者为多个，无法实现负载均衡功能 一旦服务变的越来越多，人工维护调用关系困难  那么应该则么解决呢？这时候就需要通过注册中心动">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://louis-me.github.io/aposts/e446030d/image-20210618154855845.85c63f20.png">
+<meta property="og:image" content="https://louis-me.github.io/aposts/e446030d/image-20240327194023531.png">
+<meta property="og:image" content="https://louis-me.github.io/aposts/e446030d/image-20240327194825898.png">
+<meta property="og:image" content="https://louis-me.github.io/aposts/e446030d/image-20240327201224830.png">
+<meta property="og:image" content="https://louis-me.github.io/aposts/e446030d/image-20210619162742384.19440b4a.png">
+<meta property="article:published_time" content="2024-03-27T11:26:52.000Z">
+<meta property="article:modified_time" content="2024-03-28T03:33:50.074Z">
+<meta property="article:tag" content="java">
+<meta property="article:tag" content="spring cloud">
+<meta property="article:tag" content="微服务">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://louis-me.github.io/aposts/e446030d/image-20210618154855845.85c63f20.png">
+
+<link rel="canonical" href="https://louis-me.github.io/aposts/e446030d/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>springcloud服务容错 | 施坤的博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">施坤的博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-简历">
+
+    <a href="/resume/" rel="section"><i class="fa fa-address-card fa-fw"></i>简历</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/e446030d/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="一个正经的测试工程师">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="施坤的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          springcloud服务容错
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2024-03-27 19:26:52" itemprop="dateCreated datePublished" datetime="2024-03-27T19:26:52+08:00">2024-03-27</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-03-28 11:33:50" itemprop="dateModified" datetime="2024-03-28T11:33:50+08:00">2024-03-28</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/spring-cloud/" itemprop="url" rel="index"><span itemprop="name">spring cloud</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/aposts/e446030d/" class="post-meta-item leancloud_visitors" data-flag-title="springcloud服务容错" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/aposts/e446030d/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/aposts/e446030d/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><ul>
+<li><a href="/aposts/42195072">上篇文章</a> 主要介绍了spring cloud的业务演示，本次主要介绍服务治理</li>
+</ul>
+<h2 id="服务治理介绍"><a href="#服务治理介绍" class="headerlink" title="服务治理介绍"></a>服务治理介绍</h2><p>前面我们实现了微服务之间的调用，但是我们把服务提供者的网络地址（ip，端口）等硬编码到了代码中，这种做法存在许多问题：</p>
+<ol>
+<li>一旦服务提供者地址变化，就需要手工修改代码</li>
+<li>一旦服务提供者为多个，无法实现负载均衡功能</li>
+<li>一旦服务变的越来越多，人工维护调用关系困难</li>
+</ol>
+<p>那么应该则么解决呢？这时候就需要通过注册中心动态的实现服务治理。</p>
+<p><strong>什么是服务治理？</strong></p>
+<p>服务治理是微服务架构中最核心最基本的模块。用于实现各个微服务的自动化注册和发现。</p>
+<p><strong>服务注册：</strong> 在服务治理框架中，都会构建一个注册中心，每个服务单元向注册中心登记自己提供服务的详细信息。并在注册中心形成一张服务的清单，服务注册中心需要以心跳的方式去监测清单中的服务是否可用，如果不可用，需要在服务清单中剔除不可用的服务。</p>
+<p><strong>服务发现：</strong> 服务调用方向服务注册中心咨询服务，并获取所有服务的服务清单，实现对具体服务实例的访问。</p>
+<p><img src="/aposts/e446030d/image-20210618154855845.85c63f20.png" alt="image-20210618154855845"></p>
+<p>除了微服务，还有一个组件是<strong>服务注册中心</strong>， 他是微服务架构中非常重要的一个组件，在微服务架构里主要起到了协调者的一个作用。注册中心一般包含如下几个功能：</p>
+<ol>
+<li>服务发现<ol>
+<li>服务注册： 保存服务提供者和服务调用者的信息</li>
+<li>服务订阅： 服务调用者订阅服务提供者的信息，注册中心向订阅者推送提供者的信息</li>
+</ol>
+</li>
+<li>服务配置<ol>
+<li>配置订阅：服务提供者和服务调用者订阅微服务相关的配置</li>
+<li>配置下发：主动将配置推送给服务提供者和服务调用者</li>
+</ol>
+</li>
+<li>服务健康检测<ol>
+<li>检测服务提供者的健康情况，如果发现异常，执行服务剔除</li>
+</ol>
+</li>
+</ol>
+<h3 id="常见的注册中心"><a href="#常见的注册中心" class="headerlink" title="常见的注册中心"></a>常见的注册中心</h3><p><strong>Zookeeper</strong></p>
+<ul>
+<li>zookeeper是一个分布式服务框架，是Apache Hadoop的一个子项目，它主要用来解决分布式应用中经常遇到的一些数据管理问题，如：统一命名服务，状态同步服务，集群管理，分布式应用配置项的管理等</li>
+</ul>
+<p><strong>Eureka</strong></p>
+<ul>
+<li>Eureka是Spring Cloud Netflix中的重要组件，主要作用就是做服务注册和发现。</li>
+</ul>
+<p><strong>Consul</strong></p>
+<ul>
+<li>Consul是基于Go语言开发的开源工具，主要面向分布式，服务化的系统提供服务注册，服务发现和配置管理等功能。Consul的功能都很实用，其中包括：服务注册&#x2F;发现，健康检查，Key&#x2F;Value存储，多数据中心和分布式一致性保证等特性。Consul本身只是一个二进制的可执行文件，所以安装和部署都非常简单，只需要从官网下载后，执行对应的脚本即可。</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://www.consul.io/">https://www.consul.io/</a></p>
+<p><strong>Nacos</strong></p>
+<ul>
+<li>Nacos 致力于帮助您发现、配置和管理微服务。它是Spring Cloud Alibaba的组件之一</li>
+</ul>
+<h2 id="nacos"><a href="#nacos" class="headerlink" title="nacos"></a>nacos</h2><ul>
+<li>打开<a target="_blank" rel="noopener" href="https://nacos.io/download/nacos-server/">官网</a>下载2.3.1.zip的版本</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">## 进入解压目录，进入bin目录</span><br><span class="line">cd nacos/bin</span><br><span class="line">##命令启动</span><br><span class="line">startup.cmd -m standalone</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>结果如下：</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">D:\exe\nacos\bin&gt;startup.cmd -m standalone</span><br><span class="line">&quot;nacos is starting with standalone&quot;</span><br><span class="line"></span><br><span class="line">         ,--.</span><br><span class="line">       ,--.&#x27;|</span><br><span class="line">   ,--,:  : |                                           Nacos 2.3.1</span><br><span class="line">,`--.&#x27;`|  &#x27; :                       ,---.               Running in stand alone mode, All function modules</span><br><span class="line">|   :  :  | |                      &#x27;   ,&#x27;\   .--.--.    Port: 8848</span><br><span class="line">:   |   \ | :  ,--.--.     ,---.  /   /   | /  /    &#x27;   Pid: 14064</span><br><span class="line">|   : &#x27;  &#x27;; | /       \   /     \.   ; ,. :|  :  /`./   Console: http://192.168.163.198:8848/nacos/index.html</span><br><span class="line">&#x27;   &#x27; ;.    ;.--.  .-. | /    / &#x27;&#x27;   | |: :|  :  ;_</span><br><span class="line">|   | | \   | \__\/: . ..    &#x27; / &#x27;   | .; : \  \    `.      https://nacos.io</span><br><span class="line">&#x27;   : |  ; .&#x27; ,&quot; .--.; |&#x27;   ; :__|   :    |  `----.   \</span><br><span class="line">|   | &#x27;`--&#x27;  /  /  ,.  |&#x27;   | &#x27;.&#x27;|\   \  /  /  /`--&#x27;  /</span><br><span class="line">&#x27;   : |     ;  :   .&#x27;   \   :    : `----&#x27;  &#x27;--&#x27;.     /</span><br><span class="line">;   |.&#x27;     |  ,     .-./\   \  /            `--&#x27;---&#x27;</span><br><span class="line">&#x27;---&#x27;        `--`---&#x27;     `----&#x27;</span><br><span class="line"></span><br><span class="line">2024-03-27 19:39:12,401 INFO Tomcat initialized with port(s): 8848 (http)</span><br><span class="line"></span><br><span class="line">2024-03-27 19:39:12,850 INFO Root WebApplicationContext: initialization completed in 3709 ms</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>打开浏览器，输入<a target="_blank" rel="noopener" href="http://localhost:8848/nacos">http://localhost:8848/nacos</a> 即可访问服务，默认密码 nacos&#x2F;nacos</li>
+</ul>
+<p><img src="/aposts/e446030d/image-20240327194023531.png" alt="image-20240327194023531"></p>
+<h3 id="将商品微服务注册到Nacos"><a href="#将商品微服务注册到Nacos" class="headerlink" title="将商品微服务注册到Nacos"></a>将商品微服务注册到Nacos</h3><ul>
+<li>shop-goods模块中依赖文件加入</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">           &lt;groupId&gt;com.alibaba.cloud&lt;/groupId&gt;</span><br><span class="line">           &lt;artifactId&gt;spring-cloud-starter-alibaba-nacos-discovery&lt;/artifactId&gt;</span><br><span class="line"> &lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>主类上添加@EnableDiscoveryClient</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">package xyz.shi.shop.goods;</span><br><span class="line"></span><br><span class="line">import org.springframework.boot.SpringApplication;</span><br><span class="line">import org.springframework.boot.autoconfigure.SpringBootApplication;</span><br><span class="line">import org.springframework.cloud.client.discovery.EnableDiscoveryClient;</span><br><span class="line"></span><br><span class="line">@EnableDiscoveryClient</span><br><span class="line">@SpringBootApplication</span><br><span class="line">public class GoodsApp &#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        SpringApplication.run(GoodsApp.class);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>application.yml配置中添加nacos的地址</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">spring:</span><br><span class="line">  application:</span><br><span class="line">    name: shop-goods</span><br><span class="line">  datasource:</span><br><span class="line">    password: root</span><br><span class="line">    username: 123456</span><br><span class="line">    driver-class-name: com.mysql.cj.jdbc.Driver</span><br><span class="line">    url: jdbc:mysql://localhost:3306/shop?useUnicode=true&amp;characterEncoding=UTF-8&amp;serverTimezone=UTC</span><br><span class="line">    cloud:</span><br><span class="line">      nacos:</span><br><span class="line">        discovery:</span><br><span class="line">          server-addr: 127.0.0.1:8848</span><br><span class="line">server:</span><br><span class="line">  port: 8002</span><br><span class="line"></span><br><span class="line">mybatis-plus:</span><br><span class="line">  global-config:</span><br><span class="line">    db-config:</span><br><span class="line">      table-prefix: shop_</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>启动商品模块的微服务后，查看到数据</li>
+</ul>
+<p><img src="/aposts/e446030d/image-20240327194825898.png" alt="image-20240327194825898"></p>
+<h3 id="将用户微服务注册到Nacos"><a href="#将用户微服务注册到Nacos" class="headerlink" title="将用户微服务注册到Nacos"></a>将用户微服务注册到Nacos</h3><ul>
+<li>步骤同上</li>
+</ul>
+<h3 id="将订单微服务注册到Nacos"><a href="#将订单微服务注册到Nacos" class="headerlink" title="将订单微服务注册到Nacos"></a>将订单微服务注册到Nacos</h3><ul>
+<li>步骤同上</li>
+</ul>
+<h3 id="在APP应用服务中添加Nacos"><a href="#在APP应用服务中添加Nacos" class="headerlink" title="在APP应用服务中添加Nacos"></a>在APP应用服务中添加Nacos</h3><ul>
+<li>步骤同上</li>
+</ul>
+<h4 id="dao修改"><a href="#dao修改" class="headerlink" title="dao修改"></a>dao修改</h4><p>使用nacos调用微服务</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">package xyz.shi.shop.app.config;</span><br><span class="line"></span><br><span class="line">import org.springframework.cloud.client.loadbalancer.LoadBalanced;</span><br><span class="line">import org.springframework.context.annotation.Bean;</span><br><span class="line">import org.springframework.context.annotation.Configuration;</span><br><span class="line">import org.springframework.http.client.ClientHttpRequestFactory;</span><br><span class="line">import org.springframework.http.client.SimpleClientHttpRequestFactory;</span><br><span class="line">import org.springframework.web.client.RestTemplate;</span><br><span class="line"></span><br><span class="line">@Configuration</span><br><span class="line">public class RestTemplateConfig &#123;</span><br><span class="line"></span><br><span class="line">    @Bean</span><br><span class="line">    @LoadBalanced</span><br><span class="line">    public RestTemplate restTemplate(ClientHttpRequestFactory requestFactory)&#123;</span><br><span class="line">//        return new RestTemplate(requestFactory);</span><br><span class="line">        RestTemplate restTemplate = new RestTemplate(requestFactory);</span><br><span class="line">        return restTemplate;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Bean</span><br><span class="line">    public ClientHttpRequestFactory requestFactory()&#123;</span><br><span class="line">        SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();</span><br><span class="line">        factory.setReadTimeout(5000);//单位为ms</span><br><span class="line">        factory.setConnectTimeout(5000);//单位为ms</span><br><span class="line">        return factory;</span><br><span class="line">//        return new SimpleClientHttpRequestFactory();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>​    @LoadBalanced   表示加上负载均衡</p>
+</blockquote>
+<h4 id="service修改"><a href="#service修改" class="headerlink" title="service修改"></a>service修改</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line">package xyz.shi.shop.app.service.impl;</span><br><span class="line"></span><br><span class="line">import com.alibaba.fastjson.JSON;</span><br><span class="line">import com.alibaba.fastjson.TypeReference;</span><br><span class="line">import org.springframework.beans.factory.annotation.Autowired;</span><br><span class="line">import org.springframework.stereotype.Service;</span><br><span class="line">import org.springframework.web.client.RestTemplate;</span><br><span class="line">import xyz.shi.shop.app.popj.BuyParams;</span><br><span class="line">import xyz.shi.shop.app.service.BuyService;</span><br><span class="line">import xyz.shi.shop.common.Result;</span><br><span class="line">import xyz.shi.shop.common.goods.GoodsBO;</span><br><span class="line">import xyz.shi.shop.common.user.UserBO;</span><br><span class="line">import xyz.shi.shop.order.pojo.Order;</span><br><span class="line"></span><br><span class="line">import java.math.BigDecimal;</span><br><span class="line">import java.util.Map;</span><br><span class="line"></span><br><span class="line">@Service</span><br><span class="line">public class BuyServiceImpl implements BuyService &#123;</span><br><span class="line">    @Autowired</span><br><span class="line">    private RestTemplate restTemplate;</span><br><span class="line">    private String shopUserName = &quot;shop-user&quot;;</span><br><span class="line">    private String shopGoodsName = &quot;shop-goods&quot;;</span><br><span class="line">    private String shopOrderName = &quot;shop-order&quot;;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public Result submitOrder(BuyParams buyParams) &#123;</span><br><span class="line">        String userResult = restTemplate.getForObject(&quot;http://&quot; + shopUserName + &quot;/user/findUser/&quot; + buyParams.getUserId(), String.class);</span><br><span class="line">        Result&lt;UserBO&gt; userBOResult = JSON.parseObject(userResult, new TypeReference&lt;Result&lt;UserBO&gt;&gt;() &#123;</span><br><span class="line">        &#125;);</span><br><span class="line">        if (userBOResult == null || !userBOResult.isSuccess() || userBOResult.getData() == null) &#123;</span><br><span class="line">            return Result.fail(10001, &quot;用户不存在&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">        UserBO userBO = userBOResult.getData();</span><br><span class="line"></span><br><span class="line">        String goodsResult = restTemplate.getForObject(&quot;http://&quot; + shopGoodsName + &quot;/goods/findGoods/&quot; + buyParams.getGoodsId(), String.class);</span><br><span class="line">        Result&lt;GoodsBO&gt; goodsBOResult = JSON.parseObject(goodsResult, new TypeReference&lt;Result&lt;GoodsBO&gt;&gt;() &#123;</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line">        if (goodsBOResult == null || !goodsBOResult.isSuccess() || goodsBOResult.getData() == null) &#123;</span><br><span class="line">            return Result.fail(10002, &quot;商品不存在&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">        GoodsBO goodsBO = (GoodsBO) goodsBOResult.getData();</span><br><span class="line">        Integer goodsStock = goodsBO.getGoodsStock();</span><br><span class="line">        if (goodsStock &lt; 0) &#123;</span><br><span class="line">            return Result.fail(10003, &quot;商品库存不足&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">        BigDecimal goodsPrice = goodsBO.getGoodsPrice();</span><br><span class="line">        BigDecimal account = userBO.getAccount();</span><br><span class="line">        if (account.compareTo(goodsPrice) &lt; 0) &#123;</span><br><span class="line">            return Result.fail(10004, &quot;余额不足&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">        Order orderParams = new Order();</span><br><span class="line">        orderParams.setUserId(userBO.getId());</span><br><span class="line">        orderParams.setGoodsId(goodsBO.getId());</span><br><span class="line">        orderParams.setOrderPrice(goodsBO.getGoodsPrice());</span><br><span class="line">        String orderResult = restTemplate.postForObject(&quot;http://&quot; + shopOrderName + &quot;/order/createOrder&quot;, orderParams, String.class);</span><br><span class="line">        Result&lt;String&gt; orderResultString = JSON.parseObject(orderResult, new TypeReference&lt;Result&lt;String&gt;&gt;() &#123;</span><br><span class="line">        &#125;);</span><br><span class="line">        if (orderResultString == null || !orderResultString.isSuccess()) &#123;</span><br><span class="line">            return Result.fail(10005, &quot;下单失败&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">        String orderId = orderResultString.getData();</span><br><span class="line"></span><br><span class="line">        return Result.success(orderId);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>老的代码：</p>
+<p>String userResult &#x3D; restTemplate.getForObject(“<a target="_blank" rel="noopener" href="http://localhost:8001/user/findUser/&quot;">http://localhost:8001/user/findUser/&quot;</a> + buyParams.getUserId(), String.class);</p>
+<p>新的代码</p>
+<p>  String goodsResult &#x3D; restTemplate.getForObject(“http:&#x2F;&#x2F;“ + shopGoodsName + “&#x2F;goods&#x2F;findGoods&#x2F;“ ..);</p>
+</blockquote>
+<ul>
+<li>通过以上的代码，我们发现各个微服务的地址，不需要硬编码在代码中了，通过在nacos中注册的微服务名称即可访问微服务。</li>
+</ul>
+<h3 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h3><ul>
+<li>所有的微服务模块全部启动后，查看nacos</li>
+</ul>
+<p><img src="/aposts/e446030d/image-20240327201224830.png" alt="image-20240327201224830"></p>
+<ul>
+<li>测试结果再次如下</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">import requests</span><br><span class="line"></span><br><span class="line">header = &#123;&quot;content-type&quot;: &quot;application/json&quot;,&#125;</span><br><span class="line">data = &#123;&quot;userId&quot;: 1, &quot;goodsId&quot;: 1111&#125;</span><br><span class="line">t = requests.post(&quot;http://localhost:8004/buy/submit&quot;, json=data, headers=header)</span><br><span class="line">s = t.text</span><br><span class="line">print(s)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#123;&quot;success&quot;:true,&quot;code&quot;:10001,&quot;msg&quot;:&quot;用户不存在&quot;,&quot;data&quot;:null&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="负载均衡"><a href="#负载均衡" class="headerlink" title="负载均衡"></a>负载均衡</h3><ul>
+<li><p>通俗的讲，负载均衡就是将负载（工作任务，访问请求）进行分摊到多个操作单元（服务器，组件）上进行执行。</p>
+</li>
+<li><p>根据负载均衡发生位置的不同，一般分为<strong>服务端负载均衡</strong>和<strong>客户端负载均衡</strong>。</p>
+<ul>
+<li><p>服务端负载均衡指的是发生在服务提供者一方，比如常见的nginx负载均衡。</p>
+</li>
+<li><p>而客户端负载均衡指的是发生在服务请求一方，也就是在发送请求之前已经选好了由哪个实例处理请求。</p>
+</li>
+</ul>
+</li>
+</ul>
+<p><img src="/aposts/e446030d/image-20210619162742384.19440b4a.png" alt="image-20210619162742384"></p>
+<ul>
+<li>在微服务调用关系中，一般会选择客户端负载均衡，也就是由服务调用一方来决定由哪个服务来提供执行</li>
+</ul>
+<h4 id="基于Feign实现服务调用"><a href="#基于Feign实现服务调用" class="headerlink" title="基于Feign实现服务调用"></a>基于Feign实现服务调用</h4><ul>
+<li><p>Feign是Spring Cloud提供的一个声明式的伪Http客户端，它使得调用远程服务就像调用本地服务一样简单，只需要创建一个接口并添加一个注解即可。</p>
+</li>
+<li><p>Nacos很好的集成了Feign，Feign默认集成了Ribbon，所以在Nacos下使用Feign默认就实现了负载均衡的效果</p>
+</li>
+<li><p>shop-app模块，加入Feign的依赖</p>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;spring-cloud-starter-openfeign&lt;/artifactId&gt;</span><br><span class="line">        &lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>在主类上添加Feign的注解</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">package xyz.shi.shop.app;</span><br><span class="line"></span><br><span class="line">import org.springframework.boot.SpringApplication;</span><br><span class="line">import org.springframework.boot.autoconfigure.SpringBootApplication;</span><br><span class="line">import org.springframework.cloud.client.discovery.EnableDiscoveryClient;</span><br><span class="line">import org.springframework.cloud.openfeign.EnableFeignClients;</span><br><span class="line"></span><br><span class="line">@EnableDiscoveryClient</span><br><span class="line">@SpringBootApplication</span><br><span class="line">@EnableFeignClients</span><br><span class="line"></span><br><span class="line">public class App &#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        SpringApplication.run(App.class,args);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>创建各个微服务的feign接口，实现feign的微服务调用</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">package xyz.shi.shop.app.feign;</span><br><span class="line"></span><br><span class="line">import org.springframework.cloud.openfeign.FeignClient;</span><br><span class="line">import org.springframework.web.bind.annotation.GetMapping;</span><br><span class="line">import org.springframework.web.bind.annotation.PathVariable;</span><br><span class="line">import xyz.shi.shop.common.Result;</span><br><span class="line">import xyz.shi.shop.common.goods.GoodsBO;</span><br><span class="line"></span><br><span class="line">@FeignClient(&quot;shop-goods&quot;)</span><br><span class="line">public interface GoodsFeign &#123;</span><br><span class="line"></span><br><span class="line">    //调用路径同http访问路径</span><br><span class="line">    @GetMapping(&quot;/goods/findGoods/&#123;id&#125;&quot;)</span><br><span class="line">    public Result&lt;GoodsBO&gt; findGoods(@PathVariable(&quot;id&quot;) Long id);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">package xyz.shi.shop.app.feign;</span><br><span class="line"></span><br><span class="line">import org.springframework.cloud.openfeign.FeignClient;</span><br><span class="line">import org.springframework.web.bind.annotation.PostMapping;</span><br><span class="line">import org.springframework.web.bind.annotation.RequestBody;</span><br><span class="line">import xyz.shi.shop.common.Result;</span><br><span class="line">import xyz.shi.shop.order.pojo.Order;</span><br><span class="line"></span><br><span class="line">@FeignClient(&quot;shop-order&quot;)</span><br><span class="line">public interface OrderFeign &#123;</span><br><span class="line"></span><br><span class="line">    //调用路径同http访问路径</span><br><span class="line">    @PostMapping(&quot;/order/createOrder&quot;)</span><br><span class="line">    public Result&lt;String&gt; createOrder(@RequestBody Order orderParams);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">package xyz.shi.shop.app.feign;</span><br><span class="line"></span><br><span class="line">import org.springframework.cloud.openfeign.FeignClient;</span><br><span class="line">import org.springframework.web.bind.annotation.GetMapping;</span><br><span class="line">import org.springframework.web.bind.annotation.PathVariable;</span><br><span class="line">import xyz.shi.shop.common.Result;</span><br><span class="line">import xyz.shi.shop.common.user.UserBO;</span><br><span class="line"></span><br><span class="line">@FeignClient(&quot;shop-user&quot;)</span><br><span class="line">public interface UserFeign &#123;</span><br><span class="line"></span><br><span class="line">    //调用路径同http访问路径</span><br><span class="line">    @GetMapping(&quot;/user/findUser/&#123;id&#125;&quot;)</span><br><span class="line">    public Result&lt;UserBO&gt; findUser(@PathVariable(&quot;id&quot;) Long id);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>更改BuyService的实现，使用feign来完成调用</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line">package xyz.shi.shop.app.service.impl;</span><br><span class="line"></span><br><span class="line">import org.springframework.beans.factory.annotation.Autowired;</span><br><span class="line">import org.springframework.stereotype.Service;</span><br><span class="line">import org.springframework.web.client.RestTemplate;</span><br><span class="line">import xyz.shi.shop.app.feign.GoodsFeign;</span><br><span class="line">import xyz.shi.shop.app.feign.OrderFeign;</span><br><span class="line">import xyz.shi.shop.app.feign.UserFeign;</span><br><span class="line">import xyz.shi.shop.app.popj.BuyParams;</span><br><span class="line">import xyz.shi.shop.app.service.BuyService;</span><br><span class="line">import xyz.shi.shop.common.Result;</span><br><span class="line">import xyz.shi.shop.common.goods.GoodsBO;</span><br><span class="line">import xyz.shi.shop.common.user.UserBO;</span><br><span class="line">import xyz.shi.shop.order.pojo.Order;</span><br><span class="line"></span><br><span class="line">import java.math.BigDecimal;</span><br><span class="line"></span><br><span class="line">@Service</span><br><span class="line">public class BuyServiceImpl implements BuyService &#123;</span><br><span class="line">    @Autowired</span><br><span class="line">    private UserFeign userFeign;</span><br><span class="line">    @Autowired</span><br><span class="line">    private GoodsFeign goodsFeign;</span><br><span class="line">    @Autowired</span><br><span class="line">    private OrderFeign orderFeign;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public Result submitOrder(BuyParams buyParams) &#123;</span><br><span class="line">        Result&lt;UserBO&gt; userBOResult = userFeign.findUser(buyParams.getUserId());</span><br><span class="line">        if (userBOResult == null || !userBOResult.isSuccess() || userBOResult.getData() == null)&#123;</span><br><span class="line">            return Result.fail(10001,&quot;用户不存在&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">        UserBO userBO = userBOResult.getData();</span><br><span class="line">        System.out.println(userBO);</span><br><span class="line">        Result&lt;GoodsBO&gt; goodsBOResult = goodsFeign.findGoods(buyParams.getGoodsId());</span><br><span class="line">        System.out.println(goodsBOResult);</span><br><span class="line"></span><br><span class="line">        if (goodsBOResult == null || !goodsBOResult.isSuccess() || goodsBOResult.getData() == null)&#123;</span><br><span class="line">            return Result.fail(10002,&quot;商品不存在&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">        GoodsBO goodsBO = goodsBOResult.getData();</span><br><span class="line">        Integer goodsStock = goodsBO.getGoodsStock();</span><br><span class="line">        if (goodsStock &lt; 0)&#123;</span><br><span class="line">            return Result.fail(10003,&quot;商品库存不足&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">        BigDecimal goodsPrice = goodsBO.getGoodsPrice();</span><br><span class="line">        BigDecimal account = userBO.getAccount();</span><br><span class="line">        if (account.compareTo(goodsPrice) &lt; 0)&#123;</span><br><span class="line">            return Result.fail(10004,&quot;余额不足&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">        Order orderParams = new Order();</span><br><span class="line">        orderParams.setUserId(userBO.getId());</span><br><span class="line">        orderParams.setGoodsId(goodsBO.getId());</span><br><span class="line">        orderParams.setOrderPrice(goodsBO.getGoodsPrice());</span><br><span class="line">        Result&lt;String&gt; orderResultString = orderFeign.createOrder(orderParams);</span><br><span class="line">        System.out.println(orderResultString);</span><br><span class="line"></span><br><span class="line">        if (orderResultString == null || !orderResultString.isSuccess())&#123;</span><br><span class="line">            return Result.fail(10005,&quot;下单失败&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">        String orderId =  orderResultString.getData();</span><br><span class="line"></span><br><span class="line">        return Result.success(orderId);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>老代码</p>
+<p>String goodsResult &#x3D; restTemplate.getForObject(“http:&#x2F;&#x2F;“ + shopGoodsName + “&#x2F;goods&#x2F;findGoods&#x2F;“ ..);</p>
+<p>新代码</p>
+<p> Result<UserBO> userBOResult &#x3D; userFeign.findUser(buyParams.getUserId());</UserBO></p>
+</blockquote>
+<ul>
+<li>重启APP服务，测试，整合上feign之后，我们发现，整个微服务的开发变的开始舒服起来。</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/java/" rel="tag"># java</a>
+              <a href="/tags/spring-cloud/" rel="tag"># spring cloud</a>
+              <a href="/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/" rel="tag"># 微服务</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/aposts/42195072/" rel="prev" title="springcloud业务演示">
+      <i class="fa fa-chevron-left"></i> springcloud业务演示
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+
+
+    <div class="sidebar-inner">
+
+
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%B4%E6%98%8E"><span class="nav-number">1.</span> <span class="nav-text">说明</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%86%E4%BB%8B%E7%BB%8D"><span class="nav-number">2.</span> <span class="nav-text">服务治理介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81%E7%9A%84%E6%B3%A8%E5%86%8C%E4%B8%AD%E5%BF%83"><span class="nav-number">2.1.</span> <span class="nav-text">常见的注册中心</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#nacos"><span class="nav-number">3.</span> <span class="nav-text">nacos</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B0%86%E5%95%86%E5%93%81%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%B3%A8%E5%86%8C%E5%88%B0Nacos"><span class="nav-number">3.1.</span> <span class="nav-text">将商品微服务注册到Nacos</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B0%86%E7%94%A8%E6%88%B7%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%B3%A8%E5%86%8C%E5%88%B0Nacos"><span class="nav-number">3.2.</span> <span class="nav-text">将用户微服务注册到Nacos</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B0%86%E8%AE%A2%E5%8D%95%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%B3%A8%E5%86%8C%E5%88%B0Nacos"><span class="nav-number">3.3.</span> <span class="nav-text">将订单微服务注册到Nacos</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9C%A8APP%E5%BA%94%E7%94%A8%E6%9C%8D%E5%8A%A1%E4%B8%AD%E6%B7%BB%E5%8A%A0Nacos"><span class="nav-number">3.4.</span> <span class="nav-text">在APP应用服务中添加Nacos</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#dao%E4%BF%AE%E6%94%B9"><span class="nav-number">3.4.1.</span> <span class="nav-text">dao修改</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#service%E4%BF%AE%E6%94%B9"><span class="nav-number">3.4.2.</span> <span class="nav-text">service修改</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95"><span class="nav-number">3.5.</span> <span class="nav-text">测试</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1"><span class="nav-number">3.6.</span> <span class="nav-text">负载均衡</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8EFeign%E5%AE%9E%E7%8E%B0%E6%9C%8D%E5%8A%A1%E8%B0%83%E7%94%A8"><span class="nav-number">3.6.1.</span> <span class="nav-text">基于Feign实现服务调用</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt=""
+      src="/images/avatar.gif">
+  <p class="site-author-name" itemprop="name"></p>
+  <div class="site-description" itemprop="description">一个正经的测试工程师</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">170</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">27</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">70</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Louis-me" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Louis-me" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:shikun.job@foxmail.com" title="E-Mail → mailto:shikun.job@foxmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+  <!-- 标签云 -->
+
+<script type="text/javascript" charset="utf-8" src="/js/tagcloud.js"></script>
+<script type="text/javascript" charset="utf-8" src="/js/tagcanvas.js"></script>
+<div class="widget-wrap">
+    <!--<h3 class="widget-title">Tag Cloud</h3> -->
+    <div id="myCanvasContainer" class="widget tagcloud">
+        <canvas width="250" height="250" id="resCanvas" style="width=100%">
+            <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AWVS/" rel="tag">AWVS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Burp-Site/" rel="tag">Burp Site</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DVWA/" rel="tag">DVWA</a><span class="tag-list-count">15</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dependency-Check/" rel="tag">Dependency-Check</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/H5/" rel="tag">H5</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hadoop/" rel="tag">Hadoop</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hibernate/" rel="tag">Hibernate</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hive/" rel="tag">Hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jenkins/" rel="tag">Jenkins</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Metasploit/" rel="tag">Metasploit</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MyBatis/" rel="tag">MyBatis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Nessus/" rel="tag">Nessus</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Sonic/" rel="tag">Sonic</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/airtest/" rel="tag">airtest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">android性能测试</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/app%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">app安全测试</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aritest/" rel="tag">aritest</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/centos/" rel="tag">centos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/" rel="tag">chrome</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/datax/" rel="tag">datax</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/django/" rel="tag">django</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/drozer/" rel="tag">drozer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fisco-bcos/" rel="tag">fisco-bcos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flink/" rel="tag">flink</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gin/" rel="tag">gin</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/" rel="tag">go</a><span class="tag-list-count">16</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go-zero/" rel="tag">go-zero</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hive/" rel="tag">hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/httprunner/" rel="tag">httprunner</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a><span class="tag-list-count">25</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jmeter/" rel="tag">jmeter</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka/" rel="tag">kafka</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kail/" rel="tag">kail</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode/" rel="tag">leetcode</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode-%E6%95%B0%E7%BB%84/" rel="tag">leetcode-数组</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mitmproxy/" rel="tag">mitmproxy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongodb/" rel="tag">mongodb</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/monkey/" rel="tag">monkey</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/" rel="tag">mysql</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/orm/" rel="tag">orm</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pandas/" rel="tag">pandas</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pc%E8%87%AA%E5%8A%A8%E5%8C%96/" rel="tag">pc自动化</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/playwright/" rel="tag">playwright</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pytest/" rel="tag">pytest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a><span class="tag-list-count">23</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/" rel="tag">redis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/selenium/" rel="tag">selenium</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring/" rel="tag">spring</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring-cloud/" rel="tag">spring cloud</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/springboot/" rel="tag">springboot</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlite/" rel="tag">sqlite</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlmap/" rel="tag">sqlmap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tkinter/" rel="tag">tkinter</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/" rel="tag">vue</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue3/" rel="tag">vue3</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">云服务器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8C%BA%E5%9D%97%E9%93%BE/" rel="tag">区块链</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag">大数据</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">安全测试</a><span class="tag-list-count">29</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/" rel="tag">微服务</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">性能测试</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%88%AC%E8%99%AB/" rel="tag">爬虫</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" rel="tag">环境搭建</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95/" rel="tag">自动化测试</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%8B%B1%E8%AF%AD%E5%AD%A6%E4%B9%A0/" rel="tag">英语学习</a><span class="tag-list-count">1</span></li></ul>
+        </canvas>
+    </div>
+</div>
+
+</div>
+<!-- 标签云 -->
+    </div>
+
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  <a href="https://beian.miit.gov.cn/" target="_blank">湘ICP备2022002212号-1</a><br />
+  <!--
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder"></span>
+  -->
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script src='../../../js/src/av-min.js'></script>
+<script src='../../../js/src/Valine.min.js'></script>
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : true,
+      notify     : false,
+      appId      : 'mhSm1aOQmnVeiAUJxrsKIFg5-gzGzoHsz',
+      appKey     : 'kW6GQVoeJac7wDgKvy9vXhn6',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : true,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+  
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

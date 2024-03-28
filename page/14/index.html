@@ -191,6 +191,260 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/53ff70d6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="一个正经的测试工程师">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="施坤的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/aposts/53ff70d6/" class="post-title-link" itemprop="url">jmeter登录并发实例</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-10-27 16:12:31" itemprop="dateCreated datePublished" datetime="2021-10-27T16:12:31+08:00">2021-10-27</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-02-25 11:20:56" itemprop="dateModified" datetime="2022-02-25T11:20:56+08:00">2022-02-25</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/jmeter/" itemprop="url" rel="index"><span itemprop="name">jmeter</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/aposts/53ff70d6/" class="post-meta-item leancloud_visitors" data-flag-title="jmeter登录并发实例" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/aposts/53ff70d6/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/aposts/53ff70d6/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h1><ul>
+<li>本次用jmeter进行登录并发的压测实例</li>
+<li>jmeter version 5.4.1</li>
+<li>压测平台是自己搭建的jform</li>
+<li>压测机器为单机win</li>
+</ul>
+<h2 id="20个并发登录"><a href="#20个并发登录" class="headerlink" title="20个并发登录"></a>20个并发登录</h2><h3 id="设置线程组"><a href="#设置线程组" class="headerlink" title="设置线程组"></a>设置线程组</h3><ul>
+<li>1秒钟发20个线程</li>
+</ul>
+<p><img src="/aposts/53ff70d6/image-20211027161520958.png" alt="image-20211027161520958"></p>
+<h3 id="参数化登录数据"><a href="#参数化登录数据" class="headerlink" title="参数化登录数据"></a>参数化登录数据</h3><ul>
+<li><p>下图为参数化设置，文件名使用相对路径，指向<code>%JMETER_HOME%</code>上一级目录，比如我放到的是<code>D:\exe\apache-jmeter-5.4.1</code></p>
+<p><img src="/aposts/53ff70d6/image-20211027161648791.png" alt="image-20211027161648791"></p>
+</li>
+<li><p>参数化格式为</p>
+</li>
+</ul>
+<figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">test1008,<span class="number">123456</span></span><br><span class="line">test1009,<span class="number">123456</span></span><br><span class="line">test1010,<span class="number">123456</span></span><br><span class="line">test1011,<span class="number">123456</span></span><br><span class="line">test1012,<span class="number">123456</span></span><br><span class="line">test1013,<span class="number">123456</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="登录接口"><a href="#登录接口" class="headerlink" title="登录接口"></a>登录接口</h3><p><img src="/aposts/53ff70d6/image-20211027162309389.png" alt="image-20211027162309389"></p>
+<h3 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h3><ul>
+<li><p>运行成功后，查看测试报告</p>
+<p><img src="/aposts/53ff70d6/image-20211027162426589.png" alt="image-20211027162426589"></p>
+</li>
+</ul>
+<h3 id="服务器监控"><a href="#服务器监控" class="headerlink" title="服务器监控"></a>服务器监控</h3><ul>
+<li><p>下载<a target="_blank" rel="noopener" href="https://jmeter-plugins.org/wiki/PerfMonAgent/">ServerAgent-2.2.3</a>，放到服务器上，给其他插件提供性能指标数据</p>
+</li>
+<li><p>下载<a target="_blank" rel="noopener" href="https://jmeter-plugins.org/?search=jpgc-perfmon">jpgc</a>,监控cpu,men等</p>
+<p><img src="/aposts/53ff70d6/image-20211027162740355.png" alt="image-20211027162740355"></p>
+<ul>
+<li>解压后把<code>perfmon-2.2.2.jar</code>放到<code>D:\exe\apache-jmeter-5.4.1\lib\ext</code>目录下面</li>
+</ul>
+</li>
+<li><p>重启jmeter，新增监听器可以看到PerfMon插件</p>
+<p><img src="/aposts/53ff70d6/image-20211027163542732.png" alt="image-20211027163542732"></p>
+</li>
+<li><p>新增监控指标</p>
+<ul>
+<li><p>CPU：combined ： 综合CPU使用情况</p>
+</li>
+<li><p>Memory：usedperc：内存使用比例</p>
+</li>
+<li><p>DIsk IO：usedperc：磁盘IO占用比例</p>
+</li>
+<li><p>Swap：分区通常被称为交换分区，这块儿分区位于硬盘的某个位置，当系统内存（物理内存）不够用的时候，如果开启了交换分区，部分内存里面暂时不用的数据就会Swap out（换出）到这块儿分区；当系统要使用这部分数据的时候，存储在Swap分区的数据就会Swap in(换入）到内存当中。</p>
+<p>简而言之，Swap分区就类似于内存的后备内存(只是做了下缓冲）</p>
+</li>
+</ul>
+</li>
+</ul>
+<p><img src="/aposts/53ff70d6/image-20211027163910713.png" alt="image-20211027163910713"></p>
+<h4 id="设置ServerAgent"><a href="#设置ServerAgent" class="headerlink" title="设置ServerAgent"></a>设置ServerAgent</h4><ul>
+<li>把压缩包放在服务器（centos7）上后，解压</li>
+</ul>
+<figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[root@racknerd-<span class="number">4</span>dbd89 local]# tar -zxvf ServerAgent-<span class="number">2.2</span>.<span class="number">3</span>.tar.gz</span><br><span class="line">ServerAgent-<span class="number">2.2</span>.<span class="number">3</span>/</span><br><span class="line">ServerAgent-<span class="number">2.2</span>.<span class="number">3</span>/CMDRunner.jar</span><br><span class="line">ServerAgent-<span class="number">2.2</span>.<span class="number">3</span>/lib/</span><br><span class="line">ServerAgent-<span class="number">2.2</span>.<span class="number">3</span>/lib/avalon-framework-<span class="number">4.1</span>.<span class="number">5</span>.jar</span><br><span class="line">ServerAgent-<span class="number">2.2</span>.<span class="number">3</span>/lib/cmdrunner-<span class="number">1.0</span>.<span class="number">2</span>.jar</span><br><span class="line">ServerAgent-<span class="number">2.2</span>.<span class="number">3</span>/lib/jorphan-<span class="number">2.6</span>.jar</span><br><span class="line">ServerAgent-<span class="number">2.2</span>.<span class="number">3</span>/lib/libsigar-amd64-freebsd-<span class="number">6</span>.so</span><br><span class="line">ServerAgent-<span class="number">2.2</span>.<span class="number">3</span>/lib/libsigar-amd64-linux.so</span><br><span class="line">ServerAgent-<span class="number">2.2</span>.<span class="number">3</span>/lib/libsigar-amd64-solaris.so</span><br><span class="line">ServerAgent-<span class="number">2.2</span>.<span class="number">3</span>/lib/libsigar-ia64-hpux-<span class="number">11</span>.sl</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>启动发现4444端口被使用</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@racknerd-4dbd89 ServerAgent-2.2.3]<span class="comment"># sh startAgent.sh</span></span><br><span class="line">INFO    2021-10-27 04:55:56.640 [kg.apc.p] (): Binding UDP to 4444</span><br><span class="line">INFO    2021-10-27 04:55:57.767 [kg.apc.p] (): Binding TCP to 4444</span><br><span class="line">ERROR   2021-10-27 04:55:57.778 [kg.apc.p] (): Can<span class="string">&#x27;t accept TCP connections</span></span><br><span class="line"><span class="string">java.net.BindException: Address already in use</span></span><br><span class="line"><span class="string">        at sun.nio.ch.Net.bind0(Native Method)</span></span><br><span class="line"><span class="string">        at sun.nio.ch.Net.bind(Net.java:438)</span></span><br><span class="line"><span class="string">        at sun.nio.ch.Net.bind(Net.java:430)</span></span><br><span class="line"><span class="string"></span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>修改端口</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@racknerd-4dbd89 ServerAgent-2.2.3]<span class="comment"># java -jar ./CMDRunner.jar --tool PerfMonAgent --udp-port 7777 --tcp-port 7777</span></span><br><span class="line">INFO    2021-10-27 04:57:38.028 [kg.apc.p] (): Binding UDP to 7777</span><br><span class="line">INFO    2021-10-27 04:57:39.040 [kg.apc.p] (): Binding TCP to 7777</span><br><span class="line">INFO    2021-10-27 04:57:39.048 [kg.apc.p] (): JP@GC Agent v2.2.3 started</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>jmeter这里也要修改端口为7777</p>
+<p><img src="/aposts/53ff70d6/image-20211027164933790.png" alt="image-20211027164933790"></p>
+</li>
+</ul>
+<h3 id="再次运行"><a href="#再次运行" class="headerlink" title="再次运行"></a>再次运行</h3><ul>
+<li><p>发现启动后，监听器jpgc这里一直卡着，jmeter也一直卡死，用任务管理器结束任务后，查了下相关资料，说要设置文件名路径，我设置后依然如此</p>
+</li>
+<li><p>等待漫长五分钟后，终于看到结果出现timed out提示</p>
+<p><img src="/aposts/53ff70d6/image-20211027174053337.png" alt="image-20211027174053337"></p>
+</li>
+<li><p>想到应该是服务器端口没有开放，设置防火墙端口开放</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">firewall-cmd --zone=public --add-port=7777/tcp --permanent</span><br><span class="line">firewall-cmd --relod</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>重启服务器上的serverAgent</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@racknerd-4dbd89 ServerAgent-2.2.3]<span class="comment"># netstat -lnpt |grep 7777</span></span><br><span class="line">tcp6       0      0 :::7777                 :::*                    LISTEN      23648/java</span><br><span class="line">[root@racknerd-4dbd89 ServerAgent-2.2.3]<span class="comment"># kill -9 23648</span></span><br><span class="line">[root@racknerd-4dbd89 ServerAgent-2.2.3]<span class="comment"># java -jar ./CMDRunner.jar --tool PerfMonAgent --udp-port 7777 --tcp-port 7777</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>再次运行jmeter脚本后，查看到服务器这里已经连接上了</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">gent --udp-port 7777 --tcp-port 7777</span><br><span class="line">INFO    2021-10-27 05:22:24.028 [kg.apc.p] (): Binding UDP to 7777</span><br><span class="line">INFO    2021-10-27 05:22:25.036 [kg.apc.p] (): Binding TCP to 7777</span><br><span class="line">INFO    2021-10-27 05:22:25.070 [kg.apc.p] (): JP@GC Agent v2.2.3 started</span><br><span class="line">INFO    2021-10-27 05:23:06.182 [kg.apc.p] (): Accepting new TCP connection</span><br><span class="line">INFO    2021-10-27 05:23:06.194 [kg.apc.p] (): Yep, we received the <span class="string">&#x27;test&#x27;</span> <span class="built_in">command</span></span><br><span class="line">INFO    2021-10-27 05:23:27.425 [kg.apc.p] (): Starting measures: swap: memory:cpu:</span><br><span class="line">INFO    2021-10-27 05:23:30.179 [kg.apc.p] (): Client disconnected</span><br><span class="line">INFO    2021-10-27 05:26:35.347 [kg.apc.p] (): Accepting new TCP connection</span><br><span class="line">INFO    2021-10-27 05:26:39.514 [kg.apc.p] (): Closing TCP connection</span><br><span class="line">INFO    2021-10-27 05:31:26.064 [kg.apc.p] (): Accepting new TCP connection</span><br><span class="line">INFO    2021-10-27 05:31:26.067 [kg.apc.p] (): Yep, we received the <span class="string">&#x27;test&#x27;</span> <span class="built_in">command</span></span><br><span class="line">INFO    2021-10-27 05:31:26.274 [kg.apc.p] (): Starting measures: swap: memory:cpu:     disks i/o:</span><br><span class="line">INFO    2021-10-27 05:31:28.823 [kg.apc.p] (): Client disconnected</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="出现提示框"><a href="#出现提示框" class="headerlink" title="出现提示框"></a>出现提示框</h4><ul>
+<li><p>再次运行是，出现一个弹框</p>
+<p><img src="/aposts/53ff70d6/image-20211028103314940.png" alt="image-20211028103314940"></p>
+</li>
+<li><p>打开<code>jmeter.properties</code>设置<code>resultcollector.action_if_file_exists=DELETE</code>,如下图展示，<code>action_if_file_exists</code>有三个值<code>ask</code>,<code>append</code>,<code>delete</code>看字面意思就很清楚了。</p>
+</li>
+<li><p>修改后重新打开jmeter，再次运行脚本就不会出现提示</p>
+<p><img src="/aposts/53ff70d6/image-20211028103515713.png" alt="image-20211028103515713"></p>
+</li>
+</ul>
+<h4 id="查看测试报告"><a href="#查看测试报告" class="headerlink" title="查看测试报告"></a>查看测试报告</h4><h5 id="查看服务器的测试报告"><a href="#查看服务器的测试报告" class="headerlink" title="查看服务器的测试报告"></a>查看服务器的测试报告</h5><p><img src="/aposts/53ff70d6/image-20211027174638748.png" alt="image-20211027174638748"></p>
+<ul>
+<li><p>X 10000000表示放大的次数，助于观察</p>
+</li>
+<li><p>查看cpu情况</p>
+<p><img src="/aposts/53ff70d6/image-20211027174848666.png" alt="image-20211027174848666"></p>
+</li>
+</ul>
+<p><img src="/aposts/53ff70d6/image-20211027175002092.png" alt="image-20211027175002092"></p>
+<ul>
+<li><p>我的服务器是单核cpu，配置比较差，直接就100%</p>
+</li>
+<li><p>磁盘使用情况还不错</p>
+<p><img src="/aposts/53ff70d6/image-20211027175148394.png" alt="image-20211027175148394"></p>
+</li>
+<li><p>其他情况就不分析了，类似</p>
+</li>
+</ul>
+<h5 id="查看其他监听报告"><a href="#查看其他监听报告" class="headerlink" title="查看其他监听报告"></a>查看其他监听报告</h5><ul>
+<li>汇总报告，单位为ms</li>
+</ul>
+<p><img src="/aposts/53ff70d6/image-20211028105143043.png" alt="image-20211028105143043"></p>
+<ul>
+<li><p>聚合测试报告，单位为ms，其中<code>Throughput</code>（吞吐量）——默认情况下表示每秒完成的请求数（<code>Request per Second</code>），当使用了<code> Transaction Controller</code> 时，也可以表示类似<code> LoadRunner</code> 的<code> Transaction per Second</code> 数（该值越大越好，表示服务器处理能力越强。）</p>
+<p><img src="/aposts/53ff70d6/image-20211028105302902.png" alt="image-20211028105302902"></p>
+</li>
+</ul>
+<h2 id="简单负载登录测试"><a href="#简单负载登录测试" class="headerlink" title="简单负载登录测试"></a>简单负载登录测试</h2><ul>
+<li>1秒钟增加2个线程，运行100次</li>
+<li>分别看20，40，60并发下的表现</li>
+</ul>
+<h3 id="并发20的线程组设置"><a href="#并发20的线程组设置" class="headerlink" title="并发20的线程组设置"></a>并发20的线程组设置</h3><p><img src="/aposts/53ff70d6/image-20211028114406461.png" alt="image-20211028114406461"></p>
+<h3 id="参数化"><a href="#参数化" class="headerlink" title="参数化"></a>参数化</h3><ul>
+<li>沿用上述</li>
+</ul>
+<h3 id="集合点设置"><a href="#集合点设置" class="headerlink" title="集合点设置"></a>集合点设置</h3><p><img src="/aposts/53ff70d6/image-20211028114550041.png" alt="image-20211028114550041"></p>
+<ul>
+<li><p>Number of Simulated Users to Group by:每次释放的线程数量。<strong>如果设置为0，等同于设置为线程租中的线程数量</strong>。</p>
+</li>
+<li><p>Timeout in milliseconds:</p>
+<ul>
+<li><strong>如果设置为0，Timer将会等待线程数达到了”Number of Simultaneous Users to Group”中设置的值才释放</strong>。</li>
+<li>如果大于0，那么如果超过Timeout in milliseconds中设置的最大等待时间(毫秒为单位)后还没达到”Number of Simultaneous Users to Group”中设置的值，Timer将不再等待，释放已到达的线程。默认为0</li>
+</ul>
+</li>
+<li><p>注意：如果设置Timeout in milliseconds为0，且线程数量无法达到”Number of Simultaneous Users to Group by”中设置的值，那么Test将无限等待，除非手动终止。</p>
+</li>
+<li><p>Synchronizing timer 仅作用于同一个JVM中的线程,所以，如果使用并发测试，确保”Number of Simultaneous Users to Group by”中设置的值不大于它所在线程组包含的用户数。</p>
+</li>
+<li><p><strong>备注：像聚合报告这类监听器最好少添加，一个线程组用一个足以。之所以建议少添加是因为这类组件非常消耗性能，容易对压测结果产生影响。</strong></p>
+</li>
+</ul>
+<h3 id="查看服务器报告"><a href="#查看服务器报告" class="headerlink" title="查看服务器报告"></a>查看服务器报告</h3><ul>
+<li><p>swap波动比较大</p>
+<p><img src="/aposts/53ff70d6/image-20211028152612334.png" alt="image-20211028152612334"></p>
+</li>
+<li><p>cpu再并发请求的时候直接100%</p>
+<p><img src="/aposts/53ff70d6/image-20211028152720062.png" alt="image-20211028152720062"></p>
+</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/42060b4c/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1614,108 +1868,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/2d5f3400/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="一个正经的测试工程师">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="施坤的博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/aposts/2d5f3400/" class="post-title-link" itemprop="url">Python-Excel-Pandas</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-09-29 17:13:35" itemprop="dateCreated datePublished" datetime="2021-09-29T17:13:35+08:00">2021-09-29</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-02-25 11:20:56" itemprop="dateModified" datetime="2022-02-25T11:20:56+08:00">2022-02-25</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/" itemprop="url" rel="index"><span itemprop="name">python</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/aposts/2d5f3400/" class="post-meta-item leancloud_visitors" data-flag-title="Python-Excel-Pandas" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/aposts/2d5f3400/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/aposts/2d5f3400/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line">import pandas as pd</span><br><span class="line">from ast import literal_eval</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class OperateExcel():</span><br><span class="line">    def __init__(self, file_path):</span><br><span class="line">        self.file_path = file_path</span><br><span class="line">        self.df = pd.read_excel(file_path, sheet_name=&quot;Sheet1&quot;)  # sheet_name不指定时默认返回全表数据</span><br><span class="line">        # self.df = pd.read_excel(file_path, sheet_name=&quot;Sheet1&quot;, usecols=[&#x27;name&#x27;, &#x27;method&#x27;])</span><br><span class="line"></span><br><span class="line">    def get_excel(self):</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">         读取表格数据存为json</span><br><span class="line">        :return: </span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line"></span><br><span class="line">        data = []</span><br><span class="line">        for i in self.df.values:</span><br><span class="line">            params = &quot;&quot;</span><br><span class="line">            if i[3] == &quot;post&quot;:</span><br><span class="line">                params = literal_eval(i[4])</span><br><span class="line">            app = &#123;&quot;id&quot;: i[0], &quot;name&quot;: i[2], &quot;method&quot;: i[3], &quot;params&quot;: params&#125;</span><br><span class="line">            data.append(app)</span><br><span class="line">        print(data)</span><br><span class="line"></span><br><span class="line">    def write_excel(self):</span><br><span class="line">        # 根据条件累加数据</span><br><span class="line">        self.df[&#x27;id&#x27;][self.df[&#x27;name&#x27;] == &#x27;测试2&#x27;] += 100</span><br><span class="line">        print(self.df.head())</span><br><span class="line">        self.df.to_excel(&#x27;data3.xlsx&#x27;, sheet_name=&#x27;Sheet1&#x27;, index=False, header=True)</span><br><span class="line"></span><br><span class="line">        # 新增一行</span><br><span class="line">        self.df.loc[10] = [5, &#x27;Eric&#x27;, &#x27;male&#x27;, 20, &#x27;&#x27;]</span><br><span class="line"></span><br><span class="line">        # 新增一列</span><br><span class="line">        self.df[&#x27;favorite&#x27;] = None</span><br><span class="line"></span><br><span class="line">        self.df.to_excel(&#x27;data3.xlsx&#x27;, sheet_name=&#x27;Sheet1&#x27;, index=False, header=True)</span><br><span class="line">        print(self.df.head())</span><br><span class="line"></span><br><span class="line">    def get_filter_excel(self):</span><br><span class="line">        # 查看所有的值</span><br><span class="line">        print(self.df.values)</span><br><span class="line"></span><br><span class="line">        # 查看第一行的值</span><br><span class="line">        print(self.df.values[0])</span><br><span class="line"></span><br><span class="line">        # 查看某一列所有的值</span><br><span class="line">        print(self.df[&#x27;name&#x27;].values)</span><br><span class="line">        print(&quot;===打印头部数据，仅查看数据示例时常用====&quot;)</span><br><span class="line">        print(self.df.head())</span><br><span class="line">        print(&quot;====打印列标题===&quot;)</span><br><span class="line">        print(self.df.columns)</span><br><span class="line">        print(&quot;====打印行========&quot;)</span><br><span class="line">        print(self.df.index)</span><br><span class="line">        print(&quot;========打印指定列============&quot;)</span><br><span class="line">        print(self.df[&quot;name&quot;])</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">if __name__ == &quot;__main__&quot;:</span><br><span class="line">    file_path = &#x27;data3.xlsx&#x27;</span><br><span class="line">    o_excel = OperateExcel(file_path)</span><br><span class="line">    o_excel.get_excel()</span><br><span class="line">    # o_excel.write_excel()</span><br><span class="line">    # o_excel.get_filter_excel()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<ul>
-<li>excel文件内容</li>
-</ul>
-<p><img src="/aposts/2d5f3400/1111.png" alt="image.png"></p>
-<ul>
-<li>其他几款操作excel对比，图片来源<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/363810440">这里</a>：<br><img src="/aposts/2d5f3400/2222.png" alt="image.png"></li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1791,7 +1943,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">169</span>
+          <span class="site-state-item-count">170</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1829,7 +1981,7 @@
     <!--<h3 class="widget-title">Tag Cloud</h3> -->
     <div id="myCanvasContainer" class="widget tagcloud">
         <canvas width="250" height="250" id="resCanvas" style="width=100%">
-            <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AWVS/" rel="tag">AWVS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Burp-Site/" rel="tag">Burp Site</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DVWA/" rel="tag">DVWA</a><span class="tag-list-count">15</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dependency-Check/" rel="tag">Dependency-Check</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/H5/" rel="tag">H5</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hadoop/" rel="tag">Hadoop</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hibernate/" rel="tag">Hibernate</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hive/" rel="tag">Hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jenkins/" rel="tag">Jenkins</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Metasploit/" rel="tag">Metasploit</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MyBatis/" rel="tag">MyBatis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Nessus/" rel="tag">Nessus</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Sonic/" rel="tag">Sonic</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/airtest/" rel="tag">airtest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">android性能测试</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/app%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">app安全测试</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aritest/" rel="tag">aritest</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/centos/" rel="tag">centos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/" rel="tag">chrome</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/datax/" rel="tag">datax</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/django/" rel="tag">django</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/drozer/" rel="tag">drozer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fisco-bcos/" rel="tag">fisco-bcos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flink/" rel="tag">flink</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gin/" rel="tag">gin</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/" rel="tag">go</a><span class="tag-list-count">16</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go-zero/" rel="tag">go-zero</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hive/" rel="tag">hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/httprunner/" rel="tag">httprunner</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a><span class="tag-list-count">24</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jmeter/" rel="tag">jmeter</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka/" rel="tag">kafka</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kail/" rel="tag">kail</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode/" rel="tag">leetcode</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode-%E6%95%B0%E7%BB%84/" rel="tag">leetcode-数组</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mitmproxy/" rel="tag">mitmproxy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongodb/" rel="tag">mongodb</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/monkey/" rel="tag">monkey</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/" rel="tag">mysql</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/orm/" rel="tag">orm</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pandas/" rel="tag">pandas</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pc%E8%87%AA%E5%8A%A8%E5%8C%96/" rel="tag">pc自动化</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/playwright/" rel="tag">playwright</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pytest/" rel="tag">pytest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a><span class="tag-list-count">23</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/" rel="tag">redis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/selenium/" rel="tag">selenium</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring/" rel="tag">spring</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring-cloud/" rel="tag">spring cloud</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/springboot/" rel="tag">springboot</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlite/" rel="tag">sqlite</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlmap/" rel="tag">sqlmap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tkinter/" rel="tag">tkinter</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/" rel="tag">vue</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue3/" rel="tag">vue3</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">云服务器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8C%BA%E5%9D%97%E9%93%BE/" rel="tag">区块链</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag">大数据</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">安全测试</a><span class="tag-list-count">29</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/" rel="tag">微服务</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">性能测试</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%88%AC%E8%99%AB/" rel="tag">爬虫</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" rel="tag">环境搭建</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95/" rel="tag">自动化测试</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%8B%B1%E8%AF%AD%E5%AD%A6%E4%B9%A0/" rel="tag">英语学习</a><span class="tag-list-count">1</span></li></ul>
+            <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AWVS/" rel="tag">AWVS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Burp-Site/" rel="tag">Burp Site</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DVWA/" rel="tag">DVWA</a><span class="tag-list-count">15</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dependency-Check/" rel="tag">Dependency-Check</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/H5/" rel="tag">H5</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hadoop/" rel="tag">Hadoop</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hibernate/" rel="tag">Hibernate</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hive/" rel="tag">Hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jenkins/" rel="tag">Jenkins</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Metasploit/" rel="tag">Metasploit</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MyBatis/" rel="tag">MyBatis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Nessus/" rel="tag">Nessus</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Sonic/" rel="tag">Sonic</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/airtest/" rel="tag">airtest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">android性能测试</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/app%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">app安全测试</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aritest/" rel="tag">aritest</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/centos/" rel="tag">centos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/" rel="tag">chrome</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/datax/" rel="tag">datax</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/django/" rel="tag">django</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/drozer/" rel="tag">drozer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fisco-bcos/" rel="tag">fisco-bcos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flink/" rel="tag">flink</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gin/" rel="tag">gin</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/" rel="tag">go</a><span class="tag-list-count">16</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go-zero/" rel="tag">go-zero</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hive/" rel="tag">hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/httprunner/" rel="tag">httprunner</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a><span class="tag-list-count">25</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jmeter/" rel="tag">jmeter</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka/" rel="tag">kafka</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kail/" rel="tag">kail</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode/" rel="tag">leetcode</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode-%E6%95%B0%E7%BB%84/" rel="tag">leetcode-数组</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mitmproxy/" rel="tag">mitmproxy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongodb/" rel="tag">mongodb</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/monkey/" rel="tag">monkey</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/" rel="tag">mysql</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/orm/" rel="tag">orm</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pandas/" rel="tag">pandas</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pc%E8%87%AA%E5%8A%A8%E5%8C%96/" rel="tag">pc自动化</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/playwright/" rel="tag">playwright</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pytest/" rel="tag">pytest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a><span class="tag-list-count">23</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/" rel="tag">redis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/selenium/" rel="tag">selenium</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring/" rel="tag">spring</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring-cloud/" rel="tag">spring cloud</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/springboot/" rel="tag">springboot</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlite/" rel="tag">sqlite</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlmap/" rel="tag">sqlmap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tkinter/" rel="tag">tkinter</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/" rel="tag">vue</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue3/" rel="tag">vue3</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">云服务器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8C%BA%E5%9D%97%E9%93%BE/" rel="tag">区块链</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag">大数据</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">安全测试</a><span class="tag-list-count">29</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/" rel="tag">微服务</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">性能测试</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%88%AC%E8%99%AB/" rel="tag">爬虫</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" rel="tag">环境搭建</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95/" rel="tag">自动化测试</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%8B%B1%E8%AF%AD%E5%AD%A6%E4%B9%A0/" rel="tag">英语学习</a><span class="tag-list-count">1</span></li></ul>
         </canvas>
     </div>
 </div>
