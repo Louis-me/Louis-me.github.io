@@ -293,6 +293,122 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/b6a0a5a1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="一个正经的测试工程师">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="施坤的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/aposts/b6a0a5a1/" class="post-title-link" itemprop="url">python-schematics的使用</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-09-29 17:13:35" itemprop="dateCreated datePublished" datetime="2021-09-29T17:13:35+08:00">2021-09-29</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-02-25 11:20:56" itemprop="dateModified" datetime="2022-02-25T11:20:56+08:00">2022-02-25</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/" itemprop="url" rel="index"><span itemprop="name">python</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/aposts/b6a0a5a1/" class="post-meta-item leancloud_visitors" data-flag-title="python-schematics的使用" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/aposts/b6a0a5a1/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/aposts/b6a0a5a1/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <ul>
+<li>schematics代替model层的功能 </li>
+<li>schematics自动的字段有验证功能</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">from schematics.models import Model</span><br><span class="line">from schematics.types import StringType, URLType</span><br><span class="line">import json</span><br><span class="line">class Person(Model):</span><br><span class="line">     name = StringType(required=True) #不能为空</span><br><span class="line">     website = URLType()</span><br><span class="line">person = Person(&#123;&#x27;name&#x27;:&#x27;sss&#x27;,</span><br><span class="line">                &#x27;website&#x27;: &#x27;http://soundcloud.com/joestrummer&#x27;&#125;)</span><br><span class="line">person.name=u&quot;哈哈&quot;</span><br><span class="line">js = json.dumps(person.to_primitive())</span><br><span class="line">print(js)</span><br><span class="line">f = person.validate() ##验证字段是否正确，如果不正确会报错，如果正确返回的就是none</span><br><span class="line">print(f)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>列表嵌套字典<ul>
+<li>你也可以嵌套其他的model层</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">from schematics.models import Model</span><br><span class="line">from schematics.types import StringType, IntType</span><br><span class="line">from schematics.types.compound import ListType,MultiType</span><br><span class="line">class Person(Model):</span><br><span class="line">    mls = ListType(MultiType())</span><br><span class="line">    shi = StringType()</span><br><span class="line">    code = IntType()</span><br><span class="line">mls_test = Person(&#123;&#x27;mls&#x27;: [&#123;</span><br><span class="line">     &#x27;en_US&#x27;: &#x27;Hello, world!&#x27;,</span><br><span class="line">    &#x27;fr_FR&#x27;: &#x27;Bonjour tout le monde!&#x27;,</span><br><span class="line">    &#x27;es_MX&#x27;: &#x27;¡Hola, mundo!&#x27;,</span><br><span class="line">     &#125;],&#x27;shi&#x27;:&#x27;kun&#x27;,&#x27;code&#x27;:0&#125;)</span><br><span class="line">print(mls_test.mls[0][&quot;en_US&quot;])</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>字典</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">from schematics.models import Model</span><br><span class="line">from schematics.types import StringType, IntType,MultilingualStringType</span><br><span class="line">class Person(Model):</span><br><span class="line">    mls = MultilingualStringType()</span><br><span class="line">    shi = StringType()</span><br><span class="line">    code = IntType()</span><br><span class="line">mls_test = Person(&#123;&#x27;mls&#x27;: &#123;</span><br><span class="line">     &#x27;en_US&#x27;: &#x27;Hello, world!&#x27;,</span><br><span class="line">    &#x27;fr_FR&#x27;: &#x27;Bonjour tout le monde!&#x27;,</span><br><span class="line">    &#x27;es_MX&#x27;: &#x27;¡Hola, mundo!&#x27;,</span><br><span class="line">     &#125;,&#x27;shi&#x27;:&#x27;kun&#x27;,&#x27;code&#x27;:0&#125;)</span><br><span class="line">print(mls_test.mls[&quot;en_US&quot;])</span><br></pre></td></tr></table></figure>
+
+<h1 id="更多schematics高级的用法"><a href="#更多schematics高级的用法" class="headerlink" title="更多schematics高级的用法"></a><a target="_blank" rel="noopener" href="http://schematics.readthedocs.io/en/latest/usage/exporting.html?highlight=MultilingualStringType">更多schematics高级的用法</a></h1><ul>
+<li>jsonschema 是验证json的正确性</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">from jsonschema import validate</span><br><span class="line"></span><br><span class="line">schema = &#123;</span><br><span class="line">    &quot;type&quot; : &quot;object&quot;,</span><br><span class="line">    &quot;properties&quot; : &#123;</span><br><span class="line">        &quot;price&quot; : &#123;&quot;type&quot; : &quot;number&quot;&#125;,</span><br><span class="line">        &quot;name&quot; : &#123;&quot;type&quot; : &quot;string&quot;&#125;,</span><br><span class="line">        &quot;list&quot;:&#123;&quot;maxItems&quot;:2&#125;,</span><br><span class="line">        &quot;address&quot;:&#123;&#x27;regex&#x27;:&#x27;bj&#x27;&#125;,</span><br><span class="line">    &#125;,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">validate(&#123;&quot;name&quot; : &quot;Eggs&quot;, &quot;price&quot; : &quot;dfda&quot;,&#x27;list&#x27;:[1,5],&#x27;address&#x27;:&#x27;bj-jiuxianqiao&#x27;&#125;, schema)</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/aaee9c81/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -512,7 +628,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/b6a0a5a1/">
+    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/a2f19617/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -526,7 +642,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/aposts/b6a0a5a1/" class="post-title-link" itemprop="url">python-schematics的使用</a>
+            <a href="/aposts/a2f19617/" class="post-title-link" itemprop="url">python-unittest全面解析</a>
         </h2>
 
         <div class="post-meta">
@@ -556,7 +672,7 @@
             </span>
 
           
-            <span id="/aposts/b6a0a5a1/" class="post-meta-item leancloud_visitors" data-flag-title="python-schematics的使用" title="阅读次数">
+            <span id="/aposts/a2f19617/" class="post-meta-item leancloud_visitors" data-flag-title="python-unittest全面解析" title="阅读次数">
               <span class="post-meta-item-icon">
                 <i class="fa fa-eye"></i>
               </span>
@@ -571,8 +687,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/aposts/b6a0a5a1/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/aposts/b6a0a5a1/" itemprop="commentCount"></span>
+    <a title="valine" href="/aposts/a2f19617/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/aposts/a2f19617/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -587,28 +703,54 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <ul>
-<li>schematics代替model层的功能 </li>
-<li>schematics自动的字段有验证功能</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">from schematics.models import Model</span><br><span class="line">from schematics.types import StringType, URLType</span><br><span class="line">import json</span><br><span class="line">class Person(Model):</span><br><span class="line">     name = StringType(required=True) #不能为空</span><br><span class="line">     website = URLType()</span><br><span class="line">person = Person(&#123;&#x27;name&#x27;:&#x27;sss&#x27;,</span><br><span class="line">                &#x27;website&#x27;: &#x27;http://soundcloud.com/joestrummer&#x27;&#125;)</span><br><span class="line">person.name=u&quot;哈哈&quot;</span><br><span class="line">js = json.dumps(person.to_primitive())</span><br><span class="line">print(js)</span><br><span class="line">f = person.validate() ##验证字段是否正确，如果不正确会报错，如果正确返回的就是none</span><br><span class="line">print(f)</span><br></pre></td></tr></table></figure>
+          <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">import unittest</span><br><span class="line">import os</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class MyUnittest(unittest.TestCase):</span><br><span class="line"></span><br><span class="line">    def setUp(self) -&gt; None:</span><br><span class="line">        print(&quot;setUp_每运行一次用例都会执行一次&quot;)</span><br><span class="line">        self.name = &quot;hi&quot;</span><br><span class="line">        print(&quot;setUp_name_%s&quot; % self.name)</span><br><span class="line"></span><br><span class="line">    def tearDown(self) -&gt; None:</span><br><span class="line">        print(&quot;tearDown_每结束一次用例都会执行一次&quot;)</span><br><span class="line">        print(&quot;tearDown_name_%s&quot; % self.name)</span><br><span class="line"></span><br><span class="line">    @classmethod</span><br><span class="line">    def setUpClass(cls) -&gt; None:</span><br><span class="line">        print(&quot;setUpClass_整个测试开始后执行，只执行一次&quot;)</span><br><span class="line">        cls.func = &quot;setUpClass&quot;</span><br><span class="line">        print(&quot;setUpClass_func_%s&quot; % cls.func)</span><br><span class="line"></span><br><span class="line">    @classmethod</span><br><span class="line">    def tearDownClass(cls) -&gt; None:</span><br><span class="line">        print(&quot;tearDownClass_整个测试完成后执行，只执行一次&quot;)</span><br><span class="line">        print(&quot;tearDownClass_func_%s&quot; % cls.func)</span><br><span class="line"></span><br><span class="line">    def test_add(self):</span><br><span class="line">        print(&quot;测试函数：test_add&quot;)</span><br><span class="line">        self.name = &quot;test_add&quot;</span><br><span class="line">        print(&quot;setUpClass_cls.func_%s&quot; % self.func)</span><br><span class="line"></span><br><span class="line">    def test_subtract(self):</span><br><span class="line">        print(&quot;测试函数：test_subtract&quot;)</span><br><span class="line">        self.name = &quot;test_subtract&quot;</span><br><span class="line">        self.func = &quot;test_subtract&quot;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">if __name__ == &quot;__main__&quot;:</span><br><span class="line">    # 运行方式一</span><br><span class="line">    unittest.main()</span><br></pre></td></tr></table></figure>
+<h2 id="执行结果"><a href="#执行结果" class="headerlink" title="执行结果"></a>执行结果</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">setUpClass_整个测试开始后执行，只执行一次</span><br><span class="line">setUpClass_func_setUpClass</span><br><span class="line">test_add (ut_module.ut1_test.MyUnittest) ... setUp_每运行一次用例都会执行一次</span><br><span class="line">setUp_name_hi</span><br><span class="line">测试函数：test_add</span><br><span class="line">setUpClass_cls.func_setUpClass</span><br><span class="line">tearDown_每结束一次用例都会执行一次</span><br><span class="line">tearDown_name_test_add</span><br><span class="line">ok</span><br><span class="line">test_subtract (ut_module.ut1_test.MyUnittest) ... setUp_每运行一次用例都会执行一次</span><br><span class="line">setUp_name_hi</span><br><span class="line">测试函数：test_subtract</span><br><span class="line">tearDown_每结束一次用例都会执行一次</span><br><span class="line">tearDown_name_test_subtract</span><br><span class="line">ok</span><br><span class="line">tearDownClass_整个测试完成后执行，只执行一次</span><br><span class="line">tearDownClass_func_setUpClass</span><br><span class="line"></span><br><span class="line">----------------------------------------------------------------------</span><br><span class="line">Ran 2 tests in 0.003s</span><br><span class="line"></span><br><span class="line">OK</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<h2 id="测试分析"><a href="#测试分析" class="headerlink" title="测试分析"></a>测试分析</h2><h3 id="结果分析"><a href="#结果分析" class="headerlink" title="结果分析"></a>结果分析</h3><h4 id="setUp初始化的值可以改变"><a href="#setUp初始化的值可以改变" class="headerlink" title="setUp初始化的值可以改变"></a>setUp初始化的值可以改变</h4> <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">setUp_name_hi</span><br><span class="line">测试函数：test_add</span><br><span class="line">setUpClass_cls.func_setUpClass</span><br><span class="line">tearDown_每结束一次用例都会执行一次</span><br><span class="line">tearDown_name_test_add</span><br></pre></td></tr></table></figure>
 <ul>
-<li>列表嵌套字典<ul>
-<li>你也可以嵌套其他的model层</li>
+<li><code>setUp</code>中的<code>self.name</code>的值，在测试函数中是可以被改变的，一开始<code>name</code>为hi，后面为<code>test_add</code></li>
+</ul>
+<h4 id="setUpClass的的值无法改变"><a href="#setUpClass的的值无法改变" class="headerlink" title="setUpClass的的值无法改变"></a>setUpClass的的值无法改变</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">在def setUpClass赋值</span><br><span class="line">self.func = &quot;setUpClass&quot;</span><br><span class="line">在 def test_subtract中赋值</span><br><span class="line">self.func = &quot;test_subtract&quot;</span><br><span class="line"># 执行结果</span><br><span class="line">setUpClass_整个测试开始后执行，只执行一次</span><br><span class="line">setUpClass_func_setUpClass</span><br><span class="line">.....</span><br><span class="line">tearDownClass_整个测试完成后执行，只执行一次</span><br><span class="line">tearDownClass_func_setUpClass</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>setUpClass</code>初始化的值在函数中无法改变，应该是<code>cls</code>和<code>self</code>的指向不一样</li>
+</ul>
+<h3 id="setUp和setUpClass"><a href="#setUp和setUpClass" class="headerlink" title="setUp和setUpClass"></a>setUp和setUpClass</h3><ul>
+<li>每个用例都要独立，也就是每个用执行时，都会重开设备，就使用<code>setup</code>，比如<code>appium</code>中的driver</li>
+<li>若想复用某个初始化条件，单不期望每个用例都重启再打开，可以使用<code>setUpClass</code><ul>
+<li>在使用<code>appium</code>时，用<code>setUp</code>频繁初始化<code>driver</code>造成执行用例时间太长，可以使用<code>setUpClass</code>初始化driver，结合<a target="_blank" rel="noopener" href="https://appium.readthedocs.io/en/latest/en/commands/device/app/launch-app/">launch-app</a>达到每个用例不重启，同时解决依赖关系的问题</li>
 </ul>
 </li>
 </ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">from schematics.models import Model</span><br><span class="line">from schematics.types import StringType, IntType</span><br><span class="line">from schematics.types.compound import ListType,MultiType</span><br><span class="line">class Person(Model):</span><br><span class="line">    mls = ListType(MultiType())</span><br><span class="line">    shi = StringType()</span><br><span class="line">    code = IntType()</span><br><span class="line">mls_test = Person(&#123;&#x27;mls&#x27;: [&#123;</span><br><span class="line">     &#x27;en_US&#x27;: &#x27;Hello, world!&#x27;,</span><br><span class="line">    &#x27;fr_FR&#x27;: &#x27;Bonjour tout le monde!&#x27;,</span><br><span class="line">    &#x27;es_MX&#x27;: &#x27;¡Hola, mundo!&#x27;,</span><br><span class="line">     &#125;],&#x27;shi&#x27;:&#x27;kun&#x27;,&#x27;code&#x27;:0&#125;)</span><br><span class="line">print(mls_test.mls[0][&quot;en_US&quot;])</span><br></pre></td></tr></table></figure>
+<h2 id="不同的运行unittest的方式"><a href="#不同的运行unittest的方式" class="headerlink" title="不同的运行unittest的方式"></a>不同的运行unittest的方式</h2><h3 id="方式一"><a href="#方式一" class="headerlink" title="方式一"></a>方式一</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">unittest.main()</span><br></pre></td></tr></table></figure>
+<h3 id="方式二"><a href="#方式二" class="headerlink" title="方式二"></a>方式二</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"># 构造测试集</span><br><span class="line">suite = unittest.TestSuite()</span><br><span class="line">suite.addTest(MyUnittest(&quot;test_add&quot;))</span><br><span class="line">suite.addTest(MyUnittest(&quot;test_subtract&quot;))</span><br><span class="line"># 执行测试</span><br><span class="line">runner = unittest.TextTestRunner()</span><br><span class="line">runner.run(suite)</span><br></pre></td></tr></table></figure>
+<h3 id="方式三"><a href="#方式三" class="headerlink" title="方式三"></a>方式三</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># TestLoader 用来加载TestCase到TestSuite中的，其中有几个  loadTestsFrom__()方法，就是从各个地方寻找TestCase，创建它们的实例，然后add到TestSuite中，再返回一个TestSuite实例</span><br><span class="line"># TestSuite 测试套件集合，最终将传递给testRunner进行测试执行</span><br><span class="line"># TextTestRunner 用来执行测试用例，将测试结果保存在TextTestResult中</span><br><span class="line"># 此用法可以同时测试多个类</span><br><span class="line">suite1 = unittest.TestLoader().loadTestsFromTestCase(MyUnittest)</span><br><span class="line">suite2 = unittest.TestLoader().loadTestsFromTestCase(MyUnittest1)</span><br><span class="line">suite = unittest.TestSuite([suite1, suite2 ])</span><br><span class="line">unittest.TextTestRunner(verbosity=2).run(suite)</span><br></pre></td></tr></table></figure>
+<h3 id="方式四"><a href="#方式四" class="headerlink" title="方式四"></a>方式四</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># 进入到测试目录</span><br><span class="line">os.chdir(&quot;.//ut_module&quot;)</span><br><span class="line">os.system(&quot;python -m unittest -v ut1_test&quot;)</span><br></pre></td></tr></table></figure>
 
+<h3 id="方式五，直接到终端中输入命令"><a href="#方式五，直接到终端中输入命令" class="headerlink" title="方式五，直接到终端中输入命令"></a>方式五，直接到终端中输入命令</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"># 测试某个类下的所有函数</span><br><span class="line">D:\project\ut&gt;python -m unittest -v  ut_module.ut1_test</span><br><span class="line"># 测试类中某一个函数</span><br><span class="line">D:\project\ut&gt;python -m unittest -v ut_module.ut1_test.MyUnittest.test_add</span><br><span class="line"># 执行模块下所有test结尾的文件</span><br><span class="line">D:\project\ut&gt;python -m unittest discover D:\project\ut\ut_module &quot;*_test.py&quot;</span><br><span class="line"># 同时执行多个测试类下的测试函数</span><br><span class="line">D:\project\ut&gt;python -m unittest  ut_module.ut1_test.MyUnittest.test_add  ut_module.ut2_test.MyUnittest.test_subtract1</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h2 id="其他扩展"><a href="#其他扩展" class="headerlink" title="其他扩展"></a>其他扩展</h2><h3 id="unittest的条件装饰器的使用"><a href="#unittest的条件装饰器的使用" class="headerlink" title="unittest的条件装饰器的使用"></a>unittest的条件装饰器的使用</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">class MyTestCase(unittest.TestCase):</span><br><span class="line"></span><br><span class="line">    @unittest.skip(&quot;demonstrating skipping&quot;)</span><br><span class="line">    def test_nothing(self):</span><br><span class="line">        self.fail(&quot;shouldn&#x27;t happen&quot;)</span><br><span class="line"></span><br><span class="line">    @unittest.skipIf(mylib.__version__ &lt; (1, 3),</span><br><span class="line">                     &quot;not supported in this library version&quot;)</span><br><span class="line">    def test_format(self):</span><br><span class="line">        # Tests that work for only a certain version of the library.</span><br><span class="line">        pass</span><br><span class="line"></span><br><span class="line">    @unittest.skipUnless(sys.platform.startswith(&quot;win&quot;), &quot;requires Windows&quot;)</span><br><span class="line">    def test_windows_support(self):</span><br><span class="line">        # windows specific testing code</span><br><span class="line">        pass</span><br><span class="line"></span><br><span class="line">    def test_maybe_skipped(self):</span><br><span class="line">        if not external_resource_available():</span><br><span class="line">            self.skipTest(&quot;external resource not available&quot;)</span><br><span class="line">        # test code that depends on the external resource</span><br><span class="line">        pass</span><br><span class="line">   @unittest.expectedFailure</span><br><span class="line">    def test_fail(self):</span><br><span class="line">        self.assertEqual(1, 0, &quot;broken&quot;)</span><br><span class="line"></span><br><span class="line">@unittest.skip(&quot;showing class skipping&quot;)</span><br><span class="line">class MySkippedTestCase(unittest.TestCase):</span><br><span class="line">    def test_not_run(self):</span><br><span class="line">        pass</span><br></pre></td></tr></table></figure>
 <ul>
-<li>字典</li>
+<li><code>@unittest.skip(reason)</code><br>跳过被此装饰器装饰的测试。 reason 为测试被跳过的原因。</li>
+<li><code>@unittest.skipIf(condition, reason)</code><br>当 condition 为真时，跳过被装饰的测试。</li>
+<li><code>@unittest.skipUnless(condition, reason)</code><br>跳过被装饰的测试，除非 condition 为真。</li>
 </ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">from schematics.models import Model</span><br><span class="line">from schematics.types import StringType, IntType,MultilingualStringType</span><br><span class="line">class Person(Model):</span><br><span class="line">    mls = MultilingualStringType()</span><br><span class="line">    shi = StringType()</span><br><span class="line">    code = IntType()</span><br><span class="line">mls_test = Person(&#123;&#x27;mls&#x27;: &#123;</span><br><span class="line">     &#x27;en_US&#x27;: &#x27;Hello, world!&#x27;,</span><br><span class="line">    &#x27;fr_FR&#x27;: &#x27;Bonjour tout le monde!&#x27;,</span><br><span class="line">    &#x27;es_MX&#x27;: &#x27;¡Hola, mundo!&#x27;,</span><br><span class="line">     &#125;,&#x27;shi&#x27;:&#x27;kun&#x27;,&#x27;code&#x27;:0&#125;)</span><br><span class="line">print(mls_test.mls[&quot;en_US&quot;])</span><br></pre></td></tr></table></figure>
-
-<h1 id="更多schematics高级的用法"><a href="#更多schematics高级的用法" class="headerlink" title="更多schematics高级的用法"></a><a target="_blank" rel="noopener" href="http://schematics.readthedocs.io/en/latest/usage/exporting.html?highlight=MultilingualStringType">更多schematics高级的用法</a></h1><ul>
-<li>jsonschema 是验证json的正确性</li>
+<p><code>@unittest.expectedFailure</code><br>把测试标记为预计失败。如果测试不通过，会被认为测试成功；如果测试通过了，则被认为是测试失败。</p>
+<ul>
+<li><code>exception unittest.SkipTest(reason)</code><br>引发此异常以跳过一个测试。</li>
 </ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">from jsonschema import validate</span><br><span class="line"></span><br><span class="line">schema = &#123;</span><br><span class="line">    &quot;type&quot; : &quot;object&quot;,</span><br><span class="line">    &quot;properties&quot; : &#123;</span><br><span class="line">        &quot;price&quot; : &#123;&quot;type&quot; : &quot;number&quot;&#125;,</span><br><span class="line">        &quot;name&quot; : &#123;&quot;type&quot; : &quot;string&quot;&#125;,</span><br><span class="line">        &quot;list&quot;:&#123;&quot;maxItems&quot;:2&#125;,</span><br><span class="line">        &quot;address&quot;:&#123;&#x27;regex&#x27;:&#x27;bj&#x27;&#125;,</span><br><span class="line">    &#125;,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">validate(&#123;&quot;name&quot; : &quot;Eggs&quot;, &quot;price&quot; : &quot;dfda&quot;,&#x27;list&#x27;:[1,5],&#x27;address&#x27;:&#x27;bj-jiuxianqiao&#x27;&#125;, schema)</span><br></pre></td></tr></table></figure>
+<h3 id="参数化"><a href="#参数化" class="headerlink" title="参数化"></a>参数化</h3><ul>
+<li>在使用<code>unittest</code>时，希望<code>testcase</code>传参给<code>unittest</code>,下面时用<code>appium</code>的一个伪代码<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line">class ParametrizedTestCase(unittest.TestCase):</span><br><span class="line">    &quot;&quot;&quot; TestCase classes that want to be parametrized should  </span><br><span class="line">        inherit from this class.  </span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line"></span><br><span class="line">    def __init__(self, methodName=&#x27;runTest&#x27;, param=None):</span><br><span class="line">        super(ParametrizedTestCase, self).__init__(methodName)</span><br><span class="line">      # 得到testcase传来的参数</span><br><span class="line">        global devicess</span><br><span class="line">        devicess = param</span><br><span class="line"></span><br><span class="line">    @classmethod</span><br><span class="line">    def setUpClass(cls):</span><br><span class="line">        pass</span><br><span class="line">        cls.driver = get_driver(devicess)</span><br><span class="line">        cls.logTest = myLog().getLog(cls.devicesName)  # 每个设备实例化一个日志记录器</span><br><span class="line"></span><br><span class="line">    def setUp(self):</span><br><span class="line">        pass</span><br><span class="line"></span><br><span class="line">    @classmethod</span><br><span class="line">    def tearDownClass(cls):</span><br><span class="line">        cls.driver.close_app()</span><br><span class="line">        cls.driver.quit()</span><br><span class="line">        pass</span><br><span class="line">    def tearDown(self):</span><br><span class="line">        pass</span><br><span class="line"></span><br><span class="line">    @staticmethod</span><br><span class="line">    def parametrize(testcase_klass, param=None):</span><br><span class="line">        testloader = unittest.TestLoader()</span><br><span class="line">        testnames = testloader.getTestCaseNames(testcase_klass)</span><br><span class="line">        suite = unittest.TestSuite()</span><br><span class="line">        for name in testnames:</span><br><span class="line">            suite.addTest(testcase_klass(name, param=param))</span><br><span class="line">        return suite</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class HomeTest(ParametrizedTestCase):</span><br><span class="line">    def testFirstOpen(self):</span><br><span class="line">        app = &#123;&quot;logTest&quot;: self.logTest, &quot;driver&quot;: self.driver, &quot;path&quot;: PATH(&quot;../yamls/home/firstOpen.yaml&quot;),</span><br><span class="line">               &quot;device&quot;: self.devicesName, &quot;caseName&quot;: sys._getframe().f_code.co_name&#125;</span><br><span class="line"></span><br><span class="line">        page = FirstOpenPage(app)</span><br><span class="line">        page.operate()</span><br><span class="line">        page.checkPoint()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    @classmethod</span><br><span class="line">    def setUpClass(cls):</span><br><span class="line">        super(HomeTest, cls).setUpClass()</span><br><span class="line"></span><br><span class="line">    @classmethod</span><br><span class="line">    def tearDownClass(cls):</span><br><span class="line">        super(HomeTest, cls).tearDownClass()</span><br><span class="line"></span><br><span class="line">if __name__ == &#x27;__main__&#x27;:</span><br><span class="line">    devices = &#123;&quot;设备信息&quot;&#125;</span><br><span class="line">    suite = unittest.TestSuite()</span><br><span class="line">    suite.addTest(ParametrizedTestCase.parametrize(HomeTest, param=devices))</span><br><span class="line">    unittest.TextTestRunner(verbosity=2).run(suite)</span><br><span class="line">    </span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="ddt"><a href="#ddt" class="headerlink" title="ddt"></a>ddt</h2><ul>
+<li><code>pip install ddt</code></li>
+</ul>
+<h3 id="使用json"><a href="#使用json" class="headerlink" title="使用json"></a>使用json</h3><ul>
+<li>新建文件 test_data_list.json：<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[</span><br><span class="line">    &quot;Hello&quot;,</span><br><span class="line">    &quot;Goodbye&quot;</span><br><span class="line">]</span><br></pre></td></tr></table></figure></li>
+<li>新建文件  test_data_dict.json：<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    &quot;unsorted_list&quot;: [ 10, 12, 15 ],</span><br><span class="line">    &quot;sorted_list&quot;: [ 15, 12, 50 ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li>实例代码</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">import unittest</span><br><span class="line">from ddt import ddt, file_data</span><br><span class="line">from ddt_demo.mycode import has_three_elements,is_a_greeting</span><br><span class="line"></span><br><span class="line">@ddt</span><br><span class="line">class FooTestCase(unittest.TestCase):</span><br><span class="line"></span><br><span class="line">    @file_data(&#x27;test_data_dict.json&#x27;)</span><br><span class="line">    def test_file_data_json_dict(self, value):</span><br><span class="line">        self.assertTrue(has_three_elements(value))</span><br><span class="line"></span><br><span class="line">    @file_data(&#x27;test_data_list.json&#x27;)</span><br><span class="line">    def test_file_data_json_list(self, value):</span><br><span class="line">        self.assertTrue(is_a_greeting(value))</span><br><span class="line">        </span><br><span class="line">if __name__==&#x27;__main__&#x27;:</span><br><span class="line">    unittest.main(verbosity=2</span><br></pre></td></tr></table></figure>
+<h3 id="使用yaml文件"><a href="#使用yaml文件" class="headerlink" title="使用yaml文件"></a>使用yaml文件</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">import unittest</span><br><span class="line">from ddt import ddt, file_data</span><br><span class="line">from ddt_demo.mycode import has_three_elements,is_a_greeting</span><br><span class="line"></span><br><span class="line">@ddt</span><br><span class="line">class FooTestCase(unittest.TestCase):</span><br><span class="line"></span><br><span class="line">    @file_data(&#x27;test_data_dict.yaml&#x27;)</span><br><span class="line">    def test_file_data_yaml_dict(self, value):</span><br><span class="line">        self.assertTrue(has_three_elements(value))</span><br><span class="line"></span><br><span class="line">    @file_data(&#x27;test_data_list.yaml&#x27;)</span><br><span class="line">    def test_file_data_yaml_list(self, value):</span><br><span class="line">        self.assertTrue(is_a_greeting(value))</span><br><span class="line">        </span><br><span class="line">if __name__==&#x27;__main__&#x27;:</span><br><span class="line">    unittest.main(verbosity=2)</span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -761,7 +903,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/a2f19617/">
+    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/791e1968/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -775,7 +917,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/aposts/a2f19617/" class="post-title-link" itemprop="url">python-unittest全面解析</a>
+            <a href="/aposts/791e1968/" class="post-title-link" itemprop="url">python-读写excel</a>
         </h2>
 
         <div class="post-meta">
@@ -805,7 +947,7 @@
             </span>
 
           
-            <span id="/aposts/a2f19617/" class="post-meta-item leancloud_visitors" data-flag-title="python-unittest全面解析" title="阅读次数">
+            <span id="/aposts/791e1968/" class="post-meta-item leancloud_visitors" data-flag-title="python-读写excel" title="阅读次数">
               <span class="post-meta-item-icon">
                 <i class="fa fa-eye"></i>
               </span>
@@ -820,8 +962,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/aposts/a2f19617/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/aposts/a2f19617/" itemprop="commentCount"></span>
+    <a title="valine" href="/aposts/791e1968/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/aposts/791e1968/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -836,208 +978,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">import unittest</span><br><span class="line">import os</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class MyUnittest(unittest.TestCase):</span><br><span class="line"></span><br><span class="line">    def setUp(self) -&gt; None:</span><br><span class="line">        print(&quot;setUp_每运行一次用例都会执行一次&quot;)</span><br><span class="line">        self.name = &quot;hi&quot;</span><br><span class="line">        print(&quot;setUp_name_%s&quot; % self.name)</span><br><span class="line"></span><br><span class="line">    def tearDown(self) -&gt; None:</span><br><span class="line">        print(&quot;tearDown_每结束一次用例都会执行一次&quot;)</span><br><span class="line">        print(&quot;tearDown_name_%s&quot; % self.name)</span><br><span class="line"></span><br><span class="line">    @classmethod</span><br><span class="line">    def setUpClass(cls) -&gt; None:</span><br><span class="line">        print(&quot;setUpClass_整个测试开始后执行，只执行一次&quot;)</span><br><span class="line">        cls.func = &quot;setUpClass&quot;</span><br><span class="line">        print(&quot;setUpClass_func_%s&quot; % cls.func)</span><br><span class="line"></span><br><span class="line">    @classmethod</span><br><span class="line">    def tearDownClass(cls) -&gt; None:</span><br><span class="line">        print(&quot;tearDownClass_整个测试完成后执行，只执行一次&quot;)</span><br><span class="line">        print(&quot;tearDownClass_func_%s&quot; % cls.func)</span><br><span class="line"></span><br><span class="line">    def test_add(self):</span><br><span class="line">        print(&quot;测试函数：test_add&quot;)</span><br><span class="line">        self.name = &quot;test_add&quot;</span><br><span class="line">        print(&quot;setUpClass_cls.func_%s&quot; % self.func)</span><br><span class="line"></span><br><span class="line">    def test_subtract(self):</span><br><span class="line">        print(&quot;测试函数：test_subtract&quot;)</span><br><span class="line">        self.name = &quot;test_subtract&quot;</span><br><span class="line">        self.func = &quot;test_subtract&quot;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">if __name__ == &quot;__main__&quot;:</span><br><span class="line">    # 运行方式一</span><br><span class="line">    unittest.main()</span><br></pre></td></tr></table></figure>
-<h2 id="执行结果"><a href="#执行结果" class="headerlink" title="执行结果"></a>执行结果</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">setUpClass_整个测试开始后执行，只执行一次</span><br><span class="line">setUpClass_func_setUpClass</span><br><span class="line">test_add (ut_module.ut1_test.MyUnittest) ... setUp_每运行一次用例都会执行一次</span><br><span class="line">setUp_name_hi</span><br><span class="line">测试函数：test_add</span><br><span class="line">setUpClass_cls.func_setUpClass</span><br><span class="line">tearDown_每结束一次用例都会执行一次</span><br><span class="line">tearDown_name_test_add</span><br><span class="line">ok</span><br><span class="line">test_subtract (ut_module.ut1_test.MyUnittest) ... setUp_每运行一次用例都会执行一次</span><br><span class="line">setUp_name_hi</span><br><span class="line">测试函数：test_subtract</span><br><span class="line">tearDown_每结束一次用例都会执行一次</span><br><span class="line">tearDown_name_test_subtract</span><br><span class="line">ok</span><br><span class="line">tearDownClass_整个测试完成后执行，只执行一次</span><br><span class="line">tearDownClass_func_setUpClass</span><br><span class="line"></span><br><span class="line">----------------------------------------------------------------------</span><br><span class="line">Ran 2 tests in 0.003s</span><br><span class="line"></span><br><span class="line">OK</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-<h2 id="测试分析"><a href="#测试分析" class="headerlink" title="测试分析"></a>测试分析</h2><h3 id="结果分析"><a href="#结果分析" class="headerlink" title="结果分析"></a>结果分析</h3><h4 id="setUp初始化的值可以改变"><a href="#setUp初始化的值可以改变" class="headerlink" title="setUp初始化的值可以改变"></a>setUp初始化的值可以改变</h4> <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">setUp_name_hi</span><br><span class="line">测试函数：test_add</span><br><span class="line">setUpClass_cls.func_setUpClass</span><br><span class="line">tearDown_每结束一次用例都会执行一次</span><br><span class="line">tearDown_name_test_add</span><br></pre></td></tr></table></figure>
-<ul>
-<li><code>setUp</code>中的<code>self.name</code>的值，在测试函数中是可以被改变的，一开始<code>name</code>为hi，后面为<code>test_add</code></li>
-</ul>
-<h4 id="setUpClass的的值无法改变"><a href="#setUpClass的的值无法改变" class="headerlink" title="setUpClass的的值无法改变"></a>setUpClass的的值无法改变</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">在def setUpClass赋值</span><br><span class="line">self.func = &quot;setUpClass&quot;</span><br><span class="line">在 def test_subtract中赋值</span><br><span class="line">self.func = &quot;test_subtract&quot;</span><br><span class="line"># 执行结果</span><br><span class="line">setUpClass_整个测试开始后执行，只执行一次</span><br><span class="line">setUpClass_func_setUpClass</span><br><span class="line">.....</span><br><span class="line">tearDownClass_整个测试完成后执行，只执行一次</span><br><span class="line">tearDownClass_func_setUpClass</span><br></pre></td></tr></table></figure>
-<ul>
-<li><code>setUpClass</code>初始化的值在函数中无法改变，应该是<code>cls</code>和<code>self</code>的指向不一样</li>
-</ul>
-<h3 id="setUp和setUpClass"><a href="#setUp和setUpClass" class="headerlink" title="setUp和setUpClass"></a>setUp和setUpClass</h3><ul>
-<li>每个用例都要独立，也就是每个用执行时，都会重开设备，就使用<code>setup</code>，比如<code>appium</code>中的driver</li>
-<li>若想复用某个初始化条件，单不期望每个用例都重启再打开，可以使用<code>setUpClass</code><ul>
-<li>在使用<code>appium</code>时，用<code>setUp</code>频繁初始化<code>driver</code>造成执行用例时间太长，可以使用<code>setUpClass</code>初始化driver，结合<a target="_blank" rel="noopener" href="https://appium.readthedocs.io/en/latest/en/commands/device/app/launch-app/">launch-app</a>达到每个用例不重启，同时解决依赖关系的问题</li>
-</ul>
-</li>
-</ul>
-<h2 id="不同的运行unittest的方式"><a href="#不同的运行unittest的方式" class="headerlink" title="不同的运行unittest的方式"></a>不同的运行unittest的方式</h2><h3 id="方式一"><a href="#方式一" class="headerlink" title="方式一"></a>方式一</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">unittest.main()</span><br></pre></td></tr></table></figure>
-<h3 id="方式二"><a href="#方式二" class="headerlink" title="方式二"></a>方式二</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"># 构造测试集</span><br><span class="line">suite = unittest.TestSuite()</span><br><span class="line">suite.addTest(MyUnittest(&quot;test_add&quot;))</span><br><span class="line">suite.addTest(MyUnittest(&quot;test_subtract&quot;))</span><br><span class="line"># 执行测试</span><br><span class="line">runner = unittest.TextTestRunner()</span><br><span class="line">runner.run(suite)</span><br></pre></td></tr></table></figure>
-<h3 id="方式三"><a href="#方式三" class="headerlink" title="方式三"></a>方式三</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># TestLoader 用来加载TestCase到TestSuite中的，其中有几个  loadTestsFrom__()方法，就是从各个地方寻找TestCase，创建它们的实例，然后add到TestSuite中，再返回一个TestSuite实例</span><br><span class="line"># TestSuite 测试套件集合，最终将传递给testRunner进行测试执行</span><br><span class="line"># TextTestRunner 用来执行测试用例，将测试结果保存在TextTestResult中</span><br><span class="line"># 此用法可以同时测试多个类</span><br><span class="line">suite1 = unittest.TestLoader().loadTestsFromTestCase(MyUnittest)</span><br><span class="line">suite2 = unittest.TestLoader().loadTestsFromTestCase(MyUnittest1)</span><br><span class="line">suite = unittest.TestSuite([suite1, suite2 ])</span><br><span class="line">unittest.TextTestRunner(verbosity=2).run(suite)</span><br></pre></td></tr></table></figure>
-<h3 id="方式四"><a href="#方式四" class="headerlink" title="方式四"></a>方式四</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># 进入到测试目录</span><br><span class="line">os.chdir(&quot;.//ut_module&quot;)</span><br><span class="line">os.system(&quot;python -m unittest -v ut1_test&quot;)</span><br></pre></td></tr></table></figure>
-
-<h3 id="方式五，直接到终端中输入命令"><a href="#方式五，直接到终端中输入命令" class="headerlink" title="方式五，直接到终端中输入命令"></a>方式五，直接到终端中输入命令</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"># 测试某个类下的所有函数</span><br><span class="line">D:\project\ut&gt;python -m unittest -v  ut_module.ut1_test</span><br><span class="line"># 测试类中某一个函数</span><br><span class="line">D:\project\ut&gt;python -m unittest -v ut_module.ut1_test.MyUnittest.test_add</span><br><span class="line"># 执行模块下所有test结尾的文件</span><br><span class="line">D:\project\ut&gt;python -m unittest discover D:\project\ut\ut_module &quot;*_test.py&quot;</span><br><span class="line"># 同时执行多个测试类下的测试函数</span><br><span class="line">D:\project\ut&gt;python -m unittest  ut_module.ut1_test.MyUnittest.test_add  ut_module.ut2_test.MyUnittest.test_subtract1</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<h2 id="其他扩展"><a href="#其他扩展" class="headerlink" title="其他扩展"></a>其他扩展</h2><h3 id="unittest的条件装饰器的使用"><a href="#unittest的条件装饰器的使用" class="headerlink" title="unittest的条件装饰器的使用"></a>unittest的条件装饰器的使用</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">class MyTestCase(unittest.TestCase):</span><br><span class="line"></span><br><span class="line">    @unittest.skip(&quot;demonstrating skipping&quot;)</span><br><span class="line">    def test_nothing(self):</span><br><span class="line">        self.fail(&quot;shouldn&#x27;t happen&quot;)</span><br><span class="line"></span><br><span class="line">    @unittest.skipIf(mylib.__version__ &lt; (1, 3),</span><br><span class="line">                     &quot;not supported in this library version&quot;)</span><br><span class="line">    def test_format(self):</span><br><span class="line">        # Tests that work for only a certain version of the library.</span><br><span class="line">        pass</span><br><span class="line"></span><br><span class="line">    @unittest.skipUnless(sys.platform.startswith(&quot;win&quot;), &quot;requires Windows&quot;)</span><br><span class="line">    def test_windows_support(self):</span><br><span class="line">        # windows specific testing code</span><br><span class="line">        pass</span><br><span class="line"></span><br><span class="line">    def test_maybe_skipped(self):</span><br><span class="line">        if not external_resource_available():</span><br><span class="line">            self.skipTest(&quot;external resource not available&quot;)</span><br><span class="line">        # test code that depends on the external resource</span><br><span class="line">        pass</span><br><span class="line">   @unittest.expectedFailure</span><br><span class="line">    def test_fail(self):</span><br><span class="line">        self.assertEqual(1, 0, &quot;broken&quot;)</span><br><span class="line"></span><br><span class="line">@unittest.skip(&quot;showing class skipping&quot;)</span><br><span class="line">class MySkippedTestCase(unittest.TestCase):</span><br><span class="line">    def test_not_run(self):</span><br><span class="line">        pass</span><br></pre></td></tr></table></figure>
-<ul>
-<li><code>@unittest.skip(reason)</code><br>跳过被此装饰器装饰的测试。 reason 为测试被跳过的原因。</li>
-<li><code>@unittest.skipIf(condition, reason)</code><br>当 condition 为真时，跳过被装饰的测试。</li>
-<li><code>@unittest.skipUnless(condition, reason)</code><br>跳过被装饰的测试，除非 condition 为真。</li>
-</ul>
-<p><code>@unittest.expectedFailure</code><br>把测试标记为预计失败。如果测试不通过，会被认为测试成功；如果测试通过了，则被认为是测试失败。</p>
-<ul>
-<li><code>exception unittest.SkipTest(reason)</code><br>引发此异常以跳过一个测试。</li>
-</ul>
-<h3 id="参数化"><a href="#参数化" class="headerlink" title="参数化"></a>参数化</h3><ul>
-<li>在使用<code>unittest</code>时，希望<code>testcase</code>传参给<code>unittest</code>,下面时用<code>appium</code>的一个伪代码<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line">class ParametrizedTestCase(unittest.TestCase):</span><br><span class="line">    &quot;&quot;&quot; TestCase classes that want to be parametrized should  </span><br><span class="line">        inherit from this class.  </span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line"></span><br><span class="line">    def __init__(self, methodName=&#x27;runTest&#x27;, param=None):</span><br><span class="line">        super(ParametrizedTestCase, self).__init__(methodName)</span><br><span class="line">      # 得到testcase传来的参数</span><br><span class="line">        global devicess</span><br><span class="line">        devicess = param</span><br><span class="line"></span><br><span class="line">    @classmethod</span><br><span class="line">    def setUpClass(cls):</span><br><span class="line">        pass</span><br><span class="line">        cls.driver = get_driver(devicess)</span><br><span class="line">        cls.logTest = myLog().getLog(cls.devicesName)  # 每个设备实例化一个日志记录器</span><br><span class="line"></span><br><span class="line">    def setUp(self):</span><br><span class="line">        pass</span><br><span class="line"></span><br><span class="line">    @classmethod</span><br><span class="line">    def tearDownClass(cls):</span><br><span class="line">        cls.driver.close_app()</span><br><span class="line">        cls.driver.quit()</span><br><span class="line">        pass</span><br><span class="line">    def tearDown(self):</span><br><span class="line">        pass</span><br><span class="line"></span><br><span class="line">    @staticmethod</span><br><span class="line">    def parametrize(testcase_klass, param=None):</span><br><span class="line">        testloader = unittest.TestLoader()</span><br><span class="line">        testnames = testloader.getTestCaseNames(testcase_klass)</span><br><span class="line">        suite = unittest.TestSuite()</span><br><span class="line">        for name in testnames:</span><br><span class="line">            suite.addTest(testcase_klass(name, param=param))</span><br><span class="line">        return suite</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class HomeTest(ParametrizedTestCase):</span><br><span class="line">    def testFirstOpen(self):</span><br><span class="line">        app = &#123;&quot;logTest&quot;: self.logTest, &quot;driver&quot;: self.driver, &quot;path&quot;: PATH(&quot;../yamls/home/firstOpen.yaml&quot;),</span><br><span class="line">               &quot;device&quot;: self.devicesName, &quot;caseName&quot;: sys._getframe().f_code.co_name&#125;</span><br><span class="line"></span><br><span class="line">        page = FirstOpenPage(app)</span><br><span class="line">        page.operate()</span><br><span class="line">        page.checkPoint()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    @classmethod</span><br><span class="line">    def setUpClass(cls):</span><br><span class="line">        super(HomeTest, cls).setUpClass()</span><br><span class="line"></span><br><span class="line">    @classmethod</span><br><span class="line">    def tearDownClass(cls):</span><br><span class="line">        super(HomeTest, cls).tearDownClass()</span><br><span class="line"></span><br><span class="line">if __name__ == &#x27;__main__&#x27;:</span><br><span class="line">    devices = &#123;&quot;设备信息&quot;&#125;</span><br><span class="line">    suite = unittest.TestSuite()</span><br><span class="line">    suite.addTest(ParametrizedTestCase.parametrize(HomeTest, param=devices))</span><br><span class="line">    unittest.TextTestRunner(verbosity=2).run(suite)</span><br><span class="line">    </span><br></pre></td></tr></table></figure></li>
-</ul>
-<h2 id="ddt"><a href="#ddt" class="headerlink" title="ddt"></a>ddt</h2><ul>
-<li><code>pip install ddt</code></li>
-</ul>
-<h3 id="使用json"><a href="#使用json" class="headerlink" title="使用json"></a>使用json</h3><ul>
-<li>新建文件 test_data_list.json：<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[</span><br><span class="line">    &quot;Hello&quot;,</span><br><span class="line">    &quot;Goodbye&quot;</span><br><span class="line">]</span><br></pre></td></tr></table></figure></li>
-<li>新建文件  test_data_dict.json：<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    &quot;unsorted_list&quot;: [ 10, 12, 15 ],</span><br><span class="line">    &quot;sorted_list&quot;: [ 15, 12, 50 ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
-<li>实例代码</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">import unittest</span><br><span class="line">from ddt import ddt, file_data</span><br><span class="line">from ddt_demo.mycode import has_three_elements,is_a_greeting</span><br><span class="line"></span><br><span class="line">@ddt</span><br><span class="line">class FooTestCase(unittest.TestCase):</span><br><span class="line"></span><br><span class="line">    @file_data(&#x27;test_data_dict.json&#x27;)</span><br><span class="line">    def test_file_data_json_dict(self, value):</span><br><span class="line">        self.assertTrue(has_three_elements(value))</span><br><span class="line"></span><br><span class="line">    @file_data(&#x27;test_data_list.json&#x27;)</span><br><span class="line">    def test_file_data_json_list(self, value):</span><br><span class="line">        self.assertTrue(is_a_greeting(value))</span><br><span class="line">        </span><br><span class="line">if __name__==&#x27;__main__&#x27;:</span><br><span class="line">    unittest.main(verbosity=2</span><br></pre></td></tr></table></figure>
-<h3 id="使用yaml文件"><a href="#使用yaml文件" class="headerlink" title="使用yaml文件"></a>使用yaml文件</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">import unittest</span><br><span class="line">from ddt import ddt, file_data</span><br><span class="line">from ddt_demo.mycode import has_three_elements,is_a_greeting</span><br><span class="line"></span><br><span class="line">@ddt</span><br><span class="line">class FooTestCase(unittest.TestCase):</span><br><span class="line"></span><br><span class="line">    @file_data(&#x27;test_data_dict.yaml&#x27;)</span><br><span class="line">    def test_file_data_yaml_dict(self, value):</span><br><span class="line">        self.assertTrue(has_three_elements(value))</span><br><span class="line"></span><br><span class="line">    @file_data(&#x27;test_data_list.yaml&#x27;)</span><br><span class="line">    def test_file_data_yaml_list(self, value):</span><br><span class="line">        self.assertTrue(is_a_greeting(value))</span><br><span class="line">        </span><br><span class="line">if __name__==&#x27;__main__&#x27;:</span><br><span class="line">    unittest.main(verbosity=2)</span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/61a75a58/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="一个正经的测试工程师">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="施坤的博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/aposts/61a75a58/" class="post-title-link" itemprop="url">python-执行外部命令的几种方式</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-09-29 17:13:35" itemprop="dateCreated datePublished" datetime="2021-09-29T17:13:35+08:00">2021-09-29</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-02-25 11:20:56" itemprop="dateModified" datetime="2022-02-25T11:20:56+08:00">2022-02-25</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/" itemprop="url" rel="index"><span itemprop="name">python</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/aposts/61a75a58/" class="post-meta-item leancloud_visitors" data-flag-title="python-执行外部命令的几种方式" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/aposts/61a75a58/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/aposts/61a75a58/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="os-system"><a href="#os-system" class="headerlink" title="os.system"></a><code>os.system</code></h2><ul>
-<li>执行的时候程序会打出cmd在linux上执行的信息</li>
-<li>执行命令成功返回为0，否则为1</li>
-<li>如果想获取在cmd输出的内容，是没办法获到的<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">t2 = os.system(&quot;1adb devices&quot;)</span><br><span class="line">t3 = os.system(&quot;adb devices&quot;)</span><br><span class="line">print(t2)  # 打印为1</span><br><span class="line">print(t3) # 打印为0</span><br></pre></td></tr></table></figure></li>
-</ul>
-<h2 id="subprocess-call"><a href="#subprocess-call" class="headerlink" title="subprocess.call"></a><code>subprocess.call</code></h2><ul>
-<li>取代<code>os.system</code>，但是也是无法获取cmd输出的内容</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">import subprocess</span><br><span class="line">t = subprocess.call(&#x27;adb devices&#x27;)</span><br><span class="line">print(t) # 打印为0</span><br></pre></td></tr></table></figure>
-
-<h2 id="os-popen"><a href="#os-popen" class="headerlink" title="os.popen"></a><code>os.popen</code></h2><ul>
-<li>popen返回的是一个file对象，跟open打开文件一样操作了，r是以读的方式打开</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">output = os.popen(&#x27;adb devices&#x27;)</span><br><span class="line">print(output.read()) # 得到List of devices attached</span><br></pre></td></tr></table></figure>
-
-<h2 id="subprocess-Popen"><a href="#subprocess-Popen" class="headerlink" title="subprocess.Popen"></a><code>subprocess.Popen</code></h2><ul>
-<li><code>subprocess</code>模块代替<code>os.system</code>、<code>os.popen</code>,能够得到命令输出的值</li>
-</ul>
-<h3 id="shell参数"><a href="#shell参数" class="headerlink" title="shell参数"></a><code>shell</code>参数</h3><ul>
-<li>在<code>linux</code>下，当<code>shell=False</code>（默认）时，<code>Popen</code>使用<code>os.execvp()</code>来执行子程序。<code>args</code>一般要是一个【列表】。如果<code>args</code>是个字符串的<br>话，会被当做是可执行文件的路径，这样就不能传入任何参数了。<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">subprocess.Popen(&quot;cat test.txt&quot;, shell=True)</span><br><span class="line">这是因为它相当于</span><br><span class="line">subprocess.Popen([&quot;/bin/sh&quot;, &quot;-c&quot;, &quot;cat test.txt&quot;])</span><br></pre></td></tr></table></figure></li>
-</ul>
-<h3 id="stdin-stdout-stderr-参数"><a href="#stdin-stdout-stderr-参数" class="headerlink" title="stdin stdout stderr 参数"></a><code>stdin</code> <code>stdout</code> <code>stderr</code> 参数</h3><ul>
-<li>分别表示程序的标准输入、输出、错误句柄。他们可以是<code>PIPE</code>，文件描述符或文件对象，也可以设置为<code>None</code>表示从父进程继承</li>
-<li><strong>执行结果使用管道输出的实例：</strong></li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">pipe=subprocess.Popen(&quot;adb devices&quot;,shell=True,stdout=subprocess.PIPE).stdout</span><br><span class="line">print(pipe.read()) # 得到值b&#x27;List of devices attached\r\n\r\n&#x27;</span><br></pre></td></tr></table></figure>
-<ul>
-<li><p><strong>执行结果保存在文件实例</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cmd = &quot;adb shell ls /sdcard/ | findstr aa.png&quot;  </span><br><span class="line">fhandle = open(r&quot;e:\aa.txt&quot;, &quot;w&quot;)  </span><br><span class="line">pipe = subprocess.Popen(cmd, shell=True, stdout=fhandle).stdout  </span><br><span class="line">fhandle.close()</span><br></pre></td></tr></table></figure></li>
-<li><p>子进程的文本流控制</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">#!/usr/bin/env python</span><br><span class="line"></span><br><span class="line">import subprocess</span><br><span class="line"></span><br><span class="line">child1 = subprocess.Popen([&quot;ls&quot;,&quot;-l&quot;], stdout=subprocess.PIPE)</span><br><span class="line">child2 = subprocess.Popen([&quot;wc&quot;], stdin=child1.stdout,stdout=subprocess.PIPE)</span><br><span class="line">out = child2.communicate()</span><br><span class="line">print out</span><br></pre></td></tr></table></figure></li>
-<li><p>child1.stdout–&gt;subprocess.PIPE</p>
-</li>
-<li><p>child2.stdin&lt;–subprocess.PIPE        </p>
-</li>
-<li><p>child2.stdout–&gt;subprocess.PIPE</p>
-</li>
-<li><p>相当于将child1.stdout–&gt;child2.stdin-&gt;child2.stdout-&gt;subprocess.PIPE</p>
-</li>
-<li><p>subprocess.PIPE实际上为文本流提供一个缓存区。child1的stdout将文本输出到缓存区，随后child2的stdin从该PIPE中将文本读取走。child2的输出文本也被存放在PIPE中，直到<code>communicate()</code>方法从PIPE中读取出PIPE中的文本。</p>
-</li>
-<li><p>要注意的是，<code>communicate()</code>是Popen对象的一个方法，该方法会阻塞父进程，直到子进程完成。</p>
-</li>
-<li><p><strong>我们还可以利用communicate()方法来使用PIPE给子进程输入:</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">import subprocess</span><br><span class="line">child = subprocess.Popen([&quot;cat&quot;], stdin=subprocess.PIPE)</span><br><span class="line">child.communicate(&quot;vamei&quot;) //()不为空，则写入subprocess.PIPE，为空，则从subprocess.PIPE读取</span><br></pre></td></tr></table></figure></li>
-<li><p>subprocess.PIPE–&gt;child.stdin</p>
-</li>
-<li><p>commiuncate相当于写入subprocess.PIPE，然后child从subprocess.PIPE读取</p>
-</li>
-<li><p><strong>利用python的subprocess模块执行外部命令, 并捕获stdout, stderr的输出</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">import subprocess</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># print ’popen3:’</span><br><span class="line"></span><br><span class="line">def external_cmd(cmd, msg_in=&#x27;&#x27;):</span><br><span class="line">    try:</span><br><span class="line">        proc = subprocess.Popen(cmd,</span><br><span class="line">                                shell=True,</span><br><span class="line">                                stdin=subprocess.PIPE,</span><br><span class="line">                                stdout=subprocess.PIPE,</span><br><span class="line">                                stderr=subprocess.PIPE,</span><br><span class="line">                                )</span><br><span class="line">        stdout_value, stderr_value = proc.communicate(msg_in)</span><br><span class="line">        return stdout_value, stderr_value</span><br><span class="line">    except ValueError as err:</span><br><span class="line">        # log(&quot;ValueError: %s&quot; % err)</span><br><span class="line">        return None, None</span><br><span class="line">    except IOError as err:</span><br><span class="line">        # log(&quot;IOError: %s&quot; % err)</span><br><span class="line">        return None, None</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">if __name__ == &#x27;__main__&#x27;:</span><br><span class="line">    stdout_val, stderr_val = external_cmd(&#x27;dir&#x27;)</span><br><span class="line">    print (&#x27;Standard Output: %s&#x27; % stdout_val)</span><br><span class="line">    print (&#x27;Standard Error: %s&#x27; % stderr_val)</span><br></pre></td></tr></table></figure>
-</li>
-<li><p><strong>得到命令的返回值，wait</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">p=subprocess.Popen(&quot;dir&quot;, shell=True)  </span><br><span class="line">p.wait()</span><br></pre></td></tr></table></figure></li>
-<li><p>但是Popen函数有一个缺陷，就是它是一个阻塞的方法。如果运行cmd时产生的内容非常多，函数非常容易阻塞住。解决办法是不使用wait()方法，但是也不能获得执行的返回值了。</p>
-</li>
-</ul>
-<h2 id="commands-getstatusoutput"><a href="#commands-getstatusoutput" class="headerlink" title="commands.getstatusoutput"></a><code>commands.getstatusoutput</code></h2><ul>
-<li>不推荐使用，因为在python3中被废弃</li>
-</ul>
+          <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">import  sys</span><br><span class="line">import xlrd</span><br><span class="line">#https://pypi.python.org/pypi/xlrd/0.9.3</span><br><span class="line">import xlsxwriter</span><br><span class="line">#https://pypi.python.org/pypi/XlsxWriter/0.6.6#downloads</span><br><span class="line">def read_excel(file=&#x27;c:/test.xls&#x27;):</span><br><span class="line">    data = xlrd.open_workbook(file)</span><br><span class="line">    table = data.sheet_by_index(0)</span><br><span class="line">    nrows = table.nrows</span><br><span class="line">    ncols = table.ncols</span><br><span class="line">    colnames = table.row_values(0) #one rows data</span><br><span class="line">    list = []</span><br><span class="line">    for rownum in range(1, nrows):</span><br><span class="line">        row = table.row_values(rownum)</span><br><span class="line">        if row:</span><br><span class="line">            app = &#123;&#125;</span><br><span class="line">            for i in range(len(colnames)):</span><br><span class="line">                row[i] = colnames[i] + row[i]</span><br><span class="line">                app[colnames[i]] = row[i]</span><br><span class="line">            list.append(app)</span><br><span class="line">    return list</span><br><span class="line"></span><br><span class="line">def write_excel(file=&#x27;d:/result.xlsx&#x27;, httpurl=[&quot;&quot;,&quot;&quot;], httpmethod=get, response_time=[0,10,14,0]):</span><br><span class="line">    workbook = xlsxwriter.Workbook(file)</span><br><span class="line">    worksheet = workbook.add_worksheet()</span><br><span class="line">    #worksheet.set_column(&#x27;A:A&#x27;, 20)</span><br><span class="line">    worksheet.write(0, 0, &quot;接口URL&quot;)</span><br><span class="line">    worksheet.write(0, 1, &quot;请求方法&quot;)</span><br><span class="line">    worksheet.write(0, 2, &quot;响应时间&quot;)</span><br><span class="line">    for i in range(len(response_time)):</span><br><span class="line">        worksheet.write(i + 1, 0, httpurl[i])</span><br><span class="line">        worksheet.write(i + 1, 1, httpmethod)</span><br><span class="line">        if response_time[i] == 0:</span><br><span class="line">            worksheet.write(i + 1, 2, &quot;请求超时&quot;)</span><br><span class="line">        else:</span><br><span class="line">             worksheet.write(i + 1, 2, response_time[i])</span><br><span class="line">    #worksheet.insert_image(&#x27;B5&#x27;, &#x27;logo.png&#x27;)</span><br><span class="line">    workbook.close()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -1295,7 +1236,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/791e1968/">
+    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/61a75a58/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -1309,7 +1250,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/aposts/791e1968/" class="post-title-link" itemprop="url">python-读写excel</a>
+            <a href="/aposts/61a75a58/" class="post-title-link" itemprop="url">python-执行外部命令的几种方式</a>
         </h2>
 
         <div class="post-meta">
@@ -1339,7 +1280,7 @@
             </span>
 
           
-            <span id="/aposts/791e1968/" class="post-meta-item leancloud_visitors" data-flag-title="python-读写excel" title="阅读次数">
+            <span id="/aposts/61a75a58/" class="post-meta-item leancloud_visitors" data-flag-title="python-执行外部命令的几种方式" title="阅读次数">
               <span class="post-meta-item-icon">
                 <i class="fa fa-eye"></i>
               </span>
@@ -1354,8 +1295,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/aposts/791e1968/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/aposts/791e1968/" itemprop="commentCount"></span>
+    <a title="valine" href="/aposts/61a75a58/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/aposts/61a75a58/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -1370,7 +1311,66 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">import  sys</span><br><span class="line">import xlrd</span><br><span class="line">#https://pypi.python.org/pypi/xlrd/0.9.3</span><br><span class="line">import xlsxwriter</span><br><span class="line">#https://pypi.python.org/pypi/XlsxWriter/0.6.6#downloads</span><br><span class="line">def read_excel(file=&#x27;c:/test.xls&#x27;):</span><br><span class="line">    data = xlrd.open_workbook(file)</span><br><span class="line">    table = data.sheet_by_index(0)</span><br><span class="line">    nrows = table.nrows</span><br><span class="line">    ncols = table.ncols</span><br><span class="line">    colnames = table.row_values(0) #one rows data</span><br><span class="line">    list = []</span><br><span class="line">    for rownum in range(1, nrows):</span><br><span class="line">        row = table.row_values(rownum)</span><br><span class="line">        if row:</span><br><span class="line">            app = &#123;&#125;</span><br><span class="line">            for i in range(len(colnames)):</span><br><span class="line">                row[i] = colnames[i] + row[i]</span><br><span class="line">                app[colnames[i]] = row[i]</span><br><span class="line">            list.append(app)</span><br><span class="line">    return list</span><br><span class="line"></span><br><span class="line">def write_excel(file=&#x27;d:/result.xlsx&#x27;, httpurl=[&quot;&quot;,&quot;&quot;], httpmethod=get, response_time=[0,10,14,0]):</span><br><span class="line">    workbook = xlsxwriter.Workbook(file)</span><br><span class="line">    worksheet = workbook.add_worksheet()</span><br><span class="line">    #worksheet.set_column(&#x27;A:A&#x27;, 20)</span><br><span class="line">    worksheet.write(0, 0, &quot;接口URL&quot;)</span><br><span class="line">    worksheet.write(0, 1, &quot;请求方法&quot;)</span><br><span class="line">    worksheet.write(0, 2, &quot;响应时间&quot;)</span><br><span class="line">    for i in range(len(response_time)):</span><br><span class="line">        worksheet.write(i + 1, 0, httpurl[i])</span><br><span class="line">        worksheet.write(i + 1, 1, httpmethod)</span><br><span class="line">        if response_time[i] == 0:</span><br><span class="line">            worksheet.write(i + 1, 2, &quot;请求超时&quot;)</span><br><span class="line">        else:</span><br><span class="line">             worksheet.write(i + 1, 2, response_time[i])</span><br><span class="line">    #worksheet.insert_image(&#x27;B5&#x27;, &#x27;logo.png&#x27;)</span><br><span class="line">    workbook.close()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+          <h2 id="os-system"><a href="#os-system" class="headerlink" title="os.system"></a><code>os.system</code></h2><ul>
+<li>执行的时候程序会打出cmd在linux上执行的信息</li>
+<li>执行命令成功返回为0，否则为1</li>
+<li>如果想获取在cmd输出的内容，是没办法获到的<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">t2 = os.system(&quot;1adb devices&quot;)</span><br><span class="line">t3 = os.system(&quot;adb devices&quot;)</span><br><span class="line">print(t2)  # 打印为1</span><br><span class="line">print(t3) # 打印为0</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="subprocess-call"><a href="#subprocess-call" class="headerlink" title="subprocess.call"></a><code>subprocess.call</code></h2><ul>
+<li>取代<code>os.system</code>，但是也是无法获取cmd输出的内容</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">import subprocess</span><br><span class="line">t = subprocess.call(&#x27;adb devices&#x27;)</span><br><span class="line">print(t) # 打印为0</span><br></pre></td></tr></table></figure>
+
+<h2 id="os-popen"><a href="#os-popen" class="headerlink" title="os.popen"></a><code>os.popen</code></h2><ul>
+<li>popen返回的是一个file对象，跟open打开文件一样操作了，r是以读的方式打开</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">output = os.popen(&#x27;adb devices&#x27;)</span><br><span class="line">print(output.read()) # 得到List of devices attached</span><br></pre></td></tr></table></figure>
+
+<h2 id="subprocess-Popen"><a href="#subprocess-Popen" class="headerlink" title="subprocess.Popen"></a><code>subprocess.Popen</code></h2><ul>
+<li><code>subprocess</code>模块代替<code>os.system</code>、<code>os.popen</code>,能够得到命令输出的值</li>
+</ul>
+<h3 id="shell参数"><a href="#shell参数" class="headerlink" title="shell参数"></a><code>shell</code>参数</h3><ul>
+<li>在<code>linux</code>下，当<code>shell=False</code>（默认）时，<code>Popen</code>使用<code>os.execvp()</code>来执行子程序。<code>args</code>一般要是一个【列表】。如果<code>args</code>是个字符串的<br>话，会被当做是可执行文件的路径，这样就不能传入任何参数了。<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">subprocess.Popen(&quot;cat test.txt&quot;, shell=True)</span><br><span class="line">这是因为它相当于</span><br><span class="line">subprocess.Popen([&quot;/bin/sh&quot;, &quot;-c&quot;, &quot;cat test.txt&quot;])</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="stdin-stdout-stderr-参数"><a href="#stdin-stdout-stderr-参数" class="headerlink" title="stdin stdout stderr 参数"></a><code>stdin</code> <code>stdout</code> <code>stderr</code> 参数</h3><ul>
+<li>分别表示程序的标准输入、输出、错误句柄。他们可以是<code>PIPE</code>，文件描述符或文件对象，也可以设置为<code>None</code>表示从父进程继承</li>
+<li><strong>执行结果使用管道输出的实例：</strong></li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">pipe=subprocess.Popen(&quot;adb devices&quot;,shell=True,stdout=subprocess.PIPE).stdout</span><br><span class="line">print(pipe.read()) # 得到值b&#x27;List of devices attached\r\n\r\n&#x27;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p><strong>执行结果保存在文件实例</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cmd = &quot;adb shell ls /sdcard/ | findstr aa.png&quot;  </span><br><span class="line">fhandle = open(r&quot;e:\aa.txt&quot;, &quot;w&quot;)  </span><br><span class="line">pipe = subprocess.Popen(cmd, shell=True, stdout=fhandle).stdout  </span><br><span class="line">fhandle.close()</span><br></pre></td></tr></table></figure></li>
+<li><p>子进程的文本流控制</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">#!/usr/bin/env python</span><br><span class="line"></span><br><span class="line">import subprocess</span><br><span class="line"></span><br><span class="line">child1 = subprocess.Popen([&quot;ls&quot;,&quot;-l&quot;], stdout=subprocess.PIPE)</span><br><span class="line">child2 = subprocess.Popen([&quot;wc&quot;], stdin=child1.stdout,stdout=subprocess.PIPE)</span><br><span class="line">out = child2.communicate()</span><br><span class="line">print out</span><br></pre></td></tr></table></figure></li>
+<li><p>child1.stdout–&gt;subprocess.PIPE</p>
+</li>
+<li><p>child2.stdin&lt;–subprocess.PIPE        </p>
+</li>
+<li><p>child2.stdout–&gt;subprocess.PIPE</p>
+</li>
+<li><p>相当于将child1.stdout–&gt;child2.stdin-&gt;child2.stdout-&gt;subprocess.PIPE</p>
+</li>
+<li><p>subprocess.PIPE实际上为文本流提供一个缓存区。child1的stdout将文本输出到缓存区，随后child2的stdin从该PIPE中将文本读取走。child2的输出文本也被存放在PIPE中，直到<code>communicate()</code>方法从PIPE中读取出PIPE中的文本。</p>
+</li>
+<li><p>要注意的是，<code>communicate()</code>是Popen对象的一个方法，该方法会阻塞父进程，直到子进程完成。</p>
+</li>
+<li><p><strong>我们还可以利用communicate()方法来使用PIPE给子进程输入:</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">import subprocess</span><br><span class="line">child = subprocess.Popen([&quot;cat&quot;], stdin=subprocess.PIPE)</span><br><span class="line">child.communicate(&quot;vamei&quot;) //()不为空，则写入subprocess.PIPE，为空，则从subprocess.PIPE读取</span><br></pre></td></tr></table></figure></li>
+<li><p>subprocess.PIPE–&gt;child.stdin</p>
+</li>
+<li><p>commiuncate相当于写入subprocess.PIPE，然后child从subprocess.PIPE读取</p>
+</li>
+<li><p><strong>利用python的subprocess模块执行外部命令, 并捕获stdout, stderr的输出</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">import subprocess</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># print ’popen3:’</span><br><span class="line"></span><br><span class="line">def external_cmd(cmd, msg_in=&#x27;&#x27;):</span><br><span class="line">    try:</span><br><span class="line">        proc = subprocess.Popen(cmd,</span><br><span class="line">                                shell=True,</span><br><span class="line">                                stdin=subprocess.PIPE,</span><br><span class="line">                                stdout=subprocess.PIPE,</span><br><span class="line">                                stderr=subprocess.PIPE,</span><br><span class="line">                                )</span><br><span class="line">        stdout_value, stderr_value = proc.communicate(msg_in)</span><br><span class="line">        return stdout_value, stderr_value</span><br><span class="line">    except ValueError as err:</span><br><span class="line">        # log(&quot;ValueError: %s&quot; % err)</span><br><span class="line">        return None, None</span><br><span class="line">    except IOError as err:</span><br><span class="line">        # log(&quot;IOError: %s&quot; % err)</span><br><span class="line">        return None, None</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">if __name__ == &#x27;__main__&#x27;:</span><br><span class="line">    stdout_val, stderr_val = external_cmd(&#x27;dir&#x27;)</span><br><span class="line">    print (&#x27;Standard Output: %s&#x27; % stdout_val)</span><br><span class="line">    print (&#x27;Standard Error: %s&#x27; % stderr_val)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>得到命令的返回值，wait</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">p=subprocess.Popen(&quot;dir&quot;, shell=True)  </span><br><span class="line">p.wait()</span><br></pre></td></tr></table></figure></li>
+<li><p>但是Popen函数有一个缺陷，就是它是一个阻塞的方法。如果运行cmd时产生的内容非常多，函数非常容易阻塞住。解决办法是不使用wait()方法，但是也不能获得执行的返回值了。</p>
+</li>
+</ul>
+<h2 id="commands-getstatusoutput"><a href="#commands-getstatusoutput" class="headerlink" title="commands.getstatusoutput"></a><code>commands.getstatusoutput</code></h2><ul>
+<li>不推荐使用，因为在python3中被废弃</li>
+</ul>
 
       
     </div>
