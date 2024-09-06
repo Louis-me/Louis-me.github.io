@@ -336,6 +336,105 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/1ac23ba2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="一个正经的测试工程师">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="施坤的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/aposts/1ac23ba2/" class="post-title-link" itemprop="url">Python3-X-md5</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-09-29 17:13:35" itemprop="dateCreated datePublished" datetime="2021-09-29T17:13:35+08:00">2021-09-29</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-02-25 11:20:56" itemprop="dateModified" datetime="2022-02-25T11:20:56+08:00">2022-02-25</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/" itemprop="url" rel="index"><span itemprop="name">python</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/aposts/1ac23ba2/" class="post-meta-item leancloud_visitors" data-flag-title="Python3-X-md5" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/aposts/1ac23ba2/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/aposts/1ac23ba2/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>python3.x已经把md5 module移除了。要想用md5得用hashlib module,</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">import hashlib  </span><br><span class="line">m = hashlib.md5()  </span><br><span class="line">m.update(b&quot;Nobody inspects the spammish repetition&quot;) #参数必须是byte类型，否则报Unicode-objects must be encoded before hashing错误  </span><br><span class="line">md5value=m.hexdigest()  </span><br><span class="line">print(md5value)  #bb649c83dd1ea5c9d9dec9a18df0ffe9  </span><br></pre></td></tr></table></figure>
+<p>其实可简写，如下面的md5的例子，hashlib.md5(data)，就可以了</p>
+<p>但是对中文字符串md5怎么办？<br>中文字符在Python中是以unicode存在的,同一个字符串在不同的编码体系下有不同的值,所以在hash前要进行编码，个人建议转为gb2312,因为对比发现，我下载的一个工具算出的md5值是与gb2312编码后算出的md5值一样。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">import hashlib  </span><br><span class="line">data=&#x27;我是&#x27;  </span><br><span class="line">m = hashlib.md5(data.encode(encoding=&#x27;gb2312&#x27;))  </span><br><span class="line">print(m.hexdigest())  </span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/2d5f3400/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -438,7 +537,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/1ac23ba2/">
+    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/1715d38a/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -452,7 +551,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/aposts/1ac23ba2/" class="post-title-link" itemprop="url">Python3-X-md5</a>
+            <a href="/aposts/1715d38a/" class="post-title-link" itemprop="url">Python与Java之间Socket通信</a>
         </h2>
 
         <div class="post-meta">
@@ -482,7 +581,7 @@
             </span>
 
           
-            <span id="/aposts/1ac23ba2/" class="post-meta-item leancloud_visitors" data-flag-title="Python3-X-md5" title="阅读次数">
+            <span id="/aposts/1715d38a/" class="post-meta-item leancloud_visitors" data-flag-title="Python与Java之间Socket通信" title="阅读次数">
               <span class="post-meta-item-icon">
                 <i class="fa fa-eye"></i>
               </span>
@@ -497,8 +596,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/aposts/1ac23ba2/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/aposts/1ac23ba2/" itemprop="commentCount"></span>
+    <a title="valine" href="/aposts/1715d38a/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/aposts/1715d38a/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -513,11 +612,25 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>python3.x已经把md5 module移除了。要想用md5得用hashlib module,</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">import hashlib  </span><br><span class="line">m = hashlib.md5()  </span><br><span class="line">m.update(b&quot;Nobody inspects the spammish repetition&quot;) #参数必须是byte类型，否则报Unicode-objects must be encoded before hashing错误  </span><br><span class="line">md5value=m.hexdigest()  </span><br><span class="line">print(md5value)  #bb649c83dd1ea5c9d9dec9a18df0ffe9  </span><br></pre></td></tr></table></figure>
-<p>其实可简写，如下面的md5的例子，hashlib.md5(data)，就可以了</p>
-<p>但是对中文字符串md5怎么办？<br>中文字符在Python中是以unicode存在的,同一个字符串在不同的编码体系下有不同的值,所以在hash前要进行编码，个人建议转为gb2312,因为对比发现，我下载的一个工具算出的md5值是与gb2312编码后算出的md5值一样。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">import hashlib  </span><br><span class="line">data=&#x27;我是&#x27;  </span><br><span class="line">m = hashlib.md5(data.encode(encoding=&#x27;gb2312&#x27;))  </span><br><span class="line">print(m.hexdigest())  </span><br></pre></td></tr></table></figure>
+          <ul>
+<li>python socket server</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">import socket</span><br><span class="line"></span><br><span class="line">try:</span><br><span class="line">    sock=socket.socket(socket.AF_INET,socket.SOCK_STREAM);</span><br><span class="line">    print(&quot;create socket succ!&quot;)</span><br><span class="line"></span><br><span class="line">    sock.bind((&#x27;192.168.1.38&#x27;,50006))</span><br><span class="line">    print(&#x27;bind socket succ!&#x27;)</span><br><span class="line"></span><br><span class="line">    sock.listen(5)</span><br><span class="line">    print(&#x27;listen succ!&#x27;)</span><br><span class="line"></span><br><span class="line">except:</span><br><span class="line">    print(&quot;init socket error!&quot;)</span><br><span class="line"></span><br><span class="line">while True:</span><br><span class="line">    print(&quot;listen for client...&quot;)</span><br><span class="line">    conn,addr=sock.accept()</span><br><span class="line">    print(&quot;get client&quot;)</span><br><span class="line">    print(addr)</span><br><span class="line"></span><br><span class="line">    conn.settimeout(30)</span><br><span class="line">    szBuf=conn.recv(1024)</span><br><span class="line">    print(&quot;recv:&quot;+str(szBuf,&#x27;gbk&#x27;))</span><br><span class="line"></span><br><span class="line">    if &quot;0&quot;==szBuf:</span><br><span class="line">        conn.send(b&quot;exit&quot;)</span><br><span class="line">    else:</span><br><span class="line">        conn.send(b&quot;welcome client&quot;)</span><br><span class="line"></span><br><span class="line">    conn.close()</span><br><span class="line">    print(&quot;end of servive&quot;)</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>python socket client</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">import socket</span><br><span class="line">HOST = &#x27;192.168.1.38&#x27;</span><br><span class="line">PORT = 50006</span><br><span class="line"></span><br><span class="line">sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)</span><br><span class="line">sock.connect((HOST, PORT))</span><br><span class="line">sock.send(&quot;232132132131&quot;.encode())</span><br><span class="line"></span><br><span class="line">szBuf = sock.recv(1024)</span><br><span class="line">byt = &#x27;recv:&#x27; + szBuf.decode(&#x27;utf-8&#x27;)</span><br><span class="line">print(byt)</span><br><span class="line"></span><br><span class="line">sock.close()</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>java socket client</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">import java.io.BufferedReader;</span><br><span class="line">import java.io.IOException;</span><br><span class="line">import java.io.InputStream;</span><br><span class="line">import java.io.InputStreamReader;</span><br><span class="line">import java.io.OutputStream;</span><br><span class="line">import java.io.PrintWriter;</span><br><span class="line">import java.net.Socket;</span><br><span class="line">import java.net.UnknownHostException;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">public class SocketClient &#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String args[])throws Exception &#123;</span><br><span class="line"></span><br><span class="line">        try &#123;</span><br><span class="line">            Socket socket = new Socket(&quot;192.168.1.38&quot;,50006);</span><br><span class="line"></span><br><span class="line">            //获取输出流，向服务器端发送信息</span><br><span class="line">            OutputStream os=socket.getOutputStream();//字节输出流</span><br><span class="line">            PrintWriter pw=new PrintWriter(os);//将输出流包装为打印流</span><br><span class="line">            pw.write(&quot;我是Java服务器&quot;);</span><br><span class="line">            pw.flush();</span><br><span class="line">            socket.shutdownOutput();//关闭输出流</span><br><span class="line"></span><br><span class="line">            InputStream is=socket.getInputStream();</span><br><span class="line">            BufferedReader in = new BufferedReader(new InputStreamReader(is));</span><br><span class="line">            String info=null;</span><br><span class="line">            while((info=in.readLine())!=null)&#123;</span><br><span class="line">                System.out.println(&quot;我是客户端，Python服务器说：&quot;+info);</span><br><span class="line">            &#125;</span><br><span class="line">            is.close();</span><br><span class="line">            in.close();</span><br><span class="line">            socket.close();</span><br><span class="line">        &#125; catch (UnknownHostException e) &#123;</span><br><span class="line">            // TODO Auto-generated catch block</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125; catch (IOException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>值得注意的是，这里的服务器域名应该写本电脑上的ip,而不是127.0.0.1</li>
+</ul>
+<p>来自: <a target="_blank" rel="noopener" href="http://blog.csdn.net/ChenTianSaber/article/details/52274257?locationNum=4">http://blog.csdn.net/ChenTianSaber/article/details/52274257?locationNum=4</a></p>
 
       
     </div>
@@ -638,119 +751,6 @@
 <li>一直流传多进程+协程，可以解决python的GIL问题，因为本次测试的数据不多，使用的也是单进程+协程的方式，后续对协程的测试，有机会进行大量数据的测试，采用多进程+协程的方式进行测试</li>
 <li><a target="_blank" rel="noopener" href="https://github.com/Louis-me/PyCrawler">源码获取</a></li>
 </ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/1715d38a/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="一个正经的测试工程师">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="施坤的博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/aposts/1715d38a/" class="post-title-link" itemprop="url">Python与Java之间Socket通信</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-09-29 17:13:35" itemprop="dateCreated datePublished" datetime="2021-09-29T17:13:35+08:00">2021-09-29</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-02-25 11:20:56" itemprop="dateModified" datetime="2022-02-25T11:20:56+08:00">2022-02-25</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/" itemprop="url" rel="index"><span itemprop="name">python</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/aposts/1715d38a/" class="post-meta-item leancloud_visitors" data-flag-title="Python与Java之间Socket通信" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/aposts/1715d38a/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/aposts/1715d38a/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <ul>
-<li>python socket server</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">import socket</span><br><span class="line"></span><br><span class="line">try:</span><br><span class="line">    sock=socket.socket(socket.AF_INET,socket.SOCK_STREAM);</span><br><span class="line">    print(&quot;create socket succ!&quot;)</span><br><span class="line"></span><br><span class="line">    sock.bind((&#x27;192.168.1.38&#x27;,50006))</span><br><span class="line">    print(&#x27;bind socket succ!&#x27;)</span><br><span class="line"></span><br><span class="line">    sock.listen(5)</span><br><span class="line">    print(&#x27;listen succ!&#x27;)</span><br><span class="line"></span><br><span class="line">except:</span><br><span class="line">    print(&quot;init socket error!&quot;)</span><br><span class="line"></span><br><span class="line">while True:</span><br><span class="line">    print(&quot;listen for client...&quot;)</span><br><span class="line">    conn,addr=sock.accept()</span><br><span class="line">    print(&quot;get client&quot;)</span><br><span class="line">    print(addr)</span><br><span class="line"></span><br><span class="line">    conn.settimeout(30)</span><br><span class="line">    szBuf=conn.recv(1024)</span><br><span class="line">    print(&quot;recv:&quot;+str(szBuf,&#x27;gbk&#x27;))</span><br><span class="line"></span><br><span class="line">    if &quot;0&quot;==szBuf:</span><br><span class="line">        conn.send(b&quot;exit&quot;)</span><br><span class="line">    else:</span><br><span class="line">        conn.send(b&quot;welcome client&quot;)</span><br><span class="line"></span><br><span class="line">    conn.close()</span><br><span class="line">    print(&quot;end of servive&quot;)</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>python socket client</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">import socket</span><br><span class="line">HOST = &#x27;192.168.1.38&#x27;</span><br><span class="line">PORT = 50006</span><br><span class="line"></span><br><span class="line">sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)</span><br><span class="line">sock.connect((HOST, PORT))</span><br><span class="line">sock.send(&quot;232132132131&quot;.encode())</span><br><span class="line"></span><br><span class="line">szBuf = sock.recv(1024)</span><br><span class="line">byt = &#x27;recv:&#x27; + szBuf.decode(&#x27;utf-8&#x27;)</span><br><span class="line">print(byt)</span><br><span class="line"></span><br><span class="line">sock.close()</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>java socket client</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">import java.io.BufferedReader;</span><br><span class="line">import java.io.IOException;</span><br><span class="line">import java.io.InputStream;</span><br><span class="line">import java.io.InputStreamReader;</span><br><span class="line">import java.io.OutputStream;</span><br><span class="line">import java.io.PrintWriter;</span><br><span class="line">import java.net.Socket;</span><br><span class="line">import java.net.UnknownHostException;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">public class SocketClient &#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String args[])throws Exception &#123;</span><br><span class="line"></span><br><span class="line">        try &#123;</span><br><span class="line">            Socket socket = new Socket(&quot;192.168.1.38&quot;,50006);</span><br><span class="line"></span><br><span class="line">            //获取输出流，向服务器端发送信息</span><br><span class="line">            OutputStream os=socket.getOutputStream();//字节输出流</span><br><span class="line">            PrintWriter pw=new PrintWriter(os);//将输出流包装为打印流</span><br><span class="line">            pw.write(&quot;我是Java服务器&quot;);</span><br><span class="line">            pw.flush();</span><br><span class="line">            socket.shutdownOutput();//关闭输出流</span><br><span class="line"></span><br><span class="line">            InputStream is=socket.getInputStream();</span><br><span class="line">            BufferedReader in = new BufferedReader(new InputStreamReader(is));</span><br><span class="line">            String info=null;</span><br><span class="line">            while((info=in.readLine())!=null)&#123;</span><br><span class="line">                System.out.println(&quot;我是客户端，Python服务器说：&quot;+info);</span><br><span class="line">            &#125;</span><br><span class="line">            is.close();</span><br><span class="line">            in.close();</span><br><span class="line">            socket.close();</span><br><span class="line">        &#125; catch (UnknownHostException e) &#123;</span><br><span class="line">            // TODO Auto-generated catch block</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125; catch (IOException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>值得注意的是，这里的服务器域名应该写本电脑上的ip,而不是127.0.0.1</li>
-</ul>
-<p>来自: <a target="_blank" rel="noopener" href="http://blog.csdn.net/ChenTianSaber/article/details/52274257?locationNum=4">http://blog.csdn.net/ChenTianSaber/article/details/52274257?locationNum=4</a></p>
 
       
     </div>
