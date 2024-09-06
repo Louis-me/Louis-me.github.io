@@ -191,6 +191,172 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/62baea94/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="一个正经的测试工程师">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="施坤的博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/aposts/62baea94/" class="post-title-link" itemprop="url">DVWA通关指南-CSP Bypass(内容安全策略)</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-02-15 08:55:50" itemprop="dateCreated datePublished" datetime="2022-02-15T08:55:50+08:00">2022-02-15</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-02-25 11:20:56" itemprop="dateModified" datetime="2022-02-25T11:20:56+08:00">2022-02-25</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" itemprop="url" rel="index"><span itemprop="name">安全测试</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/aposts/62baea94/" class="post-meta-item leancloud_visitors" data-flag-title="DVWA通关指南-CSP Bypass(内容安全策略)" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/aposts/62baea94/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/aposts/62baea94/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>CPS即内容安全策略，实质就是<strong>白名单制度</strong>，开发者明确告诉客户端，哪些外部资源可以加载和执行，等同于提供白名单。它的实现和执行全部由浏览器完成，开发者只需提供配置。CSP 大大增强了网页的安全性。攻击者即使发现了漏洞，也没法注入脚本，除非还控制了一台列入了白名单的可信主机。</p>
+<h3 id="开启方法"><a href="#开启方法" class="headerlink" title="开启方法"></a>开启方法</h3><ul>
+<li><p>抄录于<a target="_blank" rel="noopener" href="https://www.zhihu.com/question/21979782">这里</a></p>
+</li>
+<li><p>两种方法可以启用 CSP。一种是通过 HTTP 头信息的Content-Security-Policy的字段。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Content-Security-Policy: script-src &#x27;self&#x27;; object-src &#x27;none&#x27;; </span><br><span class="line">style-src cdn.example.org third-party.org; child-src https:</span><br></pre></td></tr></table></figure>
+
+<p><img src="/aposts/62baea94/image-20220215092004385.png" alt="image-20220215092004385"></p>
+</li>
+<li><p>另一种是通过网页的<code>&lt;meta&gt;</code>标签</p>
+</li>
+</ul>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">&quot;Content-Security-Policy&quot;</span> <span class="attr">content</span>=<span class="string">&quot;script-src &#x27;self&#x27;; object-src &#x27;none&#x27;; style-src cdn.example.org third-party.org; child-src https:&quot;</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>上面代码中，CSP 做了如下配置。</p>
+<ul>
+<li>脚本：只信任当前域名</li>
+<li><code>&lt;object&gt;</code>标签：不信任任何URL，即不加载任何资源</li>
+<li>样式表：只信任<code>http://cdn.example.org</code>和<code>http://third-party.org</code></li>
+<li>框架（frame）：必须使用HTTPS协议加载</li>
+<li>其他资源：没有限制</li>
+</ul>
+<p>启用后，不符合 CSP 的外部资源就会被阻止加载。</p>
+<h2 id="安全等级为Low"><a href="#安全等级为Low" class="headerlink" title="安全等级为Low"></a>安全等级为Low</h2><p><strong>结论：攻击失败，原因分析在下面有说明</strong></p>
+<p><img src="/aposts/62baea94/image-20220215092558062.png" alt="image-20220215092558062"></p>
+<h3 id="源代码分析"><a href="#源代码分析" class="headerlink" title="源代码分析"></a>源代码分析</h3><p>从源码查看设置了headerCSP，可以知道以下语句可以被执行：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">https://pastebin.com</span><br><span class="line">hastebin.com</span><br><span class="line">example.com</span><br><span class="line">code.jquery.com</span><br><span class="line">https://ssl.google-analytics.com</span><br></pre></td></tr></table></figure>
+
+<p><img src="/aposts/62baea94/image-20220215092503894.png" alt="image-20220215092503894"></p>
+<p>f12查看当前页面请求，也能发现CSP的设置</p>
+<p><img src="/aposts/62baea94/image-20220215092925167.png" alt="image-20220215092925167"></p>
+<h3 id="开始攻击"><a href="#开始攻击" class="headerlink" title="开始攻击"></a>开始攻击</h3><p>首先在<code>https://pastebin.com/</code>里边创建一个JavaScript代码<code>alert(&quot;hahaha&quot;)</code>保存记住链接</p>
+<p><img src="/aposts/62baea94/image-20220215093103371.png" alt="image-20220215093103371"></p>
+<p>点击右上角的raw</p>
+<p><img src="/aposts/62baea94/image-20220215093156720.png" alt="image-20220215093156720"></p>
+<p>得到了分享链接：<a target="_blank" rel="noopener" href="https://pastebin.com/raw/PgTLeSd2">https://pastebin.com/raw/PgTLeSd2</a></p>
+<p><img src="/aposts/62baea94/image-20220215093230759.png" alt="image-20220215093230759"></p>
+<p>把得到的链接输入输入框中</p>
+<p><img src="/aposts/62baea94/image-20220215093353837.png" alt="image-20220215093353837"></p>
+<ul>
+<li><p><strong>发现无论是否挂梯子，都不会弹出提示框</strong>，经过抓包分析，单独在浏览器中请求:<a target="_blank" rel="noopener" href="https://pastebin.com/raw/PgTLeSd2%E6%88%90%E5%8A%9F%EF%BC%8C%E8%BE%93%E5%85%A5%E5%88%B0%E6%96%87%E6%9C%AC%E6%A1%86%E4%B8%AD%E5%90%8E**%E5%8F%91%E7%8E%B0%E6%9C%89%E8%B7%A8%E5%9F%9F%E9%97%AE%E9%A2%98%EF%BC%8C%E6%9A%82%E6%97%B6%E4%B8%8D%E7%9F%A5%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3">https://pastebin.com/raw/PgTLeSd2成功，输入到文本框中后**发现有跨域问题，暂时不知如何解决</a>**</p>
+</li>
+<li><p>下图就是执行pastebin的请求，虽然请求响应为200，但是无任何响应数据</p>
+</li>
+</ul>
+<p><img src="/aposts/62baea94/image-20220215103943833.png" alt="image-20220215103943833"></p>
+<p>打开Console发现出现类似于跨域报错问题</p>
+<p><img src="/aposts/62baea94/image-20220215104125884.png" alt="image-20220215104125884"></p>
+<h2 id="安全等级为Medium"><a href="#安全等级为Medium" class="headerlink" title="安全等级为Medium"></a>安全等级为Medium</h2><h3 id="源码分析"><a href="#源码分析" class="headerlink" title="源码分析"></a>源码分析</h3><ul>
+<li>unsafe-inline：当csp有Unsafe-inline时, 并且受限于csp无法直接引入外部js, 不过当frame-src<br>为self, 或者能引入当前域的资源的时候, 即有一定可能能够引入外部js。</li>
+<li>nonce-source，仅允许特定的内联脚本块。如源码中：<code>nonce-TmV2ZXIgZ29pbmcgdG8gZ2l2ZSB5b3UgdXA=&#39;</code></li>
+</ul>
+<p><img src="/aposts/62baea94/image-20220215104504770.png" alt="image-20220215104504770"></p>
+<h3 id="开始攻击-1"><a href="#开始攻击-1" class="headerlink" title="开始攻击"></a>开始攻击</h3><p>直接输入：<code>&lt;script nonce=&quot;TmV2ZXIgZ29pbmcgdG8gZ2l2ZSB5b3UgdXA=&quot;&gt;alert(1)&lt;/script&gt;</code></p>
+<p><img src="/aposts/62baea94/image-20220215104701452.png" alt="image-20220215104701452"></p>
+<p><img src="/aposts/62baea94/image-20220215104717799.png" alt="image-20220215104717799"></p>
+<h2 id="安全等级为High"><a href="#安全等级为High" class="headerlink" title="安全等级为High"></a>安全等级为High</h2><p><img src="/aposts/62baea94/image-20220215105533492.png" alt="image-20220215105533492"></p>
+<h3 id="源码分析-1"><a href="#源码分析-1" class="headerlink" title="源码分析"></a>源码分析</h3><h4 id="后台代码"><a href="#后台代码" class="headerlink" title="后台代码"></a>后台代码</h4><p>这里可以看到除了自身，其余的外部资源全部过滤了</p>
+<p><img src="/aposts/62baea94/image-20220215105448255.png" alt="image-20220215105448255"></p>
+<h4 id="前端js"><a href="#前端js" class="headerlink" title="前端js"></a>前端js</h4><p>前端直接调用了一个回调函数solveSum，没有对此传参进行任何处理</p>
+<p><img src="/aposts/62baea94/image-20220215105654909.png" alt="image-20220215105654909"></p>
+<h3 id="开始攻击-2"><a href="#开始攻击-2" class="headerlink" title="开始攻击"></a>开始攻击</h3><p>谷歌浏览器按f12，打开source页签，找到high.js文件，加个断点，修改callback参数为<code>alert(document.cookie)</code>,记得按<code>ctrl+s</code>保存修改</p>
+<p><img src="/aposts/62baea94/image-20220215110402569.png" alt="image-20220215110402569"></p>
+<p>点击页面上的按钮</p>
+<p><img src="/aposts/62baea94/image-20220215110854695.png" alt="image-20220215110854695"></p>
+<p>点击继续运行按钮</p>
+<p><img src="/aposts/62baea94/image-20220215111146007.png" alt="image-20220215111146007"></p>
+<p>出现弹框</p>
+<p><img src="/aposts/62baea94/image-20220215111208307.png" alt="image-20220215111208307"></p>
+<h2 id="安全等级为"><a href="#安全等级为" class="headerlink" title="安全等级为"></a>安全等级为</h2><h3 id="源码分析-2"><a href="#源码分析-2" class="headerlink" title="源码分析"></a>源码分析</h3><p>前端没有回调函数了</p>
+<p><img src="/aposts/62baea94/image-20220215111736306.png" alt="image-20220215111736306"></p>
+<p>本文主要操作步骤来源<a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_42075643/article/details/113928878?spm=1001.2101.3001.6650.5&utm_medium=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~Rate-5.pc_relevant_default&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~Rate-5.pc_relevant_default&utm_relevant_index=8">这里</a></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/a672bb74/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1779,186 +1945,10 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/824ce28e/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="一个正经的测试工程师">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="施坤的博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/aposts/824ce28e/" class="post-title-link" itemprop="url">DVWA通关指南-CSRF(跨站请求伪造)</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-02-07 15:03:01" itemprop="dateCreated datePublished" datetime="2022-02-07T15:03:01+08:00">2022-02-07</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-02-25 11:20:56" itemprop="dateModified" datetime="2022-02-25T11:20:56+08:00">2022-02-25</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" itemprop="url" rel="index"><span itemprop="name">安全测试</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/aposts/824ce28e/" class="post-meta-item leancloud_visitors" data-flag-title="DVWA通关指南-CSRF(跨站请求伪造)" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/aposts/824ce28e/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/aposts/824ce28e/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><ul>
-<li>承接上文<a target="_blank" rel="noopener" href="https://moon-full.gitee.io/2022/01/29/DVWA%E9%80%9A%E5%85%B3%E6%8C%87%E5%8D%97-Command-Injection%EF%BC%88%E5%91%BD%E4%BB%A4%E6%B3%A8%E5%85%A5%EF%BC%89/">DVWA通关指南-Command-Injection（命令注入）</a>，本文对Cross Site Request Forgery (CSRF)（跨站请求伪造）进行实践</li>
-<li>一般来说，攻击者通过伪造用户的浏览器的请求，向访问一个用户自己曾经认证访问过的网站发送出去，使目标网站接收并误以为是用户的真实操作而去执行命令</li>
-<li>本次功能是对登录密码进行修改，修改后请用新密码登录DVWA</li>
-</ul>
-<h2 id="安全等级为LOW"><a href="#安全等级为LOW" class="headerlink" title="安全等级为LOW"></a>安全等级为LOW</h2><h3 id="源码分析"><a href="#源码分析" class="headerlink" title="源码分析"></a>源码分析</h3><p><img src="/aposts/824ce28e/image-20220207151219460.png" alt="image-20220207151219460"></p>
-<p>抓包查看，直接就是get请求，没有任何防护，如token验证</p>
-<p><img src="/aposts/824ce28e/image-20220207154001441.png" alt="image-20220207154001441"></p>
-<h3 id="开始攻击"><a href="#开始攻击" class="headerlink" title="开始攻击"></a>开始攻击</h3><ul>
-<li><p>抓包发现，修改密码的url其实就是一个get请求，链接如下：<a target="_blank" rel="noopener" href="http://ip/DVWA-2.0.1/vulnerabilities/csrf/?password_new=123456&amp;password_conf=123456&amp;Change=Change">http://ip/DVWA-2.0.1/vulnerabilities/csrf/?password_new=123456&amp;password_conf=123456&amp;Change=Change</a></p>
-</li>
-<li><p>只要诱骗用户点击这个恶意链接，就会将在不知情的情况下将密码改为123456</p>
-</li>
-</ul>
-<p><strong>我们使用Burpsuite中的PoC检测CSRF</strong></p>
-<ul>
-<li>拦截到请求后，点击行动-相关工具-CSRF PoC生成</li>
-</ul>
-<p><img src="/aposts/824ce28e/image-20220207153930211.png" alt="image-20220207153930211"></p>
-<ul>
-<li>点击 在浏览器中测试</li>
-</ul>
-<p><img src="/aposts/824ce28e/image-20220207154417669.png" alt="image-20220207154417669"></p>
-<ul>
-<li>Burpsuite会自动创建一个站点,复制 URL</li>
-</ul>
-<p><img src="/aposts/824ce28e/image-20220207154442878.png" alt="image-20220207154442878"></p>
-<ul>
-<li>用复制的链接无法访问，改为如此就可以了<ul>
-<li><a target="_blank" rel="noopener" href="http://127.0.0.1:8080/show/9/4w8z4wwlz1uk23ho7hliosh2gaxw584b">http://127.0.0.1:8080/show/9/4w8z4wwlz1uk23ho7hliosh2gaxw584b</a></li>
-</ul>
-</li>
-<li>点击提交按钮</li>
-</ul>
-<p><img src="/aposts/824ce28e/image-20220207160513370.png" alt="image-20220207160513370"></p>
-<ul>
-<li>提交后，自动跳转url其实是修改密码的url，查看到提示密码修改成功，用新密码123456登录成功</li>
-</ul>
-<p><img src="/aposts/824ce28e/image-20220207160636051.png"></p>
-<p><img src="/aposts/824ce28e/image-20220207160801912.png" alt="image-20220207160801912"></p>
-<p><strong>我们可以伪装恶意代码</strong></p>
-<ul>
-<li>我们将构造的恶意链接伪装，放入index.html中</li>
-<li>打开我的服务器中的httpd中的dvwa目录下，新建index.html</li>
-</ul>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@VM-24-13-centos DVWA-2.0.1]# pwd</span><br><span class="line">/var/www/html/DVWA-2.0.1</span><br><span class="line">[root@VM-24-13-centos DVWA-2.0.1]# vi index.html</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&lt;img src=&quot;http://xxx.xxx.xxx.xx/DVWA-2.0.1/vulnerabilities/csrf/?password_new=1234567&amp;password_conf=1234567&amp;Change=Change#&quot; border=&quot;0&quot; style=&quot;display:none;&quot;/&gt;</span><br><span class="line">&lt;h1&gt;404&lt;h1&gt; </span><br><span class="line">&lt;h2&gt;resource not found.&lt;h2&gt;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>重启服务器</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@VM-24-13-centos DVWA-2.0.1]# service httpd restart</span><br><span class="line">Redirecting to /bin/systemctl restart httpd.service</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>访问刚刚编辑的index.html，查看请求发现发起 了修改密码</li>
-</ul>
-<p><img src="/aposts/824ce28e/image-20220207170837412.png" alt="image-20220207170837412"></p>
-<h2 id="安全等级为：medium"><a href="#安全等级为：medium" class="headerlink" title="安全等级为：medium"></a>安全等级为：medium</h2><h3 id="分析源码"><a href="#分析源码" class="headerlink" title="分析源码"></a>分析源码</h3><p>Medium级别的代码检查了保留变量 HTTP_REFERER（http包头的Referer参数的值，表示来源地址）中是否包含SERVER_NAME（http包头的Host参数，及要访问的主机名），希望通过这种机制抵御CSRF攻击。</p>
-<p><img src="/aposts/824ce28e/image-20220207171945510.png" alt="image-20220207171945510"></p>
-<p>使用安全等级为Low访问index.html的方式时，发送修改密码的请求，一直加载中最后响应302后，自动发送登录请求</p>
-<p><img src="/aposts/824ce28e/image-20220207172258697.png" alt="image-20220207172258697"></p>
-<h3 id="开始攻击-1"><a href="#开始攻击-1" class="headerlink" title="开始攻击"></a>开始攻击</h3><ul>
-<li>漏洞利用过滤规则是http包头的Referer参数的值中必须包含主机名（这里是我服务器的ip）我们可以将攻击页面命名为XX.XX.XX.XX.php（XX是服务器的host，页面被放置在攻击者的服务器里）就可以绕过了</li>
-<li>准备php文件，把密码修改成12345678</li>
-</ul>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">[root@VM-24-13-centos DVWA-2.0.1]# pwd</span><br><span class="line">/var/www/html/DVWA-2.0.1</span><br><span class="line"></span><br><span class="line">[root@VM-24-13-centos DVWA-2.0.1]# vi XX.XX.XX.XX.php</span><br><span class="line"> </span><br><span class="line">&lt;img src=&quot;http://XX.XX.XX.XX/DVWA-2.0.1/vulnerabilities/csrf/?password_new=12345678&amp;password_conf=12345678&amp;Change=Change#&quot; border=&quot;0&quot; style=&quot;display:none;&quot;/&gt;</span><br><span class="line">&lt;h1&gt;404&lt;h1&gt; </span><br><span class="line">&lt;h2&gt;resource not found.&lt;h2&gt;</span><br><span class="line"></span><br><span class="line">[root@VM-24-13-centos DVWA-2.0.1]# systemctl restart httpd</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>访问刚刚新增的host.php文件，发现修改密码修改成功了(用12345678登录成功)，请求头部加入了Referer</li>
-</ul>
-<p><img src="/aposts/824ce28e/image-20220207174637976.png" alt="image-20220207174637976"></p>
-<h2 id="安全等级为Hight"><a href="#安全等级为Hight" class="headerlink" title="安全等级为Hight"></a>安全等级为Hight</h2><p>修改密码查看请求看下区别</p>
-<p><img src="/aposts/824ce28e/image-20220208090610360.png" alt="image-20220208090610360"></p>
-<h3 id="源码分析-1"><a href="#源码分析-1" class="headerlink" title="源码分析"></a>源码分析</h3><p>High级别的代码加入了Anti-CSRF token机制，用户每次访问改密页面时，服务器会返回一个随机的token，向服务器发起请求时，需要提交token参数，而服务器在收到请求时，会优先检查token，只有token正确，才会处理客户端的请求。</p>
-<p><img src="/aposts/824ce28e/image-20220208090125335.png" alt="image-20220208090125335"></p>
-<h3 id="开始攻击-2"><a href="#开始攻击-2" class="headerlink" title="开始攻击"></a>开始攻击</h3><p>客户端访问攻击页面-&gt;攻击页面获取修改密码页面的token-&gt;将token和密码作为参数一起提交，攻击页面获取修改密码页面的token这一步属于跨域请求，浏览器已经禁止这么做了，所以想要完整这个操作，有两个思路：</p>
-<ul>
-<li>第一， 将该js上传到服务器的目录下，这样就是同一个域了，不过如果可以这样，为啥不放木马呢？</li>
-<li>第二， 利用xss，xss可以执行代码，获取token，xss更现实一点，但是也得需要该网站存在xss，所以单纯从这个修改密码页面，无法突破High漏洞，本此不坐实际，等到时候学到xss时，反过来再做实际</li>
-</ul>
-<h2 id="安全等级为impossible"><a href="#安全等级为impossible" class="headerlink" title="安全等级为impossible"></a>安全等级为impossible</h2><p>这里让输入原密码，不清楚原密码的情况下，就无法进行CSRF攻击。</p>
-<p>结合业务设计，修改密码必须提供原密码，保障安全。</p>
-<p><img src="/aposts/824ce28e/image-20220208091727056.png" alt="image-20220208091727056"></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/10/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><span class="page-number current">11</span><a class="page-number" href="/page/12/">12</a><span class="space">&hellip;</span><a class="page-number" href="/page/17/">17</a><a class="extend next" rel="next" href="/page/12/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/10/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><span class="page-number current">11</span><a class="page-number" href="/page/12/">12</a><span class="space">&hellip;</span><a class="page-number" href="/page/18/">18</a><a class="extend next" rel="next" href="/page/12/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -2030,20 +2020,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">170</span>
+          <span class="site-state-item-count">171</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">27</span>
+        <span class="site-state-item-count">28</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">70</span>
+        <span class="site-state-item-count">71</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -2068,7 +2058,7 @@
     <!--<h3 class="widget-title">Tag Cloud</h3> -->
     <div id="myCanvasContainer" class="widget tagcloud">
         <canvas width="250" height="250" id="resCanvas" style="width=100%">
-            <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AWVS/" rel="tag">AWVS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Burp-Site/" rel="tag">Burp Site</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DVWA/" rel="tag">DVWA</a><span class="tag-list-count">15</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dependency-Check/" rel="tag">Dependency-Check</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/H5/" rel="tag">H5</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hadoop/" rel="tag">Hadoop</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hibernate/" rel="tag">Hibernate</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hive/" rel="tag">Hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jenkins/" rel="tag">Jenkins</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Metasploit/" rel="tag">Metasploit</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MyBatis/" rel="tag">MyBatis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Nessus/" rel="tag">Nessus</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Sonic/" rel="tag">Sonic</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/airtest/" rel="tag">airtest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">android性能测试</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/app%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">app安全测试</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aritest/" rel="tag">aritest</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/centos/" rel="tag">centos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/" rel="tag">chrome</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/datax/" rel="tag">datax</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/django/" rel="tag">django</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/drozer/" rel="tag">drozer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fisco-bcos/" rel="tag">fisco-bcos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flink/" rel="tag">flink</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gin/" rel="tag">gin</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/" rel="tag">go</a><span class="tag-list-count">16</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go-zero/" rel="tag">go-zero</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hive/" rel="tag">hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/httprunner/" rel="tag">httprunner</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a><span class="tag-list-count">25</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jmeter/" rel="tag">jmeter</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka/" rel="tag">kafka</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kail/" rel="tag">kail</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode/" rel="tag">leetcode</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode-%E6%95%B0%E7%BB%84/" rel="tag">leetcode-数组</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mitmproxy/" rel="tag">mitmproxy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongodb/" rel="tag">mongodb</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/monkey/" rel="tag">monkey</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/" rel="tag">mysql</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/orm/" rel="tag">orm</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pandas/" rel="tag">pandas</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pc%E8%87%AA%E5%8A%A8%E5%8C%96/" rel="tag">pc自动化</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/playwright/" rel="tag">playwright</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pytest/" rel="tag">pytest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a><span class="tag-list-count">23</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/" rel="tag">redis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/selenium/" rel="tag">selenium</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring/" rel="tag">spring</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring-cloud/" rel="tag">spring cloud</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/springboot/" rel="tag">springboot</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlite/" rel="tag">sqlite</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlmap/" rel="tag">sqlmap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tkinter/" rel="tag">tkinter</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/" rel="tag">vue</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue3/" rel="tag">vue3</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">云服务器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8C%BA%E5%9D%97%E9%93%BE/" rel="tag">区块链</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag">大数据</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">安全测试</a><span class="tag-list-count">29</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/" rel="tag">微服务</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">性能测试</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%88%AC%E8%99%AB/" rel="tag">爬虫</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" rel="tag">环境搭建</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95/" rel="tag">自动化测试</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%8B%B1%E8%AF%AD%E5%AD%A6%E4%B9%A0/" rel="tag">英语学习</a><span class="tag-list-count">1</span></li></ul>
+            <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AWVS/" rel="tag">AWVS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Burp-Site/" rel="tag">Burp Site</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DVWA/" rel="tag">DVWA</a><span class="tag-list-count">15</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dependency-Check/" rel="tag">Dependency-Check</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/H5/" rel="tag">H5</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hadoop/" rel="tag">Hadoop</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hibernate/" rel="tag">Hibernate</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hive/" rel="tag">Hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jenkins/" rel="tag">Jenkins</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Metasploit/" rel="tag">Metasploit</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MyBatis/" rel="tag">MyBatis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Nessus/" rel="tag">Nessus</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Sonic/" rel="tag">Sonic</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/airtest/" rel="tag">airtest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/" rel="tag">android</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">android性能测试</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/app%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">app安全测试</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aritest/" rel="tag">aritest</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/centos/" rel="tag">centos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome/" rel="tag">chrome</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/datax/" rel="tag">datax</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/django/" rel="tag">django</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/drozer/" rel="tag">drozer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fisco-bcos/" rel="tag">fisco-bcos</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/flink/" rel="tag">flink</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gin/" rel="tag">gin</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/" rel="tag">go</a><span class="tag-list-count">16</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go-zero/" rel="tag">go-zero</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hive/" rel="tag">hive</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/httprunner/" rel="tag">httprunner</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a><span class="tag-list-count">25</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jmeter/" rel="tag">jmeter</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kafka/" rel="tag">kafka</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kail/" rel="tag">kail</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode/" rel="tag">leetcode</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/leetcode-%E6%95%B0%E7%BB%84/" rel="tag">leetcode-数组</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mitmproxy/" rel="tag">mitmproxy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongodb/" rel="tag">mongodb</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/monkey/" rel="tag">monkey</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/" rel="tag">mysql</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/orm/" rel="tag">orm</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pandas/" rel="tag">pandas</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pc%E8%87%AA%E5%8A%A8%E5%8C%96/" rel="tag">pc自动化</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/playwright/" rel="tag">playwright</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pytest/" rel="tag">pytest</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a><span class="tag-list-count">23</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/" rel="tag">redis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/selenium/" rel="tag">selenium</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring/" rel="tag">spring</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spring-cloud/" rel="tag">spring cloud</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/springboot/" rel="tag">springboot</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlite/" rel="tag">sqlite</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlmap/" rel="tag">sqlmap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tkinter/" rel="tag">tkinter</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue/" rel="tag">vue</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vue3/" rel="tag">vue3</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">云服务器</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8C%BA%E5%9D%97%E9%93%BE/" rel="tag">区块链</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" rel="tag">大数据</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AE%89%E5%85%A8%E6%B5%8B%E8%AF%95/" rel="tag">安全测试</a><span class="tag-list-count">29</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/" rel="tag">微服务</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">性能测试</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%88%AC%E8%99%AB/" rel="tag">爬虫</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" rel="tag">环境搭建</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95/" rel="tag">自动化测试</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%8B%B1%E6%96%87%E5%AD%A6%E4%B9%A0/" rel="tag">英文学习</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%8B%B1%E8%AF%AD%E5%AD%A6%E4%B9%A0/" rel="tag">英语学习</a><span class="tag-list-count">1</span></li></ul>
         </canvas>
     </div>
 </div>
