@@ -17923,4 +17923,289 @@
         <tag>环境搭建</tag>
       </tags>
   </entry>
+  <entry>
+    <title>django-admin</title>
+    <url>/aposts/1ab013f1/</url>
+    <content><![CDATA[<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><ul>
+<li>安装django</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">E:\proj&gt;python -m pip install Django</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>使用django-admin 创建项目</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">django-admin startproject StudyDjangoAdmin</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>查看路径</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">E:\proj\StudyDjangoAdmin&gt;tree /f</span><br><span class="line">卷 软件盘 的文件夹 PATH 列表</span><br><span class="line">卷序列号为 240F-1787</span><br><span class="line">E:.</span><br><span class="line">│  manage.py</span><br><span class="line">│</span><br><span class="line">└─StudyDjangoAdmin</span><br><span class="line">        asgi.py</span><br><span class="line">        settings.py</span><br><span class="line">        urls.py</span><br><span class="line">        wsgi.py</span><br><span class="line">        __init__.py</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>在我们创建了Django的项目后，我们在最原始的urls.py中就可以看见关于admin的路径：</li>
+</ul>
+</li>
+</ul>
+<p><img src="/aposts/1ab013f1/image-20250909090838252.png" alt="image-20250909090838252"></p>
+<ul>
+<li>启动服务</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">python manage.py runserver 0.0.0.0:8000</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>如果要访问admin后台我们只需要输入以下网址：</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">http://127.0.0.1:8000/admin/</span><br></pre></td></tr></table></figure>
+
+<p><img src="/aposts/1ab013f1/image-20250909091046888.png" alt="image-20250909091046888"></p>
+<h2 id="数据库选择"><a href="#数据库选择" class="headerlink" title="数据库选择"></a>数据库选择</h2><ul>
+<li>我们在项目的 settings.py 文件中找到 DATABASES 配置项，将其信息修改为</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">// E:\proj\StudyDjangoAdmin\StudyDjangoAdmin\settings.py</span><br><span class="line">DATABASES = &#123;</span><br><span class="line">    # &#x27;default&#x27;: &#123;</span><br><span class="line">    #     &#x27;ENGINE&#x27;: &#x27;django.db.backends.sqlite3&#x27;,</span><br><span class="line">    #     &#x27;NAME&#x27;: BASE_DIR / &#x27;db.sqlite3&#x27;,</span><br><span class="line">    # &#125;</span><br><span class="line">    &#x27;default&#x27;:</span><br><span class="line">        &#123;</span><br><span class="line">            &#x27;ENGINE&#x27;: &#x27;django.db.backends.mysql&#x27;,  # 数据库引擎</span><br><span class="line">            &#x27;NAME&#x27;: &#x27;runoob1&#x27;,  # 数据库名称</span><br><span class="line">            &#x27;HOST&#x27;: &#x27;127.0.0.1&#x27;,  # 数据库地址，本机 ip 地址 127.0.0.1 </span><br><span class="line">            &#x27;PORT&#x27;: 3306,  # 端口 </span><br><span class="line">            &#x27;USER&#x27;: &#x27;root&#x27;,  # 数据库用户名</span><br><span class="line">            &#x27;PASSWORD&#x27;: &#x27;123456&#x27;,  # 数据库密码</span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>安装mysql驱动</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">E:\proj\StudyDjango&gt;pip3 install pymysql</span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li>在与<code> settings.py</code> 同级目录下的 <code>__init__.py </code>中引入模块和进行配置</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">// E:\proj\StudyDjangoAdmin\StudyDjangoAdmin\__init__.py</span><br><span class="line"></span><br><span class="line">import pymysql</span><br><span class="line">pymysql.install</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>默认使用的sqlite，本次选择使用mysql，(<a href="/aposts/3fcd402/">win7 mysql安装详解 </a>)</p>
+</li>
+<li><p>使用heidisql连接本地mysql数据库后，新建一个数据库，名称为：runoob1</p>
+</li>
+<li><p>生成表结构</p>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">E:\proj\StudyDjangoAdmin&gt;python manage.py migrate</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<ul>
+<li><p>如果报错，MySQLclient 目前只支持到 Python3.4，因此如果使用的更高版本的 python，把<code>D:\app\Python37\Lib\site-packages\django\db\backends\mysql\base.py</code> 对应报错代码注释</p>
+</li>
+<li><p>迁移知识点：迁移是非常强大的功能，它能让你在开发过程中持续的改变数据库结构而不需要重新删除和创建表 - 它专注于使数据库平滑升级而不会丢失数据，改变模型需要这三步：</p>
+<ul>
+<li>编辑 <code>models.py</code> 文件，改变模型</li>
+<li>运行 <a href="https://docs.djangoproject.com/zh-hans/5.2/ref/django-admin/#django-admin-makemigrations"><code>python manage.py makemigrations</code></a> 为模型的改变生成迁移文件</li>
+<li>运行 <a href="https://docs.djangoproject.com/zh-hans/5.2/ref/django-admin/#django-admin-migrate"><code>python manage.py migrate</code></a> 来应用数据库迁移。</li>
+</ul>
+</li>
+</ul>
+</blockquote>
+<p><img src="/aposts/1ab013f1/image-20250909091526544.png" alt="image-20250909091526544"></p>
+<ul>
+<li>创建超级用户</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">执行：</span><br><span class="line">python manage.py createsuperuser</span><br><span class="line">    </span><br><span class="line">     -- 提示输入创建的账号：  admin</span><br><span class="line">     -- 邮箱：可直接回车不输</span><br><span class="line">     -- 密码、输两次</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>在<a href="http://127.0.0.1:8000/admin/%E8%BE%93%E5%85%A5%E7%94%A8%E6%88%B7%E5%90%8D%E5%92%8C%E5%AF%86%E7%A0%81%EF%BC%8C%E6%97%A2%E5%8F%AF%E4%BB%A5%E7%99%BB%E5%BD%95%E6%88%90%E5%8A%9F">http://127.0.0.1:8000/admin/输入用户名和密码，既可以登录成功</a></li>
+</ul>
+<p><img src="/aposts/1ab013f1/image-20250909093243315.png" alt="image-20250909093243315"></p>
+<h2 id="修改为中文的界面"><a href="#修改为中文的界面" class="headerlink" title="修改为中文的界面"></a>修改为中文的界面</h2><p>找到settings.py里的LANGUAGE_CODE 和TIME_ZONE修改：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">LANGUAGE_CODE = &#x27;zh-Hans&#x27;</span><br><span class="line">TIME_ZONE = &#x27;Asia/Shanghai</span><br></pre></td></tr></table></figure>
+
+<h2 id="新增用户"><a href="#新增用户" class="headerlink" title="新增用户"></a>新增用户</h2><ul>
+<li>在admin后台新增用户，确保人员状态正确</li>
+</ul>
+<p><img src="/aposts/1ab013f1/image-20250911085956081.png" alt="image-20250911085956081"></p>
+<h2 id="创建APP"><a href="#创建APP" class="headerlink" title="创建APP"></a>创建APP</h2><ul>
+<li>Django 规定，如果要使用ORM模型，必须要创建一个 app</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">django-admin startapp TestModel</span><br></pre></td></tr></table></figure>
+
+<h3 id="注册app"><a href="#注册app" class="headerlink" title="注册app"></a>注册app</h3><ul>
+<li>接下来在 settings.py 中找到INSTALLED_APPS这一项，加入这个app</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">INSTALLED_APPS = [</span><br><span class="line">    &#x27;django.contrib.admin&#x27;,</span><br><span class="line">    &#x27;django.contrib.auth&#x27;,</span><br><span class="line">    &#x27;django.contrib.contenttypes&#x27;,</span><br><span class="line">    &#x27;django.contrib.sessions&#x27;,</span><br><span class="line">    &#x27;django.contrib.messages&#x27;,</span><br><span class="line">    &#x27;django.contrib.staticfiles&#x27;,</span><br><span class="line">    &#x27;TestModel&#x27;,  # 添加此项</span><br><span class="line"></span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<h3 id="模型"><a href="#模型" class="headerlink" title="模型"></a>模型</h3><ul>
+<li>我们修改 <code>TestModel/models.py</code> 文件</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">from django.db import models</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># Create your models here.</span><br><span class="line">class Book(models.Model):</span><br><span class="line">    title = models.CharField(max_length=32)</span><br><span class="line">    price = models.DecimalField(max_digits=5, decimal_places=2)</span><br><span class="line">    pub_date = models.DateField()</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>生成数据表</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 让 Django 知道我们在我们的模型有一些变更</span><br><span class="line">python manage.py makemigrations TestModel</span><br><span class="line"> # 创建表结构</span><br><span class="line">python manage.py migrate TestModel  </span><br></pre></td></tr></table></figure>
+
+<p><img src="/aposts/1ab013f1/image-20250911092703957.png" alt="image-20250911092703957"></p>
+<h2 id="应用实例"><a href="#应用实例" class="headerlink" title="应用实例"></a>应用实例</h2><ul>
+<li><p>书籍的增删改查</p>
+</li>
+<li><p>TestModel&#x2F;view</p>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">from django.http import HttpResponse</span><br><span class="line">from django.template import loader</span><br><span class="line">from TestModel import models</span><br><span class="line">def book_list(request):</span><br><span class="line">    latest_book_list = models.Book.objects.order_by(&quot;-pub_date&quot;)[:5]</span><br><span class="line">    template = loader.get_template(&quot;index.html&quot;)</span><br><span class="line">    context = &#123;&quot;latest_book_list&quot;: latest_book_list&#125;</span><br><span class="line">    return HttpResponse(template.render(context, request))</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>html模板文件</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html lang=&quot;en&quot;&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">    &lt;meta charset=&quot;UTF-8&quot;&gt;</span><br><span class="line">    &lt;title&gt;Title&lt;/title&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">&#123;% if latest_book_list %&#125;</span><br><span class="line">    &lt;ul&gt;</span><br><span class="line">    &#123;% for book in latest_book_list %&#125;</span><br><span class="line">        &lt;li&gt;&lt;a href=&quot;/book/&#123;&#123; book.id &#125;&#125;/&quot;&gt;&#123;&#123; book.title &#125;&#125;&lt;/a&gt;&lt;/li&gt;</span><br><span class="line">    &#123;% endfor %&#125;</span><br><span class="line">    &lt;/ul&gt;</span><br><span class="line">&#123;% else %&#125;</span><br><span class="line">    &lt;p&gt;No book are available.&lt;/p&gt;</span><br><span class="line">&#123;% endif %&#125;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>要为 <code>TestModel</code> 应用定义一个 URLconf，创建一个名为 <code>TestModel/urls.py</code> 的文件，并包含以下内容：</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">urlpatterns = [</span><br><span class="line">    path(&quot;book/&quot;, views.book_list, name=&quot;book_list&quot;),</span><br><span class="line"></span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>把TestModel应用的url引入</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># StudyDjangoAdmin/urls.py</span><br><span class="line">from django.contrib import admin</span><br><span class="line">from django.urls import path, include</span><br><span class="line"></span><br><span class="line">urlpatterns = [</span><br><span class="line">    path(&#x27;admin/&#x27;, admin.site.urls),</span><br><span class="line">    path(&#x27;&#x27;, include(&#x27;TestModel.urls&#x27;)),</span><br><span class="line"></span><br><span class="line">]</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>手动在book表中插入一些数据后，然后访问book</li>
+</ul>
+<p><img src="/aposts/1ab013f1/image-20250914155359641.png" alt="image-20250914155359641"></p>
+<ul>
+<li>这里有个问题，推出登录后直接访问<a href="http://127.0.0.1:8000/book/%EF%BC%8C%E9%9C%80%E8%A6%81%E5%8A%A0%E5%85%A5%E7%99%BB%E5%BD%95%E6%A0%A1%E9%AA%8C">http://127.0.0.1:8000/book/，需要加入登录校验</a></li>
+</ul>
+<h3 id="登录限制"><a href="#登录限制" class="headerlink" title="登录限制"></a>登录限制</h3><ul>
+<li>TestModel&#x2F;view 加入登录检验</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">from django.contrib.auth.decorators import login_required</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def login(request):</span><br><span class="line">    return render(request, &quot;login.html&quot;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def login_action(request):</span><br><span class="line">    if request.method == &#x27;POST&#x27;:</span><br><span class="line">        username = request.POST.get(&quot;username&quot;, &quot;&quot;)</span><br><span class="line">        password = request.POST.get(&quot;password&quot;, &quot;&quot;)</span><br><span class="line">        #接受2个参数，用户名 密码，在用户名密码正确的情况下返回一个user对象。如果不正确，返回None</span><br><span class="line">        user = auth.authenticate(username=username, password=password)</span><br><span class="line">        if user is not None:</span><br><span class="line">            auth.login(request, user)  # 登录</span><br><span class="line">            request.session[&#x27;user&#x27;] = username  # 将session信息记录到浏览器</span><br><span class="line">            response = HttpResponseRedirect(&#x27;/event_manage/&#x27;)</span><br><span class="line">            return response</span><br><span class="line">        else:</span><br><span class="line">            return render(request, &quot;login.html&quot;, &#123;&#x27;error&#x27;: &#x27;用户名或者密码错误&#x27;&#125;)</span><br><span class="line"></span><br><span class="line">@login_required</span><br><span class="line">def logout_func(request):</span><br><span class="line">    auth.logout(request)</span><br><span class="line">    return HttpResponse(&quot;退出登录成功,&lt;a href=&#x27;/login&#x27;&gt;重新登录&lt;/a&gt;&quot;)</span><br><span class="line"></span><br><span class="line">@login_required</span><br><span class="line">def event_manage(request):</span><br><span class="line">    return render(request, &#x27;event_manage.html&#x27;)</span><br><span class="line">    </span><br><span class="line"> @login_required</span><br><span class="line">def book_list(request):</span><br><span class="line">    latest_book_list = models.Book.objects.order_by(&quot;-pub_date&quot;)[:5]</span><br><span class="line">    template = loader.get_template(&quot;index.html&quot;)</span><br><span class="line">    context = &#123;&quot;latest_book_list&quot;: latest_book_list&#125;</span><br><span class="line">    return HttpResponse(template.render(context, request))</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>event_manage.html文件</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">&lt;head&gt;&lt;title&gt;登录管理&lt;/title&gt;&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">&lt;h1&gt;登录成功&lt;/h1&gt;</span><br><span class="line">&lt;p&gt;进入到&lt;a style=&quot;font-size:18px&quot; href=&quot;/TestModel/book&quot;&gt;主页&lt;/a&gt;&lt;strong&lt;/p&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>login.html</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;html&gt;</span><br><span class="line">&lt;head&gt;&lt;title&gt;Django Page&lt;/title&gt;&lt;/head&gt;</span><br><span class="line">&lt;body&gt;&lt;h1&gt;登录&lt;/h1&gt;</span><br><span class="line">&lt;form method=&quot;POST&quot; action=&quot;/login_action/&quot;&gt;</span><br><span class="line">    &lt;input name=&quot;username&quot; type=&quot;text&quot; placeholder=&quot;username&quot;&gt;&lt;br&gt;</span><br><span class="line">    &lt;input name=&quot;password&quot; type=&quot;password&quot; placeholder=&quot;password&quot;&gt;&lt;br&gt;</span><br><span class="line">    &#123;&#123; error &#125;&#125; &lt;br/&gt;</span><br><span class="line">    &lt;button id=&quot;btn&quot; type=&quot;submit&quot;&gt;登录&lt;/button&gt;</span><br><span class="line">    &#123;% csrf_token %&#125;</span><br><span class="line">&lt;/form&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>书籍主页的html，加入了一个退出登录</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;p&gt;&lt;a href=&quot;/logout&quot;&gt;退出登录&lt;/a&gt;&lt;/p&gt;</span><br><span class="line">&#123;% if latest_book_list %&#125;</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>当没有登录的情况下，访问书籍主页，直接就调整到了登录界面</li>
+</ul>
+<p><img src="/aposts/1ab013f1/image-20250914141655730.png" alt="image-20250914141655730"></p>
+<ul>
+<li>这里登录限制实现后，有个不灵活的地方，就是每次都要手动加上@login_required，之前文章里面实现过，可以参考<a href="/aposts/8d0d1e49/">这里</a></li>
+</ul>
+<h3 id="新增"><a href="#新增" class="headerlink" title="新增"></a>新增</h3><ul>
+<li>主页的index.html加入了新增</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;div&gt;</span><br><span class="line">    &lt;a href=&quot;&#123;% url &#x27;event_add&#x27; %&#125;&quot;&gt;新增&lt;/a&gt;</span><br><span class="line">&lt;/div&gt;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>应用中加入了两个add路由</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">urlpatterns = [</span><br><span class="line">    path(&quot;book/&quot;, views.book_list, name=&quot;book_list&quot;),</span><br><span class="line">    # 新增界面</span><br><span class="line">    path(&quot;event_add/&quot;, views.event_add, name=&quot;event_add&quot;),</span><br><span class="line">    # 提交新增数据</span><br><span class="line">    path(&quot;book_add/&quot;, views.book_add, name=&quot;book_add&quot;),</span><br><span class="line"></span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>view代码</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">@login_required</span><br><span class="line">def event_add(request):</span><br><span class="line">    return render(request, &#x27;add.html&#x27;)</span><br><span class="line">    </span><br><span class="line">@login_required</span><br><span class="line">def book_add(request):</span><br><span class="line">    if request.method == &#x27;POST&#x27;:</span><br><span class="line">        title = request.POST.get(&quot;title&quot;, &quot;&quot;)</span><br><span class="line">        price = request.POST.get(&quot;price&quot;, &quot;&quot;)</span><br><span class="line">        d_price = float(price)</span><br><span class="line">        pub_date = datetime.now().strftime(&quot;%Y-%m-%d&quot;)</span><br><span class="line">        book = models.Book(title=title, price=d_price, pub_date=pub_date)</span><br><span class="line">        book.save()</span><br><span class="line">        # 保存成功后，调整到首页</span><br><span class="line">        return redirect(&#x27;/book/&#x27;)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><img src="/aposts/1ab013f1/image-20250914175243952.png" alt="image-20250914175243952"></p>
+<p><img src="/aposts/1ab013f1/image-20250914175312086.png" alt="image-20250914175312086"></p>
+<h3 id="编辑"><a href="#编辑" class="headerlink" title="编辑"></a>编辑</h3><ul>
+<li>index.html，加入了编辑</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;% if latest_book_list %&#125;</span><br><span class="line">    &lt;ul&gt;</span><br><span class="line">    &#123;% for book in latest_book_list %&#125;</span><br><span class="line">        &lt;li&gt;&#123;&#123;book.id&#125;&#125;--&lt;a href=&quot;#&quot;&gt;&#123;&#123;book.title&#125;&#125;&lt;/a&gt;--&lt;a href=&quot;&#123;% url &#x27;book_edit&#x27; book.id%&#125;&quot;&gt;编辑&lt;/a&gt;&lt;/li&gt;</span><br><span class="line">    &#123;% endfor %&#125;</span><br><span class="line">    &lt;/ul&gt;</span><br><span class="line">&#123;% else %&#125;</span><br><span class="line">    &lt;p&gt;No book are available.&lt;/p&gt;</span><br><span class="line">&#123;% endif %&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>view代码。如果是get请求，就读取数据并且跳转到edit.html，然后是post请求直接就修改数据</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">@login_required</span><br><span class="line">def book_edit(request, book_id):</span><br><span class="line">    if request.method == &#x27;POST&#x27;:</span><br><span class="line">        title = request.POST.get(&quot;title&quot;, &quot;&quot;)</span><br><span class="line">        price = request.POST.get(&quot;price&quot;, &quot;&quot;)</span><br><span class="line">        d_price = float(price)</span><br><span class="line">        pub_date = datetime.now().strftime(&quot;%Y-%m-%d&quot;)</span><br><span class="line">        book = Book.objects.get(pk=book_id)</span><br><span class="line">        book.price = d_price</span><br><span class="line">        book.pub_date = pub_date</span><br><span class="line">        book.title = title</span><br><span class="line">        book.save()</span><br><span class="line">        return redirect(&#x27;book_list&#x27;)</span><br><span class="line">    else:</span><br><span class="line">        # 处理GET请求，显示编辑表单</span><br><span class="line">        book = get_object_or_404(Book, pk=book_id)</span><br><span class="line">        return render(request, &#x27;edit.html&#x27;, &#123;&#x27;book&#x27;: book&#125;)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>url修改</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">path(&quot;book_edit/&lt;int:book_id&gt;/&quot;, views.book_edit, name=&quot;book_edit&quot;),</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><img src="/aposts/1ab013f1/image-20250914195750503.png" alt="image-20250914195750503"></p>
+<h3 id="明细页面"><a href="#明细页面" class="headerlink" title="明细页面"></a>明细页面</h3><ul>
+<li>index.html修改</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;% if latest_book_list %&#125;</span><br><span class="line">    &lt;ul&gt;</span><br><span class="line">    &#123;% for book in latest_book_list %&#125;</span><br><span class="line">        &lt;li&gt;&#123;&#123;book.id&#125;&#125;--&lt;a href=&quot;&#123;% url &#x27;book_detail&#x27; book.id%&#125;&quot;&gt;&#123;&#123;book.title&#125;&#125;&lt;/a&gt;--&lt;a href=&quot;&#123;% url &#x27;book_edit&#x27; book.id%&#125;&quot;&gt;编辑&lt;/a&gt;&lt;/li&gt;</span><br><span class="line">    &#123;% endfor %&#125;</span><br><span class="line">    &lt;/ul&gt;</span><br><span class="line">&#123;% else %&#125;</span><br><span class="line">    &lt;p&gt;No book are available.&lt;/p&gt;</span><br><span class="line">&#123;% endif %&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>view.py</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">@login_required</span><br><span class="line">def book_detail(request, book_id):</span><br><span class="line">    book = get_object_or_404(Book, pk=book_id)</span><br><span class="line">    return render(request, &#x27;detail.html&#x27;, &#123;</span><br><span class="line">        &#x27;book&#x27;: book</span><br><span class="line">    &#125;)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>url</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">path(&quot;book_detail/&lt;int:book_id&gt;/&quot;, views.book_detail, name=&quot;book_detail&quot;),</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>detail.html明细页面</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html lang=&quot;en&quot;&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">    &lt;meta charset=&quot;UTF-8&quot;&gt;</span><br><span class="line">    &lt;title&gt;详情页面&lt;/title&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">&lt;div&gt;</span><br><span class="line">    &lt;p&gt;id:&#123;&#123; book.id &#125;&#125;&lt;/p&gt;</span><br><span class="line">    &lt;p&gt;标题：&#123;&#123; book.title &#125;&#125;&lt;/p&gt;</span><br><span class="line">    &lt;p&gt;价格：&#123;&#123; book.price &#125;&#125;&lt;/p&gt;</span><br><span class="line">    &lt;p&gt;日期：&#123;&#123; book.pub_date &#125;&#125;&lt;/p&gt;</span><br><span class="line">&lt;/div&gt;</span><br><span class="line">&lt;a href=&quot;&#123;% url &#x27;book_list&#x27; %&#125;&quot;&gt;Back to List&lt;/a&gt;</span><br><span class="line"></span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="删除"><a href="#删除" class="headerlink" title="删除"></a>删除</h3><ul>
+<li>index.html 加入了删除</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;% if latest_book_list %&#125;</span><br><span class="line">    &lt;ul&gt;</span><br><span class="line">    &#123;% for book in latest_book_list %&#125;</span><br><span class="line">        &lt;li&gt;&#123;&#123;book.id&#125;&#125;--&lt;a href=&quot;&#123;% url &#x27;book_detail&#x27; book.id%&#125;&quot;&gt;&#123;&#123;book.title&#125;&#125;&lt;/a&gt;--&lt;a href=&quot;&#123;% url &#x27;book_edit&#x27; book.id%&#125;&quot;&gt;编辑&lt;/a&gt;</span><br><span class="line">        &lt;form action=&quot;&#123;% url &#x27;book_delete&#x27; book.id %&#125;&quot; method=&quot;post&quot; style=&quot;display:inline;&quot;&gt;</span><br><span class="line">                &#123;% csrf_token %&#125;</span><br><span class="line">                &lt;button type=&quot;submit&quot; onclick=&quot;return confirm(&#x27;确定要删除这本书吗？&#x27;)&quot;&gt;删除&lt;/button&gt;</span><br><span class="line">            &lt;/form&gt;</span><br><span class="line">        &lt;/li&gt;</span><br><span class="line">    &#123;% endfor %&#125;</span><br><span class="line">    &lt;/ul&gt;</span><br><span class="line">&#123;% else %&#125;</span><br><span class="line">    &lt;p&gt;No book are available.&lt;/p&gt;</span><br><span class="line">&#123;% endif %&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>view加入删除</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">@login_required</span><br><span class="line">def book_delete(request,book_id):</span><br><span class="line">    if request.method == &#x27;POST&#x27;:</span><br><span class="line">        book = get_object_or_404(Book, pk=book_id)</span><br><span class="line">        book.delete()</span><br><span class="line">        return redirect(&#x27;book_list&#x27;)  </span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>url</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">path(&quot;book_delete/&lt;int:book_id&gt;/&quot;, views.book_delete, name=&quot;book_delete&quot;),</span><br></pre></td></tr></table></figure>
+
+<h3 id="查询"><a href="#查询" class="headerlink" title="查询"></a>查询</h3><ul>
+<li>书籍列表index.html加入搜索</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;p&gt;&lt;a href=&quot;/logout&quot;&gt;退出登录&lt;/a&gt;&lt;/p&gt;</span><br><span class="line"></span><br><span class="line">    &lt;form class=&quot;navbar-form&quot; method=&quot;get&quot; action=&quot;&#123;% url &#x27;book_list&#x27; %&#125;&quot;&gt;</span><br><span class="line">                    &lt;div class=&quot;form-group&quot;&gt;</span><br><span class="line">    &lt;input type=&quot;text&quot; name=&quot;title&quot; value=&quot;&#123;&#123; search_term &#125;&#125;&quot;&gt;</span><br><span class="line">                    &lt;/div&gt;</span><br><span class="line">                    &lt;button type=&quot;submit&quot; class=&quot;btn btn-success&quot;&gt;</span><br><span class="line">                        搜索</span><br><span class="line">                    &lt;/button&gt;</span><br><span class="line">                &lt;/form&gt;</span><br><span class="line">&#123;% if latest_book_list %&#125;</span><br><span class="line">....</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>view代码修改</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">@login_required</span><br><span class="line">def book_list(request):</span><br><span class="line">    title = request.GET.get(&quot;title&quot;, &quot;&quot;)</span><br><span class="line"></span><br><span class="line">    if title:</span><br><span class="line">        books = Book.objects.filter(</span><br><span class="line">            title__contains=title</span><br><span class="line">        ).order_by(&quot;-pub_date&quot;)[:5]</span><br><span class="line">    else:</span><br><span class="line">        books = Book.objects.order_by(&quot;-pub_date&quot;)[:5]</span><br><span class="line"></span><br><span class="line">    return render(request, &#x27;index.html&#x27;, &#123;</span><br><span class="line">        &#x27;latest_book_list&#x27;: books,</span><br><span class="line">        &#x27;search_term&#x27;: title</span><br><span class="line">    &#125;)</span><br></pre></td></tr></table></figure>
+
+<h3 id="分页"><a href="#分页" class="headerlink" title="分页"></a>分页</h3><ul>
+<li>view的book_list加入分页，有自带的Paginator</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger</span><br><span class="line"></span><br><span class="line">@login_required</span><br><span class="line">def book_list(request):</span><br><span class="line">    title = request.GET.get(&quot;title&quot;, &quot;&quot;)</span><br><span class="line"></span><br><span class="line">    if title:</span><br><span class="line">        books = Book.objects.filter(</span><br><span class="line">            title__contains=title</span><br><span class="line">        ).order_by(&quot;-pub_date&quot;)</span><br><span class="line">    else:</span><br><span class="line">        books = Book.objects.order_by(&quot;-pub_date&quot;)</span><br><span class="line"></span><br><span class="line">    # Set up pagination</span><br><span class="line">    paginator = Paginator(books, 5)  # Show 5 books per page.</span><br><span class="line">    page_number = request.GET.get(&#x27;page&#x27;)</span><br><span class="line">    page_obj = paginator.get_page(page_number)</span><br><span class="line">    logger.debug(f&quot;Page number: &#123;page_number&#125;, Page obj: &#123;page_obj&#125;&quot;)</span><br><span class="line">    return render(request, &#x27;index.html&#x27;, &#123;</span><br><span class="line">        &#x27;latest_book_list&#x27;: page_obj,</span><br><span class="line">        &#x27;search_term&#x27;: title</span><br><span class="line">    &#125;)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>index.html加入分页样式</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">!-- Pagination controls --&gt;</span><br><span class="line"> &lt;div class=&quot;pagination&quot;&gt;</span><br><span class="line">    &lt;span class=&quot;step-links&quot;&gt;</span><br><span class="line">        &#123;% if latest_book_list.has_previous %&#125;</span><br><span class="line">            &lt;a href=&quot;?page=1&amp;title=&#123;&#123; search_term &#125;&#125;&quot;&gt;« 首页&lt;/a&gt;</span><br><span class="line">            &lt;a href=&quot;?page=&#123;&#123; page_obj.previous_page_number &#125;&#125;&amp;title=&#123;&#123; search_term &#125;&#125;&quot;&gt;上一页&lt;/a&gt;</span><br><span class="line">        &#123;% endif %&#125;</span><br><span class="line"></span><br><span class="line">        &lt;span class=&quot;current&quot;&gt;</span><br><span class="line">            第 &#123;&#123; latest_book_list.number &#125;&#125; 页 / 共 &#123;&#123; latest_book_list.paginator.num_pages &#125;&#125; 页</span><br><span class="line">        &lt;/span&gt;</span><br><span class="line"></span><br><span class="line">        &#123;% if latest_book_list.has_next %&#125;</span><br><span class="line">            &lt;a href=&quot;?page=&#123;&#123; latest_book_list.next_page_number &#125;&#125;&amp;title=&#123;&#123; search_term &#125;&#125;&quot;&gt;下一页&lt;/a&gt;</span><br><span class="line">            &lt;a href=&quot;?page=&#123;&#123; latest_book_list.paginator.num_pages &#125;&#125;&amp;title=&#123;&#123; search_term &#125;&#125;&quot;&gt;末页 »&lt;/a&gt;</span><br><span class="line">        &#123;% endif %&#125;</span><br><span class="line">    &lt;/span&gt;</span><br><span class="line">&lt;/div&gt;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>查看结果</li>
+</ul>
+<p><img src="/aposts/1ab013f1/image-20250914231917746.png" alt="image-20250914231917746"></p>
+<h3 id="退出登录"><a href="#退出登录" class="headerlink" title="退出登录"></a>退出登录</h3><ul>
+<li>index.html</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;p&gt;&lt;a href=&quot;/logout&quot;&gt;退出登录&lt;/a&gt;&lt;/p&gt;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>在根目录的url配置</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">url(r&#x27;^logout/&#x27;, views.logout_func),</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>在应用的view中</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">@login_required</span><br><span class="line">def logout_func(request):</span><br><span class="line">    auth.logout(request)</span><br><span class="line">    return HttpResponse(&quot;退出登录成功,&lt;a href=&#x27;/login&#x27;&gt;重新登录&lt;/a&gt;&quot;)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>python</category>
+      </categories>
+      <tags>
+        <tag>python</tag>
+        <tag>django</tag>
+      </tags>
+  </entry>
 </search>
