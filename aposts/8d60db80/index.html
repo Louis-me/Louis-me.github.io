@@ -20,19 +20,20 @@
     var CONFIG = {"hostname":"louis-me.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":true,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667686970717273747576777879808182838485868788​&#96;&#96;&#96;import asyncioimport aiohttpi">
+  <meta name="description" content="说明 上一篇文章django-admin 主要介绍了利用admin创建用户，然后结合模板、html等实现了增删改查，本次介绍使用类视图来优化  登录的优化 根目录的url，用系统自带的视图  1234567urlpatterns &#x3D; [    path(&amp;#x27;admin&#x2F;&amp;#x27;, admin.site.urls),    path(&amp;#x27;accounts&#x2F;logout&#x2F;&amp;#x27">
 <meta property="og:type" content="article">
-<meta property="og:title" content="python+asyncio发送请求">
-<meta property="og:url" content="https://louis-me.github.io/aposts/aab677c5/index.html">
+<meta property="og:title" content="django类视图">
+<meta property="og:url" content="https://louis-me.github.io/aposts/8d60db80/index.html">
 <meta property="og:site_name" content="施坤的博客">
-<meta property="og:description" content="12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667686970717273747576777879808182838485868788​&#96;&#96;&#96;import asyncioimport aiohttpi">
+<meta property="og:description" content="说明 上一篇文章django-admin 主要介绍了利用admin创建用户，然后结合模板、html等实现了增删改查，本次介绍使用类视图来优化  登录的优化 根目录的url，用系统自带的视图  1234567urlpatterns &#x3D; [    path(&amp;#x27;admin&#x2F;&amp;#x27;, admin.site.urls),    path(&amp;#x27;accounts&#x2F;logout&#x2F;&amp;#x27">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2021-09-29T09:13:35.000Z">
-<meta property="article:modified_time" content="2022-02-25T03:20:56.595Z">
-<meta property="article:tag" content="自动化测试,安全测试,性能测试,渗透测试,大数据测试,python,jmeter,airtest,appium,monkey">
+<meta property="article:published_time" content="2025-09-19T00:53:42.000Z">
+<meta property="article:modified_time" content="2025-09-20T02:11:13.990Z">
+<meta property="article:tag" content="python">
+<meta property="article:tag" content="django">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="https://louis-me.github.io/aposts/aab677c5/">
+<link rel="canonical" href="https://louis-me.github.io/aposts/8d60db80/">
 
 
 <script id="page-configurations">
@@ -45,7 +46,7 @@
   };
 </script>
 
-  <title>python+asyncio发送请求 | 施坤的博客</title>
+  <title>django类视图 | 施坤的博客</title>
   
 
 
@@ -193,7 +194,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/aab677c5/">
+    <link itemprop="mainEntityOfPage" href="https://louis-me.github.io/aposts/8d60db80/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -206,7 +207,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          python+asyncio发送请求
+          django类视图
         </h1>
 
         <div class="post-meta">
@@ -216,14 +217,14 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2021-09-29 17:13:35" itemprop="dateCreated datePublished" datetime="2021-09-29T17:13:35+08:00">2021-09-29</time>
+              <time title="创建时间：2025-09-19 08:53:42" itemprop="dateCreated datePublished" datetime="2025-09-19T08:53:42+08:00">2025-09-19</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-02-25 11:20:56" itemprop="dateModified" datetime="2022-02-25T11:20:56+08:00">2022-02-25</time>
+                <time title="修改时间：2025-09-20 10:11:13" itemprop="dateModified" datetime="2025-09-20T10:11:13+08:00">2025-09-20</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -236,7 +237,7 @@
             </span>
 
           
-            <span id="/aposts/aab677c5/" class="post-meta-item leancloud_visitors" data-flag-title="python+asyncio发送请求" title="阅读次数">
+            <span id="/aposts/8d60db80/" class="post-meta-item leancloud_visitors" data-flag-title="django类视图" title="阅读次数">
               <span class="post-meta-item-icon">
                 <i class="fa fa-eye"></i>
               </span>
@@ -251,8 +252,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/aposts/aab677c5/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/aposts/aab677c5/" itemprop="commentCount"></span>
+    <a title="valine" href="/aposts/8d60db80/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/aposts/8d60db80/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -267,7 +268,66 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br></pre></td><td class="code"><pre><span class="line">​```</span><br><span class="line">import asyncio</span><br><span class="line">import aiohttp</span><br><span class="line">import json</span><br><span class="line">def fetch_page(url):</span><br><span class="line">    try:</span><br><span class="line">        response = yield from aiohttp.request(&#x27;GET&#x27;, url)</span><br><span class="line">        string = (yield from response.read()).decode(&#x27;utf-8&#x27;)</span><br><span class="line">        if response.status == 200:</span><br><span class="line">            data = json.loads(string)</span><br><span class="line">            print(data)</span><br><span class="line">        else:</span><br><span class="line">            print(&quot;data fetch failed for&quot;)</span><br><span class="line">            print(response.content, response.status)</span><br><span class="line">    except asyncio.TimeoutError:</span><br><span class="line">        print(&quot;访问失败&quot;)</span><br><span class="line">if __name__ == &#x27;__main__&#x27;:</span><br><span class="line">    url = &#x27;http://gc.ditu.aliyun.com/geocoding?a=%E8%8B%8F%E5%B7%9E%E5%B8%82&#x27;</span><br><span class="line">    # urls = [url] * 4</span><br><span class="line">    loop = asyncio.get_event_loop()</span><br><span class="line">    tasks = []</span><br><span class="line">    for i in range(5):</span><br><span class="line">        tasks.append(asyncio.async(fetch_page(url)))</span><br><span class="line">    # tasks = [asyncio.async(fetch_page(z, i)) for i, z in enumerate(urls)]</span><br><span class="line">    print(tasks)</span><br><span class="line">    loop.run_until_complete(asyncio.wait(tasks, timeout=5))</span><br><span class="line">    loop.close()</span><br><span class="line">​```</span><br><span class="line"></span><br><span class="line">封装一次</span><br><span class="line"></span><br><span class="line">​```</span><br><span class="line">class fetch():</span><br><span class="line">    def __init__(self, dict_http):</span><br><span class="line">        &#x27;&#x27;&#x27;</span><br><span class="line">        http请求的封装，传入dict</span><br><span class="line">        :param dict_http:</span><br><span class="line">        &#x27;&#x27;&#x27;</span><br><span class="line">        self.dict_http = dict_http</span><br><span class="line">    def get(self, url, param):</span><br><span class="line">        data = &#123;&#125;</span><br><span class="line">        url = self.dict_http[&quot;protocol&quot;] + self.dict_http[&quot;host&quot;] + &quot;:&quot; + str(self.dict_http[&quot;port&quot;]) + url</span><br><span class="line">        print(url)</span><br><span class="line">        try:</span><br><span class="line">            response = yield from aiohttp.request(&quot;GET&quot;, url, headers=self.dict_http[&quot;header&quot;], params=param)</span><br><span class="line">            string = (yield from response.read()).decode(&#x27;utf-8&#x27;)</span><br><span class="line">            if response.status == 200:</span><br><span class="line">                data = json.loads(string)</span><br><span class="line">            else:</span><br><span class="line">                print(&quot;data fetch failed for&quot;)</span><br><span class="line">                print(response.content, response.status)</span><br><span class="line">            data[&quot;status_code&quot;] = response.status</span><br><span class="line">            print(data)</span><br><span class="line">        except asyncio.TimeoutError:</span><br><span class="line">            print(&quot;访问失败&quot;)</span><br><span class="line">        return data</span><br><span class="line">    def post(self,url, param):</span><br><span class="line">        data = &#123;&#125;</span><br><span class="line">        url = self.dict_http[&quot;protocol&quot;] + self.dict_http[&quot;host&quot;] + &#x27;:&#x27; + str(self.dict_http[&quot;port&quot;]) + url</span><br><span class="line">        try:</span><br><span class="line">            response = yield from aiohttp.request(&#x27;POST&#x27;, url, data=param)</span><br><span class="line">            string = (yield from response.read()).decode(&#x27;utf-8&#x27;)</span><br><span class="line">            if response.status == 200:</span><br><span class="line">                data = json.loads(string)</span><br><span class="line">            else:</span><br><span class="line">                print(&quot;data fetch failed for&quot;)</span><br><span class="line">                print(response.content, response.status)</span><br><span class="line">            data[&quot;status_code&quot;] = response.status</span><br><span class="line">            print(data)</span><br><span class="line">        except asyncio.TimeoutError:</span><br><span class="line">            print(&quot;访问失败&quot;)</span><br><span class="line">        return data</span><br><span class="line">if __name__ == &#x27;__main__&#x27;:</span><br><span class="line">    url = &#x27;/iplookup/iplookup.php&#x27;</span><br><span class="line">    loop = asyncio.get_event_loop()</span><br><span class="line">    tasks = []</span><br><span class="line">    dict_http = &#123;&#125;</span><br><span class="line">    dict_http[&quot;protocol&quot;] = &quot;http://&quot;</span><br><span class="line">    dict_http[&quot;host&quot;] = &quot;int.dpool.sina.com.cn&quot;</span><br><span class="line">    dict_http[&quot;port&quot;] = 80</span><br><span class="line">    dict_http[&quot;header&quot;] = &#123;&quot;Accept&quot;:&quot;text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8&quot;,&quot;User-Agent&quot;:&quot;Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.59 Safari/537.36&quot;&#125;</span><br><span class="line">    f = fetch(dict_http)</span><br><span class="line">    for i in range(2):</span><br><span class="line">        tasks.append(asyncio.async(f.get(url, param=&quot;format=json&amp;ip=218.4.255.255&quot;)))</span><br><span class="line">    loop.run_until_complete(asyncio.wait(tasks, timeout=5))</span><br><span class="line">    loop.close()</span><br><span class="line"></span><br><span class="line">​```</span><br></pre></td></tr></table></figure>
+        <h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><ul>
+<li>上一篇文章<a href="/aposts/1ab013f1/">django-admin</a> 主要介绍了利用admin创建用户，然后结合模板、html等实现了增删改查，本次介绍使用类视图来优化</li>
+</ul>
+<h2 id="登录的优化"><a href="#登录的优化" class="headerlink" title="登录的优化"></a>登录的优化</h2><ul>
+<li>根目录的url，用系统自带的视图</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">urlpatterns = [</span><br><span class="line">    path(&#x27;admin/&#x27;, admin.site.urls),</span><br><span class="line">    path(&#x27;accounts/logout/&#x27;, LogoutView.as_view(next_page=&#x27;/login/&#x27;), name=&#x27;logout&#x27;),</span><br><span class="line">    path(&#x27;accounts/login/&#x27;, LoginView.as_view(template_name=&#x27;login.html&#x27;), name=&#x27;login&#x27;),</span><br><span class="line"></span><br><span class="line">]</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>setting加入了登录、退出登录的url</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># 指定登录URL</span><br><span class="line">LOGIN_URL = &#x27;/accounts/login/&#x27;</span><br><span class="line"></span><br><span class="line"># 指定注销后重定向的URL</span><br><span class="line">LOGOUT_REDIRECT_URL = &#x27;/login/&#x27;</span><br><span class="line"></span><br><span class="line"># 指定登录后重定向的URL</span><br><span class="line">LOGIN_REDIRECT_URL = &#x27;/book/&#x27;</span><br></pre></td></tr></table></figure>
+
+<h2 id="书籍列表"><a href="#书籍列表" class="headerlink" title="书籍列表"></a>书籍列表</h2><ul>
+<li>看下应用下的url优化</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">urlpatterns = [</span><br><span class="line">    path(&#x27;book/&#x27;, BookList.as_view(), name=&#x27;book_list&#x27;),</span><br><span class="line">    path(&#x27;book/add/&#x27;, BookAdd.as_view(), name=&#x27;book_add&#x27;),</span><br><span class="line">    path(&#x27;book/edit/&lt;int:pk&gt;/&#x27;, BookEdit.as_view(), name=&#x27;book_edit&#x27;),</span><br><span class="line">    path(&#x27;book/&lt;int:pk&gt;/&#x27;, BookDetail.as_view(), name=&#x27;book_detail&#x27;),</span><br><span class="line">    path(&#x27;book/delete/&lt;int:pk&gt;/&#x27;, BookDelete.as_view(), name=&#x27;book_delete&#x27;),  # 新增删除路径</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>vew代码</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">lass BookList(LoginRequiredMixin, ListView):</span><br><span class="line">    model = Book</span><br><span class="line">    template_name = &#x27;index.html&#x27;</span><br><span class="line">    context_object_name = &#x27;latest_book_list&#x27;</span><br><span class="line">    paginate_by = 5</span><br><span class="line"></span><br><span class="line">    def get_queryset(self):</span><br><span class="line">        title = self.request.GET.get(&quot;title&quot;, &quot;&quot;)</span><br><span class="line">        if title:</span><br><span class="line">            return Book.objects.filter(title__contains=title).order_by(&quot;-pub_date&quot;)</span><br><span class="line">        else:</span><br><span class="line">            return Book.objects.order_by(&quot;-pub_date&quot;)</span><br><span class="line"></span><br><span class="line">    def get_context_data(self, **kwargs):</span><br><span class="line">        context = super().get_context_data(**kwargs)</span><br><span class="line">        context[&#x27;search_term&#x27;] = self.request.GET.get(&quot;title&quot;, &quot;&quot;)</span><br><span class="line">        return context</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>使用了LoginRequiredMixin登录视图</li>
+<li>get_queryset 返回列表，get_context_data返回具体字段</li>
+</ul>
+<h2 id="新增书籍"><a href="#新增书籍" class="headerlink" title="新增书籍"></a>新增书籍</h2><ul>
+<li>具体view代码</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">class BookAdd(LoginRequiredMixin, CreateView):</span><br><span class="line">    model = Book</span><br><span class="line">    # fields = [&#x27;title&#x27;, &#x27;price&#x27;]</span><br><span class="line">    form_class = BookForm</span><br><span class="line"></span><br><span class="line">    template_name = &#x27;add.html&#x27;</span><br><span class="line">    success_url = reverse_lazy(&#x27;book_list&#x27;)</span><br><span class="line">    # 默认实现了 form_valid()  简单重定向至 success_url</span><br><span class="line">    def form_valid(self, form):</span><br><span class="line">        book = form.save(commit=False)</span><br><span class="line">        book.pub_date = now().strftime(&quot;%Y-%m-%d&quot;)</span><br><span class="line">        book.save()</span><br><span class="line">        return super().form_valid(form)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>html文件</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&#123;% extends &quot;base_generic.html&quot; %&#125;</span><br><span class="line"></span><br><span class="line">&#123;% block content %&#125;</span><br><span class="line">&lt;h2&gt;Add New Book&lt;/h2&gt;</span><br><span class="line">&lt;form method=&quot;post&quot;&gt;</span><br><span class="line">    &#123;% csrf_token %&#125;</span><br><span class="line">    &#123;&#123; form.as_p &#125;&#125;</span><br><span class="line">    &lt;button type=&quot;submit&quot;&gt;Save changes&lt;/button&gt;</span><br><span class="line">&lt;/form&gt;</span><br><span class="line">&lt;a href=&quot;&#123;% url &#x27;book_list&#x27; %&#125;&quot;&gt;Back to list&lt;/a&gt;</span><br><span class="line">&#123;% endblock %&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>form.as_p 直接根据BookForm 生成了表单内容</p>
+</li>
+<li><p>url进行了修改，之前是跳转到add的html界面，然后提交form表单，现在可以一步完成</p>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># path(&#x27;event/add/&#x27;, EventAdd.as_view(), name=&#x27;event_add&#x27;),</span><br><span class="line">  path(&#x27;book/add/&#x27;, BookAdd.as_view(), name=&#x27;book_add&#x27;),</span><br></pre></td></tr></table></figure>
+
+<h2 id="删除"><a href="#删除" class="headerlink" title="删除"></a>删除</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">lass BookDelete(LoginRequiredMixin, UserPassesTestMixin, DeleteView):</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    权限控制：UserPassesTestMixin 允许你在视图级别进行自定义权限检查。</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    model = Book</span><br><span class="line">    template_name = &#x27;delete.html&#x27;</span><br><span class="line">    success_url = reverse_lazy(&#x27;book_list&#x27;)</span><br><span class="line">    #     test_func: 这是 UserPassesTestMixin 要求实现的方法，用于定义具体的权限检查逻辑。如果 test_func 返回 True，则允许用户访问视图；否则，返回 False 并抛出 PermissionDenied 异常。</span><br><span class="line">    def test_func(self):</span><br><span class="line">        book = self.get_object()</span><br><span class="line">        # 确保只有书籍的所有者或管理员才能删除书籍</span><br><span class="line">        return self.request.user.is_superuser or self.request.user == book.owner</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="编辑"><a href="#编辑" class="headerlink" title="编辑"></a>编辑</h2><ul>
+<li>view</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">class BookEdit(LoginRequiredMixin, UpdateView):</span><br><span class="line">    model = Book</span><br><span class="line">    form_class = BookForm</span><br><span class="line"></span><br><span class="line">    template_name = &#x27;edit.html&#x27;</span><br><span class="line">    success_url = reverse_lazy(&#x27;book_list&#x27;)</span><br><span class="line"></span><br><span class="line">    def form_valid(self, form):</span><br><span class="line">        book = form.save(commit=False)</span><br><span class="line">        book.pub_date = now().strftime(&quot;%Y-%m-%d&quot;)</span><br><span class="line">        book.save()</span><br><span class="line">        return super().form_valid(form)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>html</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html lang=&quot;en&quot;&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">    &lt;meta charset=&quot;UTF-8&quot;&gt;</span><br><span class="line">    &lt;title&gt;编辑&lt;/title&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">&#123;% extends &quot;base_generic.html&quot; %&#125;</span><br><span class="line"></span><br><span class="line">&#123;% block content %&#125;</span><br><span class="line">&lt;h2&gt;Edit Book&lt;/h2&gt;</span><br><span class="line">&lt;form method=&quot;post&quot;&gt;</span><br><span class="line">    &#123;% csrf_token %&#125;</span><br><span class="line">    &#123;&#123; form.as_p &#125;&#125;</span><br><span class="line">    &lt;button type=&quot;submit&quot;&gt;Save changes&lt;/button&gt;</span><br><span class="line">&lt;/form&gt;</span><br><span class="line">&lt;a href=&quot;&#123;% url &#x27;book_list&#x27; %&#125;&quot;&gt;Back to list&lt;/a&gt;</span><br><span class="line">&#123;% endblock %&#125;</span><br><span class="line"></span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>本文<a target="_blank" rel="noopener" href="https://github.com/Louis-me/djangoAdminStudy">源代码</a></li>
+</ul>
 
     </div>
 
@@ -276,6 +336,10 @@
     
 
       <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/python/" rel="tag"># python</a>
+              <a href="/tags/django/" rel="tag"># django</a>
+          </div>
 
         
 
@@ -283,13 +347,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/aposts/7bdbe3d6/" rel="prev" title="python-list排序,set的使用">
-      <i class="fa fa-chevron-left"></i> python-list排序,set的使用
+    <a href="/aposts/1ab013f1/" rel="prev" title="django-admin">
+      <i class="fa fa-chevron-left"></i> django-admin
     </a></div>
-      <div class="post-nav-item">
-    <a href="/aposts/8d7c7783/" rel="next" title="py3-5-aiohttp-百万请求？">
-      py3-5-aiohttp-百万请求？ <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -353,6 +414,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%B4%E6%98%8E"><span class="nav-number">1.</span> <span class="nav-text">说明</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%99%BB%E5%BD%95%E7%9A%84%E4%BC%98%E5%8C%96"><span class="nav-number">2.</span> <span class="nav-text">登录的优化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B9%A6%E7%B1%8D%E5%88%97%E8%A1%A8"><span class="nav-number">3.</span> <span class="nav-text">书籍列表</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%B0%E5%A2%9E%E4%B9%A6%E7%B1%8D"><span class="nav-number">4.</span> <span class="nav-text">新增书籍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%A0%E9%99%A4"><span class="nav-number">5.</span> <span class="nav-text">删除</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BC%96%E8%BE%91"><span class="nav-number">6.</span> <span class="nav-text">编辑</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
